@@ -1,0 +1,8 @@
+{
+  "name": "Login",
+  "category": "Account",
+  "icon": "group",
+  "isMultiple": true,
+  "dynamicPageType": "frontastic/login",
+  "dataSourceType": "frontastic/empty"
+}

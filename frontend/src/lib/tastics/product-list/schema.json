@@ -1,0 +1,112 @@
+{
+  "name": "Product List",
+  "category": "Products",
+  "schema": [
+    {
+      "name": "Data Source",
+      "fields": [
+        {
+          "label": "Products",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/product-list",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Category configuration",
+      "fields": [
+        {
+          "label": "Category configuration",
+          "field": "categoryConfiguration",
+          "type": "group",
+          "itemLabelField": "key",
+          "min": 0,
+          "fields": [
+            {
+              "label": "Category key",
+              "type": "string",
+              "field": "key",
+              "required": true,
+              "translatable": false
+            },
+            {
+              "type": "description",
+              "text": "You can find the category key on the category page in merchant center"
+            },
+            {
+              "label": "Category Image",
+              "type": "media",
+              "field": "image"
+            },
+            {
+              "label": "Category Highlight Headline",
+              "type": "string",
+              "field": "highlightHeadline"
+            },
+            {
+              "label": "Category Highlight Subline",
+              "type": "string",
+              "field": "highlightSubline"
+            },
+            {
+              "label": "Category Highlight CTA",
+              "type": "string",
+              "field": "highlightCta"
+            },
+            {
+              "label": "Category Highlight CTA Reference",
+              "type": "reference",
+              "field": "highlightCtaReference"
+            },
+            {
+              "label": "Category Highlight Items",
+              "field": "highlightItems",
+              "type": "group",
+              "itemLabelField": "name",
+              "fields": [
+                {
+                  "label": "Image",
+                  "field": "image",
+                  "type": "media"
+                },
+                {
+                  "label": "Name",
+                  "field": "name",
+                  "type": "string"
+                },
+                {
+                  "label": "Price",
+                  "field": "price",
+                  "type": "number"
+                },
+                {
+                  "label": "Reference",
+                  "field": "reference",
+                  "type": "reference"
+                },
+                {
+                  "label": "Press Target Position",
+                  "field": "pressTargetPosition",
+                  "type": "enum",
+                  "values": [
+                    {
+                      "name": "Top",
+                      "value": "top"
+                    },
+                    {
+                      "name": "Bottom",
+                      "value": "bottom"
+                    }
+                  ],
+                  "default": "bottom"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

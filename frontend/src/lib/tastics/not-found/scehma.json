@@ -1,0 +1,33 @@
+{
+  "tasticType": "commercetools/ui/not-found",
+  "name": "Not Found",
+  "Category": "Not Found",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Title",
+          "field": "title",
+          "type": "string"
+        },
+        {
+          "label": "Summary",
+          "field": "summary",
+          "type": "string"
+        },
+        {
+          "label": "Link",
+          "field": "linkName",
+          "type": "string"
+        },
+        {
+          "label": "Link Reference",
+          "field": "link",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    }
+  ]
+}

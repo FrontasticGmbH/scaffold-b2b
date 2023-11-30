@@ -1,0 +1,43 @@
+{
+  "tasticType": "commercetools/ui/content/hero-tile",
+  "name": "Hero Tile",
+  "category": "Content",
+  "schema": [
+    {
+      "name": "Media",
+      "fields": [
+        {
+          "label": "Image",
+          "field": "image",
+          "type": "media",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Links",
+          "field": "links",
+          "type": "group",
+          "itemLabelField": "name",
+          "min": 0,
+          "fields": [
+            {
+              "label": "Name",
+              "field": "name",
+              "type": "string"
+            },
+            {
+              "label": "Reference",
+              "field": "href",
+              "type": "reference",
+              "translatable": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

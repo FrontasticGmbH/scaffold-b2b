@@ -1,0 +1,17 @@
+{
+  "thank.for.order": "Tack för din beställning",
+  "email.sent": "En bekräftelsemail har skickats till",
+  "order.number": "Ordernummer",
+  "delivery.by": "Levereras av",
+  "delivery.to": "Levereras till",
+  "payment.by": "Betalning genom",
+  "user.title": "Mina beställningar",
+  "user.subtitle": "Hantera, kontrollera eller spåra dina beställningar.",
+  "user.cta": "Kontrollera orderstatus",
+  "guest.title": "Spara dina uppgifter",
+  "guest.subtitle": "Njut av snabbare kassahantering, beställningshistorik och personliga erbjudanden.",
+  "guest.cta": "Skapa konto",
+  "order.details": "Orderdetaljer",
+  "your.order": "Din beställning",
+  "print.invoice": "Skriv ut faktura"
+}

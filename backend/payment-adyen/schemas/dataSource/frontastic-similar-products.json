@@ -1,0 +1,7 @@
+{
+  "customDataSourceType": "frontastic/similar-products",
+  "name": "Similar products",
+  "category": "Products",
+  "icon": "view_list",
+  "schema": []
+}

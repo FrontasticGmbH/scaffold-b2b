@@ -1,0 +1,19 @@
+{
+  "tasticType": "commercetools/ui/quote-detail",
+  "name": "Quote Detail",
+  "Category": "Dashboard",
+  "schema": [
+    {
+      "name": "Data Source",
+      "fields": [
+        {
+          "label": "Products",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/product-list",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

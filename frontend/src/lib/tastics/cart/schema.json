@@ -1,0 +1,34 @@
+{
+  "tasticType": "commercetools/ui/cart",
+  "name": "Cart",
+  "category": "Cart",
+  "icon": "shopping_cart",
+  "schema": [
+    {
+      "name": "Payment Methods",
+      "fields": [
+        {
+          "label": "Payment Method",
+          "field": "paymentMethods",
+          "type": "group",
+          "itemLabelField": "name",
+          "min": 0,
+          "fields": [
+            {
+              "label": "Name",
+              "field": "name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "label": "Image",
+              "field": "image",
+              "type": "media",
+              "required": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

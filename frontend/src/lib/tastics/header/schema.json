@@ -1,0 +1,95 @@
+{
+  "tasticType": "commercetools/ui/header",
+  "name": "Header",
+  "category": "Header",
+  "schema": [
+    {
+      "name": "Logo",
+      "fields": [
+        {
+          "label": "Logo",
+          "field": "logo",
+          "type": "media",
+          "required": true,
+          "options": []
+        },
+        {
+          "label": "Link Reference",
+          "field": "logoLink",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    },
+    {
+      "name": "Logo Link",
+      "fields": [
+        {
+          "label": "Link Reference",
+          "field": "logoLink",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    },
+    {
+      "name": "Account Link",
+      "fields": [
+        {
+          "label": "Link",
+          "field": "accountLinkLabel",
+          "type": "string",
+          "translatable": true
+        },
+        {
+          "label": "Link Reference",
+          "field": "accountLink",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    },
+    {
+      "name": "Cart Link",
+      "fields": [
+        {
+          "label": "Link",
+          "field": "cartLinkLabel",
+          "type": "string",
+          "translatable": true
+        },
+        {
+          "label": "Link Reference",
+          "field": "cartLink",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    },
+    {
+      "name": "Page Links",
+      "fields": [
+        {
+          "label": "Page Links",
+          "field": "pageLinks",
+          "type": "group",
+          "itemLabelField": "Page Link",
+          "fields": [
+            {
+              "label": "Link",
+              "field": "name",
+              "type": "string",
+              "translatable": true
+            },
+            {
+              "label": "Link Reference",
+              "field": "href",
+              "type": "reference",
+              "translatable": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

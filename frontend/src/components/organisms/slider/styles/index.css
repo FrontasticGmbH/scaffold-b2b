@@ -1,0 +1,38 @@
+.slick-slider {
+  position: static;
+}
+
+.slick-arrow.slick-disabled {
+  display: none !important;
+}
+
+.slick-dots {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+
+.slick-dots li {
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  transition: 150ms ease-out;
+  cursor: pointer;
+
+  @apply bg-gray-300;
+}
+
+.slick-dots li:hover {
+  @apply bg-gray-600;
+}
+
+.slick-dots li button {
+  overflow: hidden;
+  text-indent: 999px;
+}
+
+.slick-dots li.slick-active {
+  @apply bg-gray-600;
+}

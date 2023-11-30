@@ -1,0 +1,19 @@
+{
+  "customDataSourceType": "frontastic/preview/product",
+  "name": "Preview Single product",
+  "category": "Previews",
+  "icon": "picture_in_picture",
+  "schema": [
+    {
+      "name": "Product selection",
+      "fields": [
+        {
+          "label": "Product ID",
+          "field": "productId",
+          "type": "text",
+          "translatable": false
+        }
+      ]
+    }
+  ]
+}

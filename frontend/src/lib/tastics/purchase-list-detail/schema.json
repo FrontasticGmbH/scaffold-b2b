@@ -1,0 +1,19 @@
+{
+  "tasticType": "commercetools/ui/purchase-list-detail",
+  "name": "Shopping List Detail",
+  "Category": "Dashboard",
+  "schema": [
+    {
+      "name": "Data Source",
+      "fields": [
+        {
+          "label": "Products",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/product-list",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

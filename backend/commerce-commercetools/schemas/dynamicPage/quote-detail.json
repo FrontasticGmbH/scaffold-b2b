@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/quote-detail-page",
+  "name": "Quote details page",
+  "category": "Quotes",
+  "icon": "picture_in_picture",
+  "dataSourceType": "frontastic/product-list",
+  "isMultiple": true
+}

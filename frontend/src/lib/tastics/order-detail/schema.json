@@ -1,0 +1,19 @@
+{
+  "tasticType": "commercetools/ui/order-detail",
+  "name": "Order Detail",
+  "Category": "Dashboard",
+  "schema": [
+    {
+      "name": "Data Source",
+      "fields": [
+        {
+          "label": "Products",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/product-list",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "customDataSourceType": "frontastic/categories",
+  "name": "Categories",
+  "category": "Products",
+  "icon": "calendar_view_day",
+  "schema": []
+}

@@ -1,0 +1,42 @@
+{
+  "tasticType": "commercetools/ui/content/blog",
+  "name": "Blog",
+  "category": "Content",
+  "schema": [
+    {
+      "name": "Media",
+      "fields": [
+        {
+          "label": "Image",
+          "field": "image",
+          "type": "media"
+        }
+      ]
+    },
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Title",
+          "field": "title",
+          "type": "string"
+        },
+        {
+          "label": "Description",
+          "field": "description",
+          "type": "markdown"
+        },
+        {
+          "label": "Link",
+          "field": "linkName",
+          "type": "string"
+        },
+        {
+          "label": "Link Reference",
+          "field": "link",
+          "type": "reference"
+        }
+      ]
+    }
+  ]
+}

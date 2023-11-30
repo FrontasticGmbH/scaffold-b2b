@@ -1,0 +1,8 @@
+{
+  "name": "Reset Password",
+  "category": "Account",
+  "icon": "group",
+  "isMultiple": true,
+  "dynamicPageType": "frontastic/reset-password",
+  "dataSourceType": "frontastic/empty"
+}

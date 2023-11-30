@@ -1,0 +1,10 @@
+{
+  "auth.wrong": "Fel e-postadress eller lösenord",
+  "wentWrong": "Det är ledsamt. Något gick fel.",
+  "password.noMatch": "Lösenorden matchar inte",
+  "password.not.valid": "Lösenordet måste vara minst 8 tecken långt och innehålla minst en stor bokstav.",
+  "account.create.fail": "Tyvärr kunde vi inte skapa ditt konto.",
+  "email.enter": "Ange din e-postadress",
+  "email": "Ogiltig e-postadress.",
+  "name": "Namnet måste vara minst två tecken långt."
+}

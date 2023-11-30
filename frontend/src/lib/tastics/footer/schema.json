@@ -1,0 +1,62 @@
+{
+  "tasticType": "commercetools/ui/footer",
+  "name": "Footer",
+  "category": "Footer",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Copyright Statement",
+          "field": "copyrightStatement",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Links",
+      "fields": [
+        {
+          "label": "Link",
+          "field": "links",
+          "type": "group",
+          "min": 0,
+          "itemLabelField": "name",
+          "fields": [
+            {
+              "label": "Name",
+              "field": "name",
+              "type": "string"
+            },
+            {
+              "label": "Reference",
+              "field": "href",
+              "type": "reference"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Styling",
+      "fields": [
+        {
+          "label": "Variant",
+          "field": "variant",
+          "type": "enum",
+          "values": [
+            {
+              "name": "Default",
+              "value": "default"
+            },
+            {
+              "name": "Simple",
+              "value": "simple"
+            }
+          ],
+          "default": "default"
+        }
+      ]
+    }
+  ]
+}

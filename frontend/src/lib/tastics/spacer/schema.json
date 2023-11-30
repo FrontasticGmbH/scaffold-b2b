@@ -1,0 +1,34 @@
+{
+  "tasticType": "commercetools/ui/spacer",
+  "name": "Spacer",
+  "category": "Content",
+  "schema": [
+    {
+      "name": "Options",
+      "fields": [
+        {
+          "label": "Space",
+          "field": "space",
+          "type": "number",
+          "required": true
+        },
+        {
+          "label": "Background Color",
+          "field": "bgColor",
+          "type": "enum",
+          "default": "white",
+          "values": [
+            {
+              "name": "White",
+              "value": "white"
+            },
+            {
+              "name": "Neutral (200)",
+              "value": "neutral-200"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

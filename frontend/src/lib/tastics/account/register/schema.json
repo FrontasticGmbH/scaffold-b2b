@@ -1,0 +1,36 @@
+{
+  "tasticType": "commercetools/ui/account/register",
+  "name": "Register",
+  "category": "Account",
+  "icon": "account_circle",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Image",
+          "field": "image",
+          "type": "media",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Logo",
+      "fields": [
+        {
+          "label": "Logo",
+          "field": "logo",
+          "type": "media",
+          "required": true
+        },
+        {
+          "label": "Link Reference",
+          "field": "logoLink",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    }
+  ]
+}

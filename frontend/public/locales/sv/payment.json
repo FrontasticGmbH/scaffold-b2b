@@ -1,0 +1,19 @@
+{
+  "payment.methods": "Betalningsmetoder",
+  "payment.details": "Ta bort eller lägg till betalningsmetoder.",
+  "add.card": "Lägg till nytt kort",
+  "edit": "Redigera",
+  "edit.payment": "Redigera betalningsmetod",
+  "add.payment": "Lägg till ny betalningsmetod",
+  "card.holder": "Kortinnehavare",
+  "card.number": "Kortnummer *",
+  "expiration.date": "Utgångsdatum *",
+  "security.number": "Säkerhetsnummer *",
+  "save": "Spara",
+  "cancel": "Avbryt",
+  "delete": "Radera",
+  "delete.question": "Radera betalningsmetod?",
+  "delete.warning": "Denna åtgärd kan inte ångras.",
+  "card.number.error": "Ange ett giltigt kreditkortsnummer",
+  "card.holder.error": "Ange kortinnehavarens namn"
+}

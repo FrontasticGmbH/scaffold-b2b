@@ -1,0 +1,73 @@
+{
+  "tasticType": "commercetools/ui/content/content-tiles",
+  "name": "Content Tiles",
+  "category": "Content",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Title",
+          "field": "title",
+          "type": "string"
+        },
+        {
+          "label": "Link",
+          "field": "link",
+          "type": "string"
+        },
+        {
+          "label": "Link Reference",
+          "field": "linkReference",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "fields": [
+        {
+          "label": "Item",
+          "field": "items",
+          "type": "group",
+          "itemLabelField": "title",
+          "fields": [
+            {
+              "label": "Image",
+              "field": "image",
+              "type": "media"
+            },
+            {
+              "label": "Title",
+              "field": "title",
+              "type": "string"
+            },
+            {
+              "label": "Link",
+              "field": "link",
+              "type": "string"
+            },
+            {
+              "label": "Link Reference",
+              "field": "linkReference",
+              "type": "reference",
+              "translatable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Configuration",
+      "fields": [
+        {
+          "label": "As Slider",
+          "field": "asSlider",
+          "type": "boolean",
+          "default": false
+        }
+      ]
+    }
+  ]
+}

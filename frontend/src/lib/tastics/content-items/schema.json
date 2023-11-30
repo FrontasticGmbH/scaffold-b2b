@@ -1,0 +1,78 @@
+{
+  "tasticType": "commercetools/ui/content/content-items",
+  "name": "Content Items",
+  "category": "Content",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Title",
+          "field": "title",
+          "type": "string"
+        },
+        {
+          "label": "Link",
+          "field": "link",
+          "type": "string"
+        },
+        {
+          "label": "Link Reference",
+          "field": "linkReference",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "fields": [
+        {
+          "label": "Item",
+          "field": "items",
+          "type": "group",
+          "itemLabelField": "title",
+          "fields": [
+            {
+              "label": "Image",
+              "field": "image",
+              "type": "media"
+            },
+            {
+              "label": "Title",
+              "field": "title",
+              "type": "string"
+            },
+            {
+              "label": "Link",
+              "field": "link",
+              "type": "reference",
+              "translatable": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Styling",
+      "fields": [
+        {
+          "label": "Variant",
+          "field": "variant",
+          "type": "enum",
+          "values": [
+            {
+              "name": "Default",
+              "value": "default"
+            },
+            {
+              "name": "Inline",
+              "value": "inline"
+            }
+          ],
+          "default": "default"
+        }
+      ]
+    }
+  ]
+}

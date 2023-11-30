@@ -1,0 +1,8 @@
+{
+  "name": "Cart",
+  "category": "Cart",
+  "icon": "shopping_cart",
+  "isMultiple": true,
+  "dynamicPageType": "frontastic/cart",
+  "dataSourceType": "frontastic/empty"
+}

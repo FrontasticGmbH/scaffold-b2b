@@ -1,0 +1,49 @@
+.rdp-table {
+  border-collapse: separate;
+  border-spacing: 0 5px;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected):hover {
+  background-color: #eff0f5;
+}
+
+.rdp-caption_label {
+  font-weight: 500;
+  color: #494949;
+  font-size: 14px;
+}
+
+.rdp-cell {
+  width: 32px;
+  height: 32px;
+}
+
+.rdp-head_cell {
+  color: #494949;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.rdp-nav_button svg {
+  width: 12px;
+  height: 10px;
+}
+
+.rdp-weeknumber,
+.rdp-day {
+  font-size: 14px;
+  font-weight: 400;
+  color: #212121;
+}
+
+.rdp-day_selected,
+.rdp-day_selected:focus-visible,
+.rdp-day_selected:hover {
+  background-color: #173a5f;
+  color: #fff;
+}
+
+.rdp-day_range_middle {
+  background-color: #eff0f5;
+  color: #212121;
+}
