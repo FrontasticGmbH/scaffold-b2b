@@ -1,38 +1,11 @@
 import React, { createContext, useState } from 'react';
-import { Link } from '@/types/link';
-import { Image as LogoImage } from '@/types/image';
-import { Option } from '@/components/atoms/select/types';
-import { NavigationCategory, ContextShape } from '../types';
-import { Suggestion } from '../../search/types';
+import { NavigationCategory, ContextShape, ContextProps } from '../types';
 
-const initialMarketState = {
-  myAccount: {} as NavigationCategory,
-  pageLinks: [] as Link[],
-  categoryLinks: [] as NavigationCategory[],
-  logo: {} as LogoImage,
-  logoLink: {} as Link,
-  cartItems: 0 as number,
-  cartLink: {} as Link,
-  accountLink: {} as Link,
-  showQuickOrder: false as boolean,
-  showQuickOrderMenu: {} as () => void,
-  hideQuickOrderMenu: {} as () => void,
-  showMenu: false as boolean,
-  showHeaderMenu: {} as () => void,
-  hideHeaderMenu: {} as () => void,
-  navigationLevel: [] as NavigationCategory[],
-  insertCategory: {} as (category: NavigationCategory) => void,
-  removeCategory: {} as () => void,
-  businessUnits: [] as Option[],
-  stores: [] as Option[],
-  quotas: 0 as number,
-  quickOrderProducts: [] as Suggestion[],
-};
-
-const HeaderContext = createContext(initialMarketState);
+const HeaderContext = createContext({} as ContextShape);
 
 const HeaderProvider = ({
-  myAccount,
+  isAdmin,
+  myAccountMenu,
   pageLinks,
   categoryLinks,
   accountLink,
@@ -42,10 +15,14 @@ const HeaderProvider = ({
   logoLink,
   children,
   businessUnits,
+  selectedBusinessUnit,
+  onBusinessUnitChange,
+  selectedStore,
   stores,
-  quotas,
+  onStoreChange,
+  quotes,
   quickOrderProducts,
-}: React.PropsWithChildren<ContextShape>) => {
+}: React.PropsWithChildren<ContextProps>) => {
   const [navigationLevel, setNavigationLevel] = useState<NavigationCategory[]>([]);
   const [showMenu, setShowMenu] = useState(false);
   const [showQuickOrder, setShowQuickOrder] = useState(false);
@@ -78,26 +55,31 @@ const HeaderProvider = ({
   return (
     <HeaderContext.Provider
       value={{
-        myAccount: myAccount,
-        pageLinks: pageLinks,
-        categoryLinks: categoryLinks,
-        logo: logo,
-        logoLink: logoLink,
-        cartItems: cartItems,
-        cartLink: cartLink,
-        accountLink: accountLink,
-        showQuickOrder: showQuickOrder,
-        showQuickOrderMenu: showQuickOrderMenu,
-        hideQuickOrderMenu: hideQuickOrderMenu,
-        showMenu: showMenu,
-        showHeaderMenu: showHeaderMenu,
-        hideHeaderMenu: hideHeaderMenu,
-        navigationLevel: navigationLevel,
-        insertCategory: insertCategory,
-        removeCategory: removeCategory,
-        businessUnits: businessUnits,
-        stores: stores,
-        quotas: quotas,
+        isAdmin,
+        myAccountMenu,
+        pageLinks,
+        categoryLinks,
+        logo,
+        logoLink,
+        cartItems,
+        cartLink,
+        accountLink,
+        showQuickOrder,
+        showQuickOrderMenu,
+        hideQuickOrderMenu,
+        showMenu,
+        showHeaderMenu,
+        hideHeaderMenu,
+        navigationLevel,
+        insertCategory,
+        removeCategory,
+        selectedBusinessUnit,
+        businessUnits,
+        onBusinessUnitChange,
+        selectedStore,
+        stores,
+        onStoreChange,
+        quotes,
         quickOrderProducts,
       }}
     >

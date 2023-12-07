@@ -9,15 +9,12 @@ export interface BusinessUnitPayload extends BusinessUnit {
 
 export interface CompanyAdminPageProps {
   businessUnitOptions: Option[];
-  storeOptions: Option[];
   countryOptions: (Option & { states: Option[] })[];
   roleOptions: Option[];
   initialBusinessUnit?: string;
-  initialStore?: string;
   companyName?: string;
   storeName?: string;
   onBusinessUnitChange?: (businessUnit: string) => void;
-  onStoreChange?: (store: string) => void;
   generalInformation: BusinessUnit[];
   addresses: Address[];
   accountAddresses: Address[];

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '@/components/organisms/header';
 import AnnouncementBar from '@/components/organisms/announcement-bar';
@@ -14,9 +14,16 @@ import { mapCategory } from '@/utils/mappers/map-category';
 import useCart from '@/lib/hooks/useCart';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useStores from '@/lib/hooks/useStores';
+import useQuotes from '@/lib/hooks/useQuotes';
+import { Option } from '@/components/atoms/select/types';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import { NavigationCategory } from '@/components/organisms/header/types';
+import { Quote } from '@shared/types/quote/Quote';
 import { TasticProps } from '../types';
-import { businessUnits, myAccount, pageLinks, quotas, stores, textBar, suggestions, quickOrderProducts } from './mocks';
+import { myAccountMenu, pageLinks, textBar, suggestions, quickOrderProducts } from './mocks';
 import { HeaderTasticProps } from './types';
+import useBusinessUnit from '../company-admin/hooks/useBusinessUnit';
+import useStore from './hooks/useStore';
 
 const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
   const { translate } = useTranslation();
@@ -24,11 +31,24 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
   const router = useRouter();
 
   const { defaultBusinessUnit } = useBusinessUnits();
+
+  const { businessUnits, activeBusinessUnit, onBusinessUnitSelected } = useBusinessUnit();
+
   const { defaultStore } = useStores();
+
+  const { storeOptions, onStoreSelected } = useStore({ activeBusinessUnit });
 
   const { totalItems } = useCart(defaultBusinessUnit?.key, defaultStore?.key);
 
   const { categories } = useCategories();
+  const navigationCategories = categories.map(mapCategory).filter((category) => !!category.name);
+
+  const { quotes } = useQuotes({});
+  const quotesPending = quotes?.items?.filter((quote: Quote) => quote?.quoteState === 'Pending');
+
+  const { account, logout } = useAccount();
+
+  const { isAdmin } = useAccountRoles();
 
   const { ref } = useResizeObserver(
     (el: HTMLDivElement) => {
@@ -41,10 +61,23 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     },
   );
 
-  const { account, logout } = useAccount();
-
   const onLogoutClick = () => {
     logout().then(() => router.push('login'));
+  };
+
+  const mapBusinessUnits: Option[] = businessUnits.map(({ name, key }) => {
+    return { name: name ?? key ?? 'Name', value: key ?? 'key' };
+  });
+
+  const accountLinks: NavigationCategory[] = useMemo(() => {
+    return isAdmin
+      ? myAccountMenu.subCategories
+      : myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin');
+  }, [isAdmin]);
+
+  const accountMenuMobile: NavigationCategory = {
+    ...myAccountMenu,
+    subCategories: myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin'),
   };
 
   return (
@@ -52,20 +85,27 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
       <div className="relative">
         <AnnouncementBar
           textBar={textBar}
-          myAccount={myAccount}
-          businessUnits={businessUnits}
-          stores={stores}
-          onLogoutClick={onLogoutClick}
+          accountLinks={accountLinks}
+          selectedBusinessUnit={activeBusinessUnit?.key ?? 'Select'}
+          businessUnits={mapBusinessUnits}
+          stores={storeOptions}
+          selectedStore={defaultStore?.key ?? 'Select'}
           name={account?.firstName ?? ''}
-          quotas={quotas}
+          quotes={quotesPending?.length ?? 0}
+          onLogoutClick={onLogoutClick}
+          onBusinessUnitChange={onBusinessUnitSelected}
+          onStoreChange={onStoreSelected}
         />
         <Header
+          isAdmin={isAdmin}
           csvDownloadLink="/template.csv"
           quickOrderProducts={quickOrderProducts}
-          businessUnits={businessUnits}
-          stores={stores}
-          categoryLinks={categories.map(mapCategory)}
-          myAccount={myAccount}
+          selectedBusinessUnit={activeBusinessUnit?.key ?? ''}
+          businessUnits={mapBusinessUnits}
+          selectedStore={defaultStore?.key ?? ''}
+          stores={storeOptions}
+          categoryLinks={navigationCategories}
+          myAccountMenu={accountMenuMobile}
           accountLink={resolveReference(data.accountLink)}
           cartItems={totalItems}
           cartLink={resolveReference(data.cartLink)}
@@ -76,7 +116,9 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
             isDesktopSize ? translate('common.search.placeholder') : translate('common.search.placeholder.mobile')
           }
           searchSuggestions={suggestions}
-          quotas={22}
+          quotes={quotesPending?.length ?? 0}
+          onBusinessUnitChange={onBusinessUnitSelected}
+          onStoreChange={onStoreSelected}
         />
       </div>
     </div>

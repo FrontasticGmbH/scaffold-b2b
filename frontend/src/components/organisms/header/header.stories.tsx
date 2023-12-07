@@ -104,7 +104,7 @@ Primary.args = {
     resolveReference({ type: 'link', link: '/' }, 'Sale'),
     resolveReference({ type: 'link', link: '/' }, 'New items'),
   ],
-  myAccount: {
+  myAccountMenu: {
     categoryId: 'my-account',
     name: 'My Account',
     path: '/my-account',
@@ -194,7 +194,7 @@ Primary.args = {
     { name: 'opt3', value: 'opt3' },
     { name: 'opt4', value: 'opt4' },
   ],
-  quotas: 4,
+  quotes: 4,
   searchPlaceholder: 'Search by SKU number, product name or keyword',
   searchSuggestions: productListImage,
   quickOrderProducts: [

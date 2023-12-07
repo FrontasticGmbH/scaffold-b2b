@@ -1,8 +1,11 @@
-import { FC, TableHTMLAttributes } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
+import { TableRowProps } from '../types';
 
-const TableRow: FC<TableHTMLAttributes<HTMLTableRowElement>> = ({ className, ...props }) => {
-  const rowClassName = classnames('shadow-[0px_-1px_0px_0px_#E4E4E7_inset]', className);
+const TableRow = ({ className, ...props }: TableRowProps) => {
+  const rowClassName = classnames(
+    'whitespace-nowrap shadow-[0px_-1px_0px_0px_#E4E4E7_inset] last:shadow-none',
+    className,
+  );
   return <tr className={rowClassName} {...props}></tr>;
 };
 

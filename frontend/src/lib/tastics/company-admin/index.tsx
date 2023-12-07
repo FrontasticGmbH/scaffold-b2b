@@ -7,7 +7,7 @@ import Dashboard from '@/components/pages/dashboard';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useAccount from '@/lib/hooks/useAccount';
 import countries from '@/static/countries.json';
-import { mapAddress } from '@/utils/mappers/map-address';
+import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
 import { mapAssociate } from '@/utils/mappers/map-associate';
 import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import { CompanyAdminPageProps } from '@/components/pages/dashboard/pages/company-admin/types';
@@ -20,10 +20,19 @@ import useSubPath from './hooks/useSubPath';
 const CompanyAdminTastic = () => {
   const { activeBusinessUnit, onBusinessUnitSelected, businessUnits } = useBusinessUnit();
 
-  const { addBusinessUnit, updateBusinessUnit, removeBusinessUnit, addAssociate, updateAssociate, removeAssociate } =
-    useBusinessUnits();
+  const {
+    addBusinessUnit,
+    updateBusinessUnit,
+    removeBusinessUnit,
+    addAssociate,
+    updateAssociate,
+    removeAssociate,
+    addAddress,
+    updateAddress,
+    removeAddress,
+  } = useBusinessUnits();
 
-  const { storeOptions, onStoreSelected, selectedStore } = useStore({ activeBusinessUnit });
+  const { selectedStore } = useStore({ activeBusinessUnit });
 
   const { roleOptions } = useRole();
 
@@ -41,8 +50,6 @@ const CompanyAdminTastic = () => {
     businessUnitOptions: businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' })),
     initialBusinessUnit: activeBusinessUnit?.key,
     onBusinessUnitChange: onBusinessUnitSelected,
-    storeOptions,
-    onStoreChange: onStoreSelected,
     countryOptions: countries.map(({ name, code, states }) => ({
       name,
       value: code,
@@ -100,6 +107,24 @@ const CompanyAdminTastic = () => {
       return !!businessUnit.businessUnitId;
     },
     canAddBusinessUnit: !!selectedStore,
+    onAddAddress: async (address) => {
+      if (!activeBusinessUnit.key) return;
+
+      const businessUnit = await addAddress({ ...mapCoCoAddress(address), businessUnit: activeBusinessUnit.key });
+      return !!businessUnit.businessUnitId;
+    },
+    onUpdateAddress: async (address) => {
+      if (!activeBusinessUnit.key) return;
+
+      const businessUnit = await updateAddress({ ...mapCoCoAddress(address), businessUnit: activeBusinessUnit.key });
+      return !!businessUnit.businessUnitId;
+    },
+    onDeleteAddress: async (id) => {
+      if (!activeBusinessUnit.key) return;
+
+      const businessUnit = await removeAddress({ addressId: id, businessUnit: activeBusinessUnit.key });
+      return !!businessUnit.businessUnitId;
+    },
   } as CompanyAdminPageProps;
 
   const { ActiveSubPath } = useSubPath({ ...companyAdminProps, selectedStore });

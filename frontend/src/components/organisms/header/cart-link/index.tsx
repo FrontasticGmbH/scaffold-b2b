@@ -13,7 +13,7 @@ const CartLink = () => {
       {cartItems > 0 && (
         <Typography
           fontSize={10}
-          className="absolute -right-2 -top-3 rounded-lg bg-primary px-1 py-[2px] text-white lg:right-[-12px] lg:top-[-16px]"
+          className="absolute -right-2 top-[-14px] rounded-full bg-primary px-[5px] py-[2px] text-white lg:right-[-12px]"
         >
           {cartItems.toString()}
         </Typography>
@@ -21,7 +21,7 @@ const CartLink = () => {
       <Typography fontSize={16} className="hidden text-gray-700 lg:block">
         {translate('common.cart')}
       </Typography>
-      <ShoppingCartIcon className="w-7 text-gray-700 lg:w-5" />
+      <ShoppingCartIcon className="ml-0 w-6 text-gray-700 lg:ml-2 lg:w-5" />
     </Link>
   );
 };

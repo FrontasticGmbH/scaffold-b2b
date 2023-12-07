@@ -21,43 +21,42 @@ const OrdersTable = ({
   const { formatCurrency } = useFormat();
 
   return (
-    <div>
-      <Table className="mt-8 rounded-md ">
-        <Table.Container className="table-fixed">
-          <Table.Head className="border-b text-12 font-bold">
-            <Table.Cell>{translate('common.status')}</Table.Cell>
-            <Table.Cell>{translate('common.id')}</Table.Cell>
-            <Table.Cell className="hidden md:table-cell">{translate('common.date')}</Table.Cell>
-            <Table.Cell className="hidden lg:table-cell">{translate('common.business.unit')}</Table.Cell>
-            <Table.Cell className="hidden md:table-cell">{translate('common.total')}</Table.Cell>
-            <Table.Cell />
-          </Table.Head>
-          <Table.Body>
-            {(orders ?? []).map(({ id, status, creationDate, businessUnit, total, currency }) => (
-              <Table.Row key={id}>
-                <Table.Cell>
-                  <div className="flex items-center justify-between gap-2">
-                    <OrderStatusTag status={status} />
-                  </div>
-                </Table.Cell>
-                <Table.Cell>
-                  <span className="block max-w-full truncate">{id}</span>
-                </Table.Cell>
-                <Table.Cell className="hidden md:table-cell">{creationDate}</Table.Cell>
-                <Table.Cell className="hidden lg:table-cell">{businessUnit}</Table.Cell>
-                <Table.Cell className="hidden md:table-cell">{formatCurrency(total, currency)}</Table.Cell>
-                <Table.Cell>
-                  <div className="flex justify-end">
-                    <Link href={DashboardLinks.orderDetail(id)} underlineOnHover={false}>
-                      <Button variant="secondary">{translate('common.view')}</Button>
-                    </Link>
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table.Container>
-      </Table>
+    <Table className="mt-8">
+      <Table.Container className="table-fixed rounded-md">
+        <Table.Head className="border-b text-12 font-bold">
+          <Table.Cell>{translate('common.status')}</Table.Cell>
+          <Table.Cell>{translate('common.id')}</Table.Cell>
+          <Table.Cell>{translate('common.date')}</Table.Cell>
+          <Table.Cell>{translate('common.business.unit')}</Table.Cell>
+          <Table.Cell>{translate('common.total')}</Table.Cell>
+          <Table.Cell isButtonsHead />
+        </Table.Head>
+        <Table.Body>
+          {(orders ?? []).map(({ id, status, creationDate, businessUnit, total, currency }) => (
+            <Table.Row key={id}>
+              <Table.Cell>
+                <div className="flex items-center justify-between gap-2">
+                  <OrderStatusTag status={status} />
+                </div>
+              </Table.Cell>
+              <Table.Cell>
+                <span className="block max-w-full truncate">{id}</span>
+              </Table.Cell>
+              <Table.Cell>{creationDate}</Table.Cell>
+              <Table.Cell>{businessUnit}</Table.Cell>
+              <Table.Cell>{formatCurrency(total, currency)}</Table.Cell>
+              <Table.Cell isButtonsCell>
+                <div className="flex justify-end">
+                  <Link href={DashboardLinks.orderDetail(id)} underlineOnHover={false}>
+                    <Button variant="secondary">{translate('common.view')}</Button>
+                  </Link>
+                </div>
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Container>
+
       <Table.Pagination
         page={page}
         limit={limit}
@@ -66,7 +65,7 @@ const OrdersTable = ({
         onPrevious={() => onPageChange?.(page - 1)}
         onRowsPerPageChange={onRowsPerPageChange}
       />
-    </div>
+    </Table>
   );
 };
 

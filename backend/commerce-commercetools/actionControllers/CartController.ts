@@ -73,20 +73,24 @@ export const addToCart: ActionHook = async (request: Request, actionContext: Act
 
   const account = fetchAccountFromSession(request);
 
-  let cart = await CartFetcher.fetchCart(request, actionContext);
+  try {
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
-  cart = await cartApi.addToCart(cart, body.lineItems, account, body.businessUnitKey);
+    cart = await cartApi.addToCart(cart, body.lineItems, account, body.businessUnitKey);
 
-  const cartId = cart.cartId;
+    const cartId = cart.cartId;
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(cart),
-    sessionData: {
-      ...request.sessionData,
-      cartId,
-    },
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(cart),
+      sessionData: {
+        ...request.sessionData,
+        cartId,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const updateLineItem: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -104,19 +108,23 @@ export const updateLineItem: ActionHook = async (request: Request, actionContext
 
   const account = fetchAccountFromSession(request);
 
-  let cart = await CartFetcher.fetchCart(request, actionContext);
-  cart = await cartApi.updateLineItem(cart, lineItem, account, body.businessUnitKey);
+  try {
+    let cart = await CartFetcher.fetchCart(request, actionContext);
+    cart = await cartApi.updateLineItem(cart, lineItem, account, body.businessUnitKey);
 
-  const cartId = cart.cartId;
+    const cartId = cart.cartId;
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(cart),
-    sessionData: {
-      ...request.sessionData,
-      cartId,
-    },
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(cart),
+      sessionData: {
+        ...request.sessionData,
+        cartId,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const returnItems: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -152,8 +160,8 @@ export const cancelOrder: ActionHook = async (request: Request, actionContext: A
     } = JSON.parse(request.body);
 
     const account = fetchAccountFromSession(request);
-
     const res = await cartApi.updateOrderState(body.orderId, OrderState.Cancelled, account, body.businessUnitKey);
+
     return {
       statusCode: 200,
       body: JSON.stringify(res),
@@ -204,19 +212,23 @@ export const splitLineItem: ActionHook = async (request: Request, actionContext:
     shippingAddresses: { address: Address; count: number }[];
   } = JSON.parse(request.body);
 
-  let cart = await CartFetcher.fetchCart(request, actionContext);
   const account = fetchAccountFromSession(request);
 
-  cart = await cartApi.splitLineItem(cart, body.lineItemId, body.shippingAddresses, account, body.businessUnitKey);
+  try {
+    let cart = await CartFetcher.fetchCart(request, actionContext);
+    cart = await cartApi.splitLineItem(cart, body.lineItemId, body.shippingAddresses, account, body.businessUnitKey);
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(cart),
-    sessionData: {
-      ...request.sessionData,
-      cartId: cart.cartId,
-    },
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(cart),
+      sessionData: {
+        ...request.sessionData,
+        cartId: cart.cartId,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const reassignCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -231,18 +243,21 @@ export const reassignCart: ActionHook = async (request: Request, actionContext: 
   const account = fetchAccountFromSession(request);
 
   const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+  try {
+    cart = await cartApi.setCustomerId(cart, body.accountId, account, body?.businessUnitKey);
+    cart = await cartApi.setEmail(cart, body.email);
 
-  cart = await cartApi.setCustomerId(cart, body.accountId, account, body?.businessUnitKey);
-  cart = await cartApi.setEmail(cart, body.email);
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify(cart),
-    sessionData: {
-      ...request.sessionData,
-      cartId,
-    },
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(cart),
+      sessionData: {
+        ...request.sessionData,
+        cartId,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const removeLineItem: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -260,26 +275,27 @@ export const removeLineItem: ActionHook = async (request: Request, actionContext
   let cart = await CartFetcher.fetchCart(request, actionContext);
 
   const account = fetchAccountFromSession(request);
+  try {
+    cart = await cartApi.removeLineItem(cart, lineItem, account, body?.businessUnitKey);
 
-  cart = await cartApi.removeLineItem(cart, lineItem, account, body?.businessUnitKey);
+    const cartId = cart.cartId;
 
-  const cartId = cart.cartId;
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify(cart),
-    sessionData: {
-      ...request.sessionData,
-      cartId,
-    },
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(cart),
+      sessionData: {
+        ...request.sessionData,
+        cartId,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const checkout: ActionHook = async (request: Request, actionContext: ActionContext) => {
   const locale = getLocale(request);
   const cartApi = new CartApi(actionContext.frontasticContext, locale, getCurrency(request));
-
-  const cart = await updateCartFromRequest(request, actionContext);
 
   const body: {
     purchaseOrderNumber?: string;
@@ -289,6 +305,7 @@ export const checkout: ActionHook = async (request: Request, actionContext: Acti
   const account = fetchAccountFromSession(request);
 
   try {
+    const cart = await updateCartFromRequest(request, actionContext);
     const order = await cartApi.order(cart, account, body.businessUnitKey, body.purchaseOrderNumber);
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
 

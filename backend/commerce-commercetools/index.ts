@@ -19,7 +19,7 @@ import { Wishlist } from '@Types/wishlist/Wishlist';
 import { Quote } from '@Types/quote/Quote';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { Order } from '@Types/cart/Order';
-import { ProductPaginatedResult } from '@Types/result';
+import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 
 export default {
   'dynamic-page-handler': async (
@@ -81,7 +81,7 @@ export default {
 
     // Identify Wishlist
     if (WishlistRouter.identifyFrom(request)) {
-      return WishlistRouter.loadFor(request, context.frontasticContext).then((wishlist: Wishlist) => {
+      return WishlistRouter.loadFor(request, context.frontasticContext).then((wishlist: PaginatedResult<Wishlist>) => {
         if (wishlist) {
           return {
             dynamicPageType: 'frontastic/shopping-list-detail-page',
@@ -101,22 +101,24 @@ export default {
 
     // Identify Preview Wishlist
     if (WishlistRouter.identifyPreviewFrom(request)) {
-      return WishlistRouter.loadPreviewFor(request, context.frontasticContext).then((wishlist: Wishlist) => {
-        if (wishlist) {
-          return {
-            dynamicPageType: 'frontastic/shopping-list-detail-page',
-            dataSourcePayload: {
-              wishlist: wishlist,
-            },
-            pageMatchingPayload: {
-              wishlist: wishlist,
-            },
-          };
-        }
+      return WishlistRouter.loadPreviewFor(request, context.frontasticContext).then(
+        (wishlist: PaginatedResult<Wishlist>) => {
+          if (wishlist) {
+            return {
+              dynamicPageType: 'frontastic/shopping-list-detail-page',
+              dataSourcePayload: {
+                wishlist: wishlist,
+              },
+              pageMatchingPayload: {
+                wishlist: wishlist,
+              },
+            };
+          }
 
-        // FIXME: Return proper error result
-        return null;
-      });
+          // FIXME: Return proper error result
+          return null;
+        },
+      );
     }
 
     // Identify Order

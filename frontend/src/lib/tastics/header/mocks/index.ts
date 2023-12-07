@@ -5,7 +5,7 @@ export const pageLinks = [
   resolveReference({ type: 'link', link: '/' }, 'Sale'),
   resolveReference({ type: 'link', link: '/' }, 'New items'),
 ];
-export const myAccount = {
+export const myAccountMenu = {
   categoryId: 'my-account',
   name: 'My Account',
   path: '/dashboard',
@@ -26,6 +26,12 @@ export const myAccount = {
       categoryId: 'quotes',
       name: 'Quotes',
       path: '/quotes',
+      subCategories: [],
+    },
+    {
+      categoryId: 'company-admin',
+      name: 'Company Admin',
+      path: '/company-admin',
       subCategories: [],
     },
     {
@@ -107,7 +113,6 @@ export const stores = [
 export const name = 'Erika';
 export const onLogoutClick = () => {};
 export const textBar = 'Worldwide shipping & returns *';
-export const quotas = '4';
 export const suggestions = [
   {
     id: '1',

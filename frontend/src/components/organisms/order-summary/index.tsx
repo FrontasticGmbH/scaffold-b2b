@@ -2,8 +2,8 @@ import useMediaQuery from '@/hooks/useMediaQuery';
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
 import { desktop } from '@/constants/screensizes';
+import DiscountsForm from '@/components/molecules/discounts-form';
 import OrderPaymentSection from '../order-payment-section';
-import DiscountForm from '../order-payment-section/components/discount-form';
 import { OrderSummaryProps } from './types';
 import SummaryAccordion from './components/summary-accordion';
 import OrderItemsListing from '../order-items-listing';
@@ -38,7 +38,9 @@ const OrderSummary = ({
         <SummaryAccordion className="lg:hidden" order={props.order} cart={props.cart} transaction={transaction} />
       )}
 
-      {!isDesktopSize && includeSummaryAccordion && <DiscountForm className={props.classNames?.applyDiscountButton} />}
+      {!isDesktopSize && includeSummaryAccordion && (
+        <DiscountsForm className={props.classNames?.applyDiscountButton} discounts={[]} />
+      )}
 
       {(isDesktopSize || !includeSummaryAccordion) && (
         <OrderPaymentSection

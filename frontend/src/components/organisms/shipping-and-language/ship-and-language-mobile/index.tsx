@@ -32,7 +32,7 @@ const ShippingAndLanguageSectionMobile = () => {
           menuTop={languageMenuTop}
           value={selectedLanguage?.value}
           className="pt-2"
-          size="sm"
+          size="lg"
           placeholder="Select"
           options={selectedLocation?.languages ?? []}
           onChange={(value) => {

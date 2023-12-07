@@ -13,6 +13,7 @@ const Costs = ({
   currency = 'USD',
   loading = false,
   classNames = {},
+  isShippingEstimated = true,
 }: CostsProps) => {
   const { translate } = useTranslation();
 
@@ -37,7 +38,7 @@ const Costs = ({
     },
     {
       key: 'shipping',
-      label: translate('cart.shipping.estimate'),
+      label: translate(isShippingEstimated ? 'cart.shipping.estimate' : 'cart.shipping'),
       value: shipping,
     },
     {
@@ -55,16 +56,18 @@ const Costs = ({
   return (
     <div className={classNames.container}>
       <div className={subCostsContainerClassNames}>
-        {costs.map(({ key, label, value }) => (
-          <div key={key} className={subCostsClassNames}>
-            <Typography className="text-14 md:text-16" asSkeleton={loading}>
-              {label}
-            </Typography>
-            <Typography className="text-14 md:text-16" asSkeleton={loading}>
-              {formatCurrency(value, currency)}
-            </Typography>
-          </div>
-        ))}
+        {costs
+          .filter(({ value }) => value > 0)
+          .map(({ key, label, value }) => (
+            <div key={key} className={subCostsClassNames}>
+              <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>
+                {label}
+              </Typography>
+              <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>
+                {formatCurrency(value, currency)}
+              </Typography>
+            </div>
+          ))}
       </div>
 
       <div className={totalAmountClassNames}>

@@ -8,17 +8,17 @@ const usePurchaseLists = () => {
   const { defaultStore } = useStores();
 
   const response = useSWR(['/action/wishlist/', defaultStore?.key], () =>
-    sdk.callAction<Wishlist[]>({ actionName: 'wishlist/getWishlists', query: { storeKey: defaultStore?.key ?? '' } }),
+    sdk.composableCommerce.wishlist.getWishlists({ storeKey: defaultStore?.key ?? '' }),
   );
 
   const { mutate } = response;
 
   const createPurchaseList = useCallback(
     async ({ name, description, store }: Wishlist) => {
-      const res = await sdk.callAction({
-        actionName: `wishlist/createWishlist?storeKey=${store?.key ?? ''}`,
-        payload: { name, description },
-      });
+      const res = await sdk.composableCommerce.wishlist.createWishlist(
+        { name, description },
+        { storeKey: store?.key ?? '' },
+      );
 
       mutate();
 
@@ -29,10 +29,7 @@ const usePurchaseLists = () => {
 
   const updatePurchaseList = useCallback(
     async ({ wishlistId, name, description }: Partial<Wishlist>) => {
-      const res = await sdk.callAction({
-        actionName: `wishlist/updateWishlist?id=${wishlistId}`,
-        payload: { name, description },
-      });
+      const res = await sdk.composableCommerce.wishlist.updateWishlist({ name, description }, { id: wishlistId });
 
       mutate();
 

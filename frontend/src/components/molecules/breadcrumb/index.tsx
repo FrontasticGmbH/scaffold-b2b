@@ -7,7 +7,7 @@ import Truncator from './components/truncator';
 
 const Breadcrumb = ({
   children,
-  Separator = '/',
+  Separator = '|',
   className = '',
   disabled = false,
   maxItems = React.Children.count(children),

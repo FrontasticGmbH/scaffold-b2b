@@ -21,7 +21,7 @@ const ShippingSelect = () => {
     }
   }, [showMenu]);
 
-  const menuClassName = shippingMenuTop ? 'bottom-12 shadow-500-reverse' : '';
+  const menuClassName = shippingMenuTop ? 'bottom-12 shadow-500-reverse' : 'shadow-500';
 
   const getOptionDisplay = (location: Location) => {
     return (

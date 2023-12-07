@@ -4,22 +4,23 @@ import { classnames } from '@/utils/classnames/classnames';
 import { useAccordion } from '../../context';
 import { Props } from './types';
 
-const AccordionButton = ({ children, className = '', defaultSpacing = true }: React.PropsWithChildren<Props>) => {
+const AccordionButton = ({
+  children,
+  className = '',
+  defaultSpacing = true,
+  withArrow = true,
+}: React.PropsWithChildren<Props>) => {
   const { isExpanded, toggle } = useAccordion();
 
-  const arrowClassName = classnames('text-gray-700', isExpanded ? 'rotate-180' : '');
+  const arrowClassName = classnames('shrink-0 text-gray-700', isExpanded ? 'rotate-180' : '');
 
   return (
     <div
-      className={classnames(
-        'flex cursor-pointer items-center justify-between',
-        { 'px-4 py-[18px]': defaultSpacing },
-        className,
-      )}
+      className={classnames('flex cursor-pointer items-center gap-2', { 'px-4 py-[18px]': defaultSpacing }, className)}
       onClick={toggle}
     >
-      <div>{children}</div>
-      <ArrowIcon width={24} className={arrowClassName} />
+      <div className="grow">{children}</div>
+      {withArrow && <ArrowIcon width={24} className={arrowClassName} />}
     </div>
   );
 };

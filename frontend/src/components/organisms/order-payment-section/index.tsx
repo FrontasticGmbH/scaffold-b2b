@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import Costs from '@/components/molecules/costs';
-import DiscountForm from './components/discount-form';
+import DiscountsForm from '@/components/molecules/discounts-form';
 import PaymentMethods from './components/payment-methods';
 import { OrderSummaryProps } from '../order-summary/types';
 
@@ -18,7 +18,7 @@ const OrderPaymentSection: FC<OrderSummaryProps> = ({
 
   return (
     <div className={className} {...props}>
-      {!order && <DiscountForm className={classNames?.applyDiscountButton} />}
+      {!order && <DiscountsForm className={classNames?.applyDiscountButton} discounts={[]} />}
 
       <div className={infoContainerClassName}>
         <Costs

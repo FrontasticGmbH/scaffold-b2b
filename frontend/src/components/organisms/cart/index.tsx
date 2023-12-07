@@ -57,7 +57,7 @@ const Cart = ({
         const quote = await onRequestQuote({ buyerComment });
         setSubmittedQuote(quote);
       },
-      disabled: (lineItems ?? []).some((item) => !item.variant?.isOnStock),
+      disabled: (lineItems ?? []).filter((item) => !item.deleted).some((item) => !item.variant?.isOnStock),
     };
   }, [closeFlyouts, translate, onRequestQuote, lineItems]);
 

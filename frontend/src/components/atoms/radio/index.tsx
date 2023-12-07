@@ -29,7 +29,7 @@ const Radio = ({ label, checked: checkedProp, onSelected, disabled, className, s
         />
         <span className={dotClassName}></span>
       </div>
-      <span className={labelClassName}>{label}</span>
+      {label && <span className={labelClassName}>{label}</span>}
     </label>
   );
 };

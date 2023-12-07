@@ -47,7 +47,9 @@ const ProductListViewModel = ({
 
   const categoriesBreadcrumb = [
     { name: translate('common.home'), link: '/' },
-    ...slug.split('/').map((chunk, index, arr) => ({ name: chunk, link: `/${arr.slice(0, index + 1).join('/')}` })),
+    ...slug
+      .split('/')
+      .map((chunk, index, arr) => ({ name: chunk.replace(/-/g, ' '), link: `/${arr.slice(0, index + 1).join('/')}` })),
   ];
 
   if (category && isRootCategory && !searchParams.get('view')) {

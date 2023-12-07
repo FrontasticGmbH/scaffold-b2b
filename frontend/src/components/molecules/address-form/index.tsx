@@ -7,9 +7,23 @@ import Select from '@/components/atoms/select';
 import Checkbox from '@/components/atoms/checkbox';
 import { Address } from '@/types/entity/address';
 import useEntityToasters from '@/hooks/useEntityToasters';
-import { CompanyAdminPageProps } from '../../types';
+import { AddressFormProps } from './types';
 
-const AddressForm = ({ onAddAddress, onUpdateAddress, addresses, countryOptions }: CompanyAdminPageProps) => {
+const AddressForm = ({
+  onAddAddress,
+  onUpdateAddress,
+  addresses,
+  countryOptions,
+  onSave,
+  onCancel,
+  unstyled = false,
+  toasters = true,
+  translations = {},
+  showPhoneField = true,
+  showCancelButton = true,
+  showSubmitButton = true,
+  showDefaultCheckBoxes = true,
+}: AddressFormProps) => {
   const { translate } = useTranslation();
 
   const { showSavedMessage, showFailedMessage } = useEntityToasters('address');
@@ -36,19 +50,29 @@ const AddressForm = ({ onAddAddress, onUpdateAddress, addresses, countryOptions 
   );
 
   const handleSubmit = useCallback(async () => {
+    if (!(data.name && data.country && data.line1 && data.zip && data.city)) return;
+
     const success = await (id ? onUpdateAddress?.(data) : onAddAddress?.(data as Address));
 
-    if (success) showSavedMessage();
-    else showFailedMessage();
+    if (toasters) {
+      if (success) showSavedMessage();
+      else showFailedMessage();
+    }
 
-    router.back();
-  }, [onUpdateAddress, onAddAddress, data, id, router, showSavedMessage, showFailedMessage]);
+    (onSave ?? router.back)();
+  }, [onUpdateAddress, onAddAddress, data, id, router, showSavedMessage, showFailedMessage, onSave, toasters]);
 
   return (
     <EntityForm
-      translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}
+      unstyled={unstyled}
+      translations={{
+        cancel: translations.cancel ?? translate('common.cancel'),
+        submit: translations.submit ?? translate('common.save'),
+      }}
+      showSubmitButton={showSubmitButton}
+      showCancelButton={showCancelButton}
       onSubmit={handleSubmit}
-      onCancel={router.back}
+      onCancel={onCancel ?? router.back}
     >
       <div className="flex flex-col gap-4">
         <Input
@@ -68,6 +92,18 @@ const AddressForm = ({ onAddAddress, onUpdateAddress, addresses, countryOptions 
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
+
+        {showPhoneField && (
+          <Input
+            name="phone"
+            label={translate('common.phone')}
+            showOptionalLabel
+            optionalLabel={translate('common.optional.for.order.updates')}
+            value={data.phone ?? ''}
+            onChange={handleChange}
+            containerClassName="max-w-[400px]"
+          />
+        )}
 
         <Select
           label={translate('common.country')}
@@ -135,20 +171,24 @@ const AddressForm = ({ onAddAddress, onUpdateAddress, addresses, countryOptions 
           />
         )}
 
-        <p className="cursor-pointer text-14 font-medium text-gray-700">{translate('dashboard.save.as.default')}</p>
+        {showDefaultCheckBoxes && (
+          <>
+            <p className="cursor-pointer text-14 font-medium text-gray-700">{translate('dashboard.save.as.default')}</p>
 
-        <div className="flex items-center gap-5">
-          <Checkbox
-            checked={!!data.isDefaultShipping}
-            label={translate('common.address.shipping')}
-            onChecked={(checked) => setData({ ...data, isDefaultShipping: checked })}
-          />
-          <Checkbox
-            checked={!!data.isDefaultBilling}
-            label={translate('common.address.billing')}
-            onChecked={(checked) => setData({ ...data, isDefaultBilling: checked })}
-          />
-        </div>
+            <div className="flex items-center gap-5">
+              <Checkbox
+                checked={!!data.isDefaultShipping}
+                label={translate('common.address.shipping')}
+                onChecked={(checked) => setData({ ...data, isDefaultShipping: checked })}
+              />
+              <Checkbox
+                checked={!!data.isDefaultBilling}
+                label={translate('common.address.billing')}
+                onChecked={(checked) => setData({ ...data, isDefaultBilling: checked })}
+              />
+            </div>
+          </>
+        )}
       </div>
     </EntityForm>
   );

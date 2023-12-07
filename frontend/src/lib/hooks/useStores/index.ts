@@ -1,3 +1,4 @@
+import { Store } from '@shared/types/store/Store';
 import useBusinessUnits from '../useBusinessUnits';
 
 const useStores = () => {
@@ -5,7 +6,7 @@ const useStores = () => {
 
   const stores = defaultBusinessUnit?.stores ?? [];
 
-  const defaultStore = stores[0];
+  const defaultStore = stores[0] as Store | undefined;
 
   return { stores, defaultStore };
 };

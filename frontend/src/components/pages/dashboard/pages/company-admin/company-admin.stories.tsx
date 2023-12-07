@@ -17,10 +17,6 @@ Primary.args = {
     { name: 'East Coast', value: '1' },
   ],
   initialBusinessUnit: '0',
-  storeOptions: [
-    { name: 'The Show Store', value: '0' },
-    { name: 'The Good Store', value: '1' },
-  ],
   countryOptions: countries.map(({ name, code, states }) => ({
     name,
     value: code,
