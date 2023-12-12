@@ -1,6 +1,6 @@
 import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { Context } from '@frontastic/extension-types';
+import { Context, Project } from '@frontastic/extension-types';
 import { SmtpConfig } from '../interfaces/SmtpConfig';
 import { SmtpConfigurationError } from '../errors/SmtpConfigurationError';
 import { Account } from '@Types/account/Account';
@@ -117,7 +117,7 @@ export class EmailApi {
     });
   }
 
-  async sendAssociateVerificationAndPasswordResetEmail(customer: Account, passwordResetToken: AccountToken) {
+  async sendAccountVerificationAndPasswordResetEmail(customer: Account, passwordResetToken: AccountToken) {
     if (!customer.confirmationToken?.token) {
       console.error('No valid confirmation token');
       return;
@@ -128,7 +128,7 @@ export class EmailApi {
       return;
     }
 
-    const verificationUrl = `${this.client_host}/verify-associate?token=${customer.confirmationToken.token}&password-reset-token=${passwordResetToken.token}`;
+    const verificationUrl = `${this.client_host}/verify?token=${customer.confirmationToken.token}&password-reset-token=${passwordResetToken.token}`;
 
     const htmlVerificationMessage = `
       <h1>Hello!</h1>

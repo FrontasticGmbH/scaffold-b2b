@@ -5,7 +5,6 @@ import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
 import { QuoteDetailsPageProps } from './types';
 import QuoteStatusTag from '../../components/quote-status-tag';
-import PreviousPageLink from '../../components/previous-page-link';
 
 const QuoteDetailsPage = ({
   quote,
@@ -23,16 +22,9 @@ const QuoteDetailsPage = ({
 
   return (
     <div>
-      <div className="flex items-center justify-between py-6 md:py-7 lg:py-9">
-        <h1 className="text-18 font-extrabold leading-[100%] text-gray-800 md:text-20 lg:text-24">
-          {translate('dashboard.quote.details')}
-        </h1>
-        <PreviousPageLink className="hidden md:block" />
-      </div>
       <h3 className="text-14 text-gray-600">
         {translate('dashboard.quote.id')}: {quote.id}
       </h3>
-
       <h3 className="mt-2 flex items-center gap-2">
         <span className="text-14 text-gray-600">{translate('common.status')}:</span>
         <QuoteStatusTag status={quote.status} />
@@ -73,7 +65,7 @@ const QuoteDetailsPage = ({
         <div className="overflow-x-auto scrollbar-hide">
           <table className="w-full">
             <thead>
-              <tr className="p-4 text-12 uppercase text-gray-500 shadow-[0px_-1px_0px_0px_#E4E4E7_inset]">
+              <tr className="border-b border-neutral-400 p-4 text-12 uppercase text-gray-500">
                 <th className="p-4 text-left font-semibold">{translate('common.product')}</th>
                 <th className="p-4 text-left font-semibold">{translate('common.sku')}</th>
                 <th className="p-4 text-right font-semibold">{translate('common.qty')}</th>
@@ -83,7 +75,7 @@ const QuoteDetailsPage = ({
             </thead>
             <tbody>
               {quote.items.map(({ id, image, name, sku, quantity, price, currency }) => (
-                <tr key={id} className="p-4 text-14 text-gray-600 shadow-[0px_-1px_0px_0px_#E4E4E7_inset]">
+                <tr key={id} className="border-b border-neutral-400 p-4 text-14 text-gray-600">
                   <td className="whitespace-pre p-4 text-left">
                     <div className="flex items-center gap-3">
                       <span className="relative block h-[40px] w-[40px]">

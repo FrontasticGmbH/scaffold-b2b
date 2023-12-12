@@ -5,7 +5,7 @@ export const pageLinks = [
   resolveReference({ type: 'link', link: '/' }, 'Sale'),
   resolveReference({ type: 'link', link: '/' }, 'New items'),
 ];
-export const myAccountMenu = {
+export const myAccount = {
   categoryId: 'my-account',
   name: 'My Account',
   path: '/dashboard',
@@ -19,41 +19,65 @@ export const myAccountMenu = {
     {
       categoryId: 'orders',
       name: 'Orders',
-      path: '/orders',
+      path: '/dashboard/?hash=orders',
       subCategories: [],
     },
     {
       categoryId: 'quotes',
       name: 'Quotes',
-      path: '/quotes',
-      subCategories: [],
-    },
-    {
-      categoryId: 'company-admin',
-      name: 'Company Admin',
-      path: '/company-admin',
+      path: '/dashboard/?hash=quotes',
       subCategories: [],
     },
     {
       categoryId: 'shopping-lists',
       name: 'Shopping Lists',
-      path: '/shopping-lists',
+      path: '/dashboard/?hash=shopping-lists',
       subCategories: [],
     },
     {
       categoryId: 'settings-and-security',
       name: 'Settings & Security',
-      path: '/settings',
+      path: '/dashboard/?hash=settings',
       subCategories: [],
     },
     {
       categoryId: 'addresses',
       name: 'Addresses',
-      path: '/addresses',
+      path: '/dashboard/?hash=addresses',
       subCategories: [],
     },
   ],
 };
+export const categoryLinks = [
+  {
+    categoryId: 'ct-1',
+    name: 'Category-1',
+    path: '/',
+    subCategories: [
+      { categoryId: ' ct-3-sub-1', name: 'Sub-Category-1', path: '/', subCategories: [] },
+      { categoryId: ' ct-3-sub-2', name: 'Sub-Category-2', path: '/', subCategories: [] },
+      { categoryId: ' ct-3-sub-3', name: 'Sub-Category-3', path: '/', subCategories: [] },
+      { categoryId: ' ct-3-sub-4', name: 'Sub-Category-4', path: '/', subCategories: [] },
+    ],
+  },
+  {
+    categoryId: 'ct-2',
+    name: 'Category-2',
+    path: '/',
+    subCategories: [{ categoryId: 'ct-2-sub-1', name: 'Sub-Category-1', path: '/', subCategories: [] }],
+  },
+  {
+    categoryId: 'ct-3',
+    name: 'Category-3',
+    path: '/',
+    subCategories: [
+      { categoryId: 'ct-3-sub-1', name: 'Sub-Category-1', path: '/', subCategories: [] },
+      { categoryId: 'ct-3-sub-2', name: 'Sub-Category-2', path: '/', subCategories: [] },
+      { categoryId: 'ct-3-sub-3', name: 'Sub-Category-3', path: '/', subCategories: [] },
+      { categoryId: 'ct-3-sub-4', name: 'Sub-Category-4', path: '/', subCategories: [] },
+    ],
+  },
+];
 export const logo = { src: '/images/b2b-logo.png', width: 200, height: 100 };
 export const logoLink = resolveReference({ type: 'link', link: '/' }, 'Logo');
 export const accountLink = resolveReference({ type: 'link', link: '/' }, 'Logo');
@@ -113,6 +137,7 @@ export const stores = [
 export const name = 'Erika';
 export const onLogoutClick = () => {};
 export const textBar = 'Worldwide shipping & returns *';
+export const quotas = '4';
 export const suggestions = [
   {
     id: '1',

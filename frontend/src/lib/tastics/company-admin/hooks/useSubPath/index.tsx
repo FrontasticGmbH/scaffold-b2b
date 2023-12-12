@@ -2,12 +2,11 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import GeneralInfoForm from '@/components/pages/dashboard/pages/company-admin/forms/general-info';
 import { CompanyAdminPageProps } from '@/components/pages/dashboard/pages/company-admin/types';
-import AddressForm from '@/components/molecules/address-form';
+import AddressForm from '@/components/pages/dashboard/pages/company-admin/forms/address';
 import AssociateForm from '@/components/pages/dashboard/pages/company-admin/forms/associate';
 import BusinessUnitForm from '@/components/pages/dashboard/pages/company-admin/forms/business-unit';
-import { Store } from '@shared/types/store/Store';
 
-const useSubPath = ({ ...props }: CompanyAdminPageProps & { selectedStore?: Store }) => {
+const useSubPath = (props: CompanyAdminPageProps) => {
   const searchParams = useSearchParams();
 
   const subPath = searchParams.get('subPath');

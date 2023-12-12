@@ -22,7 +22,6 @@ import AddressesTastic from './addresses';
 import PurchaseListDetailTastic from './purchase-list-detail';
 import OrderDetailTastic from './order-detail';
 import QuoteDetailTastic from './quote-detail';
-import CheckoutTastic from './checkout';
 
 const tastics = {
   'commercetools/ui/content/hero-tile': HeroTileTastic,
@@ -48,7 +47,6 @@ const tastics = {
   'commercetools/ui/purchase-list-detail': PurchaseListDetailTastic,
   'commercetools/ui/order-detail': OrderDetailTastic,
   'commercetools/ui/quote-detail': QuoteDetailTastic,
-  'commercetools/ui/checkout': CheckoutTastic,
 } as TasticRegistry;
 
 export default tastics;

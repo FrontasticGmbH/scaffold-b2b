@@ -3,11 +3,11 @@ import Breadcrumb from '@/components/molecules/breadcrumb';
 import Link from '@/components/atoms/link';
 import { ProductListProps } from '../../types';
 
-const CategoriesBreadcrumb = ({ breadcrumb }: Partial<ProductListProps>) => {
+const CategoriesBreadcrumb = ({ breadcrumb }: ProductListProps) => {
   return (
     <Breadcrumb Separator="|">
-      {(breadcrumb ?? []).map(({ name, link }) => (
-        <Link key={name} href={link} className="capitalize" underlineOnHover={false}>
+      {breadcrumb.map(({ name, link }) => (
+        <Link key={name} href={link} className="capitalize">
           {name}
         </Link>
       ))}

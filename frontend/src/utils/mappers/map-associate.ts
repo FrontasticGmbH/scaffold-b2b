@@ -12,7 +12,7 @@ export const mapAssociate = ({
   return {
     id: accountId as string,
     firstName: firstName ?? '',
-    lastName: lastName ?? '',
+    lastName,
     email: email ?? '',
     role: roles?.[0].key ?? '',
     status: confirmed ? 'confirmed' : 'pending',

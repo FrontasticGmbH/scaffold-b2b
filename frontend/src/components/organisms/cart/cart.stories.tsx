@@ -12,7 +12,6 @@ const Template: StoryFn<typeof Cart> = () => (
     {...cart}
     account={{ email: 'madilyn@commercetools.com' }}
     onRemove={async () => {}}
-    onAdd={async () => {}}
     onUpdateQuantity={async () => {}}
     onRequestQuote={async () => ({})}
     paymentMethods={[]}

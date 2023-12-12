@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useDisclosure from '@/hooks/useDisclosure';
 import {
   AdjustmentsHorizontalIcon as FiltersIcon,
@@ -11,6 +11,7 @@ import Accordion from '@/components/molecules/accordion';
 import Radio from '@/components/atoms/radio';
 import SearchInput from '@/components/atoms/search-input';
 import Checkbox from '@/components/atoms/checkbox';
+import DatePicker from '@/components/molecules/date-picker';
 import { QuotesPageProps } from '../../types';
 
 const RefinementsDrawer = ({
@@ -22,11 +23,16 @@ const RefinementsDrawer = ({
   onClearRefinements,
   statusOptions,
   onStatusRefine,
+  onCreationDateRefine,
   onInfoClick,
 }: Partial<QuotesPageProps & { onInfoClick: () => void }>) => {
   const { translate } = useTranslation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { isOpen: isDatePickerOpen, onClose: onCloseDatePicker, onToggle: onToggleDatePicker } = useDisclosure();
+
+  const [data, setData] = useState({ creationDate: '' });
 
   const refinements = [
     {
@@ -65,6 +71,42 @@ const RefinementsDrawer = ({
         </div>
       ),
     },
+    // {
+    //   title: 'dashboard.creation.date',
+    //   Component: (
+    //     <div>
+    //       <div
+    //         onClick={onToggleDatePicker}
+    //         className="rounded-md border border-gray-300 px-3 py-2 text-14 text-gray-600"
+    //       >
+    //         {filters?.creationDate ?? 'dd/mm/yy'}
+    //       </div>
+    //       {isDatePickerOpen && (
+    //         <div>
+    //           <DatePicker
+    //             mode="single"
+    //             selected={filters?.creationDate ? new Date(filters.creationDate) : undefined}
+    //             onSelect={(date) => setData({ ...data, creationDate: date?.toLocaleDateString() ?? '' })}
+    //           />
+    //           <div className="mt-2 flex items-center justify-end gap-8 pr-8">
+    //             <span className="text-14 font-medium uppercase text-primary" onClick={onCloseDatePicker}>
+    //               {translate('common.cancel')}
+    //             </span>
+    //             <span
+    //               className="text-14 font-medium uppercase text-primary"
+    //               onClick={() => {
+    //                 onCreationDateRefine?.(data.creationDate ?? '');
+    //                 onCloseDatePicker();
+    //               }}
+    //             >
+    //               {translate('common.save')}
+    //             </span>
+    //           </div>
+    //         </div>
+    //       )}
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (

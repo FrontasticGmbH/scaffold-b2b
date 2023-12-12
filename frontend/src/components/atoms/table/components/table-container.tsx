@@ -1,11 +1,8 @@
-import { TableHTMLAttributes } from 'react';
+import { FC, TableHTMLAttributes } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 
-const TableContainer = ({ className, ...props }: TableHTMLAttributes<HTMLTableElement>) => {
-  const tableClassName = classnames(
-    'relative block w-full overflow-x-auto border border-neutral-400 md:table',
-    className,
-  );
+const TableContainer: FC<TableHTMLAttributes<HTMLTableElement>> = ({ className, ...props }) => {
+  const tableClassName = classnames('w-full', className);
   return <table className={tableClassName} {...props} />;
 };
 

@@ -90,17 +90,5 @@
   "quote.status.failed": "Failed",
   "quote.status.pending": "Pending",
   "clear.all": "Clear All",
-  "quote.request.submitted": "Quote request submitted",
-  "entity.businessunit.saved": "Business unit saved successfully!",
-  "entity.address.saved": "Address saved successfully!",
-  "entity.associate.saved": "Associate saved successfully!",
-  "entity.businessunit.failed": "Couldn't save business unit..",
-  "entity.address.failed": "Couldn't save address..",
-  "entity.associate.failed": "Couldn't save associate..",
-  "entity.businessunit.deleted": "Business unit remove successfully!",
-  "entity.address.deleted": "Address removed successfully!",
-  "entity.associate.deleted": "Associate removed successfully!",
-  "entity.businessunit.deleted.failed": "Couldn't delete business unit..",
-  "entity.address.deleted.failed": "Couldn't delete address..",
-  "entity.associate.deleted.failed": "Couldn't delete associate.."
+  "quote.request.submitted": "Quote request submitted"
 }

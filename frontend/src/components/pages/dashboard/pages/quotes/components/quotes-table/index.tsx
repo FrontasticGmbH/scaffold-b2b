@@ -21,48 +21,49 @@ const QuotesTable = ({
   const { formatCurrency } = useFormat();
 
   return (
-    <Table className="mt-5 rounded-md lg:mt-8">
-      <Table.Container>
-        <Table.Head>
-          <Table.Cell>{translate('common.status')}</Table.Cell>
-          <Table.Cell>{translate('common.id')}</Table.Cell>
-          <Table.Cell>{translate('common.date')}</Table.Cell>
-          <Table.Cell>{translate('common.business.unit')}</Table.Cell>
-          <Table.Cell className="text-right">{translate('common.total')}</Table.Cell>
-          <Table.Cell isButtonsHead />
-        </Table.Head>
-        <Table.Body>
-          {(quotes ?? []).map(({ id, status, creationDate, businessUnit, total, currency, isNew, url }) => (
-            <Table.Row key={id}>
-              <Table.Cell>
-                <div className="flex items-center gap-3">
-                  <QuoteStatusTag status={status} />
-                  {isNew && (
-                    <div className="flex items-center gap-1">
-                      <span className="h-[6px] w-[6px] rounded-full bg-[#2A4DA8]" />
-                      <span className="text-12 text-gray-500 lg:block">{translate('common.reply')}</span>
-                    </div>
-                  )}
-                </div>
-              </Table.Cell>
-              <Table.Cell>
-                <span className="block max-w-full truncate text-12 md:text-14">{id}</span>
-              </Table.Cell>
-              <Table.Cell>{creationDate}</Table.Cell>
-              <Table.Cell>{businessUnit}</Table.Cell>
-              <Table.Cell>{formatCurrency(total, currency)}</Table.Cell>
-              <Table.Cell isButtonsCell>
-                <div className="flex justify-end">
-                  <Link href={url} underlineOnHover={false}>
-                    <Button variant="secondary">{translate('common.view')}</Button>
-                  </Link>
-                </div>
-              </Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Container>
-
+    <div className="mt-5 lg:mt-8">
+      <Table className="rounded-md">
+        <Table.Container className="table-fixed">
+          <Table.Head>
+            <Table.Cell>{translate('common.status')}</Table.Cell>
+            <Table.Cell>{translate('common.id')}</Table.Cell>
+            <Table.Cell className="hidden md:table-cell">{translate('common.date')}</Table.Cell>
+            <Table.Cell className="hidden lg:table-cell">{translate('common.business.unit')}</Table.Cell>
+            <Table.Cell className="hidden text-right md:table-cell">{translate('common.total')}</Table.Cell>
+            <Table.Cell />
+          </Table.Head>
+          <Table.Body>
+            {(quotes ?? []).map(({ id, status, creationDate, businessUnit, total, currency, isNew, url }) => (
+              <Table.Row key={id}>
+                <Table.Cell>
+                  <div className="flex items-center gap-3">
+                    <QuoteStatusTag status={status} />
+                    {isNew && (
+                      <div className="flex items-center gap-1">
+                        <span className="h-[6px] w-[6px] rounded-full bg-[#2A4DA8]" />
+                        <span className="hidden text-12 text-gray-500 lg:block">{translate('common.reply')}</span>
+                      </div>
+                    )}
+                  </div>
+                </Table.Cell>
+                <Table.Cell>
+                  <span className="block max-w-full truncate">{id}</span>
+                </Table.Cell>
+                <Table.Cell className="hidden md:table-cell">{creationDate}</Table.Cell>
+                <Table.Cell className="hidden lg:table-cell">{businessUnit}</Table.Cell>
+                <Table.Cell className="hidden text-right md:table-cell">{formatCurrency(total, currency)}</Table.Cell>
+                <Table.Cell>
+                  <div className="flex justify-end">
+                    <Link href={url} underlineOnHover={false}>
+                      <Button variant="secondary">{translate('common.view')}</Button>
+                    </Link>
+                  </div>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Container>
+      </Table>
       <Table.Pagination
         page={page}
         limit={limit}
@@ -71,7 +72,7 @@ const QuotesTable = ({
         onPrevious={() => onPageChange?.(page - 1)}
         onRowsPerPageChange={onRowsPerPageChange}
       />
-    </Table>
+    </div>
   );
 };
 

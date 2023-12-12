@@ -4,13 +4,10 @@ import EntityForm from '@/components/organisms/entity-form';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
 import { BusinessUnit } from '@/types/entity/business-unit';
-import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
 const GeneralInfoForm = ({ onUpdateGeneralInfo, generalInformation }: CompanyAdminPageProps) => {
   const { translate } = useTranslation();
-
-  const { showSavedMessage, showFailedMessage } = useEntityToasters('businessunit');
 
   const router = useRouter();
 
@@ -30,13 +27,10 @@ const GeneralInfoForm = ({ onUpdateGeneralInfo, generalInformation }: CompanyAdm
   );
 
   const handleSubmit = useCallback(async () => {
-    const success = await onUpdateGeneralInfo?.(data);
-
-    if (success) showSavedMessage();
-    else showFailedMessage();
+    await onUpdateGeneralInfo?.(data);
 
     router.back();
-  }, [onUpdateGeneralInfo, data, router, showSavedMessage, showFailedMessage]);
+  }, [onUpdateGeneralInfo, data, router]);
 
   return (
     <EntityForm
@@ -49,7 +43,7 @@ const GeneralInfoForm = ({ onUpdateGeneralInfo, generalInformation }: CompanyAdm
           name="name"
           label={translate('common.name')}
           required
-          value={data.name ?? ''}
+          value={data.name}
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
@@ -58,7 +52,7 @@ const GeneralInfoForm = ({ onUpdateGeneralInfo, generalInformation }: CompanyAdm
           label={translate('common.email')}
           required
           type="email"
-          value={data.email ?? ''}
+          value={data.email}
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />

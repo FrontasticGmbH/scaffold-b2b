@@ -48,11 +48,7 @@ const SettingsTastic = () => {
   const { ActiveSubPath } = useSubPath(settingsProps);
 
   return (
-    <Dashboard
-      title={ActiveSubPath?.title ?? 'account.settings.security'}
-      href={DashboardLinks.settings}
-      userName={account?.firstName}
-    >
+    <Dashboard title={ActiveSubPath?.title ?? 'account.settings.security'} href={DashboardLinks.settings}>
       {ActiveSubPath?.Component ?? <SettingsPage {...settingsProps} />}
     </Dashboard>
   );

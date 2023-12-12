@@ -1,50 +1,27 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
 import { Props } from './types';
-import Input from '../input';
 
 const QuantityWidget = ({ value: valueProp, defaultValue = 0, maxValue, onChange, showLabel = true }: Props) => {
   const { translate } = useTranslation();
 
   const [value, setValue] = useControllableState(valueProp, defaultValue);
-  const [rawValue, setRawValue] = useState(value.toString());
 
   const handleDecrement = useCallback(() => {
     if (value === 0) return;
 
-    const newValue = value - 1;
-
-    setValue(newValue);
-    setRawValue(newValue.toString());
-    onChange?.(newValue);
+    setValue(value - 1);
+    onChange?.(value - 1);
   }, [value, setValue, onChange]);
 
   const handleIncrement = useCallback(() => {
     if (value === maxValue) return;
 
-    const newValue = value + 1;
-
-    setValue(newValue);
-    setRawValue(newValue.toString());
-    onChange?.(newValue);
+    setValue(value + 1);
+    onChange?.(value + 1);
   }, [value, setValue, onChange, maxValue]);
-
-  const handleRawValueChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    if (value === '' || !isNaN(+value)) setRawValue(value);
-  }, []);
-
-  const handleRawValueSubmit = useCallback(() => {
-    if (isNaN(+rawValue)) return;
-
-    const number = Math.max(0, Math.min(maxValue ?? Number.MAX_VALUE, +rawValue));
-
-    setValue(number);
-    onChange?.(number);
-  }, [rawValue, maxValue, onChange, setValue]);
 
   const boxClassName = classnames('flex h-[40px] w-[40px] items-center justify-center p-0');
 
@@ -57,29 +34,15 @@ const QuantityWidget = ({ value: valueProp, defaultValue = 0, maxValue, onChange
       {showLabel && <span className="text-14 text-gray-700">{translate('common.quantity.shorthand')}</span>}
       <div className="flex overflow-hidden rounded-md border border-gray-300 text-gray-700">
         <button
-          disabled={value <= 0}
+          disabled={value === 0}
           className={classnames(boxClassName, buttonClassName, 'border-r')}
           onClick={handleDecrement}
         >
           -
         </button>
-        <form
-          className={boxClassName}
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleRawValueSubmit();
-          }}
-        >
-          <Input
-            unStyled
-            className="text-center text-14"
-            value={rawValue}
-            onChange={handleRawValueChange}
-            onBlur={handleRawValueSubmit}
-          />
-        </form>
+        <div className={classnames(boxClassName, 'text-14')}>{value}</div>
         <button
-          disabled={value >= (maxValue ?? Number.MAX_VALUE)}
+          disabled={value === maxValue}
           className={classnames(boxClassName, buttonClassName, 'border-l')}
           onClick={handleIncrement}
         >

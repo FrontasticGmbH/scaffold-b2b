@@ -30,13 +30,13 @@ const useClassNames = (variant: SearchVariant, focused: boolean, disabled: boole
   const resolveSearchButton = cva({
     xs: classnames('rounded-r-md bg-white px-3 py-2 disabled:cursor-not-allowed disabled:bg-neutral-200'),
     sm: classnames('rounded-r-md bg-white p-3 disabled:cursor-not-allowed disabled:bg-neutral-200'),
-    lg: classnames(focused ? 'bg-primary' : 'bg-white', 'h-10 rounded-r-sm border-l border-neutral-400 px-4'),
+    lg: classnames(focused ? 'bg-primary' : 'bg-white ', ' rounded-r-sm border-l border-neutral-400 px-4 py-3'),
   });
 
   const resolveSearchIcon = cva({
     xs: classnames('w-5', disabled ? 'text-gray-300' : 'text-gray-600'),
     sm: classnames('w-5', disabled ? 'text-gray-300' : 'text-gray-600'),
-    lg: classnames('w-6', focused ? 'text-white' : 'text-gray-600'),
+    lg: classnames('w-6', focused ? 'text-white ' : 'text-gray-600'),
   });
 
   const searchBarClassNames = classnames('flex', resolveSearchBar(variant) as string);

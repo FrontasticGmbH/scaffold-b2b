@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AddressesPageProps } from '@/components/pages/dashboard/pages/addresses/types';
-import AddressForm from '@/components/molecules/address-form';
+import AddressForm from '@/components/pages/dashboard/pages/company-admin/forms/address';
 
 const useSubPath = (props: AddressesPageProps) => {
   const searchParams = useSearchParams();

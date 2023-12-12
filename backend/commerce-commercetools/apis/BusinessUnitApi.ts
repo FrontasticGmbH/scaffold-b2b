@@ -25,13 +25,16 @@ export class BusinessUnitApi extends BaseApi {
 
     const businessUnitKey = businessUnitKeyFormatter(account.companyName);
 
-    const stores = store?.storeId ? { id: store.storeId } : { key: store.key };
-
     const businessUnitDraft: BusinessUnitDraft = {
       key: businessUnitKey,
       name: account.companyName,
       status: BusinessUnitStatus.Active,
-      stores: [{ ...stores, typeId: 'store' }],
+      stores: [
+        {
+          typeId: 'store',
+          id: store.storeId,
+        },
+      ],
       storeMode: StoreMode.Explicit,
       unitType: BusinessUnitType.Company,
       contactEmail: account.email,

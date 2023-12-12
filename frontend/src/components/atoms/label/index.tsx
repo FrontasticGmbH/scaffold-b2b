@@ -6,7 +6,6 @@ const Label = ({
   children,
   required,
   showOptionalLabel,
-  optionalLabel,
   requiredStyle = 'asterisk',
 }: React.PropsWithChildren<LabelProps>) => {
   const { translate } = useTranslation();
@@ -19,7 +18,7 @@ const Label = ({
         <label className="block text-14">
           <span className="text-gray-700">{children}</span>{' '}
           {!required && showOptionalLabel && (
-            <span className="lowercase text-gray-600">({optionalLabel ?? translate('common.optional')})</span>
+            <span className="lowercase text-gray-600">({translate('common.optional')})</span>
           )}
           {required && requiredStyle === 'asterisk' && <span>*</span>}
         </label>

@@ -87,12 +87,11 @@ export class CartMapper extends BaseCartMapper {
 
   static commercetoolsOrderToOrder(commercetoolsOrder: CommercetoolsOrder, locale: Locale): Order {
     return {
-      cartId: commercetoolsOrder.cart?.id,
+      cartId: commercetoolsOrder.cart.id,
       accountId: commercetoolsOrder.customerId,
       origin: this.commercetoolsCartOriginToCartOrigin(commercetoolsOrder.origin),
       orderState: this.commercetoolsOrderStateToOrderState(commercetoolsOrder.orderState),
-      orderId: commercetoolsOrder.id,
-      orderNumber: commercetoolsOrder.orderNumber,
+      orderId: commercetoolsOrder.orderNumber,
       orderVersion: commercetoolsOrder.version.toString(),
       lineItems: this.commercetoolsLineItemsToLineItems(commercetoolsOrder.lineItems, locale),
       email: commercetoolsOrder?.customerEmail,

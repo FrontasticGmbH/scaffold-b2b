@@ -25,16 +25,13 @@ const AddressesTastic = () => {
     accountAddresses: searchedAccountAddresses.map(mapAddress),
     onSearchAccountAddresses: handleSearch('accountAddresses'),
     onAddAccountAddress: async (address) => {
-      const addressRes = await addAccountAddress(mapCoCoAddress(address));
-      return !!addressRes.accountId;
+      await addAccountAddress(mapCoCoAddress(address));
     },
     onUpdateAccountAddress: async (address) => {
-      const addressRes = await updateAccountAddress(mapCoCoAddress(address));
-      return !!addressRes.accountId;
+      await updateAccountAddress(mapCoCoAddress(address));
     },
     onDeleteAccountAddress: async (addressId) => {
-      const addressRes = await removeAccountAddress(addressId);
-      return !!addressRes.accountId;
+      await removeAccountAddress(addressId);
     },
     countryOptions: countries.map(({ name, code, states }) => ({
       name,
@@ -46,11 +43,7 @@ const AddressesTastic = () => {
   const { ActiveSubPath } = useSubPath(addressesProps);
 
   return (
-    <Dashboard
-      title={ActiveSubPath?.title ?? 'common.addresses'}
-      href={DashboardLinks.addresses}
-      userName={account?.firstName}
-    >
+    <Dashboard title={ActiveSubPath?.title ?? 'common.addresses'} href={DashboardLinks.addresses}>
       {ActiveSubPath?.Component ?? <AddressesPage {...addressesProps} />}
     </Dashboard>
   );

@@ -14,9 +14,8 @@ const Link = ({
   underlineOnHover = true,
   ...props
 }: LinkProps) => {
-  const linkClassName = classnames(className, 'w-fit', {
+  const linkClassName = classnames(className, 'flex w-fit items-center gap-1', {
     'underline-offset-4 hover:underline': underlineOnHover,
-    'flex items-center gap-1': !!chevron,
   });
 
   return (

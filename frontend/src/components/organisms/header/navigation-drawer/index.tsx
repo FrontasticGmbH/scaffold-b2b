@@ -19,10 +19,9 @@ const NavigationDrawer = () => {
       <Drawer
         isOpen={showMenu}
         direction="left"
-        className="w-4/5 overflow-y-auto border border-neutral-400 bg-neutral-100"
+        className="w-4/5 overflow-y-scroll border border-neutral-400 bg-neutral-100"
         onClose={hideHeaderMenu}
         headline="Shop"
-        headerClassName="py-[8px] pr-[4px] lg:py-[16px] lg:pl-[20px] lg:pr-[12px]"
       >
         <NavigationSections />
       </Drawer>

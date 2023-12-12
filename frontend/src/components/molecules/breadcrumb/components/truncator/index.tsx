@@ -23,11 +23,7 @@ const Truncator = ({ children }: React.PropsWithChildren) => {
             {React.Children.map(children, (Child) => (
               <Menu.Item>
                 {({ active }) => (
-                  <button
-                    className={classnames('block w-full p-2 text-14 font-normal text-gray-700 transition', {
-                      'bg-gray-100': active,
-                    })}
-                  >
+                  <button className={classnames('block w-full p-2 text-14 transition', { 'bg-gray-100': active })}>
                     {Child}
                   </button>
                 )}

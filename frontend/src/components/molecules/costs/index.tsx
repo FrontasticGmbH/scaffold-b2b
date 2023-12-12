@@ -13,14 +13,13 @@ const Costs = ({
   currency = 'USD',
   loading = false,
   classNames = {},
-  isShippingEstimated = true,
 }: CostsProps) => {
   const { translate } = useTranslation();
 
   const { formatCurrency } = useFormat();
 
   const totalAmountClassNames = classnames(
-    'mt-4 flex items-center justify-between border-t border-neutral-400 pt-4 font-medium md:mt-6',
+    'mt-6 flex items-center justify-between border-t border-neutral-400 pt-4 font-medium',
     classNames.totalAmount,
   );
 
@@ -38,7 +37,7 @@ const Costs = ({
     },
     {
       key: 'shipping',
-      label: translate(isShippingEstimated ? 'cart.shipping.estimate' : 'cart.shipping'),
+      label: translate('cart.shipping.estimate'),
       value: shipping,
     },
     {
@@ -56,25 +55,23 @@ const Costs = ({
   return (
     <div className={classNames.container}>
       <div className={subCostsContainerClassNames}>
-        {costs
-          .filter(({ value }) => value > 0)
-          .map(({ key, label, value }) => (
-            <div key={key} className={subCostsClassNames}>
-              <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>
-                {label}
-              </Typography>
-              <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>
-                {formatCurrency(value, currency)}
-              </Typography>
-            </div>
-          ))}
+        {costs.map(({ key, label, value }) => (
+          <div key={key} className={subCostsClassNames}>
+            <Typography className="text-14 md:text-16" asSkeleton={loading}>
+              {label}
+            </Typography>
+            <Typography className="text-14 md:text-16" asSkeleton={loading}>
+              {formatCurrency(value, currency)}
+            </Typography>
+          </div>
+        ))}
       </div>
 
       <div className={totalAmountClassNames}>
-        <Typography className="text-16 text-gray-700 md:text-18" fontWeight="medium" asSkeleton={loading}>
+        <Typography className="text-16 md:text-18" fontWeight="medium" asSkeleton={loading}>
           {`${translate('cart.total')}:`}
         </Typography>
-        <Typography className="text-16 text-gray-700 md:text-18" fontWeight="medium" asSkeleton={loading}>
+        <Typography className="text-16 md:text-18" fontWeight="medium" asSkeleton={loading}>
           {formatCurrency(total, currency)}
         </Typography>
       </div>

@@ -5,7 +5,6 @@ export interface ConfirmationProps {
     confirm?: string;
     cancel?: string;
   };
-  isOpen?: boolean;
   disabled?: boolean;
   onConfirm?: () => Promise<void>;
   onCancel?: () => void;

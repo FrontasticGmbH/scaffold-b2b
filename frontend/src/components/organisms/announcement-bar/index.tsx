@@ -6,16 +6,12 @@ import { AnnouncementBarProps } from './types';
 
 const AnnouncementBar = ({
   textBar,
-  accountLinks,
-  selectedBusinessUnit,
+  myAccount,
   businessUnits,
-  selectedStore,
   stores,
   name,
-  quotes,
+  quotas,
   onLogoutClick,
-  onBusinessUnitChange,
-  onStoreChange,
 }: AnnouncementBarProps) => {
   return (
     <div className="relative flex h-10 w-full items-center justify-center bg-gray-700">
@@ -25,16 +21,12 @@ const AnnouncementBar = ({
       <div className="absolute right-10 hidden lg:block">
         <div className="flex justify-start gap-x-20">
           <AccountButton
-            quotes={quotes}
+            quotas={quotas}
             name={name}
             onLogoutClick={onLogoutClick}
-            accountLinks={accountLinks}
-            selectedBusinessUnit={selectedBusinessUnit}
+            myAccount={myAccount}
             businessUnits={businessUnits}
-            onBusinessUnitChange={onBusinessUnitChange}
-            selectedStore={selectedStore}
             stores={stores}
-            onStoreChange={onStoreChange}
           />
           <ShippingAndLanguageSection desktopDirection="right" />
         </div>

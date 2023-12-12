@@ -1,9 +1,12 @@
 import { sdk } from '@/sdk';
+import { Wishlist } from '@shared/types/wishlist/Wishlist';
 import { mutate } from 'swr';
 
 const useWishlist = () => {
   const getWishlist = async (id: string) => {
-    const result = await sdk.composableCommerce.wishlist.getWishlist({ wishlistId: id });
+    const result = await sdk.callAction<Wishlist>({
+      actionName: `wishlist/fetchWishlist?id=${id}`,
+    });
 
     if (!result.isError) {
       mutate('/action/wishlist/fetchWishlist');
@@ -14,7 +17,9 @@ const useWishlist = () => {
   };
 
   const getWishlists = async (storeKey: string) => {
-    const result = await sdk.composableCommerce.wishlist.getWishlists({ storeKey });
+    const result = await sdk.callAction<Wishlist[]>({
+      actionName: `wishlist/getWishlists?storeKey=${storeKey}`,
+    });
 
     if (!result.isError) {
       mutate('/action/wishlist/getWishlists');

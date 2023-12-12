@@ -23,7 +23,7 @@ const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
         </h1>
         <div className="hidden items-center justify-normal gap-x-3 md:flex">
           <Link href="?hash=orders" underlineOnHover className="hidden text-blue-700 lg:block">
-            <Typography className="text-14 text-blue-700">{translate('common.back.to.previous.page')}</Typography>
+            <Typography className="text-14 text-blue-700">{translate('common.back.to.previous')}</Typography>
           </Link>
           <Button size="s" variant="secondary">
             {translate('orders.return')}
@@ -44,7 +44,7 @@ const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
 
       <div className="flex flex-col items-center justify-normal gap-y-4 md:hidden">
         <Link href="?hash=orders" underlineOnHover className="hidden text-blue-700 lg:block">
-          <Typography className="text-14 text-blue-700">{translate('common.back.to.previous.page')}</Typography>
+          <Typography className="text-14 text-blue-700">{translate('common.back.to.previous')}</Typography>
         </Link>
         <Button size="full" variant="secondary">
           {translate('orders.return')}

@@ -1,8 +1,8 @@
 import { getProduct, queryCategories } from '../commerce-commercetools/actionControllers/ProductController';
 import { Request } from '@frontastic/extension-types';
-import { Product } from '../../types/product';
+import { Product } from '../../types/product/Product';
+import { Result } from '../../types/product/Result';
 import { dummyAccount, dummyActionContext, frontasticSession } from './data-provider';
-import { ProductPaginatedResult } from '../../types/result';
 
 jest.setTimeout(10000);
 
@@ -107,7 +107,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
 
     return queryCategories(request, dummyActionContext).then((res) => {
       expect(res.statusCode).toBe(200);
-      const body = JSON.parse(res.body) as ProductPaginatedResult;
+      const body = JSON.parse(res.body) as Result;
       expect(body.count).toBe(1);
       expect(body.query.slug).toBe('new-men');
     });
@@ -132,7 +132,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
 
     return queryCategories(request, dummyActionContext).then((res) => {
       expect(res.statusCode).toBe(200);
-      const body = JSON.parse(res.body) as ProductPaginatedResult;
+      const body = JSON.parse(res.body) as Result;
       expect(body.count).toBe(0);
       expect(body.total).toBe(0);
       expect(body.items.length).toBe(0);

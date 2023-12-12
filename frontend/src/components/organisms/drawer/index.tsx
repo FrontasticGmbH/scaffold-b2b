@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import { Transition } from '@headlessui/react';
@@ -69,12 +70,12 @@ const Drawer = ({
               <Button
                 variant="ghost"
                 size="icon"
-                icon={<XMarkIcon className="w-6 text-gray-700 lg:w-7" />}
+                icon={<XMarkIcon className="w-7 text-gray-700" />}
                 onClick={onClose}
               />
             </div>
           </div>
-          <div className="grow overflow-y-auto">{children}</div>
+          <div className="grow overflow-hidden">{children}</div>
         </div>
       </Transition>
     </>

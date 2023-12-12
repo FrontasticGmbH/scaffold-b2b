@@ -1,38 +1,27 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Table from '@/components/atoms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
 import Confirmation from '@/components/organisms/confirmation';
 import Link from '@/components/atoms/link';
-import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
 const AddressesTable = ({ onDeleteAddress, addresses = [] }: Partial<CompanyAdminPageProps>) => {
   const { translate } = useTranslation();
 
-  const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('address');
-
-  const handleDelete = useCallback(
-    async (id: string) => {
-      const success = await onDeleteAddress?.(id);
-
-      if (success) showDeletedMessage();
-      else showDeletedFailedMessage();
-    },
-    [showDeletedMessage, showDeletedFailedMessage, onDeleteAddress],
-  );
-
   return (
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Cell>{translate('common.name')}</Table.Cell>
-          <Table.Cell>{translate('common.use')}</Table.Cell>
-          <Table.Cell>{translate('common.address')}</Table.Cell>
-          <Table.Cell>{`${translate('common.city')}, ${translate('common.state')}`}</Table.Cell>
-          <Table.Cell>{translate('common.zipCode')}</Table.Cell>
-          <Table.Cell>{translate('common.country')}</Table.Cell>
-          <Table.Cell />
+          <Table.Row>
+            <Table.Cell>{translate('common.name')}</Table.Cell>
+            <Table.Cell>{translate('common.use')}</Table.Cell>
+            <Table.Cell>{translate('common.address')}</Table.Cell>
+            <Table.Cell>{`${translate('common.city')}, ${translate('common.state')}`}</Table.Cell>
+            <Table.Cell>{translate('common.zipCode')}</Table.Cell>
+            <Table.Cell>{translate('common.country')}</Table.Cell>
+            <Table.Cell />
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {addresses.map(({ id, name, line1, city, state, zip, country, isDefaultBilling, isDefaultShipping }) => (
@@ -70,7 +59,7 @@ const AddressesTable = ({ onDeleteAddress, addresses = [] }: Partial<CompanyAdmi
                       cancel: translate('common.cancel'),
                       confirm: translate('common.delete'),
                     }}
-                    onConfirm={async () => handleDelete(id)}
+                    onConfirm={async () => onDeleteAddress?.(id)}
                   >
                     <DeleteIcon className="cursor-pointer" width={20} />
                   </Confirmation>

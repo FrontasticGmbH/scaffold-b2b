@@ -2,8 +2,8 @@ import React from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import SearchInput from '@/components/atoms/search-input';
 import Dropdown from '@/components/atoms/dropdown';
+import Checkbox from '@/components/atoms/checkbox';
 import DatePicker from '@/components/molecules/date-picker';
-import RefinementDropdown from '@/components/atoms/refinement-dropdown';
 import { OrdersPageProps } from '../../types';
 
 const Refinements = ({
@@ -31,19 +31,23 @@ const Refinements = ({
     {
       title: 'common.status',
       Component: (
-        <RefinementDropdown
-          size="sm"
-          className="w-[200px]"
-          options={(statusOptions ?? []).map(({ name, value, count }) => ({
-            name,
-            value,
-            count,
-            selected: !!filters?.status?.includes(value),
-            onSelected: () => onStatusRefine?.(value),
-          }))}
-        >
-          {translate('common.select')}
-        </RefinementDropdown>
+        <Dropdown size="sm" className="w-[200px]">
+          <Dropdown.Button>{translate('common.select')}</Dropdown.Button>
+          <Dropdown.Options>
+            {(statusOptions ?? []).map(({ name, value, count }) => (
+              <div key={value} className="flex items-center justify-between p-2">
+                <span className="text-14 text-gray-700">{name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-12 text-gray-600">{count}</span>
+                  <Checkbox
+                    checked={!!filters?.status?.includes(value)}
+                    onChecked={(checked) => onStatusRefine?.(checked ? value : '')}
+                  />
+                </div>
+              </div>
+            ))}
+          </Dropdown.Options>
+        </Dropdown>
       ),
     },
     {

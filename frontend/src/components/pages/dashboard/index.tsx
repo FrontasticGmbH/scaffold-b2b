@@ -6,7 +6,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useItems from './hooks/useItems';
 import { DashboardProps } from './types';
 
-const Dashboard = ({ title, href, children, userName }: React.PropsWithChildren<DashboardProps>) => {
+const Dashboard = ({ title, href, children }: React.PropsWithChildren<DashboardProps>) => {
   const { translate } = useTranslation();
 
   const { sidebarItems } = useItems();
@@ -15,7 +15,7 @@ const Dashboard = ({ title, href, children, userName }: React.PropsWithChildren<
     <div className="relative flex items-start gap-6 2xl:min-h-[calc(100vh-123px)]">
       <div className="sticky top-[123px] hidden h-[calc(100vh-123px)] w-max shrink-0 2xl:block">
         <Sidebar
-          title={translate('common.say.hi', { values: { name: userName ?? '' } })}
+          title="HELLO, ERIKA!"
           links={sidebarItems.map((link) => ({ ...link, isActive: href === link.href }))}
         />
       </div>

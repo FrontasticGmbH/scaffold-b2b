@@ -4,7 +4,7 @@ import CartItemsList from './cart-items-list';
 import EmptyCart from './empty-cart';
 import { CartContentProps } from '../types';
 
-const CartContent = ({ className, lineItems, onUpdateQuantity, onRemove, onAdd }: CartContentProps) => {
+const CartContent = ({ className, lineItems, onUpdateQuantity, onRemove }: CartContentProps) => {
   const { translate } = useTranslation();
 
   const cartHasProducts = lineItems?.length ?? 0;
@@ -21,7 +21,7 @@ const CartContent = ({ className, lineItems, onUpdateQuantity, onRemove, onAdd }
               lineItems?.length
             } ${translate('cart.items')})`}</Typography>
           </div>
-          <CartItemsList lineItems={lineItems} onAdd={onAdd} onUpdateQuantity={onUpdateQuantity} onRemove={onRemove} />
+          <CartItemsList lineItems={lineItems} onUpdateQuantity={onUpdateQuantity} onRemove={onRemove} />
         </>
       ) : (
         <EmptyCart />

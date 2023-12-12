@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export const revalidate = 300; // 5 minutes
-export const fetchCache = process.env.NODE_ENV === 'production' ? 'force-cache' : 'force-no-store';
+export const fetchCache = 'force-cache';
 
 export default async function Page({ params, searchParams }: PageProps) {
   const { locale, slug } = params;

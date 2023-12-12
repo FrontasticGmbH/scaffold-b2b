@@ -55,8 +55,8 @@ const SearchInput = ({
       {label && variant !== 'lg' && <Label required={false}>{label}</Label>}
       <div className={classnames(searchBarClassNames, containerClassName)}>
         {variant === 'lg' && mobile && (
-          <button onClick={onBackClick} className="flex items-center justify-center bg-white px-3 transition">
-            <BackIcon className="w-5 fill-gray-600 stroke-0" />
+          <button onClick={onBackClick} className="bg-white p-3 transition">
+            <BackIcon className="w-6 fill-gray-600 stroke-0" />
           </button>
         )}
         <input
@@ -72,8 +72,8 @@ const SearchInput = ({
           }}
         />
         {variant === 'lg' && value && (
-          <button onClick={handleClear} className="shrink-0 bg-white px-4 transition">
-            <CloseIcon className="w-5 fill-gray-600 stroke-0" />
+          <button onClick={handleClear} className="shrink-0 bg-white px-4 py-3 transition">
+            <CloseIcon className="w-6 fill-gray-600 stroke-0" />
           </button>
         )}
         {(variant === 'sm' || variant === 'xs') && value ? (

@@ -9,6 +9,7 @@ import { getPath } from './utils/Request';
 import { ProductRouter } from './utils/ProductRouter';
 import { Product } from '@Types/product/Product';
 import { SearchRouter } from './utils/SearchRouter';
+import { Result } from '@Types/product/Result';
 import { CategoryRouter } from './utils/CategoryRouter';
 import dataSources from './dataSources';
 import { actions } from './actionControllers';
@@ -19,7 +20,6 @@ import { Wishlist } from '@Types/wishlist/Wishlist';
 import { Quote } from '@Types/quote/Quote';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { Order } from '@Types/cart/Order';
-import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 
 export default {
   'dynamic-page-handler': async (
@@ -81,7 +81,7 @@ export default {
 
     // Identify Wishlist
     if (WishlistRouter.identifyFrom(request)) {
-      return WishlistRouter.loadFor(request, context.frontasticContext).then((wishlist: PaginatedResult<Wishlist>) => {
+      return WishlistRouter.loadFor(request, context.frontasticContext).then((wishlist: Wishlist) => {
         if (wishlist) {
           return {
             dynamicPageType: 'frontastic/shopping-list-detail-page',
@@ -101,24 +101,22 @@ export default {
 
     // Identify Preview Wishlist
     if (WishlistRouter.identifyPreviewFrom(request)) {
-      return WishlistRouter.loadPreviewFor(request, context.frontasticContext).then(
-        (wishlist: PaginatedResult<Wishlist>) => {
-          if (wishlist) {
-            return {
-              dynamicPageType: 'frontastic/shopping-list-detail-page',
-              dataSourcePayload: {
-                wishlist: wishlist,
-              },
-              pageMatchingPayload: {
-                wishlist: wishlist,
-              },
-            };
-          }
+      return WishlistRouter.loadPreviewFor(request, context.frontasticContext).then((wishlist: Wishlist) => {
+        if (wishlist) {
+          return {
+            dynamicPageType: 'frontastic/shopping-list-detail-page',
+            dataSourcePayload: {
+              wishlist: wishlist,
+            },
+            pageMatchingPayload: {
+              wishlist: wishlist,
+            },
+          };
+        }
 
-          // FIXME: Return proper error result
-          return null;
-        },
-      );
+        // FIXME: Return proper error result
+        return null;
+      });
     }
 
     // Identify Order
@@ -203,7 +201,7 @@ export default {
 
     // Identify Search
     if (SearchRouter.identifyFrom(request)) {
-      return SearchRouter.loadFor(request, context.frontasticContext).then((result: ProductPaginatedResult) => {
+      return SearchRouter.loadFor(request, context.frontasticContext).then((result: Result) => {
         if (result) {
           return {
             dynamicPageType: 'frontastic/search',
@@ -224,40 +222,38 @@ export default {
 
     // Identify preview list
     if (CategoryRouter.identifyPreviewFrom(request)) {
-      return CategoryRouter.loadPreviewFor(request, context.frontasticContext).then(
-        (result: ProductPaginatedResult) => {
-          if (result) {
-            return {
-              dynamicPageType: 'frontastic/category',
-              dataSourcePayload: {
-                totalItems: result.total,
-                items: result.items,
-                facets: result.facets,
-                previousCursor: result.previousCursor,
-                nextCursor: result.nextCursor,
-                category: getPath(request),
-                isPreview: true,
-              },
-              pageMatchingPayload: {
-                totalItems: result.total,
-                items: result.items,
-                facets: result.facets,
-                previousCursor: result.previousCursor,
-                nextCursor: result.nextCursor,
-                category: getPath(request),
-                isPreview: true,
-              },
-            };
-          }
+      return CategoryRouter.loadPreviewFor(request, context.frontasticContext).then((result: Result) => {
+        if (result) {
+          return {
+            dynamicPageType: 'frontastic/category',
+            dataSourcePayload: {
+              totalItems: result.total,
+              items: result.items,
+              facets: result.facets,
+              previousCursor: result.previousCursor,
+              nextCursor: result.nextCursor,
+              category: getPath(request),
+              isPreview: true,
+            },
+            pageMatchingPayload: {
+              totalItems: result.total,
+              items: result.items,
+              facets: result.facets,
+              previousCursor: result.previousCursor,
+              nextCursor: result.nextCursor,
+              category: getPath(request),
+              isPreview: true,
+            },
+          };
+        }
 
-          // FIXME: Return proper error result
-          return null;
-        },
-      );
+        // FIXME: Return proper error result
+        return null;
+      });
     }
 
     if (CategoryRouter.identifyFrom(request)) {
-      return CategoryRouter.loadFor(request, context.frontasticContext).then((result: ProductPaginatedResult) => {
+      return CategoryRouter.loadFor(request, context.frontasticContext).then((result: Result) => {
         if (result) {
           return {
             dynamicPageType: 'frontastic/category',

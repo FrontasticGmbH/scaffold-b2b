@@ -1,14 +1,9 @@
-import { Product } from '../product';
-
-export interface PaginatedResult<T> {
+export interface PaginatedResult<T, U = T | undefined> {
   total?: number;
   previousCursor?: string;
   nextCursor?: string;
   count: number;
-  items: T[];
-  query?: any;
-}
-
-export interface ProductPaginatedResult extends PaginatedResult<Product> {
+  items: T[] | U[];
   facets?: any[];
+  query?: any;
 }

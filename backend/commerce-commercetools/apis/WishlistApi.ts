@@ -4,10 +4,6 @@ import { WishlistMapper } from '../mappers/WishlistMapper';
 import { ExternalError } from '@Commerce-commercetools/utils/Errors';
 import { Account } from '@Types/account/Account';
 import { ShoppingListUpdateAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
-import { PaginatedResult } from '@Types/result';
-import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
-import { WishlistQuery } from '@Types/wishlist';
 
 const expandVariants = ['lineItems[*].variant', 'store'];
 
@@ -50,6 +46,27 @@ export class WishlistApi extends BaseWishlistApi {
         return response.body.results.map((shoppingList) =>
           WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale),
         );
+      })
+      .catch((error) => {
+        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+      });
+  };
+
+  getByIdForAccount = async (wishlistId: string, account: Account) => {
+    const locale = await this.getCommercetoolsLocal();
+
+    return await this.requestBuilder()
+      .shoppingLists()
+      .withId({ ID: wishlistId })
+      .get({
+        queryArgs: {
+          where: `customer(id="${account.accountId}")`,
+          expand: expandVariants,
+        },
+      })
+      .execute()
+      .then((response) => {
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
         throw new ExternalError({ status: error.code, message: error.message, body: error.body });
@@ -136,51 +153,4 @@ export class WishlistApi extends BaseWishlistApi {
         throw new ExternalError({ status: error.code, message: error.message, body: error.body });
       });
   };
-
-  async queryWishlists(wishlistQuery: WishlistQuery): Promise<PaginatedResult<Wishlist>> {
-    const locale = await this.getCommercetoolsLocal();
-    const limit = +wishlistQuery.limit || undefined;
-
-    const whereClause = [`customer(id="${wishlistQuery.accountId}")`];
-
-    if (wishlistQuery.storeKey !== undefined) {
-      whereClause.push(`store(key="${wishlistQuery.storeKey}")`);
-    }
-
-    if (wishlistQuery.wishlistIds !== undefined && wishlistQuery.wishlistIds.length !== 0) {
-      whereClause.push(`id in ("${wishlistQuery.wishlistIds.join('","')}")`);
-    }
-
-    const searchQuery = wishlistQuery.query && wishlistQuery.query;
-
-    return this.requestBuilder()
-      .shoppingLists()
-      .get({
-        queryArgs: {
-          where: whereClause,
-          expand: expandVariants,
-          limit: limit,
-          offset: getOffsetFromCursor(wishlistQuery.cursor),
-          [`text.${locale.language}`]: searchQuery,
-        },
-      })
-      .execute()
-      .then((response) => {
-        const wishlists = response.body.results.map((commercetoolsQuote) => {
-          return WishlistMapper.commercetoolsShoppingListToWishlist(commercetoolsQuote, locale);
-        });
-
-        return {
-          total: response.body.total,
-          items: wishlists,
-          count: response.body.count,
-          previousCursor: ProductMapper.calculatePreviousCursor(response.body.offset, response.body.count),
-          nextCursor: ProductMapper.calculateNextCursor(response.body.offset, response.body.count, response.body.total),
-          query: wishlistQuery,
-        };
-      })
-      .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
-      });
-  }
 }

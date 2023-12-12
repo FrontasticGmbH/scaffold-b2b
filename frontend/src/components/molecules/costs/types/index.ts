@@ -5,7 +5,6 @@ export interface CostsProps {
   discount: number;
   tax: number;
   shipping: number;
-  isShippingEstimated?: boolean;
   total: number;
   currency: Currency;
   loading?: boolean;

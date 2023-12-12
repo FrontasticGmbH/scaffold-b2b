@@ -1,10 +1,5 @@
-import { TableHTMLAttributes } from 'react';
-import { classnames } from '@/utils/classnames/classnames';
+import { FC, TableHTMLAttributes } from 'react';
 
-const TableBody = ({ className, ...props }: TableHTMLAttributes<HTMLTableSectionElement>) => {
-  const bodyClassName = classnames('[&>td]:text-gray-600', className);
-
-  return <tbody className={bodyClassName} {...props} />;
-};
+const TableBody: FC<TableHTMLAttributes<HTMLTableSectionElement>> = (props) => <tbody {...props}></tbody>;
 
 export default TableBody;

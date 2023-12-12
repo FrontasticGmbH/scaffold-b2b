@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { CheckCircleIcon as StockIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon as InStockIcon, ExclamationCircleIcon as OutOfStockIcon } from '@heroicons/react/24/outline';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { StockIndicatorProps } from './types';
 
@@ -32,19 +32,19 @@ const StockIndicator = ({ inStock, restockableInDays }: StockIndicatorProps) => 
     <div className="flex items-center gap-2 whitespace-pre text-14 text-gray-700">
       {inStock ? (
         <>
-          <StockIcon className="text-primary" width={20} />
+          <InStockIcon className="text-primary" width={20} />
           <span>{translate('common.in.stock')}</span>
         </>
       ) : (
         <>
           {formattedRestockable ? (
             <>
-              <StockIcon className="text-yellow-500" width={20} />
+              <InStockIcon className="text-yellow-500" width={20} />
               <span>{formattedRestockable}</span>
             </>
           ) : (
             <>
-              <StockIcon className="text-red-500" width={20} />
+              <OutOfStockIcon className="text-red-500" width={20} />
               <span>{translate('common.out.of.stock')}</span>
             </>
           )}

@@ -4,13 +4,10 @@ import React from 'react';
 import Dashboard from '@/components/pages/dashboard';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import OrdersPage from '@/components/pages/dashboard/pages/orders';
-import useAccount from '@/lib/hooks/useAccount';
 
 const OrdersTastic = () => {
-  const { account } = useAccount();
-
   return (
-    <Dashboard href={DashboardLinks.orders} userName={account?.firstName}>
+    <Dashboard href={DashboardLinks.orders}>
       <OrdersPage
         orders={[
           {

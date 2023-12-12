@@ -8,8 +8,8 @@ import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAcco
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
-import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
+import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import handleError from '@Commerce-commercetools/utils/handleError';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
@@ -47,26 +47,22 @@ export const createQuoteRequest: ActionHook = async (request: Request, actionCon
     throw new AccountAuthenticationError({ message: 'Not logged in.' });
   }
 
-  try {
-    const cart = await CartFetcher.fetchCart(request, actionContext);
+  const cart = await CartFetcher.fetchCart(request, actionContext);
 
-    quoteRequest = await quoteApi.createQuoteRequest(quoteRequest, cart);
+  quoteRequest = await quoteApi.createQuoteRequest(quoteRequest, cart);
 
-    await cartApi.deleteCart(cart, account);
+  await cartApi.deleteCart(cart, account);
 
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(quoteRequest),
-      sessionData: {
-        ...request.sessionData,
-        cartId: undefined,
-      },
-    };
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(quoteRequest),
+    sessionData: {
+      ...request.sessionData,
+      cartId: undefined,
+    },
+  };
 
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
+  return response;
 };
 
 export const query: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -145,31 +141,27 @@ export const acceptQuote: ActionHook = async (request: Request, actionContext: A
 
   const quoteId = request.query?.['id'];
 
-  try {
-    const quote = await quoteApi.acceptQuote(quoteId);
+  const quote = await quoteApi.acceptQuote(quoteId);
 
-    const cartId =
-      quote.quoteRequest.quotationCart.cartId ??
-      (await quoteApi.getQuote(quote.quoteId)).quoteRequest.quotationCart.cartId;
+  const cartId =
+    quote.quoteRequest.quotationCart.cartId ??
+    (await quoteApi.getQuote(quote.quoteId)).quoteRequest.quotationCart.cartId;
 
-    let cart = await cartApi.getById(cartId);
+  let cart = await cartApi.getById(cartId);
 
-    cart = await cartApi.setEmail(cart, quote.quoteRequest.account.email);
-    cart = await cartApi.setCustomerId(cart, quote.quoteRequest.account.accountId, account);
+  cart = await cartApi.setEmail(cart, quote.quoteRequest.account.email);
+  cart = await cartApi.setCustomerId(cart, quote.quoteRequest.account.accountId, account);
 
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(quote),
-      sessionData: {
-        ...request.sessionData,
-        cartId: cart.cartId,
-      },
-    };
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(quote),
+    sessionData: {
+      ...request.sessionData,
+      cartId: cart.cartId,
+    },
+  };
 
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
+  return response;
 };
 
 export const declineQuote: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -177,21 +169,17 @@ export const declineQuote: ActionHook = async (request: Request, actionContext: 
 
   const quoteId = request.query?.['id'];
 
-  try {
-    const quote = await quoteApi.declineQuote(quoteId);
+  const quote = await quoteApi.declineQuote(quoteId);
 
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(quote),
-      sessionData: {
-        ...request.sessionData,
-      },
-    };
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(quote),
+    sessionData: {
+      ...request.sessionData,
+    },
+  };
 
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
+  return response;
 };
 
 export const renegotiateQuote: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -200,21 +188,17 @@ export const renegotiateQuote: ActionHook = async (request: Request, actionConte
   const quoteId = request.query?.['id'];
   const buyerComment = JSON.parse(request.body).comment;
 
-  try {
-    const quote = await quoteApi.renegotiateQuote(quoteId, buyerComment);
+  const quote = await quoteApi.renegotiateQuote(quoteId, buyerComment);
 
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(quote),
-      sessionData: {
-        ...request.sessionData,
-      },
-    };
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(quote),
+    sessionData: {
+      ...request.sessionData,
+    },
+  };
 
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
+  return response;
 };
 
 export const cancelQuoteRequest: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -222,19 +206,15 @@ export const cancelQuoteRequest: ActionHook = async (request: Request, actionCon
 
   const quoteRequestId = request.query?.['id'];
 
-  try {
-    const quoteRequest = await quoteApi.cancelQuoteRequest(quoteRequestId);
+  const quoteRequest = await quoteApi.cancelQuoteRequest(quoteRequestId);
 
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(quoteRequest),
-      sessionData: {
-        ...request.sessionData,
-      },
-    };
+  const response: Response = {
+    statusCode: 200,
+    body: JSON.stringify(quoteRequest),
+    sessionData: {
+      ...request.sessionData,
+    },
+  };
 
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
+  return response;
 };

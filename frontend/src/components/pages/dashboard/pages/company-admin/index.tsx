@@ -14,8 +14,11 @@ import BusinessUnitsTable from './components/business-units-table';
 
 const CompanyAdminPage = ({
   businessUnitOptions,
+  storeOptions,
   onBusinessUnitChange,
+  onStoreChange,
   initialBusinessUnit,
+  initialStore,
   generalInformation,
   addresses,
   associates,
@@ -51,6 +54,15 @@ const CompanyAdminPage = ({
           options={businessUnitOptions}
           defaultValue={initialBusinessUnit}
           onChange={onBusinessUnitChange}
+        />
+        <Select
+          className="w-[280px]"
+          label={translate('common.store')}
+          placeholder={translate('common.select')}
+          enableSearch
+          options={storeOptions}
+          defaultValue={initialStore}
+          onChange={onStoreChange}
         />
       </div>
 

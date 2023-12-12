@@ -8,25 +8,27 @@ import { HeaderContext } from '../../../context';
 
 const CategorySection = () => {
   const { translate } = useTranslation();
-  const { categoryLinks, navigationLevel, hideHeaderMenu, insertCategory, isAdmin } = useContext(HeaderContext);
+  const { categoryLinks, navigationLevel, hideHeaderMenu, insertCategory } = useContext(HeaderContext);
   const categorySectionClassNames = classnames(
-    'pb-2 lg:py-6',
-    navigationLevel.length === 0 ? 'border-t' : '',
-    navigationLevel[navigationLevel.length - 1]?.name !== 'My Account' ? 'lg:border-t' : '',
+    'py-6',
+    navigationLevel.length === 0 || navigationLevel[navigationLevel.length - 1]?.name !== 'My Account'
+      ? 'border-t'
+      : '',
   );
-
   return (
     <div className={categorySectionClassNames}>
       {navigationLevel && navigationLevel?.length > 0 && (
-        <div className="pb-2 pt-6 lg:pb-6 lg:pt-0">
-          <Typography fontSize={16} fontWeight="semibold" className="text-gray-700">
-            {navigationLevel[navigationLevel.length - 1].name}
-          </Typography>
+        <div className="pb-6" onClick={hideHeaderMenu}>
+          <Link openInNewTab={false} href={navigationLevel[navigationLevel.length - 1]?.path as string}>
+            <Typography fontSize={16} fontWeight="semibold" className="text-gray-700">
+              {navigationLevel[navigationLevel.length - 1].name}
+            </Typography>
+          </Link>
         </div>
       )}
       {navigationLevel && navigationLevel.length === 0 ? (
         <>
-          <div className="block pb-2 pt-6 lg:hidden">
+          <div className="block pb-5 lg:hidden">
             <Typography fontSize={16} fontWeight="semibold" className="text-gray-800">
               {translate('common.shop.by.category')}
             </Typography>
@@ -42,34 +44,14 @@ const CategorySection = () => {
         </>
       ) : (
         <>
-          {navigationLevel && (
-            <>
-              {navigationLevel[navigationLevel.length - 1].categoryId !== 'my-account' && (
-                <Link href={navigationLevel[navigationLevel.length - 1]?.path ?? '/'}>
-                  <div className="flex h-[48px] items-center pb-2 lg:h-fit lg:pb-7" onClick={hideHeaderMenu}>
-                    <Typography fontSize={16} className="text-gray-700">
-                      {translate('common.view.all')}
-                    </Typography>
-                  </div>
-                </Link>
-              )}
-              {navigationLevel[navigationLevel.length - 1].subCategories.map((nav) => (
-                <NavigationButton key={nav.categoryId} link={nav} onClick={() => insertCategory(nav)} />
-              ))}
-            </>
-          )}
-        </>
-      )}
-      {isAdmin && (
-        <>
-          {navigationLevel && navigationLevel[navigationLevel.length - 1]?.name === 'My Account' && (
-            <Typography fontSize={16} fontWeight="normal" className="text-gray-300">
-              {`${translate('common.company.admin')} - ${translate('common.desktop.only')}`}
-            </Typography>
-          )}
+          {navigationLevel &&
+            navigationLevel[navigationLevel.length - 1].subCategories.map((nav) => (
+              <NavigationButton key={nav.categoryId} link={nav} onClick={() => insertCategory(nav)} />
+            ))}
         </>
       )}
     </div>
   );
 };
+
 export default CategorySection;

@@ -4,7 +4,6 @@ import Button from '@/components/atoms/button';
 import { classnames } from '@/utils/classnames/classnames';
 import TextArea from '@/components/atoms/text-area';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
-import toast from '@/components/atoms/toaster/helpers/toast';
 import { CheckoutCTAProps } from '../types';
 
 const CheckoutCTA = ({ className, link, disabled, text, onCheckout, onRequestQuote }: CheckoutCTAProps) => {
@@ -30,12 +29,6 @@ const CheckoutCTA = ({ className, link, disabled, text, onCheckout, onRequestQuo
     [comment, onRequestQuote],
   );
 
-  const handleDisabledClick = useCallback(() => {
-    if (!disabled) return;
-
-    toast.error(translate('cart.attempt.with.outofstock.item'), { position: 'top-right' });
-  }, [disabled, translate]);
-
   const CTAClassName = classnames(className, 'gap-4');
 
   if (isSubmittingQuoteRequest) {
@@ -53,7 +46,7 @@ const CheckoutCTA = ({ className, link, disabled, text, onCheckout, onRequestQuo
 
   return (
     <div className={CTAClassName}>
-      <Link href={!disabled ? link : '#'} className="w-full" underlineOnHover={false} onClick={handleDisabledClick}>
+      <Link href={link} className="w-full" underlineOnHover={false}>
         <Button size="full" disabled={disabled} onClick={onCheckout}>
           {text}
         </Button>

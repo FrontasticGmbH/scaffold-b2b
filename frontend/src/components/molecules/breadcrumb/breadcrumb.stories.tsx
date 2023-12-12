@@ -20,7 +20,7 @@ const categoryElements = React.Children.toArray(
 
 export const Primary = Template.bind({});
 Primary.args = {
-  Separator: '|',
+  Separator: '/',
   children: categoryElements,
 };
 

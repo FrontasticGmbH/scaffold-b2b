@@ -7,7 +7,7 @@ import Dashboard from '@/components/pages/dashboard';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useAccount from '@/lib/hooks/useAccount';
 import countries from '@/static/countries.json';
-import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
+import { mapAddress } from '@/utils/mappers/map-address';
 import { mapAssociate } from '@/utils/mappers/map-associate';
 import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import { CompanyAdminPageProps } from '@/components/pages/dashboard/pages/company-admin/types';
@@ -20,19 +20,9 @@ import useSubPath from './hooks/useSubPath';
 const CompanyAdminTastic = () => {
   const { activeBusinessUnit, onBusinessUnitSelected, businessUnits } = useBusinessUnit();
 
-  const {
-    addBusinessUnit,
-    updateBusinessUnit,
-    removeBusinessUnit,
-    addAssociate,
-    updateAssociate,
-    removeAssociate,
-    addAddress,
-    updateAddress,
-    removeAddress,
-  } = useBusinessUnits();
+  const { addBusinessUnit, removeBusinessUnit, addAssociate, updateAssociate, removeAssociate } = useBusinessUnits();
 
-  const { selectedStore } = useStore({ activeBusinessUnit });
+  const { storeOptions, onStoreSelected, selectedStore } = useStore({ activeBusinessUnit });
 
   const { roleOptions } = useRole();
 
@@ -46,10 +36,12 @@ const CompanyAdminTastic = () => {
 
   const companyAdminProps = {
     companyName: account?.companyName,
-    storeName: activeBusinessUnit?.name ?? activeBusinessUnit?.key,
+    storeName: selectedStore?.name,
     businessUnitOptions: businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' })),
     initialBusinessUnit: activeBusinessUnit?.key,
     onBusinessUnitChange: onBusinessUnitSelected,
+    storeOptions,
+    onStoreChange: onStoreSelected,
     countryOptions: countries.map(({ name, code, states }) => ({
       name,
       value: code,
@@ -71,70 +63,31 @@ const CompanyAdminTastic = () => {
     associates: searchedAssociates.map(mapAssociate),
     onSearchAssociates: handleSearch('associates'),
     onAddAssociate: async (associate) => {
-      const associateRes = await addAssociate({ ...associate, businessUnit: activeBusinessUnit?.key as string });
-      return !!associateRes.businessUnitId;
+      await addAssociate({ ...associate, businessUnit: activeBusinessUnit?.key as string });
     },
     onUpdateAssociate: async (associate) => {
-      const associateRes = await updateAssociate({ ...associate, businessUnit: activeBusinessUnit?.key as string });
-      return !!associateRes.businessUnitId;
+      await updateAssociate({ ...associate, businessUnit: activeBusinessUnit?.key as string });
     },
     onDeleteAssociate: async (id) => {
-      const associate = await removeAssociate({ id, businessUnit: activeBusinessUnit?.key as string });
-      return !!associate.businessUnitId;
+      await removeAssociate({ id, businessUnit: activeBusinessUnit?.key as string });
     },
     businessUnits: searchedBusinessUnits.map(mapBusinessUnit),
     onSearchBusinessUnits: handleSearch('businessUnits'),
     onAddBusinessUnit: async ({ email, name }) => {
-      if (!selectedStore || !account?.accountId) return false;
-
-      const businessUnit = await addBusinessUnit({
-        account: { accountId: account.accountId, companyName: name, email },
-        storeId: selectedStore.storeId ?? '',
-      });
-      return !!businessUnit.businessUnitId;
-    },
-    onUpdateBusinessUnit: async ({ name, email, key }) => {
-      const businessUnit = await updateBusinessUnit({ name: name ?? '', contactEmail: email ?? '', key: key ?? '' });
-      return !!businessUnit.businessUnitId;
-    },
-    onUpdateGeneralInfo: async ({ name, email, key }) => {
-      const businessUnit = await updateBusinessUnit({ name: name ?? '', contactEmail: email ?? '', key: key ?? '' });
-      return !!businessUnit.businessUnitId;
+      if (!selectedStore) return;
+      await addBusinessUnit({ account: { ...account, companyName: name, email }, store: selectedStore });
     },
     onDeleteBusinessUnit: async (id) => {
       const target = businessUnits.find((businessUnit) => businessUnit.businessUnitId === id);
-      const businessUnit = await removeBusinessUnit(target?.key as string);
-      return !!businessUnit.businessUnitId;
+      if (target) await removeBusinessUnit(target.key as string);
     },
     canAddBusinessUnit: !!selectedStore,
-    onAddAddress: async (address) => {
-      if (!activeBusinessUnit.key) return;
-
-      const businessUnit = await addAddress({ ...mapCoCoAddress(address), businessUnit: activeBusinessUnit.key });
-      return !!businessUnit.businessUnitId;
-    },
-    onUpdateAddress: async (address) => {
-      if (!activeBusinessUnit.key) return;
-
-      const businessUnit = await updateAddress({ ...mapCoCoAddress(address), businessUnit: activeBusinessUnit.key });
-      return !!businessUnit.businessUnitId;
-    },
-    onDeleteAddress: async (id) => {
-      if (!activeBusinessUnit.key) return;
-
-      const businessUnit = await removeAddress({ addressId: id, businessUnit: activeBusinessUnit.key });
-      return !!businessUnit.businessUnitId;
-    },
   } as CompanyAdminPageProps;
 
-  const { ActiveSubPath } = useSubPath({ ...companyAdminProps, selectedStore });
+  const { ActiveSubPath } = useSubPath(companyAdminProps);
 
   return (
-    <Dashboard
-      title={ActiveSubPath?.title ?? 'common.company.admin'}
-      href={DashboardLinks.companyAdmin}
-      userName={account?.firstName}
-    >
+    <Dashboard title={ActiveSubPath?.title ?? 'common.company.admin'} href={DashboardLinks.companyAdmin}>
       {ActiveSubPath?.Component ?? <CompanyAdminPage {...companyAdminProps} />}
     </Dashboard>
   );

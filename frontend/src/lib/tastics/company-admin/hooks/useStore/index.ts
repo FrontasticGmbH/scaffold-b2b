@@ -1,11 +1,23 @@
+import { useCallback, useMemo, useState } from 'react';
 import { Props } from './types';
 
 const useStore = ({ activeBusinessUnit }: Props) => {
-  const stores = activeBusinessUnit?.stores ?? [];
+  const [selectedStoreKey, setSelectedStoreKey] = useState<string>();
 
-  const selectedStore = stores[0];
+  const stores = useMemo(() => activeBusinessUnit?.stores ?? [], [activeBusinessUnit?.stores]);
 
-  return { stores, selectedStore };
+  const storeOptions = stores.map(({ name, key }) => ({
+    name: name ?? key ?? '',
+    value: key,
+  }));
+
+  const onStoreSelected = useCallback((key: string) => {
+    setSelectedStoreKey(key);
+  }, []);
+
+  const selectedStore = stores.find((store) => store.key === selectedStoreKey);
+
+  return { stores, storeOptions, selectedStore, onStoreSelected };
 };
 
 export default useStore;

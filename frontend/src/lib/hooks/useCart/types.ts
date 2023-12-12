@@ -5,7 +5,3 @@ export interface CartDetails {
   shipping?: Address;
   billing?: Address;
 }
-
-export interface CheckoutPayload {
-  purchaseOrderNumber: string;
-}

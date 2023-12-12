@@ -38,7 +38,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
           label={translate('common.email')}
           required
           type="email"
-          value={data.email ?? ''}
+          value={data.email}
           onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
         />
@@ -47,7 +47,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
           name="firstName"
           label={translate('common.firstName')}
           required
-          value={data.firstName ?? ''}
+          value={data.firstName}
           onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
         />
@@ -56,7 +56,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
           name="lastName"
           label={translate('common.lastName')}
           required
-          value={data.lastName ?? ''}
+          value={data.lastName}
           onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
         />

@@ -8,40 +8,16 @@ const usePurchaseLists = () => {
   const { defaultStore } = useStores();
 
   const response = useSWR(['/action/wishlist/', defaultStore?.key], () =>
-    sdk.composableCommerce.wishlist.getWishlists({ storeKey: defaultStore?.key ?? '' }),
+    sdk.callAction<Wishlist[]>({ actionName: 'wishlist/getWishlists', query: { storeKey: defaultStore?.key ?? '' } }),
   );
 
   const { mutate } = response;
 
   const createPurchaseList = useCallback(
     async ({ name, description, store }: Wishlist) => {
-      const res = await sdk.composableCommerce.wishlist.createWishlist(
-        { name, description },
-        { storeKey: store?.key ?? '' },
-      );
-
-      mutate();
-
-      return res.isError ? null : res.data;
-    },
-    [mutate],
-  );
-
-  const updatePurchaseList = useCallback(
-    async ({ wishlistId, name, description }: Partial<Wishlist>) => {
-      const res = await sdk.composableCommerce.wishlist.updateWishlist({ name, description }, { id: wishlistId });
-
-      mutate();
-
-      return res.isError ? null : res.data;
-    },
-    [mutate],
-  );
-
-  const deletePurchaseList = useCallback(
-    async ({ wishlistId, store }: Partial<Wishlist>) => {
       const res = await sdk.callAction({
-        actionName: `wishlist/deleteWishlist?id=${wishlistId}&storeKey=${store?.key ?? ''}`,
+        actionName: `wishlist/createWishlist?storeKey=${store?.key ?? ''}`,
+        payload: { name, description },
       });
 
       mutate();
@@ -51,12 +27,21 @@ const usePurchaseLists = () => {
     [mutate],
   );
 
-  return {
-    purchaseLists: response.data?.isError ? [] : response.data?.data ?? [],
-    createPurchaseList,
-    updatePurchaseList,
-    deletePurchaseList,
-  };
+  const updateWishlist = useCallback(
+    async ({ wishlistId, name, description }: Partial<Wishlist>) => {
+      const res = await sdk.callAction({
+        actionName: `wishlist/updateWishlist?id=${wishlistId}`,
+        payload: { name, description },
+      });
+
+      mutate();
+
+      return res.isError ? null : res.data;
+    },
+    [mutate],
+  );
+
+  return { purchaseLists: response.data?.isError ? [] : response.data?.data ?? [], createPurchaseList, updateWishlist };
 };
 
 export default usePurchaseLists;

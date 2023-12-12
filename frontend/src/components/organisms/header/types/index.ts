@@ -7,8 +7,7 @@ import { Suggestion } from '../../search/types';
 export type NavigationCategory = Category;
 
 export interface HeaderProps {
-  isAdmin: boolean;
-  myAccountMenu: NavigationCategory;
+  myAccount: NavigationCategory;
   cartItems: number;
   cartLink: Link;
   accountLink: Link;
@@ -16,22 +15,17 @@ export interface HeaderProps {
   categoryLinks: NavigationCategory[];
   logo: LogoImage;
   logoLink: Link;
-  selectedBusinessUnit: string;
   businessUnits: Option[];
-  onBusinessUnitChange?: (businessUnit: string) => void;
-  selectedStore: string;
   stores: Option[];
-  onStoreChange?: (store: string) => void;
   searchSuggestions: Suggestion[];
   quickOrderProducts: Suggestion[];
   searchPlaceholder: string;
-  quotes: number;
+  quotas: number;
   csvDownloadLink: string;
 }
 
-export interface ContextProps {
-  isAdmin: boolean;
-  myAccountMenu: NavigationCategory;
+export interface ContextShape {
+  myAccount: NavigationCategory;
   cartItems: number;
   cartLink: Link;
   accountLink: Link;
@@ -39,26 +33,10 @@ export interface ContextProps {
   categoryLinks: NavigationCategory[];
   logo: LogoImage;
   logoLink: Link;
-  selectedBusinessUnit: string;
   businessUnits: Option[];
-  onBusinessUnitChange?: (businessUnit: string) => void;
-  selectedStore: string;
   stores: Option[];
-  onStoreChange?: (store: string) => void;
-  quotes: number;
+  quotas: number;
   quickOrderProducts: Suggestion[];
-}
-
-export interface ContextShape extends ContextProps {
-  navigationLevel: Category[];
-  showMenu: boolean;
-  showHeaderMenu: () => void;
-  hideHeaderMenu: () => void;
-  showQuickOrder: boolean;
-  showQuickOrderMenu: () => void;
-  hideQuickOrderMenu: () => void;
-  removeCategory: () => void;
-  insertCategory: (category: NavigationCategory) => void;
 }
 
 export interface NavigationButtonProps {

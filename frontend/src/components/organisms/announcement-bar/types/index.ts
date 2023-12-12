@@ -2,30 +2,22 @@ import { Option } from '@/components/atoms/select/types';
 import { NavigationCategory } from '../../header/types';
 
 export interface AnnouncementBarProps {
-  accountLinks: NavigationCategory[];
+  myAccount: NavigationCategory;
   textBar: string;
-  selectedBusinessUnit: string;
   businessUnits: Option[];
-  selectedStore: string;
   stores: Option[];
   name: string;
-  quotes: number;
+  quotas: string;
   onLogoutClick: () => void;
-  onBusinessUnitChange?: (businessUnit: string) => void;
-  onStoreChange?: (store: string) => void;
 }
 
 export interface AccountButtonProps {
-  quotes: number;
   name: string;
-  selectedBusinessUnit: string;
   businessUnits: Option[];
-  selectedStore: string;
   stores: Option[];
-  accountLinks: NavigationCategory[];
+  myAccount: NavigationCategory;
   onLogoutClick: () => void;
-  onBusinessUnitChange?: (businessUnit: string) => void;
-  onStoreChange?: (store: string) => void;
+  quotas: string;
 }
 export interface ButtonProps {
   onOpen: () => void;

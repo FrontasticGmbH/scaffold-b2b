@@ -7,14 +7,11 @@ import QuotesPage from '@/components/pages/dashboard/pages/quotes';
 import useQuotes from '@/lib/hooks/useQuotes';
 import { mapQuote, mapQuoteRequest } from '@/utils/mappers/map-quote';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
-import useAccount from '@/lib/hooks/useAccount';
 import useRefinements from './hooks/useRefinements';
 import useStatusesOptions from './hooks/useStatusesOptions';
 
 const QuotesTastic = () => {
   const router = useRouter();
-
-  const { account } = useAccount();
 
   const searchParams = useSearchParams();
 
@@ -58,7 +55,7 @@ const QuotesTastic = () => {
   const statusOptions = selected === 'quotes' ? quoteStatusOptions : quoteRequestStatusOptions;
 
   return (
-    <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
+    <Dashboard href={DashboardLinks.quotes}>
       <QuotesPage
         onSelectedChange={(newSelected) => {
           setSelected(newSelected);

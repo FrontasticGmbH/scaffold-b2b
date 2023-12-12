@@ -6,7 +6,6 @@ export interface Address {
   line2?: string;
   city?: string;
   state?: string;
-  phone?: string;
   zip?: string;
   country: string;
   isDefaultShipping?: boolean;

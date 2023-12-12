@@ -1,3 +1,4 @@
+import { Result } from '@Types/product/Result';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { Product } from '@Types/product/Product';
 import { FilterField, FilterFieldTypes } from '@Types/product/FilterField';
@@ -10,7 +11,6 @@ import { ProductMapper } from '../mappers/ProductMapper';
 import { CategoryQuery } from '@Types/query/CategoryQuery';
 import { BaseApi } from './BaseApi';
 import { ExternalError } from '@Commerce-commercetools/utils/Errors';
-import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 
 export class BaseProductApi extends BaseApi {
   protected getOffsetFromCursor = (cursor: string) => {
@@ -22,7 +22,7 @@ export class BaseProductApi extends BaseApi {
     return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
   };
 
-  query: (productQuery: ProductQuery) => Promise<ProductPaginatedResult> = async (productQuery: ProductQuery) => {
+  query: (productQuery: ProductQuery) => Promise<Result> = async (productQuery: ProductQuery) => {
     try {
       const locale = await this.getCommercetoolsLocal();
 
@@ -151,7 +151,7 @@ export class BaseProductApi extends BaseApi {
             )
             .filter((item) => !!item.name);
 
-          const result: ProductPaginatedResult = {
+          const result: Result = {
             total: response.body.total,
             items: items,
             count: response.body.count,
@@ -237,9 +237,7 @@ export class BaseProductApi extends BaseApi {
     return filterFields;
   };
 
-  queryCategories: (categoryQuery: CategoryQuery) => Promise<PaginatedResult<Category>> = async (
-    categoryQuery: CategoryQuery,
-  ) => {
+  queryCategories: (categoryQuery: CategoryQuery) => Promise<Result> = async (categoryQuery: CategoryQuery) => {
     const locale = await this.getCommercetoolsLocal();
 
     // TODO: get default from constant
@@ -264,7 +262,7 @@ export class BaseProductApi extends BaseApi {
         ProductMapper.commercetoolsCategoryToCategory(category, this.categoryIdField, locale),
       );
 
-      const result: PaginatedResult<Category> = {
+      const result: Result = {
         total: response.body.total,
         items: items,
         count: response.body.count,

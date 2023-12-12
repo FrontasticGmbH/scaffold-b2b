@@ -8,12 +8,9 @@ import { PurchaseListsPageProps } from '@/components/pages/dashboard/pages/purch
 import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
 import useStores from '@/lib/hooks/useStores';
 import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
-import useAccount from '@/lib/hooks/useAccount';
 import useSubPath from './hooks/useSubPath';
 
 const PurchaseListsTastic = () => {
-  const { account } = useAccount();
-
   const { purchaseLists, createPurchaseList } = usePurchaseLists();
 
   const { defaultStore } = useStores();
@@ -30,11 +27,7 @@ const PurchaseListsTastic = () => {
   const { ActiveSubPath } = useSubPath(purchaseListProps);
 
   return (
-    <Dashboard
-      title={ActiveSubPath?.title ?? 'common.purchase.lists'}
-      href={DashboardLinks.shoppingLists}
-      userName={account?.firstName}
-    >
+    <Dashboard title={ActiveSubPath?.title ?? 'common.purchase.lists'} href={DashboardLinks.shoppingLists}>
       {ActiveSubPath?.Component ?? <PurchaseListsPage {...purchaseListProps} />}
     </Dashboard>
   );

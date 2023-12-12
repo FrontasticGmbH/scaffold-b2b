@@ -3,15 +3,14 @@ import { Cart } from '@shared/types/cart/Cart';
 import { sdk } from '@/sdk';
 import useSWR from 'swr';
 import { Address } from '@shared/types/account/Address';
-import { Order } from '@shared/types/cart';
+import { QuoteRequest } from '@shared/types/quote/QuoteRequest';
 import { calculateTransaction } from './utils';
-import { CheckoutPayload } from './types';
 
 const useCart = (businessUnitKey?: string, storeKey?: string) => {
   const getCart = useCallback(async () => {
-    const result = await sdk.composableCommerce.cart.getCart({
-      businessUnitKey: businessUnitKey as string,
-      storeKey: storeKey as string,
+    const result = await sdk.callAction<Cart>({
+      actionName: `cart/getCart`,
+      query: { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
     });
 
     return result.isError ? ({} as Cart) : result.data;
@@ -23,9 +22,10 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     async (lineItems: Array<{ sku: string; count: number }>) => {
       const payload = { lineItems: lineItems.map(({ sku, count }) => ({ variant: { sku }, count })), businessUnitKey };
 
-      const result = await sdk.composableCommerce.cart.addItem(payload, {
-        businessUnitKey: businessUnitKey as string,
-        storeKey: storeKey as string,
+      const result = await sdk.callAction<Cart>({
+        actionName: 'cart/addToCart',
+        payload,
+        query: { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       });
 
       mutate();
@@ -39,9 +39,10 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     async (lineItem: { id: string; count: number }) => {
       const payload = { lineItem, businessUnitKey };
 
-      const result = await sdk.composableCommerce.cart.updateItem(payload, {
-        businessUnitKey: businessUnitKey as string,
-        storeKey: storeKey as string,
+      const result = await sdk.callAction<Cart>({
+        actionName: 'cart/updateLineItem',
+        payload,
+        query: { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       });
 
       mutate();
@@ -55,9 +56,10 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     async (lineItemId: string) => {
       const payload = { lineItem: { id: lineItemId }, businessUnitKey };
 
-      const result = await sdk.composableCommerce.cart.removeItem(payload, {
-        businessUnitKey: businessUnitKey as string,
-        storeKey: storeKey as string,
+      const result = await sdk.callAction<Cart>({
+        actionName: 'cart/removeLineItem',
+        payload,
+        query: { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       });
 
       mutate();
@@ -69,10 +71,11 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
 
   const requestQuote = useCallback(
     async (payload: { buyerComment: string }) => {
-      const result = await sdk.composableCommerce.quote.createQuote(
-        { comment: payload.buyerComment },
-        { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
-      );
+      const result = await sdk.callAction<QuoteRequest>({
+        actionName: 'quote/createQuoteRequest',
+        payload,
+        query: { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
+      });
 
       mutate();
 
@@ -83,70 +86,15 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
 
   const updateCart = useCallback(
     async ({ shipping, billing, email }: { shipping?: Address; billing?: Address; email?: string }) => {
-      const result = await sdk.composableCommerce.cart.updateCart(
-        { shipping, billing, ...(email ? { account: { email } } : {}) },
-        { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
-      );
+      const result = await sdk.callAction<Cart>({
+        actionName: 'cart/updateCart',
+        payload: { shipping, billing, account: { email } },
+        query: { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
+      });
 
       mutate();
 
-      return result.isError ? ({} as Partial<Cart>) : result.data;
-    },
-    [mutate, businessUnitKey, storeKey],
-  );
-
-  const setShippingMethod = useCallback(
-    async (shippingMethodId: string) => {
-      const result = await sdk.composableCommerce.cart.setShippingMethod(
-        { shippingMethod: { id: shippingMethodId } },
-        { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
-      );
-
-      mutate();
-
-      return result.isError ? ({} as Partial<Cart>) : result.data;
-    },
-    [mutate, businessUnitKey, storeKey],
-  );
-
-  const redeemDiscount = useCallback(
-    async (code: string) => {
-      const result = await sdk.composableCommerce.cart.redeemDiscountCode(
-        { code },
-        { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
-      );
-
-      mutate();
-
-      return result.isError ? ({} as Partial<Cart>) : result.data;
-    },
-    [mutate, businessUnitKey, storeKey],
-  );
-
-  const removeDiscount = useCallback(
-    async (discountId: string) => {
-      const result = await sdk.composableCommerce.cart.removeDiscountCode(
-        { discountId },
-        { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
-      );
-
-      mutate();
-
-      return result.isError ? ({} as Partial<Cart>) : result.data;
-    },
-    [mutate, businessUnitKey, storeKey],
-  );
-
-  const checkout = useCallback(
-    async ({ purchaseOrderNumber }: CheckoutPayload) => {
-      const result = await sdk.composableCommerce.cart.checkout(
-        { purchaseOrderNumber },
-        { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
-      );
-
-      mutate();
-
-      return result.isError ? ({} as Partial<Order>) : result.data;
+      return result.isError ? {} : result.data;
     },
     [mutate, businessUnitKey, storeKey],
   );
@@ -159,10 +107,6 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     removeItem,
     requestQuote,
     updateCart,
-    setShippingMethod,
-    redeemDiscount,
-    removeDiscount,
-    checkout,
   };
 };
 

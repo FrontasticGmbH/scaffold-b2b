@@ -108,7 +108,7 @@ const ProductTile = ({
           'mt-4 flex flex-col justify-start',
           isDiscounted ? 'gap-[52px] lg:gap-6' : 'gap-[72px] lg:gap-8',
           {
-            'ml-4 md:ml-6 md:mt-0 md:shrink-0 md:self-stretch md:text-end lg:ml-12': variant === 'list-item',
+            'md:mt-0 md:shrink-0 md:self-stretch md:text-end': variant === 'list-item',
           },
         )}
       >
@@ -117,9 +117,8 @@ const ProductTile = ({
         </div>
 
         <div
-          className={classnames('flex flex-col', {
-            'gap-3 md:items-end': variant === 'list-item',
-            'gap-4 md:gap-5 lg:gap-6': variant === 'grid-item',
+          className={classnames('flex flex-col gap-3', {
+            'md:items-end': variant === 'list-item',
           })}
         >
           <div className={classnames('hidden', { 'lg:block': variant === 'list-item' })}>
@@ -130,18 +129,18 @@ const ProductTile = ({
             {isDiscounted ? (
               <div
                 className={classnames('flex items-center gap-3', {
-                  'md:flex-col-reverse md:items-end md:gap-2': variant === 'list-item',
+                  'md:flex-col-reverse md:items-end md:gap-1': variant === 'list-item',
                 })}
               >
                 <span
                   className={classnames(
-                    'font-bold leading-loose text-red-500',
+                    'font-bold leading-tight text-red-500',
                     variant === 'list-item' ? 'text-18' : 'text-20',
                   )}
                 >
                   {formatCurrency(discountedPrice as number, currency)}
                 </span>
-                <span className="text-14 leading-tight text-gray-600 line-through">
+                <span className="text-14 leading-loose text-gray-600 line-through">
                   {formatCurrency(price, currency)}
                 </span>
               </div>
@@ -167,7 +166,6 @@ const ProductTile = ({
               className="grow truncate"
               onClick={handleAddToCart}
               loading={addingToCart}
-              disabled={!inStock}
             >
               {translate('cart.add')}
             </Button>

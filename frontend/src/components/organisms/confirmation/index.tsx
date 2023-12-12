@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import useDisclosure from '@/hooks/useDisclosure';
 import Button from '@/components/atoms/button';
 import useScrollBlock from '@/hooks/useScrollBlock';
-import useControllableState from '@/hooks/useControllableState';
 import { ConfirmationProps } from './types';
 import ResponsiveModal from '../responsive-modal';
 
@@ -12,13 +12,9 @@ const Confirmation = ({
   translations,
   onCancel,
   onConfirm,
-  isOpen: isOpenProp,
   disabled = false,
 }: React.PropsWithChildren<ConfirmationProps>) => {
-  const [isOpen, setIsOpen] = useControllableState(isOpenProp, false);
-
-  const onOpen = useCallback(() => setIsOpen(true), [setIsOpen]);
-  const onClose = useCallback(() => setIsOpen(false), [setIsOpen]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [isLoading, setIsLoading] = useState(false);
 

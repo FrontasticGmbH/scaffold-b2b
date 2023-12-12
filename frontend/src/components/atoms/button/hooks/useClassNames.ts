@@ -39,12 +39,12 @@ const useClassNames: UseClassNames = ({
     },
     size: {
       xs: 'p-2 text-12',
-      s: 'px-6 py-2 text-14',
+      s: 'px-6 py-2 text-12',
       m: 'px-9 py-3 text-14',
-      l: 'px-12 py-3 text-16',
+      l: 'px-12 py-4 text-16',
       fit: 'p-0',
       full: 'w-full py-3',
-      icon: 'grid h-10 w-10 items-center justify-center',
+      icon: 'grid h-fit w-fit items-center justify-center',
     },
   });
 

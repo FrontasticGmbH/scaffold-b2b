@@ -52,7 +52,7 @@ const PurchaseListForm = ({
           name="name"
           label={translate('common.name')}
           required
-          value={data.name ?? ''}
+          value={data.name}
           onChange={handleChange}
           containerClassName="md:w-[350px] lg:w-[400px]"
         />

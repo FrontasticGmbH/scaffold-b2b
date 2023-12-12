@@ -10,18 +10,7 @@ import useScrollBlock from '@/hooks/useScrollBlock';
 import { AccountButtonProps } from '../types';
 import ButtonElement from './button';
 
-const AccountButton = ({
-  selectedBusinessUnit,
-  businessUnits,
-  selectedStore,
-  stores,
-  accountLinks,
-  name,
-  quotes,
-  onLogoutClick,
-  onBusinessUnitChange,
-  onStoreChange,
-}: AccountButtonProps) => {
+const AccountButton = ({ businessUnits, stores, myAccount, name, onLogoutClick, quotas }: AccountButtonProps) => {
   const { translate } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -56,10 +45,9 @@ const AccountButton = ({
             <Select
               enableSearch
               className="z-[100] pt-2"
-              size="lg"
-              value={selectedBusinessUnit}
+              size="sm"
+              value={businessUnits[1]?.value ?? ''}
               options={businessUnits}
-              onChange={onBusinessUnitChange}
             />
           </div>
           <div className="py-4">
@@ -69,15 +57,14 @@ const AccountButton = ({
             <Select
               enableSearch
               className="pt-2"
-              size="lg"
+              size="sm"
               placeholder="Select"
-              defaultValue={selectedStore}
+              value={stores[0]?.value ?? ''}
               options={stores}
-              onChange={onStoreChange}
             />
           </div>
         </div>
-        {accountLinks.map((account) => (
+        {myAccount.subCategories.map((account) => (
           <div key={account.categoryId} className="flex items-center justify-between border-t">
             <Link href={account.path ?? '/'} className="px-4 py-3 text-14">
               {account.name}
@@ -85,7 +72,7 @@ const AccountButton = ({
             {account.categoryId === 'quotes' && (
               <div className="mr-4 flex h-5 w-5 items-center justify-center rounded-md bg-blue-100">
                 <Typography fontSize={12} fontWeight="semibold" align="center" className="text-primary">
-                  {quotes.toString()}
+                  {quotas}
                 </Typography>
               </div>
             )}

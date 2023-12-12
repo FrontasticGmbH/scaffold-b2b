@@ -167,8 +167,6 @@
   "quotes.requests": " Quote requests",
   "author": "Author",
   "seller": "Seller",
-  "cart": "Cart",
-  "undo": "Undo",
-  "shop.all": "Shop all",
-  "home": "home"
+  "back.to.previous": "Back To Previous Page",
+  "cart": "Cart"
 }

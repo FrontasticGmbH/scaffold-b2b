@@ -15,7 +15,6 @@ const Input = ({
   value: valueProp,
   onChange,
   onClear,
-  optionalLabel,
   onFocus: onFocusProp,
   onBlur: onBlurProp,
   label = '',
@@ -65,12 +64,7 @@ const Input = ({
 
   return (
     <div>
-      <Label
-        required={required}
-        showOptionalLabel={showOptionalLabel}
-        optionalLabel={optionalLabel}
-        requiredStyle={requiredStyle}
-      >
+      <Label required={required} showOptionalLabel={showOptionalLabel} requiredStyle={requiredStyle}>
         {label}
       </Label>
 

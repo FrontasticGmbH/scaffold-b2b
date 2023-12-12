@@ -1,52 +1,46 @@
-import { SVGAttributes, useMemo } from 'react';
+import { FC, SVGAttributes, useMemo } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
-import { classnames } from '@/utils/classnames/classnames';
-import useMediaQuery from '@/hooks/useMediaQuery';
-import { tablet } from '@/constants/screensizes';
 import Typography from '../../typography';
 import Select from '../../select';
-import { TablePaginationProps } from '../types';
+import { SelectProps } from '../../select/types';
 
-const TablePagination = ({
-  className,
+export type TablePaginationProps = {
+  page: number;
+  limit: number;
+  totalItems: number;
+  onRowsPerPageChange?: SelectProps['onChange'];
+  onPrevious?: () => void;
+  onNext?: () => void;
+};
+
+const TablePagination: FC<TablePaginationProps> = ({
   page,
   limit,
   totalItems,
-  disableNext,
-  disablePrevious,
   onRowsPerPageChange,
   onPrevious,
   onNext,
-}: TablePaginationProps) => {
+}) => {
   const { translate } = useTranslation();
 
-  const [isTabletSize] = useMediaQuery(tablet);
-
   const { from, to } = useMemo(() => {
-    const from = ((page - 1) * limit + 1).toString();
+    const from = (page * limit + 1).toString();
     const to = Math.min(page * limit + limit, totalItems).toString();
 
     return { from, to };
   }, [limit, page, totalItems]);
 
-  const previousIconProps: SVGAttributes<SVGElement> = {
-    className: classnames('h-6 w-6', { 'cursor-pointer': !disablePrevious }),
-    stroke: disablePrevious ? '#D1D1D1' : '#212121',
+  const iconDefaultProps: SVGAttributes<SVGElement> = {
+    className: 'h-6 w-6 cursor-pointer',
+    stroke: '#212121',
   };
-
-  const nextIconProps: SVGAttributes<SVGElement> = {
-    className: classnames('h-6 w-6', { 'cursor-pointer': !disableNext }),
-    stroke: disableNext ? '#D1D1D1' : '#212121',
-  };
-
-  const paginationClassName = classnames('flex w-full gap-4 py-6 md:justify-between md:gap-0', className);
 
   return (
-    <div className={paginationClassName}>
+    <div className="flex w-full justify-between py-6">
       <div className="flex items-center gap-2">
         <Typography fontSize={14} className="text-gray-700">
-          {isTabletSize ? translate('common.rows.per.page') : translate('common.rows')}
+          {translate('common.rows.per.page')}
         </Typography>
         <Select
           onChange={onRowsPerPageChange}
@@ -59,7 +53,7 @@ const TablePagination = ({
           ]}
         />
       </div>
-      <div className="flex items-center gap-3 md:gap-9">
+      <div className="flex items-center gap-9">
         <Typography fontSize={14} className="text-gray-700">
           {translate('common.from.to', {
             values: {
@@ -70,8 +64,8 @@ const TablePagination = ({
           })}
         </Typography>
         <div className="flex gap-4">
-          <ChevronLeftIcon stroke="#212121" {...previousIconProps} onClick={onPrevious} />
-          <ChevronRightIcon stroke="#212121" {...nextIconProps} onClick={onNext} />
+          <ChevronLeftIcon {...iconDefaultProps} onClick={onPrevious} />
+          <ChevronRightIcon {...iconDefaultProps} onClick={onNext} />
         </div>
       </div>
     </div>

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Discount } from '@shared/types/cart/Discount';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { classnames } from '@/utils/classnames/classnames';
 import Input from '@/components/atoms/input';
-import { DiscountFormProps } from './types';
-import Accordion from '../accordion';
+import Accordion from '../../../molecules/accordion';
+import { DiscountFormProps } from '../types';
 
-const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) => {
+const DiscountForm = ({ className }: DiscountFormProps) => {
   const { translate } = useTranslation();
 
   const [code, setCode] = useState('');
+  const [discounts] = useState<Discount[]>([]);
   const [codeIsInvalid, setCodeIsInvalid] = useState(false);
 
   const [processing, setProcessing] = useState(false);
@@ -25,18 +27,10 @@ const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) =>
 
   const containerClassName = classnames('border-t border-neutral-400 py-4 text-16', className);
 
-  const onApplyDiscount = async () => {
+  const onApplyDiscount = () => {
     if (processing || !code) return;
 
     setProcessing(true);
-
-    const success = await onSubmit?.(code);
-
-    setCodeIsInvalid(!success);
-
-    if (success) setCode('');
-
-    setProcessing(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +53,7 @@ const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) =>
           <form className="pt-6" onSubmit={handleSubmit}>
             <Input
               className={inputClassName}
-              value={code ?? ''}
+              value={code}
               placeholder={translate('cart.discount.enter')}
               onChange={handleChange}
               disabled={processing}
@@ -72,12 +66,12 @@ const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) =>
             <div className={discountsContainerClassName}>
               {discounts.map((discount) => (
                 <div
-                  key={discount.code}
+                  key={discount.discountId}
                   className="mr-1 flex w-fit justify-between gap-2 rounded-sm border border-neutral-400 bg-white px-2 py-1"
                 >
                   <label className="text-12 uppercase leading-[16px] text-secondary">{discount.code}</label>
-                  <button type="button" className="shrink-0" onClick={discount.onRemove}>
-                    <XMarkIcon className="h-4 w-4 text-secondary" />
+                  <button type="button">
+                    <XMarkIcon className="h-1 w-1 text-secondary" />
                   </button>
                 </div>
               ))}
@@ -89,4 +83,4 @@ const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) =>
   );
 };
 
-export default DiscountsForm;
+export default DiscountForm;

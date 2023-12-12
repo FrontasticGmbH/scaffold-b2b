@@ -7,9 +7,9 @@ import { AuthLayoutProps } from '@/components/organisms/authentication/types';
 import { TasticProps } from '../../types';
 
 const AccountRegisterTastic = ({ data }: TasticProps<AuthLayoutProps>) => {
-  const { register } = useAccount();
+  const { register, login } = useAccount();
 
-  return <Register register={register} {...data} />;
+  return <Register register={register} login={login} {...data} />;
 };
 
 export default AccountRegisterTastic;

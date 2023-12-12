@@ -19,7 +19,7 @@ const CartItemFooter = ({ className, onRemove }: CartItemFooterProps) => {
       <Button
         variant="ghost"
         size="fit"
-        className="flex-1 text-center text-14 font-medium text-gray-700 md:flex-[unset] md:text-start"
+        className="grow text-center text-14 font-medium md:grow-0 md:text-start"
         onClick={onRemove}
       >
         {translate('common.remove')}

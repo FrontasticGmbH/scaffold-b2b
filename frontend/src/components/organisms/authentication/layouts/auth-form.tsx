@@ -2,7 +2,6 @@ import { PropsWithChildren } from 'react';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import Typography from '@/components/atoms/typography';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { AuthFormProps } from '../types';
 
 const AuthForm = ({
@@ -13,7 +12,6 @@ const AuthForm = ({
   buttonLabel,
   footerLabel,
   footerLink,
-  includeCheckIcon,
   footerOnClick,
   footerLinkLabel,
   onSubmit,
@@ -22,9 +20,7 @@ const AuthForm = ({
   return (
     <>
       <div className="grid h-fit gap-5">
-        {includeCheckIcon && <CheckCircleIcon className="h-7 w-7 text-primary" />}
-
-        <Typography as="h1" fontSize={18} fontWeight="bold" className="text-gray-700 md:text-20 lg:text-24">
+        <Typography as="h1" fontSize={18} fontWeight="extrabold" className="text-gray-700">
           {title}
         </Typography>
 
@@ -34,10 +30,7 @@ const AuthForm = ({
               {subtitle}
             </Typography>
             {subtitleLink && subtitleLinkLabel && (
-              <Link
-                className="text-14 font-medium leading-loose text-gray-600 underline hover:text-gray-500"
-                href={subtitleLink}
-              >
+              <Link className="text-14 font-medium leading-loose text-gray-600 underline" href={subtitleLink}>
                 {subtitleLinkLabel}
               </Link>
             )}
@@ -45,9 +38,9 @@ const AuthForm = ({
         )}
       </div>
 
-      {children && <div className="mt-6 grid gap-3 md:mt-9">{children}</div>}
+      <div className="mt-6 grid gap-3 md:mt-9">{children}</div>
 
-      <Button size="l" className="mt-6 text-14 md:mt-9" onClick={onSubmit}>
+      <Button className="mt-6 text-14 md:mt-9" onClick={onSubmit}>
         {buttonLabel}
       </Button>
 
@@ -58,11 +51,7 @@ const AuthForm = ({
           </Typography>
         )}
         {footerLink && footerLinkLabel && (
-          <Link
-            href={footerLink}
-            onClick={footerOnClick}
-            className="text-14 leading-loose text-gray-600 underline hover:text-gray-500"
-          >
+          <Link href={footerLink} onClick={footerOnClick} className="text-14 leading-loose text-gray-600 underline">
             {footerLinkLabel}
           </Link>
         )}

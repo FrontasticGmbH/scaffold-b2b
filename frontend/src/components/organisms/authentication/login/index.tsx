@@ -48,15 +48,9 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const handleResetSubmit = () => {
     if (data.email) {
-      requestPasswordReset(data.email)
-        .then(() => {
-          setResetting(false);
-        })
-        .catch(() => {
-          toast.error(translate('error.email'));
-        });
-    } else {
-      toast.error(translate('error.email'));
+      requestPasswordReset(data.email).catch(() => {
+        toast.error(translate('error.email'));
+      });
     }
   };
 
@@ -99,11 +93,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
                 label={translate('account.rememberMe')}
                 onChange={handleChange}
               />
-              <Link
-                className="text-14 text-gray-600 underline hover:text-gray-500"
-                href="#"
-                onClick={() => setResetting(true)}
-              >
+              <Link className="text-14 text-gray-600 underline" href="#" onClick={() => setResetting(true)}>
                 {translate('account.password.forgot')}
               </Link>
             </div>

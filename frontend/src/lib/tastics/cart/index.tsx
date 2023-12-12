@@ -9,14 +9,14 @@ import useAccount from '@/lib/hooks/useAccount';
 import { TasticProps } from '../types';
 import { Props } from './types';
 
-const CartTastic = ({}: TasticProps<Props>) => {
+const CartTastic = ({ data }: TasticProps<Props>) => {
   const { defaultBusinessUnit } = useBusinessUnits();
 
   const { account } = useAccount();
 
   const { defaultStore } = useStores();
 
-  const { cart, addItem, updateItem, removeItem, requestQuote, updateCart } = useCart(
+  const { cart, updateItem, removeItem, requestQuote, updateCart } = useCart(
     defaultBusinessUnit?.key,
     defaultStore?.key,
   );
@@ -33,12 +33,9 @@ const CartTastic = ({}: TasticProps<Props>) => {
 
   return (
     <Cart
-      {...cart}
       account={{ email: account?.email ?? '' }}
-      paymentMethods={[]}
-      onAdd={async (sku, count) => {
-        addItem([{ sku, count }]);
-      }}
+      paymentMethods={data.paymentMethods}
+      {...cart}
       onUpdateQuantity={async (id, count) => {
         updateItem({ id, count });
       }}

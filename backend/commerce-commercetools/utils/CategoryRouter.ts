@@ -3,8 +3,8 @@ import { ProductApi } from '../apis/ProductApi';
 import { CategoryQuery } from '@Types/query/CategoryQuery';
 import { Category } from '@Types/product/Category';
 import { getCurrency, getLocale, getPath } from './Request';
+import { Result } from '@Types/product/Result';
 import { ProductQueryFactory } from './ProductQueryFactory';
-import { ProductPaginatedResult } from '@Types/result';
 
 export class CategoryRouter {
   static identifyPreviewFrom(request: Request) {
@@ -22,7 +22,7 @@ export class CategoryRouter {
     return false;
   }
 
-  static loadFor = async (request: Request, frontasticContext: Context): Promise<ProductPaginatedResult> => {
+  static loadFor = async (request: Request, frontasticContext: Context): Promise<Result> => {
     const productApi = new ProductApi(frontasticContext, getLocale(request), getCurrency(request));
 
     // We are using the last subdirectory of the path to identify the category slug
@@ -48,7 +48,7 @@ export class CategoryRouter {
     return null;
   };
 
-  static loadPreviewFor = async (request: Request, frontasticContext: Context): Promise<ProductPaginatedResult> => {
+  static loadPreviewFor = async (request: Request, frontasticContext: Context): Promise<Result> => {
     const productApi = new ProductApi(frontasticContext, getLocale(request), getCurrency(request));
     const urlMatches = getPath(request)?.match(/\/preview\/(.+)/);
 
