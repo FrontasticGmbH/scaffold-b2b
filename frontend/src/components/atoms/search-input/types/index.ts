@@ -12,6 +12,7 @@ export interface SearchInputProps {
   onBlur?: () => void;
   onBackClick?: () => void;
   handleOnChange?: (value: string) => void;
+  handleSearchAction?: () => void;
   className?: string;
   containerClassName?: string;
 }

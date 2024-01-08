@@ -8,9 +8,16 @@ export const mapQuote = (quote: CoCoQuote): Quote => {
   const currencyCode = (quote.sum?.currencyCode ?? 'USD') as Currency;
   const fractionDigits = quote.sum?.fractionDigits ?? 2;
 
+  const statusMapping = {
+    DeclinedForRenegotiation: 'waiting',
+    Pending: 'inprogress',
+  } as Record<Required<CoCoQuote>['quoteState'], Quote['status']>;
+
+  const status = statusMapping[quote.quoteState as keyof typeof statusMapping] ?? quote.quoteState ?? '';
+
   return {
     id: (quote.quoteId ?? '').replace(/-/g, ' '),
-    status: (quote.quoteState?.toLocaleLowerCase() as Quote['status']) ?? 'inprogress',
+    status: (status.toLocaleLowerCase() as Quote['status']) ?? 'inprogress',
     creationDate: quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : '-',
     businessUnit: quote.quoteRequest?.businessUnit?.name ?? quote.quoteRequest?.businessUnit?.key ?? '',
     activity: [

@@ -2,10 +2,10 @@ import { Option } from '@/components/atoms/select/types';
 import { Address } from '@/types/entity/address';
 
 export interface AddressesPageProps {
-  accountAddresses: Address[];
-  onAddAccountAddress?: (address: Address) => Promise<void>;
-  onDeleteAccountAddress?: (id: string) => Promise<void>;
-  onUpdateAccountAddress?: (address: Partial<Address>) => Promise<void>;
-  onSearchAccountAddresses?: (val: string) => void;
+  addresses: Address[];
+  onAddAddress?: (address: Address) => Promise<boolean>;
+  onDeleteAddress?: (id: string) => Promise<boolean>;
+  onUpdateAddress?: (address: Partial<Address>) => Promise<boolean>;
+  onSearchAddresses?: (val: string) => void;
   countryOptions: Array<Option & { states: Array<Option> }>;
 }

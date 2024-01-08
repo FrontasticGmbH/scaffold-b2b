@@ -9,7 +9,7 @@ import { ContentTileProps } from './types';
 const ContentTile = ({ title, link, image }: ContentTileProps) => {
   return (
     <div>
-      <Link href={link?.href ?? '#'} openInNewTab={link?.openInNewTab} className="relative w-full pb-[85%]">
+      <Link href={link?.href ?? '#'} openInNewTab={link?.openInNewTab} className="relative block w-full pb-[85%]">
         <Image {...image} fill style={{ objectFit: 'cover' }} alt={title ?? ''} className="rounded-md" />
       </Link>
       <Link

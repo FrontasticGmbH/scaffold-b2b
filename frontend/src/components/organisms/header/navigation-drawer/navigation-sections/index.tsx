@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import QuickOrderMobile from '@/components/organisms/quick-order/quick-order-mobile';
 import ShippingAndLanguageSection from '@/components/organisms/shipping-and-language';
 import Typography from '@/components/atoms/typography';
-import QuickOrderContent from '@/components/organisms/quick-order/quick-order-content';
+import QuickOrderContent from '@/components/organisms/quick-order/quick-order-accordion/quick-order-content';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import QuickOrderMobileButton from '../quick-order-mobile-button';
 import PageLinksSection from './page-links-section';
 import CategorySection from './category-section';
 import AccountSection from './account-section';
@@ -12,15 +12,23 @@ import { HeaderContext } from '../../context';
 
 const NavigationSections = () => {
   const { translate } = useTranslation();
-  const { navigationLevel, showQuickOrder, showQuickOrderMenu, quickOrderProducts } = useContext(HeaderContext);
-
+  const {
+    navigationLevel,
+    showQuickOrder,
+    showQuickOrderMenu,
+    hideQuickOrderMenu,
+    quickOrderSearch,
+    onQuickOrderSearch,
+    quickOrderProducts,
+    addToCart,
+  } = useContext(HeaderContext);
   return (
     <div className="px-4 lg:px-5">
       <div className="border-t" />
       {(showQuickOrder || navigationLevel.length > 0) && <BackButton />}
       {!showQuickOrder && navigationLevel.length === 0 && (
         <div className="py-6">
-          <QuickOrderMobile showQuickOrderMenu={showQuickOrderMenu} />
+          <QuickOrderMobileButton showQuickOrderMenu={showQuickOrderMenu} />
           <PageLinksSection />
         </div>
       )}
@@ -40,7 +48,13 @@ const NavigationSections = () => {
               {translate('quick-order.quick.add.cart')}
             </Typography>
           </div>
-          <QuickOrderContent items={quickOrderProducts} />
+          <QuickOrderContent
+            items={quickOrderProducts}
+            searchText={quickOrderSearch}
+            onSearch={onQuickOrderSearch}
+            addItem={addToCart}
+            closeMenu={hideQuickOrderMenu}
+          />
         </div>
       )}
     </div>

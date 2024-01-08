@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AddressesPageProps } from '@/components/pages/dashboard/pages/addresses/types';
-import AddressForm from '@/components/pages/dashboard/pages/company-admin/forms/address';
+import AddressForm from '@/components/molecules/address-form';
 
 const useSubPath = (props: AddressesPageProps) => {
   const searchParams = useSearchParams();
@@ -16,8 +16,8 @@ const useSubPath = (props: AddressesPageProps) => {
           <AddressForm
             {...({
               ...props,
-              addresses: props.accountAddresses,
-              onAddAddress: props.onAddAccountAddress,
+              addresses: props.addresses,
+              onAddAddress: props.onAddAddress,
             } as React.ComponentProps<typeof AddressForm>)}
           />
         ),
@@ -28,8 +28,8 @@ const useSubPath = (props: AddressesPageProps) => {
           <AddressForm
             {...({
               ...props,
-              addresses: props.accountAddresses,
-              onUpdateAddress: props.onUpdateAccountAddress,
+              addresses: props.addresses,
+              onUpdateAddress: props.onUpdateAddress,
             } as React.ComponentProps<typeof AddressForm>)}
           />
         ),

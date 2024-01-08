@@ -11,8 +11,8 @@ const useClassNames = ({ disabled, size }: Partial<DropdownProps>) => {
       disabled: 'cursor-not-allowed border-neutral-200 bg-neutral-200 text-neutral-800',
     },
     size: {
-      sm: 'py-2',
-      lg: 'py-3',
+      sm: 'h-[32px]',
+      lg: 'h-[40px]',
     },
   });
 

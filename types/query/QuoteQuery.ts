@@ -1,6 +1,5 @@
 import { PaginatedQuery } from './PaginatedQuery';
-import { QuoteState } from '../quote/Quote';
-import { QuoteRequestState } from '../quote/QuoteRequest';
+import { QuoteRequestState, QuoteState } from '../quote';
 
 export enum SortOrder {
   ASCENDING = 'ascending',

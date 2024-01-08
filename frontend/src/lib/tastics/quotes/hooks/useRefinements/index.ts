@@ -9,7 +9,7 @@ const useRefinements = () => {
 
   const debouncedSearch = useDebounce(search);
 
-  const page = Math.floor(+cursor.split(':')[1] / limit);
+  const page = Math.floor(+cursor.split(':')[1] / limit) + 1;
 
   const addState = useCallback((state: string) => setStates([...states, state]), [states]);
   const removeState = useCallback((state: string) => setStates(states.filter((s) => s !== state)), [states]);

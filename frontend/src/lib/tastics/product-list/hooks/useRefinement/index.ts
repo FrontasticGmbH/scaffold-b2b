@@ -12,6 +12,8 @@ const useRefinement = () => {
 
   const searchParams = Object.fromEntries(params.entries());
 
+  const { query: searchQuery } = searchParams;
+
   const limit = +(params.get('limit') ?? '24');
 
   const currentSortValue =
@@ -60,9 +62,11 @@ const useRefinement = () => {
           else if (facet.type === 'navigation' || facet.type === 'term') refineTerms(facet, newParams);
         });
 
+      if (searchQuery) newParams.set('query', searchQuery);
+
       router.push(`${pathWithoutQuery}?${newParams.toString()}`);
     },
-    [currentSortValue, refineRange, refineTerms, pathWithoutQuery, router],
+    [currentSortValue, refineRange, refineTerms, pathWithoutQuery, router, searchQuery],
   );
 
   const onLoadMore = useCallback(() => {

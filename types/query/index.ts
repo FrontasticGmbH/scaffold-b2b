@@ -7,6 +7,7 @@ import { RangeFacet } from './RangeFacet';
 import { RangeFilter } from './RangeFilter';
 import { TermFacet } from './TermFacet';
 import { TermFilter } from './TermFilter';
+import { OrderQuery } from './OrderQuery';
 
 export {
   type CategoryQuery,
@@ -21,4 +22,5 @@ export {
   type RangeFilter,
   type TermFacet,
   type TermFilter,
+  type OrderQuery,
 };

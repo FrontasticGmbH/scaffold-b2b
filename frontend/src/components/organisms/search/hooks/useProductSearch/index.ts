@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
-import { Suggestion } from '../../types';
+import { ProductSuggestion } from '../../types';
 
-const useProductSearch = (items?: Suggestion[], searchCallback?: () => void) => {
+const useQuickProductSearch = (items?: ProductSuggestion[], searchCallback?: () => void) => {
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce<string>(searchValue, 150);
 
@@ -11,7 +11,7 @@ const useProductSearch = (items?: Suggestion[], searchCallback?: () => void) => 
     setSearchValue(value);
   };
 
-  const [products, setProducts] = useState<Suggestion[]>([]);
+  const [products, setProducts] = useState<ProductSuggestion[]>([]);
 
   const searchResult = useMemo(() => {
     return items?.filter(
@@ -22,11 +22,11 @@ const useProductSearch = (items?: Suggestion[], searchCallback?: () => void) => 
     );
   }, [items, debouncedValue]);
 
-  const insertProduct = (product: Suggestion) => {
+  const insertProduct = (product: ProductSuggestion) => {
     setProducts((array) => [...array, product]);
   };
 
-  const removeProduct = (product: Suggestion) => {
+  const removeProduct = (product: ProductSuggestion) => {
     setProducts((array) => array.filter((item) => item.sku !== product.sku));
   };
 
@@ -39,4 +39,4 @@ const useProductSearch = (items?: Suggestion[], searchCallback?: () => void) => 
     searchResult,
   };
 };
-export default useProductSearch;
+export default useQuickProductSearch;

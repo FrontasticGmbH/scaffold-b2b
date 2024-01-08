@@ -1,8 +1,0 @@
-{
-  "dynamicPageType": "frontastic/order-detail-page",
-  "name": "Order details",
-  "category": "Orders",
-  "icon": "group",
-  "dataSourceType": "frontastic/product-list",
-  "isMultiple": true
-}

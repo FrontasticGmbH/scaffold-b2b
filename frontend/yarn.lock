@@ -1404,10 +1404,10 @@
     dotenv "^16.0.3"
     node-fetch "^3.3.1"
 
-"@commercetools/frontend-sdk@^1.8.1":
-  version "1.8.1"
-  resolved "https://registry.npmjs.org/@commercetools/frontend-sdk/-/frontend-sdk-1.8.1.tgz"
-  integrity sha512-nmfK6o7wdMIQ7W9KKBzPUZsVqoRX8ygkg5csDXF1iUoIhcg68bpQNbx4/58qSO6p70UEXCnK8degW2OGonQvfw==
+"@commercetools/frontend-sdk@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/frontend-sdk/-/frontend-sdk-1.9.0.tgz#82b7463afb8f9913518724bd7cbe4634ac7de5e0"
+  integrity sha512-58G9RE5p13/oUrD14q/qjSPo0h//Ddghoolq7eAbQR5AnSGrD42ZyE+D0Id8y0TZJJvRhFStI+8Lv7RxO9hhRA==
   dependencies:
     "@frontastic/extension-types" "^0.0.11"
     cookie "^0.5.0"
@@ -1583,7 +1583,7 @@
 
 "@frontastic/extension-types@^0.0.11":
   version "0.0.11"
-  resolved "https://registry.npmjs.org/@frontastic/extension-types/-/extension-types-0.0.11.tgz"
+  resolved "https://registry.yarnpkg.com/@frontastic/extension-types/-/extension-types-0.0.11.tgz#2b4919cbe0a05e18d817424da454c65a84d7852c"
   integrity sha512-Qme7FALn7JHZooiKmuqWdNsK4u+leLY4dzt+ctLWfRES5/zvpsZiErh7MuE+ftfbc/mXByNcULUeaOL5MsUEAw==
 
 "@frontastic/extension-types@^0.0.12":
@@ -5140,10 +5140,10 @@ concat-stream@^1.6.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-concurrently@^8.2.0:
-  version "8.2.0"
-  resolved "https://registry.npmjs.org/concurrently/-/concurrently-8.2.0.tgz"
-  integrity sha512-nnLMxO2LU492mTUj9qX/az/lESonSZu81UznYDoXtz1IQf996ixVqPAgHXwvHiHCAef/7S8HIK+fTFK7Ifk8YA==
+concurrently@^8.2.2:
+  version "8.2.2"
+  resolved "https://registry.yarnpkg.com/concurrently/-/concurrently-8.2.2.tgz#353141985c198cfa5e4a3ef90082c336b5851784"
+  integrity sha512-1dP4gpXFhei8IOtlXRE/T/4H88ElHgTiUzh71YUmtjTEHMSRS2Z/fgOxHSxxusGHogsRfxNq1vyAwxSC+EVyDg==
   dependencies:
     chalk "^4.1.2"
     date-fns "^2.30.0"
@@ -7481,11 +7481,6 @@ human-signals@^4.3.0:
   version "4.3.1"
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-4.3.1.tgz"
   integrity sha512-nZXjEF2nbo7lIw3mgYjItAfgQXog3OjJogSbKa2CQIIvSGWcKgeJnQlNXip6NglNzYH45nSRiEVimMvYL8DDqQ==
-
-husky@^8.0.3:
-  version "8.0.3"
-  resolved "https://registry.yarnpkg.com/husky/-/husky-8.0.3.tgz#4936d7212e46d1dea28fef29bb3a108872cd9184"
-  integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
 
 iconv-lite@0.4.24:
   version "0.4.24"

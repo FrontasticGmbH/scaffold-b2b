@@ -1,12 +1,16 @@
 import { Account } from '@Types/account/Account';
 import { Customer as commercetoolsCustomer } from '@commercetools/platform-sdk';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { BaseAccountMapper } from './BaseAccountMapper';
 import { AccountRegisterBody } from '@Commerce-commercetools/actionControllers/AccountController';
 import { parseBirthday } from '@Commerce-commercetools/utils/parseBirthday';
 import { Request } from '@frontastic/extension-types';
+import { Address } from '@Types/account';
+import {
+  Address as CommercetoolsAddress,
+  BaseAddress,
+} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 
-export class AccountMapper extends BaseAccountMapper {
+export class AccountMapper {
   static commercetoolsCustomerToAccount(commercetoolsCustomer: commercetoolsCustomer, locale: Locale): Account {
     return {
       accountId: commercetoolsCustomer.id,
@@ -23,15 +27,55 @@ export class AccountMapper extends BaseAccountMapper {
     } as Account;
   }
 
-  static commercetoolsCustomerToSmallerAccount(commercetoolsCustomer: commercetoolsCustomer): Account {
+  static commercetoolsCustomerToAddresses(commercetoolsCustomer: commercetoolsCustomer, locale: Locale): Address[] {
+    const addresses: Address[] = [];
+
+    commercetoolsCustomer.addresses.forEach((commercetoolsAddress) => {
+      addresses.push({
+        ...this.commercetoolsAddressToAddress(commercetoolsAddress),
+        isDefaultBillingAddress: commercetoolsAddress.id === commercetoolsCustomer.defaultBillingAddressId,
+        isDefaultShippingAddress: commercetoolsAddress.id === commercetoolsCustomer.defaultShippingAddressId,
+      } as Address);
+    });
+
+    return addresses;
+  }
+
+  static commercetoolsAddressToAddress(commercetoolsAddress: CommercetoolsAddress): Address {
     return {
-      accountId: commercetoolsCustomer.id,
-      email: commercetoolsCustomer.email,
-      salutation: commercetoolsCustomer?.salutation,
-      firstName: commercetoolsCustomer?.firstName,
-      lastName: commercetoolsCustomer?.lastName,
-      confirmed: commercetoolsCustomer.isEmailVerified,
+      addressId: commercetoolsAddress.id,
+      salutation: commercetoolsAddress.salutation ?? undefined,
+      firstName: commercetoolsAddress.firstName ?? undefined,
+      lastName: commercetoolsAddress.lastName ?? undefined,
+      streetName: commercetoolsAddress.streetName ?? undefined,
+      streetNumber: commercetoolsAddress.streetNumber ?? undefined,
+      additionalStreetInfo: commercetoolsAddress.additionalStreetInfo ?? undefined,
+      additionalAddressInfo: commercetoolsAddress.additionalAddressInfo ?? undefined,
+      postalCode: commercetoolsAddress.postalCode ?? undefined,
+      city: commercetoolsAddress.city ?? undefined,
+      country: commercetoolsAddress.country ?? undefined,
+      state: commercetoolsAddress.state ?? undefined,
+      phone: commercetoolsAddress.phone ?? undefined,
     };
+  }
+
+  static addressToCommercetoolsAddress(address: Address): BaseAddress {
+    return {
+      id: address.addressId,
+      // key: Guid.newGuid(),
+      salutation: address.salutation,
+      firstName: address.firstName,
+      lastName: address.lastName,
+      streetName: address.streetName,
+      streetNumber: address.streetNumber,
+      additionalStreetInfo: address.additionalStreetInfo,
+      additionalAddressInfo: address.additionalAddressInfo,
+      postalCode: address.postalCode,
+      city: address.city,
+      country: address.country,
+      state: address.state,
+      phone: address.phone,
+    } as BaseAddress;
   }
 
   static requestToAccount(request: Request): Account {
@@ -69,10 +113,3 @@ export class AccountMapper extends BaseAccountMapper {
     return account;
   }
 }
-
-// Override the BaseMapper with new Mapper functions
-Object.getOwnPropertyNames(AccountMapper).forEach((key) => {
-  if (typeof AccountMapper[key] === 'function') {
-    BaseAccountMapper[key] = AccountMapper[key];
-  }
-});

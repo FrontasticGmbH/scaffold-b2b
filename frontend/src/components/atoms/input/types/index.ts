@@ -4,7 +4,7 @@ export type InputVariant = 'disabled' | 'readOnly' | 'valid' | 'error' | 'defaul
 
 export interface InputProps
   extends React.ComponentProps<'input'>,
-    Pick<LabelProps, 'requiredStyle' | 'showOptionalLabel'> {
+    Pick<LabelProps, 'requiredStyle' | 'showOptionalLabel' | 'optionalLabel'> {
   label?: string;
   valid?: boolean;
   error?: string;

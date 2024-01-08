@@ -74,12 +74,15 @@
   "minutes": "Minuter",
   "seconds": "Sekunder",
   "rows.per.page": "Rader per sida:",
+  "rows": "Rader:",
   "from.to": "{from} - {to} av {totalItems}",
   "shop.ship.title": "Handla och skicka till",
   "language": "Språk",
   "save.and.continue": "Spara och fortsätt",
   "back": "Tillbaka",
   "shop.by.category": "Handla efter kategori",
-  "back.to.previous": "Tillbaka till föregående sida",
-  "cart": "Vagn"
+  "back.to.previous.page": "Tillbaka till föregående sida",
+  "cart": "Vagn",
+  "company.admin": "Företagsadministratör",
+  "desktop.only":"Endast skrivbord"
 }

@@ -1,31 +1,42 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Table from '@/components/atoms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
 import Confirmation from '@/components/organisms/confirmation';
 import Link from '@/components/atoms/link';
+import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
 const AssociatesTable = ({ onDeleteAssociate, associates = [] }: Partial<CompanyAdminPageProps>) => {
   const { translate } = useTranslation();
 
+  const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('associate');
+
   const isDeleteDisabled = associates.length === 1;
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      const success = await onDeleteAssociate?.(id);
+
+      if (success) showDeletedMessage();
+      else showDeletedFailedMessage();
+    },
+    [showDeletedMessage, showDeletedFailedMessage, onDeleteAssociate],
+  );
 
   return (
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Row>
-            <Table.Cell>{translate('common.name')}</Table.Cell>
-            <Table.Cell>{translate('common.email')}</Table.Cell>
-            <Table.Cell>{translate('common.role')}</Table.Cell>
-            <Table.Cell />
-          </Table.Row>
+          <Table.Cell>{translate('common.name')}</Table.Cell>
+          <Table.Cell>{translate('common.email')}</Table.Cell>
+          <Table.Cell>{translate('common.role')}</Table.Cell>
+          <Table.Cell />
         </Table.Head>
         <Table.Body>
           {associates.map(({ id, firstName, lastName, email, role }) => (
             <Table.Row key={id}>
-              <Table.Cell>{`${firstName} ${lastName}`}</Table.Cell>
+              <Table.Cell>{firstName || lastName ? `${firstName} ${lastName}`.trim() : '-'}</Table.Cell>
               <Table.Cell>{email}</Table.Cell>
               <Table.Cell>{role}</Table.Cell>
               <Table.Cell>
@@ -40,7 +51,7 @@ const AssociatesTable = ({ onDeleteAssociate, associates = [] }: Partial<Company
                       confirm: translate('common.delete'),
                     }}
                     disabled={isDeleteDisabled}
-                    onConfirm={async () => onDeleteAssociate?.(id)}
+                    onConfirm={async () => handleDelete(id)}
                   >
                     <DeleteIcon className="cursor-pointer" width={20} />
                   </Confirmation>

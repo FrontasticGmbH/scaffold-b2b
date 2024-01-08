@@ -2,6 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { classnames } from '@/utils/classnames/classnames';
 import { SelectProps } from './types';
 import Dropdown from '../dropdown';
 import Label from '../label';
@@ -15,6 +16,7 @@ const Select = ({
   options = [],
   placeholder = '',
   enableSearch = false,
+  menuTop,
   ...props
 }: SelectProps) => {
   const { translate } = useTranslation();
@@ -43,13 +45,14 @@ const Select = ({
               unStyled
               focusOnMount
               onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.key === ' ' && e.stopPropagation()}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           );
         }}
       </Dropdown.Button>
-      <Dropdown.Options>
+      <Dropdown.Options className={classnames({ 'bottom-12 shadow-500-reverse': menuTop })}>
         {enableSearch && filteredOptions.length === 0 && (
           <p className="px-3 py-2 text-14 text-gray-500">{translate('common.no.results.found')}</p>
         )}

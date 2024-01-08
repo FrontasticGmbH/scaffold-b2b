@@ -8,10 +8,7 @@ import { TasticProps } from '../../types';
 const VerifyTastic = async ({ data, searchParams }: TasticProps<AuthLayoutProps>) => {
   const { token } = searchParams;
 
-  const response = await sdk.callAction({
-    actionName: 'account/confirm',
-    payload: { token },
-  });
+  const response = await sdk.composableCommerce.account.confirm({ token: token as string });
 
   if (!response.isError) redirect('/login');
   else return <VerifyFailed {...data} />;

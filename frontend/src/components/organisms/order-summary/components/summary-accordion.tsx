@@ -55,13 +55,13 @@ const SummaryAccordion = ({ className, order, cart, transaction }: SummaryAccord
       </Accordion.Panel>
 
       <Costs
-        classNames={{ container: 'bg-neutral-200 py-4 md:py-6 lg:py-11' }}
-        subtotal={transaction.subtotal.centAmount}
-        shipping={transaction.shipping.centAmount}
-        discount={transaction.discount.centAmount}
-        tax={transaction.tax.centAmount}
-        total={transaction.total.centAmount}
-        currency={transaction.total.currencyCode}
+        classNames={{ container: 'bg-neutral-200 py-4 md:py-6 lg:pb-11' }}
+        subtotal={transaction?.subtotal.centAmount ?? 0}
+        shipping={transaction?.shipping.centAmount ?? 0}
+        discount={transaction?.discount.centAmount ?? 0}
+        tax={transaction?.tax.centAmount ?? 0}
+        total={transaction?.total.centAmount ?? 0}
+        currency={transaction?.total.currencyCode ?? 'USD'}
       />
     </Accordion>
   );

@@ -11,7 +11,8 @@ export type QuoteStatus =
   | 'cancelled'
   | 'rejected'
   | 'sent'
-  | 'closed';
+  | 'closed'
+  | 'waiting';
 
 export interface QuoteActivity {
   title: string;

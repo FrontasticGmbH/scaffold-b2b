@@ -2,6 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import { resolveReference } from '@/utils/lib/resolve-reference';
 import logoSrc from 'public/THE B2B STORE.svg';
 import Header from '.';
+import { ProductSuggestion } from '../search/types';
 
 export default {
   title: 'Organisms/Header',
@@ -10,32 +11,32 @@ export default {
 
 const Template: StoryFn<typeof Header> = (args) => <Header {...args} />;
 
-const productListImage = [
+const productListImage: ProductSuggestion[] = [
   {
     id: '1',
     sku: 'SKU-110',
-    image: { src: '/brake-disk.png', width: 45, height: 45 },
+    image: '/brake-disk.png',
     name: 'PrecisionStop™ 494 Advanced Brake Pad Set',
     url: '/',
   },
   {
     id: '2',
     sku: 'SKU-111',
-    image: { src: '/brake-pad.png', width: 45, height: 45 },
+    image: '/brake-pad.png',
     name: 'UltraGrip™ 122 Performance Brake Pads',
     url: '/',
   },
   {
     id: '3',
     sku: 'SKU-112',
-    image: { src: '/brake-system.png', width: 45, height: 45 },
+    image: '/brake-system.png',
     name: 'UltraGrip™ 555 Performance Brake Pads',
     url: '/',
   },
   {
     id: '4',
     sku: 'SKU-113',
-    image: { src: '/brake-disk.png', width: 45, height: 45 },
+    image: '/brake-disk.png',
     name: 'UltraGrip™ 555 Performance Brake Pads',
     url: '/',
   },
@@ -43,41 +44,41 @@ const productListImage = [
     id: '5',
     sku: 'SKU-114',
     name: 'Brake Pad Set, disc brake DELPHI LP20',
-    image: { src: '/brake-system.png', width: 45, height: 45 },
+    image: '/brake-system.png',
     url: '/',
   },
   {
     id: '6',
     sku: 'SKU-115',
     name: 'Brake disc with caliper, LANA SS46',
-    image: { src: '/brake-disk.png', width: 45, height: 45 },
+    image: '/brake-disk.png',
     url: '/',
   },
   {
     id: '7',
     sku: 'SKU-116',
-    image: { src: '/brake-disk.png', width: 45, height: 45 },
+    image: '/brake-disk.png',
     name: 'PrecisionStop™ 494 Advanced Brake Pad Set',
     url: '/',
   },
   {
     id: '8',
     sku: 'SKU-117',
-    image: { src: '/brake-pad.png', width: 45, height: 45 },
+    image: '/brake-pad.png',
     name: 'UltraGrip™ 122 Performance Brake Pads',
     url: '/',
   },
   {
     id: '9',
     sku: 'SKU-118',
-    image: { src: '/brake-system.png', width: 45, height: 45 },
+    image: '/brake-system.png',
     name: 'UltraGrip™ 555 Performance Brake Pads',
     url: '/',
   },
   {
     id: '10',
     sku: 'SKU-119',
-    image: { src: '/brake-disk.png', width: 45, height: 45 },
+    image: '/brake-disk.png',
     name: 'UltraGrip™ 555 Performance Brake Pads',
     url: '/',
   },
@@ -85,26 +86,27 @@ const productListImage = [
     id: '11',
     sku: 'SKU-120',
     name: 'Brake Pad Set, disc brake DELPHI LP20',
-    image: { src: '/brake-system.png', width: 45, height: 45 },
+    image: '/brake-system.png',
     url: '/',
   },
   {
     id: '12',
     sku: 'SKU-121',
     name: 'Brake disc with caliper, LANA SS46',
-    image: { src: '/brake-disk.png', width: 45, height: 45 },
+    image: '/brake-disk.png',
     url: '/',
   },
 ];
 
 export const Primary = Template.bind({});
 Primary.args = {
+  variant: 'navigation',
   pageLinks: [
     resolveReference({ type: 'link', link: '/' }, 'Member + Benefits'),
     resolveReference({ type: 'link', link: '/' }, 'Sale'),
     resolveReference({ type: 'link', link: '/' }, 'New items'),
   ],
-  myAccount: {
+  myAccountMenu: {
     categoryId: 'my-account',
     name: 'My Account',
     path: '/my-account',
@@ -194,7 +196,7 @@ Primary.args = {
     { name: 'opt3', value: 'opt3' },
     { name: 'opt4', value: 'opt4' },
   ],
-  quotas: 4,
+  quotes: 4,
   searchPlaceholder: 'Search by SKU number, product name or keyword',
   searchSuggestions: productListImage,
   quickOrderProducts: [
@@ -203,72 +205,64 @@ Primary.args = {
       sku: 'SKU-110',
       name: '001-Oil-filter-A1',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '2',
       sku: 'SKU-111',
       name: '002-Spark-plug-B2',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '3',
       sku: 'SKU-112',
       name: '003-Brake-pad-C3',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '4',
       sku: 'SKU-113',
       name: '004-Air-filter-D4',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '5',
       sku: 'SKU-114',
       name: '005-Headlight-bulb-E5',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '6',
       sku: 'SKU-115',
       name: '006-Headlight-bulb-E6',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '7',
       sku: 'SKU-116',
       name: 'PrecisionStop™ 494 Advanced Brake Pad Set',
       maxQuantity: 33,
+      image: '',
+      url: '/',
     },
     {
       id: '8',
       sku: 'SKU-117',
       name: 'UltraGrip™ 122 Performance Brake Pads',
       maxQuantity: 33,
-    },
-    {
-      id: '9',
-      sku: 'SKU-118',
-      name: 'UltraGrip™ 555 Performance Brake Pads',
-      maxQuantity: 33,
-    },
-    {
-      id: '10',
-      sku: 'SKU-119',
-      name: 'UltraGrip™ 555 Performance Brake Pads',
-      maxQuantity: 33,
-    },
-    {
-      id: '11',
-      sku: 'SKU-120',
-      name: 'Brake Pad Set, disc brake DELPHI LP20',
-      maxQuantity: 33,
-    },
-    {
-      id: '12',
-      sku: 'SKU-121',
-      name: 'Brake disc with caliper, LANA SS46',
-      maxQuantity: 33,
+      image: '',
+      url: '/',
     },
   ],
   csvDownloadLink: '/template.csv',

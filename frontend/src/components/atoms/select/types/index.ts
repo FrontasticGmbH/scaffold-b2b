@@ -7,6 +7,7 @@ export interface Option {
 }
 
 export interface SelectProps extends DropdownProps, LabelProps {
+  menuTop?: boolean;
   label?: React.ReactNode;
   placeholder?: string;
   options: Option[];

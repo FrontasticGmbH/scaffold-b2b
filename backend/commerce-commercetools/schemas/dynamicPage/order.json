@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/order-page",
+  "name": "Order",
+  "category": "Orders",
+  "icon": "group",
+  "dataSourceType": "frontastic/order",
+  "isMultiple": true
+}

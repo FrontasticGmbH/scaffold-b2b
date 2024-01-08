@@ -13,3 +13,5 @@ export const useSearchParams = () => {
 export const useRouter = () => {
   return { push: () => {} };
 };
+
+export const back = () => {};

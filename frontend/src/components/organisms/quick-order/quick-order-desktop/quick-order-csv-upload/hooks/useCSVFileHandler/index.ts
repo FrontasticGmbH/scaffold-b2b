@@ -40,6 +40,9 @@ const useCSVFileHandler = () => {
         reader.onload = () => {
           const includesSKU = (reader.result as string).split(',')[0].toLowerCase().includes('sku');
           const includesQuantity = (reader.result as string).split(',')[1].toLowerCase().includes('quantity');
+
+          if ((reader.result as string).split('\n').length > 501)
+            setFileError((fileError) => ({ ...fileError, [file.name]: translate('error.file.exceeds') }));
           setReadFiles((readFiles) => ({ ...readFiles, [file.name]: reader.result as string }));
           if (!includesSKU || !includesQuantity)
             setFileError((fileError) => ({ ...fileError, [file.name]: translate('quick-order.error.format') }));

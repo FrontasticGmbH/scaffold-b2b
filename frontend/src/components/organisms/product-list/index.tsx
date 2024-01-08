@@ -16,16 +16,16 @@ import CategoriesBreadcrumb from './components/breadcrumb';
 const ProductList = (props: ProductListProps) => {
   return (
     <ProductListProvider {...props}>
-      <div className="mt-5 hidden px-4 md:px-6 xl:block xl:px-12">
+      <div className="mt-5 hidden px-4 md:px-6 lg:block lg:px-12">
         <CategoriesBreadcrumb {...props} />
       </div>
-      <div className="px-4 pb-12 md:px-6 xl:flex xl:gap-6 xl:px-12 xl:pb-[72px]">
-        <div className="xl:max-w-[320px]">
+      <div className="px-4 pb-12 md:px-6 lg:px-12 xl:flex xl:gap-6 xl:pb-[72px]">
+        <div className="xl:max-w-[340px]">
           <Header />
           <div className="mt-4 xl:hidden">
             <FacetsDrawer />
           </div>
-          <div className="mt-3 hidden border-t border-neutral-400 xl:block">
+          <div className="mt-2 hidden border-t border-neutral-400 xl:block">
             <Facets />
           </div>
         </div>

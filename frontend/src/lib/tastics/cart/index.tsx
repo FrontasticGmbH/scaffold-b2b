@@ -2,23 +2,20 @@
 
 import { useEffect } from 'react';
 import Cart from '@/components/organisms/cart';
-import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
-import useStores from '@/lib/hooks/useStores';
 import useCart from '@/lib/hooks/useCart';
 import useAccount from '@/lib/hooks/useAccount';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { TasticProps } from '../types';
 import { Props } from './types';
 
-const CartTastic = ({ data }: TasticProps<Props>) => {
-  const { defaultBusinessUnit } = useBusinessUnits();
-
+const CartTastic = ({}: TasticProps<Props>) => {
   const { account } = useAccount();
 
-  const { defaultStore } = useStores();
+  const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { cart, updateItem, removeItem, requestQuote, updateCart } = useCart(
-    defaultBusinessUnit?.key,
-    defaultStore?.key,
+  const { cart, addItem, updateItem, removeItem, requestQuote, updateCart } = useCart(
+    selectedBusinessUnit?.key,
+    selectedStore?.key,
   );
 
   const { defaultShippingAddress } = useAccount();
@@ -29,13 +26,14 @@ const CartTastic = ({ data }: TasticProps<Props>) => {
     }
   }, [cart?.shippingAddress?.addressId, defaultShippingAddress, updateCart]);
 
-  if (!cart) return <></>;
-
   return (
     <Cart
-      account={{ email: account?.email ?? '' }}
-      paymentMethods={data.paymentMethods}
       {...cart}
+      account={{ email: account?.email ?? '' }}
+      paymentMethods={[]}
+      onAdd={async (sku, count) => {
+        addItem([{ sku, count }]);
+      }}
       onUpdateQuantity={async (id, count) => {
         updateItem({ id, count });
       }}

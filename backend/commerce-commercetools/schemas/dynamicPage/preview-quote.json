@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/preview/quote-page",
+  "name": "Quote preview",
+  "category": "Previews",
+  "icon": "picture_in_picture",
+  "dataSourceType": "frontastic/quote",
+  "isMultiple": true
+}

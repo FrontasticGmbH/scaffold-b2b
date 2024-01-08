@@ -27,17 +27,19 @@ export interface PaymentMethod {
 export type CartProps = {
   account: Pick<Account, 'email'>;
   paymentMethods: Array<PaymentMethod>;
+  onAdd: (sku: string, qty: number) => Promise<void>;
   onRemove: (id: string) => Promise<void>;
   onUpdateQuantity: (id: string, qty: number) => Promise<void>;
   onRequestQuote: (args: { buyerComment?: string }) => Promise<Partial<Quote>>;
-} & Cart & { transaction: Transaction };
+} & Partial<Cart> & { transaction?: Transaction };
 
 export type CartContentProps = Pick<Cart, 'lineItems'> &
-  Pick<CartProps, 'onUpdateQuantity' | 'onRemove'> & {
+  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd'> & {
     className?: string;
   };
 
 export type CartItemFooterProps = Pick<CartItemProps, 'onRemove'> & {
+  item: LineItem;
   className?: string;
 };
 
@@ -51,10 +53,12 @@ interface ClassNames {
 }
 
 export interface CartItemProps {
-  item: LineItem;
+  item: LineItem & { deleted?: boolean };
   classNames?: ClassNames;
   onUpdateQuantity: (qty: number) => Promise<void>;
+  onUndoRemove?: () => Promise<void>;
   onRemove?: () => Promise<void>;
 }
 
-export type CartItemsListProps = Pick<CartContentProps, 'lineItems'> & Pick<CartProps, 'onUpdateQuantity' | 'onRemove'>;
+export type CartItemsListProps = Pick<CartContentProps, 'lineItems'> &
+  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd'>;

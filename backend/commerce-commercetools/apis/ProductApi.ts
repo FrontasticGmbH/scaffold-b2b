@@ -1,6 +1,4 @@
-import { Result } from '@Types/product/Result';
 import { ProductQuery } from '@Types/query/ProductQuery';
-import { FilterField, FilterFieldTypes } from '@Types/product/FilterField';
 import { FilterTypes } from '@Types/query/Filter';
 import { TermFilter } from '@Types/query/TermFilter';
 import { RangeFilter } from '@Types/query/RangeFilter';
@@ -8,12 +6,23 @@ import { FacetDefinition } from '@Types/product/FacetDefinition';
 import { ProductMapper } from '../mappers/ProductMapper';
 import { Category } from '@Types/product/Category';
 import { CategoryQuery } from '@Types/query/CategoryQuery';
-import { BaseProductApi } from '@Commerce-commercetools/apis/BaseProductApi';
 import { Product } from '@Types/product/Product';
 import { ExternalError } from '@Commerce-commercetools/utils/Errors';
+import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
+import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import { FilterField, FilterFieldTypes } from '@Types/product/FilterField';
 
-export class ProductApi extends BaseProductApi {
-  query: (productQuery: ProductQuery) => Promise<Result> = async (productQuery: ProductQuery) => {
+export class ProductApi extends BaseApi {
+  protected getOffsetFromCursor = (cursor: string) => {
+    if (cursor === undefined) {
+      return undefined;
+    }
+
+    const offsetMach = cursor.match(/(?<=offset:).+/);
+    return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
+  };
+
+  query: (productQuery: ProductQuery) => Promise<ProductPaginatedResult> = async (productQuery: ProductQuery) => {
     const locale = await this.getCommercetoolsLocal();
 
     // TODO: get default from constant
@@ -123,7 +132,15 @@ export class ProductApi extends BaseProductApi {
         priceCountry: locale.country,
         facet: queryArgFacets.length > 0 ? queryArgFacets : undefined,
         filter: filterFacets.length > 0 ? filterFacets : undefined,
-        expand: 'categories[*]',
+        expand: [
+          'categories[*]',
+          'masterVariant.scopedPrice.discounted.discount',
+          'masterVariant.price.discounted.discount',
+          'masterVariant.prices[*].discounted.discount',
+          'variants[*].scopedPrice.discounted.discount',
+          'variants[*].price.discounted.discount',
+          'variants[*].prices[*].discounted.discount',
+        ],
         'filter.facets': filterFacets.length > 0 ? filterFacets : undefined,
         'filter.query': filterQuery.length > 0 ? filterQuery : undefined,
         [`text.${locale.language}`]: productQuery.query,
@@ -141,7 +158,7 @@ export class ProductApi extends BaseProductApi {
           ProductMapper.commercetoolsProductProjectionToProduct(product, this.categoryIdField, locale),
         );
 
-        const result: Result = {
+        const result: ProductPaginatedResult = {
           total: response.body.total,
           items: items,
           count: response.body.count,
@@ -173,7 +190,54 @@ export class ProductApi extends BaseProductApi {
     }
   };
 
-  queryCategories: (categoryQuery: CategoryQuery) => Promise<Result> = async (categoryQuery: CategoryQuery) => {
+  getSearchableAttributes: () => Promise<FilterField[]> = async () => {
+    const locale = await this.getCommercetoolsLocal();
+
+    const response = await this.requestBuilder()
+      .productTypes()
+      .get()
+      .execute()
+      .catch((error) => {
+        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+      });
+
+    const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(response.body.results, locale);
+
+    // Category filter. Not included as commercetools product type.
+    filterFields.push({
+      field: 'categoryIds',
+      type: FilterFieldTypes.ENUM,
+      label: 'Category',
+      values: await this.queryCategories({ limit: 250 }).then((result) => {
+        return (result.items as Category[]).map((item) => {
+          return {
+            value: item.categoryId,
+            name: item.name,
+          };
+        });
+      }),
+    });
+
+    // Variants price filter. Not included as commercetools product type.
+    filterFields.push({
+      field: 'variants.price',
+      type: FilterFieldTypes.MONEY,
+      label: 'Variants price', // TODO: localize label
+    });
+
+    // Variants scoped price filter. Not included as commercetools product type.
+    filterFields.push({
+      field: 'variants.scopedPrice.value',
+      type: FilterFieldTypes.MONEY,
+      label: 'Variants scoped price', // TODO: localize label
+    });
+
+    return filterFields;
+  };
+
+  queryCategories: (categoryQuery: CategoryQuery) => Promise<PaginatedResult<Category>> = async (
+    categoryQuery: CategoryQuery,
+  ) => {
     const locale = await this.getCommercetoolsLocal();
 
     // TODO: get default from constant
@@ -206,7 +270,7 @@ export class ProductApi extends BaseProductApi {
                 ProductMapper.commercetoolsCategoryToCategory(category, this.categoryIdField, locale),
               );
 
-        const result: Result = {
+        const result: PaginatedResult<Category> = {
           total: response.body.total,
           items: items,
           count: response.body.count,
@@ -221,4 +285,14 @@ export class ProductApi extends BaseProductApi {
         throw new ExternalError({ status: error.code, message: error.message, body: error.body });
       });
   };
+
+  protected async getCommercetoolsCategoryPagedQueryResponse(methodArgs: object) {
+    return await this.requestBuilder()
+      .categories()
+      .get(methodArgs)
+      .execute()
+      .catch((error) => {
+        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+      });
+  }
 }

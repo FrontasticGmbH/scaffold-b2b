@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/product-page",
+  "name": "Product",
+  "category": "Products",
+  "icon": "picture_in_picture",
+  "dataSourceType": "frontastic/product",
+  "isMultiple": true
+}

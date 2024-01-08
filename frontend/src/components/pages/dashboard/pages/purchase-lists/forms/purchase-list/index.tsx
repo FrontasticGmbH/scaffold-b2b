@@ -5,6 +5,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
 import { PurchaseList } from '@/types/entity/purchase-list';
 import TextArea from '@/components/atoms/text-area';
+import useEntityToasters from '@/hooks/useEntityToasters';
 import { Props } from './types';
 
 const PurchaseListForm = ({
@@ -22,6 +23,8 @@ const PurchaseListForm = ({
 
   const params = useSearchParams();
 
+  const { showSavedMessage, showFailedMessage } = useEntityToasters('purchaselist');
+
   const id = propId ?? params.get('id');
 
   const defaultValues = (purchaseLists.find((list) => list.id === id) ?? {}) as Partial<PurchaseList>;
@@ -36,9 +39,13 @@ const PurchaseListForm = ({
   );
 
   const handleSubmit = useCallback(async () => {
-    await (id ? onUpdatePurchaseList?.(data) : onAddPurchaseList?.(data as PurchaseList));
+    const success = await (id ? onUpdatePurchaseList?.(data) : onAddPurchaseList?.(data as PurchaseList));
+
+    if (success) showSavedMessage();
+    else showFailedMessage();
+
     (onSave ?? router.back)();
-  }, [onUpdatePurchaseList, onAddPurchaseList, data, id, router, onSave]);
+  }, [onUpdatePurchaseList, onAddPurchaseList, data, id, router, onSave, showSavedMessage, showFailedMessage]);
 
   return (
     <EntityForm
@@ -52,7 +59,7 @@ const PurchaseListForm = ({
           name="name"
           label={translate('common.name')}
           required
-          value={data.name}
+          value={data.name ?? ''}
           onChange={handleChange}
           containerClassName="md:w-[350px] lg:w-[400px]"
         />

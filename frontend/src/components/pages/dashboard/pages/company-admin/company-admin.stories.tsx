@@ -17,10 +17,6 @@ Primary.args = {
     { name: 'East Coast', value: '1' },
   ],
   initialBusinessUnit: '0',
-  storeOptions: [
-    { name: 'The Show Store', value: '0' },
-    { name: 'The Good Store', value: '1' },
-  ],
   countryOptions: countries.map(({ name, code, states }) => ({
     name,
     value: code,
@@ -37,6 +33,7 @@ Primary.args = {
       key: 'commercetools',
       name: 'commercetools',
       email: '123@commercetools.com',
+      addresses: [],
     },
   ],
   addresses: Array.from({ length: 3 }, (_, index) => ({
@@ -81,5 +78,6 @@ Primary.args = {
     name: `commercetools ${index + 1}`,
     key: `ct-region-${index + 1}`,
     email: '123@commercetools.com',
+    addresses: [],
   })),
 };

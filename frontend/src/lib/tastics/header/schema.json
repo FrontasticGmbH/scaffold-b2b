@@ -1,95 +1,161 @@
 {
-  "tasticType": "commercetools/ui/header",
-  "name": "Header",
-  "category": "Header",
-  "schema": [
-    {
-      "name": "Logo",
-      "fields": [
-        {
-          "label": "Logo",
-          "field": "logo",
-          "type": "media",
-          "required": true,
-          "options": []
-        },
-        {
-          "label": "Link Reference",
-          "field": "logoLink",
-          "type": "reference",
-          "translatable": false
-        }
-      ]
-    },
-    {
-      "name": "Logo Link",
-      "fields": [
-        {
-          "label": "Link Reference",
-          "field": "logoLink",
-          "type": "reference",
-          "translatable": false
-        }
-      ]
-    },
-    {
-      "name": "Account Link",
-      "fields": [
-        {
-          "label": "Link",
-          "field": "accountLinkLabel",
-          "type": "string",
-          "translatable": true
-        },
-        {
-          "label": "Link Reference",
-          "field": "accountLink",
-          "type": "reference",
-          "translatable": false
-        }
-      ]
-    },
-    {
-      "name": "Cart Link",
-      "fields": [
-        {
-          "label": "Link",
-          "field": "cartLinkLabel",
-          "type": "string",
-          "translatable": true
-        },
-        {
-          "label": "Link Reference",
-          "field": "cartLink",
-          "type": "reference",
-          "translatable": false
-        }
-      ]
-    },
-    {
-      "name": "Page Links",
-      "fields": [
-        {
-          "label": "Page Links",
-          "field": "pageLinks",
-          "type": "group",
-          "itemLabelField": "Page Link",
-          "fields": [
-            {
-              "label": "Link",
-              "field": "name",
-              "type": "string",
-              "translatable": true
-            },
-            {
-              "label": "Link Reference",
-              "field": "href",
-              "type": "reference",
-              "translatable": false
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	"name": "Header",
+	"category": "Header",
+	"schema": [
+		{
+			"name": "Announcement Bar",
+			"fields": [
+				{
+					"label": "Bar Text",
+					"field": "textBar",
+					"type": "string",
+					"translatable": true
+				}
+			]
+		},
+		{
+			"name": "Variant",
+			"fields": [
+				{
+					"label": "Variant",
+					"field": "variant",
+					"type": "enum",
+					"required": true,
+					"values": [
+						{
+							"name": "Account",
+							"value": "account"
+						},
+						{
+							"name": "Checkout",
+							"value": "checkout"
+						},
+						{
+							"name": "Navigation",
+							"value": "navigation"
+						}
+					],
+					"defaultValue": "navigation"
+				}
+			]
+		},
+		{
+			"name": "Logo",
+			"fields": [
+				{
+					"label": "Logo",
+					"field": "logo",
+					"type": "media",
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "Logo Link",
+			"fields": [
+				{
+					"label": "Link Reference",
+					"field": "logoLink",
+					"type": "reference"
+				}
+			]
+		},
+		{
+			"name": "Account Link",
+			"fields": [
+				{
+					"label": "Link ID",
+					"field": "accountLinkId",
+					"type": "string",
+					"required": true
+				},
+				{
+					"label": "Link",
+					"field": "accountLinkLabel",
+					"type": "string",
+					"translatable": true
+				},
+				{
+					"label": "Link Reference",
+					"field": "accountLink",
+					"type": "reference",
+					"translatable": false
+				}
+			]
+		},
+		{
+			"name": "Account Page Links",
+			"fields": [
+				{
+					"label": "Account Page Links",
+					"field": "accountPageLinks",
+					"type": "group",
+					"itemLabelField": "Page Link",
+					"fields": [
+						{
+							"label": "Link ID",
+							"field": "linkID",
+							"type": "string",
+							"required": true,
+							"translatable": true
+						},
+						{
+							"label": "Link",
+							"field": "name",
+							"type": "string",
+							"translatable": true
+						},
+						{
+							"label": "Link Reference",
+							"field": "href",
+							"type": "reference",
+							"translatable": false
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Cart Link",
+			"fields": [
+				{
+					"label": "Link",
+					"field": "cartLinkLabel",
+					"type": "string",
+					"translatable": true
+				},
+				{
+					"label": "Link Reference",
+					"field": "cartLink",
+					"type": "reference",
+					"translatable": false
+				}
+			]
+		},
+		{
+			"name": "Page Links",
+			"fields": [
+				{
+					"label": "Page Links",
+					"field": "pageLinks",
+					"type": "group",
+					"itemLabelField": "Page Link",
+					"fields": [
+						{
+							"label": "Link",
+							"field": "name",
+							"type": "string",
+							"translatable": true
+						},
+						{
+							"label": "Link Reference",
+							"field": "href",
+							"type": "reference",
+							"translatable": false
+						}
+					]
+				}
+			]
+		}
+	]
 }

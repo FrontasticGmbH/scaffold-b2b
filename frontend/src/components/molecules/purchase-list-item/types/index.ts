@@ -2,7 +2,7 @@ import { PurchaseListItem } from '@/types/entity/purchase-list';
 
 export interface PurchaseListItemProps {
   item: PurchaseListItem;
-  onRemove?: () => Promise<void>;
-  onAddToCart?: () => Promise<void>;
-  onQuantityChange?: (qty: number) => Promise<void>;
+  onRemove?: () => Promise<boolean>;
+  onAddToCart?: () => Promise<boolean>;
+  onQuantityChange?: (qty: number) => Promise<boolean>;
 }

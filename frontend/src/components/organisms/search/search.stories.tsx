@@ -1,6 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
 import Search from '.';
-import useFilterItems from './hooks/useFilterItems';
 
 export default {
   title: 'Organisms/Search',
@@ -30,15 +29,12 @@ const productListImage = productList.map((p) => {
 });
 
 const Template: StoryFn<typeof Search> = (args) => {
-  const { searchValue, handleOnChange, filterBySearchResult } = useFilterItems(
-    args.variant === 'sm' ? productList : productListImage,
-  );
   return (
     <div className="p-3">
-      <Search {...args} searchValue={searchValue} handleOnChange={handleOnChange} />
+      <Search {...args} searchValue={''} />
       {args.filterSearch && (
         <div className="mt-6">
-          {filterBySearchResult?.map((result) => (
+          {productList?.map((result) => (
             <div key={result.sku} className="px-4 py-1">
               {result.name}
             </div>

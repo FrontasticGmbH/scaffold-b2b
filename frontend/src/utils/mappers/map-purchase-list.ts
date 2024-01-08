@@ -1,6 +1,7 @@
 import { Wishlist } from '@shared/types/wishlist/Wishlist';
 import { LineItem } from '@shared/types/wishlist/LineItem';
 import { PurchaseList, PurchaseListItem } from '@/types/entity/purchase-list';
+import { Currency } from '@/types/currency';
 
 export const mapPurchaseItem = ({ lineItemId, name, count, variant }: LineItem): PurchaseListItem => {
   return {
@@ -8,8 +9,9 @@ export const mapPurchaseItem = ({ lineItemId, name, count, variant }: LineItem):
     name: name ?? '',
     quantity: count ?? 1,
     image: variant?.images?.[0],
-    price: 0,
-    currency: 'USD',
+    price: (variant?.price?.centAmount ?? 0) / Math.pow(10, variant?.price?.fractionDigits ?? 2),
+    currency: (variant?.price?.currencyCode ?? 'AUD') as Currency,
+    inStock: !!variant?.isOnStock,
   };
 };
 

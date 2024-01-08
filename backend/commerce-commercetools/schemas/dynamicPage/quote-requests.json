@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/quote-requests-page",
+  "name": "Quote Requests",
+  "category": "Quotes",
+  "icon": "group",
+  "dataSourceType": "frontastic/quote-requests",
+  "isMultiple": true
+}

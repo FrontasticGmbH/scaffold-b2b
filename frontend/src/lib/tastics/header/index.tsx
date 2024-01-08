@@ -1,34 +1,77 @@
 'use client';
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useMemo } from 'react';
 import Header from '@/components/organisms/header';
 import AnnouncementBar from '@/components/organisms/announcement-bar';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { desktop } from '@/constants/screensizes';
-import useAccount from '@/lib/hooks/useAccount';
 import useResizeObserver from '@/hooks/useResizeObserver';
 import { resolveReference } from '@/utils/lib/resolve-reference';
-import { useCategories } from '@/lib/hooks/useCategories';
-import { mapCategory } from '@/utils/mappers/map-category';
-import useCart from '@/lib/hooks/useCart';
-import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
-import useStores from '@/lib/hooks/useStores';
+import { mapProductSuggestion } from '@/utils/mappers/map-product-suggestion';
+import { Link } from '@/types/link';
+import { NavigationCategory } from '@/components/organisms/header/types';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import { TasticProps } from '../types';
-import { businessUnits, myAccount, pageLinks, quotas, stores, textBar, suggestions, quickOrderProducts } from './mocks';
 import { HeaderTasticProps } from './types';
+import useHeaderData from './hooks/useHeaderData';
 
 const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
   const { translate } = useTranslation();
   const [isDesktopSize] = useMediaQuery(desktop);
-  const router = useRouter();
+  const { isAdmin } = useAccountRoles();
 
-  const { defaultBusinessUnit } = useBusinessUnits();
-  const { defaultStore } = useStores();
+  const {
+    account,
+    businessUnits,
+    selectedBusinessUnit,
+    stores,
+    selectedStore,
+    quotes,
+    totalCartItems,
+    navigationCategories,
+    headerSearch,
+    headerProducts,
+    quickOrderSearch,
+    quickOrderProducts,
+    csvShowProducts,
+    addToCart,
+    onHeaderSearch,
+    onQuickOrderSearch,
+    onBusinessUnitSelect,
+    onStoreSelect,
+    onLogoutClick,
+    headerSearchAction,
+    handleSKUsUpdate,
+  } = useHeaderData();
 
-  const { totalItems } = useCart(defaultBusinessUnit?.key, defaultStore?.key);
+  const pageLinks: Link[] = data.pageLinks.map((pl) => {
+    return { name: pl.name, href: resolveReference(pl.href).href };
+  });
 
-  const { categories } = useCategories();
+  const myAccountMenu: NavigationCategory = {
+    categoryId: data.accountLinkId,
+    name: data.accountLinkLabel,
+    path: resolveReference(data.accountLink).href ?? '/',
+    subCategories: data.accountPageLinks.map((link) => {
+      return {
+        categoryId: link.linkId,
+        name: link.name,
+        path: resolveReference(link.href).href ?? '/',
+        subCategories: [],
+      };
+    }),
+  };
+
+  const accountLinks: NavigationCategory[] = useMemo(() => {
+    return isAdmin
+      ? myAccountMenu.subCategories
+      : myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin');
+  }, [isAdmin, myAccountMenu.subCategories]);
+
+  const accountMenuMobile: NavigationCategory = {
+    ...myAccountMenu,
+    subCategories: myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin'),
+  };
 
   const { ref } = useResizeObserver(
     (el: HTMLDivElement) => {
@@ -41,33 +84,37 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     },
   );
 
-  const { account, logout } = useAccount();
-
-  const onLogoutClick = () => {
-    logout().then(() => router.push('login'));
-  };
-
   return (
     <div id="header-container" className="fixed top-0 z-50 w-full" ref={ref}>
       <div className="relative">
-        <AnnouncementBar
-          textBar={textBar}
-          myAccount={myAccount}
-          businessUnits={businessUnits}
-          stores={stores}
-          onLogoutClick={onLogoutClick}
-          name={account?.firstName ?? ''}
-          quotas={quotas}
-        />
+        {data.variant === 'navigation' && (
+          <AnnouncementBar
+            textBar={data.textBar}
+            accountLinks={accountLinks}
+            selectedBusinessUnit={selectedBusinessUnit}
+            businessUnits={businessUnits}
+            stores={stores}
+            selectedStore={selectedStore}
+            name={account?.firstName ?? ''}
+            quotes={quotes?.length ?? 0}
+            onLogoutClick={onLogoutClick}
+            onBusinessUnitChange={onBusinessUnitSelect}
+            onStoreChange={onStoreSelect}
+          />
+        )}
         <Header
+          variant={data.variant ?? 'navigation'}
+          isAdmin={isAdmin}
           csvDownloadLink="/template.csv"
-          quickOrderProducts={quickOrderProducts}
+          quickOrderProducts={quickOrderProducts.map((product) => mapProductSuggestion(product))}
+          selectedBusinessUnit={selectedBusinessUnit}
           businessUnits={businessUnits}
           stores={stores}
-          categoryLinks={categories.map(mapCategory)}
-          myAccount={myAccount}
+          selectedStore={selectedStore}
+          categoryLinks={navigationCategories}
+          myAccountMenu={accountMenuMobile}
           accountLink={resolveReference(data.accountLink)}
-          cartItems={totalItems}
+          cartItems={totalCartItems}
           cartLink={resolveReference(data.cartLink)}
           pageLinks={pageLinks}
           logo={data.logo}
@@ -75,8 +122,18 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
           searchPlaceholder={
             isDesktopSize ? translate('common.search.placeholder') : translate('common.search.placeholder.mobile')
           }
-          searchSuggestions={suggestions}
-          quotas={22}
+          searchSuggestions={headerProducts.map((product) => mapProductSuggestion(product))}
+          quotes={quotes?.length ?? 0}
+          onBusinessUnitChange={onBusinessUnitSelect}
+          onStoreChange={onStoreSelect}
+          quickOrderSearch={quickOrderSearch}
+          onQuickOrderSearch={onQuickOrderSearch}
+          headerSearch={headerSearch}
+          onHeaderSearch={onHeaderSearch}
+          onHeaderSearchAction={headerSearchAction}
+          addToCart={addToCart}
+          csvShowProducts={csvShowProducts}
+          handleSKUsUpdate={handleSKUsUpdate}
         />
       </div>
     </div>

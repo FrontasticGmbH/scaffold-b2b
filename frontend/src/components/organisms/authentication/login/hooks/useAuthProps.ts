@@ -32,7 +32,7 @@ const useAuthProps: UseAuthProps = ({
     reset: {
       onSubmit: handleResetSubmit,
       title: translate('account.password.reset.headline'),
-      buttonLabel: translate('account.reset.link'),
+      buttonLabel: translate('account.account.reset.link'),
       footerLinkLabel: translate('account.account.back.login'),
       footerLink: '/login',
       footerOnClick: goBackToLogin,

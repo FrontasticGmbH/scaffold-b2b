@@ -1,21 +1,21 @@
-import { useMemo } from 'react';
-import { LineItem } from '@shared/types/wishlist/LineItem';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import CartItem from './cart-item';
 import { CartItemsListProps } from '../types';
 
-const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove }: CartItemsListProps) => {
+const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd }: CartItemsListProps) => {
   const { translate } = useTranslation();
 
-  const soldOutItems = useMemo(() => lineItems?.filter((item) => !item.variant?.isOnStock), [lineItems]) as LineItem[];
+  const inStockItems = lineItems?.filter((item) => !!item.variant?.isOnStock) ?? [];
+  const soldOutItems = lineItems?.filter((item) => !item.variant?.isOnStock) ?? [];
 
   return (
     <div className="mt-3 divide-y divide-neutral-400 border-t border-neutral-400 lg:mt-8 lg:border-none">
-      {lineItems?.map((lineItem) => (
+      {inStockItems?.map((lineItem) => (
         <div key={lineItem.lineItemId}>
           <CartItem
             item={lineItem}
             classNames={{ moveToWishlist: 'text-14' }}
+            onUndoRemove={() => onAdd(lineItem.variant?.sku as string, lineItem.count ?? 1)}
             onUpdateQuantity={(qty) =>
               qty === 0 ? onRemove(lineItem.lineItemId as string) : onUpdateQuantity(lineItem.lineItemId as string, qty)
             }

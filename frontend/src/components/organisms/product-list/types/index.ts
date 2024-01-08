@@ -10,6 +10,7 @@ export interface CategoryBreadcrumb {
 export interface ProductListProps {
   products: Product[];
   facets: Facet[];
+  searchQuery?: string;
   breadcrumb: Array<CategoryBreadcrumb>;
   onRefine: (facet: Facet[]) => void;
   onResetAll: () => void;

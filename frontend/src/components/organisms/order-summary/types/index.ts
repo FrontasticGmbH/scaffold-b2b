@@ -35,14 +35,14 @@ export type OrderSummaryProps = {
   paymentMethods?: Array<PaymentMethod>;
   dataReference?: 'order' | 'cart';
   button?: ReactElement;
-  transaction: Transaction;
+  transaction?: Transaction;
 };
 
 export type SummaryAccordionProps = {
   className?: string;
   order?: Order;
   cart?: Cart;
-  transaction: Transaction;
+  transaction?: Transaction;
 };
 
 export type AccordionButtonProps = {

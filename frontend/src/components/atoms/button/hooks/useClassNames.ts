@@ -21,11 +21,11 @@ const useClassNames: UseClassNames = ({
         'disabled:bg-neutral-400 disabled:text-neutral-100',
       ],
       secondary: [
-        'rounded-md border border-gray-700 bg-white text-gray-700',
+        'rounded-md border border-gray-700 text-gray-700',
         'hover:shadow-[0px_0px_3px_rgba(71,71,1)]',
         'active:shadow-button active:outline-2 active:outline-offset-0 active:outline-gray-300 active:disabled:shadow-none',
         'focus-visible:border focus-visible:outline focus-visible:outline-offset-[3px]',
-        'disabled:border-neutral-400 disabled:bg-transparent disabled:text-neutral-400',
+        'disabled:border-neutral-400 disabled:text-neutral-400',
       ],
       warning: [
         'bg-red-500 text-neutral-100 outline-offset-0',
@@ -39,12 +39,12 @@ const useClassNames: UseClassNames = ({
     },
     size: {
       xs: 'p-2 text-12',
-      s: 'px-6 py-2 text-12',
+      s: 'px-6 py-2 text-14',
       m: 'px-9 py-3 text-14',
-      l: 'px-12 py-4 text-16',
+      l: 'px-12 py-3 text-16',
       fit: 'p-0',
       full: 'w-full py-3',
-      icon: 'grid h-fit w-fit items-center justify-center',
+      icon: 'grid h-10 w-10 items-center justify-center',
     },
   });
 

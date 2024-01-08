@@ -10,7 +10,7 @@ const Template: StoryFn<typeof AddressesPage> = (args) => <AddressesPage {...arg
 
 export const Primary = Template.bind({});
 Primary.args = {
-  accountAddresses: Array.from({ length: 3 }, (_, index) => ({
+  addresses: Array.from({ length: 3 }, (_, index) => ({
     id: index.toString(),
     name: 'commercetools',
     line1: '123 ABC Roadway',

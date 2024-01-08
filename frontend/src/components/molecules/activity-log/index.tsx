@@ -105,7 +105,7 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                 <Button
                   variant="secondary"
                   size="l"
-                  className="py-[12px] leading-[16px]"
+                  className="leading-[16px]"
                   onClick={async () => {
                     setReplyProcessing({ ...replyProcessing, [index]: true });
                     await onReject?.();

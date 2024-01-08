@@ -10,7 +10,7 @@ import { AccountAuthenticationError } from '@Commerce-commercetools/errors/Accou
 import { Account } from '@Types/account/Account';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
-import { BaseAccountMapper } from '@Commerce-commercetools/mappers/BaseAccountMapper';
+import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import { Address } from '@Types/account/Address';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
@@ -40,15 +40,19 @@ export const getBusinessUnits: ActionHook = async (request: Request, actionConte
 
   const expandStores = request.query?.['expandStores'] === 'true';
 
-  const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account, expandStores);
+  try {
+    const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account, expandStores);
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(businessUnits),
-    sessionData: {
-      ...request.sessionData,
-    },
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify(businessUnits),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const getBusinessUnitOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -62,18 +66,22 @@ export const getBusinessUnitOrders: ActionHook = async (request: Request, action
 
   const key = request?.query?.['key'];
   if (!key) {
-    throw new Error('No key');
+    const error = new Error('No key');
+    return handleError(error, request);
   }
+  try {
+    const orders = await cartApi.getBusinessUnitOrders(key, account);
 
-  const orders = await cartApi.getBusinessUnitOrders(key, account);
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(orders),
+      sessionData: request.sessionData,
+    };
 
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(orders),
-    sessionData: request.sessionData,
-  };
-
-  return response;
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const create: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -89,15 +97,22 @@ export const create: ActionHook = async (request: Request, actionContext: Action
     throw new AccountAuthenticationError({ message: 'Not logged in.' });
   }
 
-  const businessUnit = await businessUnitApi.createForAccountAndStore(account, businessUnitRequestBody.store);
+  try {
+    const businessUnit = await businessUnitApi.createForAccountAndStore(
+      businessUnitRequestBody.account,
+      businessUnitRequestBody.store,
+    );
 
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(businessUnit),
-    sessionData: request.sessionData,
-  };
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(businessUnit),
+      sessionData: request.sessionData,
+    };
 
-  return response;
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
 };
 
 export const addAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -112,33 +127,37 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
   const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
   const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
 
-  let account = await accountApi.getAccountByEmail(addUserBody.email);
-  if (!account) {
-    const accountData = {
-      email: addUserBody.email,
-      password: Math.random().toString(36).slice(-8),
+  try {
+    let account = await accountApi.getAccountByEmail(addUserBody.email);
+    if (!account) {
+      const accountData = {
+        email: addUserBody.email,
+        password: Math.random().toString(36).slice(-8),
+      };
+      account = await accountApi.create(accountData);
+
+      const passwordResetToken = await accountApi.generatePasswordResetToken(account.email);
+      emailApi.sendAssociateVerificationAndPasswordResetEmail(account, passwordResetToken);
+    }
+
+    const businessUnit = await businessUnitApi.addAssociate(
+      request.query['key'],
+      account.accountId,
+      addUserBody.roleKeys,
+    );
+
+    emailApi.sendWelcomeAssociateEmail(account, businessUnit);
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(businessUnit),
+      sessionData: request.sessionData,
     };
-    account = await accountApi.create(accountData);
 
-    const passwordResetToken = await accountApi.generatePasswordResetToken(account.email);
-    emailApi.sendAccountVerificationAndPasswordResetEmail(account, passwordResetToken);
+    return response;
+  } catch (error) {
+    return handleError(error, request);
   }
-
-  const businessUnit = await businessUnitApi.addAssociate(
-    request.query['key'],
-    account.accountId,
-    addUserBody.roleKeys,
-  );
-
-  emailApi.sendWelcomeAssociateEmail(account, businessUnit);
-
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(businessUnit),
-    sessionData: request.sessionData,
-  };
-
-  return response;
 };
 
 export const removeAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -220,7 +239,7 @@ export const addBusinessUnitAddress: ActionHook = async (request: Request, actio
 
   const requestData = parseRequestBody<{ address: Address }>(request.body);
 
-  const addressData = BaseAccountMapper.addressToCommercetoolsAddress(requestData.address);
+  const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
 
   try {
     const businessUnit = await businessUnitApi.addBusinessUnitAddress(request.query['key'], addressData);
@@ -244,7 +263,7 @@ export const updateBusinessUnitAddress: ActionHook = async (request: Request, ac
 
   const requestData = parseRequestBody<{ address: Address }>(request.body);
 
-  const addressData = BaseAccountMapper.addressToCommercetoolsAddress(requestData.address);
+  const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
 
   const businessUnitKey = request.query['key'];
 
@@ -306,12 +325,7 @@ export const getByKey: ActionHook = async (request: Request, actionContext: Acti
       sessionData: request.sessionData,
     };
   } catch (error) {
-    const errorInfo = error as Error;
-    return {
-      statusCode: 400,
-      body: JSON.stringify(errorInfo.message),
-      sessionData: request.sessionData,
-    };
+    return handleError(error, request);
   }
 };
 
@@ -323,11 +337,10 @@ export const remove: ActionHook = async (request: Request, actionContext: Action
   );
   const key = request.query?.['key'];
 
-  let response: Response;
-
   try {
     const businessUnit = await businessUnitApi.delete(key);
-    response = {
+
+    return {
       statusCode: 200,
       body: JSON.stringify(businessUnit),
       sessionData: request.sessionData,
@@ -335,8 +348,6 @@ export const remove: ActionHook = async (request: Request, actionContext: Action
   } catch (error) {
     return handleError(error, request);
   }
-
-  return response;
 };
 
 export const getAssociateRoles: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -346,13 +357,17 @@ export const getAssociateRoles: ActionHook = async (request: Request, actionCont
     getCurrency(request),
   );
 
-  const associateRoles = await businessUnitApi.getAssociateRoles();
+  try {
+    const associateRoles = await businessUnitApi.getAssociateRoles();
 
-  const response: Response = {
-    statusCode: 200,
-    body: JSON.stringify(associateRoles),
-    sessionData: request.sessionData,
-  };
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(associateRoles),
+      sessionData: request.sessionData,
+    };
 
-  return response;
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
 };

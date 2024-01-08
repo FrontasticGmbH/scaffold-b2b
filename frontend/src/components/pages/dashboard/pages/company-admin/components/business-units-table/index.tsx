@@ -1,26 +1,37 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Table from '@/components/atoms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
 import Confirmation from '@/components/organisms/confirmation';
 import Link from '@/components/atoms/link';
+import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
 const BusinessUnitsTable = ({ onDeleteBusinessUnit, businessUnits = [] }: Partial<CompanyAdminPageProps>) => {
   const { translate } = useTranslation();
 
+  const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('businessunit');
+
   const isDeleteDisabled = businessUnits.length === 1;
+
+  const handleDelete = useCallback(
+    async (id: string) => {
+      const success = await onDeleteBusinessUnit?.(id);
+
+      if (success) showDeletedMessage();
+      else showDeletedFailedMessage();
+    },
+    [showDeletedMessage, showDeletedFailedMessage, onDeleteBusinessUnit],
+  );
 
   return (
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Row>
-            <Table.Cell>{translate('common.name')}</Table.Cell>
-            <Table.Cell>{translate('common.key')}</Table.Cell>
-            <Table.Cell>{translate('common.email')}</Table.Cell>
-            <Table.Cell />
-          </Table.Row>
+          <Table.Cell>{translate('common.name')}</Table.Cell>
+          <Table.Cell>{translate('common.key')}</Table.Cell>
+          <Table.Cell>{translate('common.email')}</Table.Cell>
+          <Table.Cell />
         </Table.Head>
         <Table.Body>
           {businessUnits.map(({ id, name, key, email }) => (
@@ -42,7 +53,7 @@ const BusinessUnitsTable = ({ onDeleteBusinessUnit, businessUnits = [] }: Partia
                       confirm: translate('common.delete'),
                     }}
                     disabled={isDeleteDisabled}
-                    onConfirm={async () => onDeleteBusinessUnit?.(id)}
+                    onConfirm={() => handleDelete(id)}
                   >
                     <DeleteIcon className="cursor-pointer" width={20} />
                   </Confirmation>

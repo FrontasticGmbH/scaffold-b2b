@@ -1,5 +1,5 @@
 {
-  "auth.wrong": "Wrong email address or password",
+  "auth.wrong": "Invalid email or password. Please check and try again.",
   "wentWrong": "Sorry, something went wrong..",
   "wentWrong.retry": "Entschuldigung, etwas ist schief gelaufen. Bitte versuchen Sie es in 5 Minuten erneut.",
   "password.noMatch": "Passwords don't match.",

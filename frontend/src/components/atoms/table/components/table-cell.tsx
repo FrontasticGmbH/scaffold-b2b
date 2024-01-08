@@ -1,11 +1,30 @@
-import { FC, useMemo } from 'react';
+import { useMemo } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
 import Typography from '../../typography';
 import { TableCellProps } from '../types';
 
-const TableCell: FC<TableCellProps> = ({ className, sortable, onSorting, children, ...props }) => {
-  const cellClassName = classnames('p-4', { 'cursor-pointer': !!sortable }, className);
+const TableCell = ({
+  className,
+  sortable,
+  isButtonsCell = false,
+  isButtonsHead = false,
+  onSorting,
+  children,
+  ...props
+}: TableCellProps) => {
+  const cellClassName = classnames(
+    'p-4',
+    { 'cursor-pointer': !!sortable },
+    { 'bg-white': isButtonsCell },
+    { 'bg-[#FCFCFD]': isButtonsHead },
+    { 'shadow-[0px_-1px_0px_0px_#E4E4E7_inset] lg:shadow-none': isButtonsCell || isButtonsHead },
+    {
+      'sticky right-0 z-10 lg:block lg:bg-transparent': isButtonsCell || isButtonsHead,
+    },
+    { 'text-right': typeof children == 'number' },
+    className,
+  );
 
   const asTypography = useMemo(
     () => (

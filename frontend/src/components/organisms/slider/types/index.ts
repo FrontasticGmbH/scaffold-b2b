@@ -6,9 +6,12 @@ export interface SliderProps extends Omit<React.ComponentProps<typeof Slick>, 's
   arrowSize?: number;
   arrowStyles?: React.CSSProperties;
   arrowClassName?: string;
+  arrowIconClassName?: string;
   arrowVariant?: ArrowProps['variant'];
+  overlayDarkArrow?: boolean;
   slideWidth?: number | ResponsiveQuery<number>;
   slidesToShow?: number | ResponsiveQuery<number>;
+  containerClassName?: string;
 }
 
 export interface SlideProps {
@@ -27,6 +30,9 @@ export interface ArrowProps {
   size?: number;
   customStyles?: React.CSSProperties;
   customClassName?: string;
+  iconClassName?: string;
+  align?: 'horizontal' | 'vertical';
   position?: 'prev' | 'next';
   variant?: 'default' | 'overlay';
+  overlayDarkArrow?: boolean;
 }

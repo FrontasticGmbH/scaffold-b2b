@@ -39,12 +39,12 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
   ] as Location[];
 
   const parameters = useParams();
-  const [selectedLocationValue, setSelectedLocationValue] = useState('sv');
+  const [selectedLocationValue, setSelectedLocationValue] = useState(parameters.locale);
   const selectedLocation = locations.find((location) => location.value === selectedLocationValue);
   const selectedLanguage = selectedLocation?.languages.find((language) => language.value === parameters.locale);
 
   const onLanguageSelect = (language: string) => {
-    router.push(`/${language}/${path}`);
+    router.push(`/${language}${path}`);
   };
 
   const onLocationSelect = (location: string) => {

@@ -7,7 +7,7 @@ const AccountLink = () => {
   const { accountLink } = useContext(HeaderContext);
   return (
     <Link href={accountLink.href ?? '/'}>
-      <UserCircleIcon className="w-7 text-gray-700 lg:w-5" />
+      <UserCircleIcon className="w-6 text-gray-700 lg:w-5" />
     </Link>
   );
 };

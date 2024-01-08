@@ -1,4 +1,4 @@
-import { addToWishlist, getWishlist } from '../commerce-commercetools/actionControllers/BaseWishlistController';
+import { addToWishlist, getWishlist } from '../commerce-commercetools/actionControllers/WishlistController';
 import { Request } from '@frontastic/extension-types';
 import { dummyAccount, dummyActionContext } from './data-provider';
 

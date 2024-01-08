@@ -22,6 +22,11 @@ import AddressesTastic from './addresses';
 import PurchaseListDetailTastic from './purchase-list-detail';
 import OrderDetailTastic from './order-detail';
 import QuoteDetailTastic from './quote-detail';
+import CheckoutTastic from './checkout';
+import ThankYouTastic from './thank-you';
+import ProductSliderTastic from './product-slider';
+import ProductDetailsTastic from './product-details';
+import QuoteRequestDetailsTastic from './quote-request-detail';
 
 const tastics = {
   'commercetools/ui/content/hero-tile': HeroTileTastic,
@@ -32,6 +37,7 @@ const tastics = {
   'commercetools/ui/not-found': NotFoundTastic,
   'commercetools/ui/content/blog': BlogTastic,
   'commercetools/ui/header': HeaderTastic,
+  'commercetools/ui/products/details': ProductDetailsTastic,
   'commercetools/ui/products/product-list': ProductListTastic,
   'commercetools/ui/cart': CartTastic,
   'commercetools/ui/account/login': AccountLoginTastic,
@@ -47,6 +53,10 @@ const tastics = {
   'commercetools/ui/purchase-list-detail': PurchaseListDetailTastic,
   'commercetools/ui/order-detail': OrderDetailTastic,
   'commercetools/ui/quote-detail': QuoteDetailTastic,
+  'commercetools/ui/quote-request-detail': QuoteRequestDetailsTastic,
+  'commercetools/ui/checkout': CheckoutTastic,
+  'commercetools/ui/thank-you': ThankYouTastic,
+  'commercetools/ui/products/product-slider': ProductSliderTastic,
 } as TasticRegistry;
 
 export default tastics;

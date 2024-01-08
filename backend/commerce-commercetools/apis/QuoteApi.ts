@@ -7,9 +7,9 @@ import { Quote, QuoteState } from '@Types/quote/Quote';
 import { ExternalError } from '@Commerce-commercetools/utils/Errors';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import { Result } from '@Types/quote/Result';
 import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import { PaginatedResult } from '@Types/result';
 
 export class QuoteApi extends BaseApi {
   createQuoteRequest: (quoteDraft: QuoteRequest, cart: Cart) => Promise<QuoteRequest> = async (
@@ -91,7 +91,7 @@ export class QuoteApi extends BaseApi {
       });
   };
 
-  query: (quoteQuery: QuoteQuery) => Promise<Result> = async (quoteQuery: QuoteQuery) => {
+  async query(quoteQuery: QuoteQuery): Promise<PaginatedResult<Quote>> {
     const locale = await this.getCommercetoolsLocal();
     const limit = +quoteQuery.limit || undefined;
     const sortAttributes: string[] = [];
@@ -132,7 +132,7 @@ export class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteToQuote(commercetoolsQuote, locale);
         });
 
-        const result: Result = {
+        return {
           total: response.body.total,
           items: quotes,
           count: response.body.count,
@@ -140,14 +140,13 @@ export class QuoteApi extends BaseApi {
           nextCursor: ProductMapper.calculateNextCursor(response.body.offset, response.body.count, response.body.total),
           query: quoteQuery,
         };
-        return result;
       })
       .catch((error) => {
         throw new ExternalError({ status: error.code, message: error.message, body: error.body });
       });
-  };
+  }
 
-  queryQuoteRequests: (quoteQuery: QuoteQuery) => Promise<Result> = async (quoteQuery: QuoteQuery) => {
+  async queryQuoteRequests(quoteQuery: QuoteQuery): Promise<PaginatedResult<QuoteRequest>> {
     const locale = await this.getCommercetoolsLocal();
     const limit = +quoteQuery.limit || undefined;
     const sortAttributes: string[] = [];
@@ -188,7 +187,7 @@ export class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(commercetoolsQuoteRequest, locale);
         });
 
-        const result: Result = {
+        const result: PaginatedResult<QuoteRequest> = {
           total: response.body.total,
           items: quoteRequests,
           count: response.body.count,
@@ -230,7 +229,7 @@ export class QuoteApi extends BaseApi {
       });
 
     return result;
-  };
+  }
 
   acceptQuote: (quoteId: string) => Promise<Quote> = async (quoteId: string) => {
     const locale = await this.getCommercetoolsLocal();

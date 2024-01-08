@@ -2,6 +2,9 @@ import { Product } from '@shared/types/product/Product';
 import { TermFacet } from '@shared/types/query/TermFacet';
 import { RangeFacet } from '@shared/types/query/RangeFacet';
 import { Category } from '@shared/types/product/Category';
+import { Image } from '@/types/image';
+import { Reference } from '@/types/lib/reference';
+import { FrontasticImage } from '@/types/lib/image';
 
 export interface DataSourceProps {
   category?: string;
@@ -26,6 +29,32 @@ export interface DataSourceProps {
   totalItems: number;
 }
 
+export interface CategoryConfiguration {
+  key: string;
+  image?: FrontasticImage;
+  highlightHeadline?: string;
+  highlightSubline?: string;
+  highlightCta?: string;
+  highlightCtaReference?: Reference;
+  highlightItems: Array<CategoryHighlightItem>;
+}
+
+export interface CategoryHighlightItem {
+  image: Image;
+  name: string;
+  price: number;
+  reference: Reference;
+  pressTargetPosition: 'top' | 'bottom';
+}
+
 export interface Props {
-  categories: Category[];
+  categories: Array<Category>;
+  categoryConfiguration: CategoryConfiguration[];
+}
+
+export interface ViewModelProps {
+  categories: Array<Category>;
+  category?: Category;
+  categoryConfiguration: Record<string, CategoryConfiguration>;
+  displayIntermediaryPage?: boolean;
 }

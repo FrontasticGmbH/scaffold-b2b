@@ -13,7 +13,7 @@ const AuthLayout = ({ image, logo, logoLink, children }: PropsWithChildren<AuthL
   return (
     <div className="grid h-[100vh] lg:grid-cols-2">
       <div className="relative md:col-span-1">
-        <div className="grid w-full content-center border-b border-neutral-400 px-4 py-5 md:px-6 lg:absolute lg:px-12 lg:py-7">
+        <div className="grid w-full content-center border-b border-neutral-400 px-4 py-5 md:px-6 lg:absolute lg:border-none lg:px-12 lg:py-7">
           <div className="w-[180px] lg:w-[205px]">
             <HeaderLogo logo={logo} logoLink={logoLink} />
           </div>

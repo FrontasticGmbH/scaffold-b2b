@@ -5,3 +5,7 @@ thead td {
 table tbody td {
   @apply text-gray-600;
 }
+
+table tbody tr:last-child td {
+  @apply shadow-none;
+}

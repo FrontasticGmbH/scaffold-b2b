@@ -20,10 +20,7 @@ const Table: FC<HTMLAttributes<HTMLDivElement>> & {
 } = ({ className = '', ...props }) => {
   return (
     <div
-      className={classnames(
-        'overflow-x-auto whitespace-pre border border-neutral-400 scrollbar-hide lg:scrollbar-default',
-        className,
-      )}
+      className={classnames('overflow-x-auto whitespace-pre scrollbar-hide lg:scrollbar-default', className)}
       {...props}
     />
   );

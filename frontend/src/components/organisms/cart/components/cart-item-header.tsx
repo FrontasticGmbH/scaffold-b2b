@@ -9,7 +9,13 @@ const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
   return (
     <div className={className}>
       {/* Product Name */}
-      <Typography fontSize={14} lineHeight="loose" fontWeight="semibold" className="md:text-16" title={item.name}>
+      <Typography
+        fontSize={14}
+        lineHeight="loose"
+        fontWeight="semibold"
+        className="text-gray-800 md:text-16"
+        title={item.name}
+      >
         {item.name}
       </Typography>
 

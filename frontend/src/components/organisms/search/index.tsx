@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Overlay from '@/components/atoms/overlay';
 import SearchInput from '@/components/atoms/search-input';
 import useMediaQuery from '@/hooks/useMediaQuery';
@@ -11,14 +11,13 @@ import SearchPanel from './search-suggestions-panel';
 const Search = ({
   disabled,
   searchValue,
-  searchResult,
   suggestions,
   variant = 'sm',
   placeholder,
-  filterSearch,
-  onClick,
+  onProductClick,
   handleOnChange,
   scrollControl,
+  handleSearchAction,
 }: SearchProps) => {
   const [focused, setFocused] = useState(false);
   const onFocus = useCallback(() => setFocused(true), []);
@@ -27,8 +26,6 @@ const Search = ({
   }, []);
 
   const { SearchWrapperClassNames, searchPanelClassNames } = useClassNames(variant, focused);
-
-  const showPanel = useMemo(() => (searchValue ? searchResult : suggestions), [searchResult, searchValue, suggestions]);
 
   const [isLargerThanTablet, width] = useMediaQuery(tablet);
 
@@ -43,7 +40,7 @@ const Search = ({
 
   return (
     <>
-      {width >= tablet && focused && !filterSearch && variant === 'lg' && <Overlay />}
+      {width >= tablet && focused && variant === 'lg' && <Overlay />}
       <div className={SearchWrapperClassNames}>
         <SearchInput
           mobile={!isLargerThanTablet && focused}
@@ -55,9 +52,15 @@ const Search = ({
           placeholder={placeholder}
           handleOnChange={handleOnChange}
           onBackClick={handleOnBackClick}
+          handleSearchAction={handleSearchAction}
         />
-        {focused && showPanel && !filterSearch && (
-          <SearchPanel panelItems={showPanel} onClick={onClick} className={searchPanelClassNames} />
+        {focused && suggestions && suggestions.length > 0 && (
+          <SearchPanel
+            variant={variant}
+            panelItems={suggestions}
+            onClick={onProductClick}
+            className={searchPanelClassNames}
+          />
         )}
       </div>
     </>

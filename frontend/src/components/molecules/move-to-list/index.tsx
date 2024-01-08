@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
-import Typography from '@/components/atoms/typography';
-import ResponsiveModal from '@/components/organisms/responsive-modal';
-import Checkbox from '@/components/atoms/checkbox';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useDisclosure from '@/hooks/useDisclosure';
 import { MoveToListProps } from './types';
+import WishlistModal from '../wishlist-modal';
+import { Wishlist } from '../wishlist-modal/types';
 
-const MoveToList = ({ lists }: MoveToListProps) => {
+const MoveToList = ({ lists, onSubmit }: MoveToListProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [loading, setLoading] = useState(false);
 
   const { translate } = useTranslation();
 
   const [checkedBoxes, setCheckedBoxes] = useState<Record<string, boolean>>({});
+
+  const selectedIds = Object.keys(checkedBoxes).filter((key) => !!checkedBoxes[key]);
 
   const handleChange = (id: string, checked: boolean) => {
     const updated = { ...checkedBoxes };
@@ -21,46 +24,38 @@ const MoveToList = ({ lists }: MoveToListProps) => {
     setCheckedBoxes(updated);
   };
 
+  const handleSubmit = useCallback(
+    async (lists: Wishlist[]) => {
+      setLoading(true);
+
+      await onSubmit?.(lists.map((list) => list.id));
+
+      onClose();
+
+      setLoading(false);
+    },
+    [onSubmit, onClose],
+  );
+
   return (
     <>
       <Button
         size="fit"
         variant="ghost"
-        className="grow text-center text-14 font-medium md:grow-0 md:text-start"
+        className="flex-1 text-center text-14 font-medium text-gray-700 md:flex-[unset] md:text-start"
         onClick={onOpen}
       >
         {translate('wishlist.move.to.list')}
       </Button>
-      <ResponsiveModal isOpen={isOpen} onRequestClose={onClose} closeButton className="md:w-[400px] lg:w-[600px]">
-        <div className="px-6 pt-6 lg:mx-auto lg:max-w-[400px]">
-          <Typography fontWeight="semibold" fontSize={16} lineHeight="loose" className="pb-4 text-gray-700 md:text-20">
-            {translate('wishlist.select.list')}
-          </Typography>
-
-          <div className="max-h-[284px] overflow-y-scroll">
-            {lists.map(({ label, id }) => (
-              <Checkbox
-                key={id}
-                label={label}
-                value={id}
-                onChecked={(checked) => handleChange(id, checked)}
-                containerClassName="flex-row-reverse w-full justify-between py-4 lg:py-5 border-y border-neutral-400"
-              />
-            ))}
-          </div>
-        </div>
-
-        <div className=" border-t border-neutral-400 p-6">
-          <div className="flex justify-end gap-3 lg:mx-auto lg:max-w-[400px]">
-            <Button size="l" variant="secondary" onClick={onClose}>
-              {translate('common.cancel')}
-            </Button>
-            <Button size="l" onClick={onClose}>
-              {translate('wishlist.move')}
-            </Button>
-          </div>
-        </div>
-      </ResponsiveModal>
+      <WishlistModal
+        lists={lists}
+        isOpen={isOpen}
+        onClose={onClose}
+        handleChange={handleChange}
+        selectedIds={selectedIds}
+        onSubmit={handleSubmit}
+        loading={loading}
+      />
     </>
   );
 };

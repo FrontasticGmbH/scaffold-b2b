@@ -1,6 +1,9 @@
-import { Quote } from './Quote';
-import { QuoteRequest } from './QuoteRequest';
+import {Quote} from './Quote';
+import {QuoteRequest} from './QuoteRequest';
 
+/**
+ * @deprecated | Use PaginatedResult<T>
+ */
 export interface Result {
   total?: number;
   previousCursor?: string;

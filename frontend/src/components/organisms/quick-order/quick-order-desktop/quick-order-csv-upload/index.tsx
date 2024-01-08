@@ -11,10 +11,13 @@ import { QuickOrderDesktopContext } from '../quick-order-csv-upload/context';
 
 const QuickOrderCSVUpload = () => {
   const { translate } = useTranslation();
-  const { checked, products, files, handleProductClear, handleAddToCart, onCheckboxChange } =
+
+  const { checked, products, files, addToCartLoading, handleProductClear, handleAddToCart, onCheckboxChange } =
     useContext(QuickOrderDesktopContext);
+
   const checkboxLabelClassNames = (product: Product) =>
     classnames(!product.inStock ? 'text-gray-500 line-through' : '');
+
   const checkboxLabel = (product: Product) => (
     <div className="flex justify-start">
       <div className={checkboxLabelClassNames(product)}>
@@ -47,9 +50,14 @@ const QuickOrderCSVUpload = () => {
                     label={checkboxLabel(product)}
                     onChecked={(value) => onCheckboxChange(product, value)}
                   />
-                  {!product.inStock && (
+                  {product.exists && !product.inStock && (
                     <Typography fontSize={12} className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-red-600">
                       {translate('quick-order.out.of.stock')}
+                    </Typography>
+                  )}
+                  {!product.exists && (
+                    <Typography fontSize={12} className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-red-600">
+                      {translate('quick-order.item.not.located')}
                     </Typography>
                   )}
                 </div>
@@ -65,7 +73,13 @@ const QuickOrderCSVUpload = () => {
               >
                 {translate('quick-order.click.clear')}
               </Button>
-              <Button variant="primary" size="full" className="text-14" onClick={handleAddToCart}>
+              <Button
+                variant="primary"
+                size="full"
+                className="text-14"
+                loading={addToCartLoading}
+                onClick={handleAddToCart}
+              >
                 {translate('quick-order.add.to.cart')}
               </Button>
             </div>

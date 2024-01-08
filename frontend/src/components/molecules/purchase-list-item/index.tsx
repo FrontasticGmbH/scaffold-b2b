@@ -40,11 +40,15 @@ const PurchaseListItem = ({
 
   const { formatCurrency } = useFormat();
 
+  const handleRemove = useCallback(async () => {
+    onRemove?.();
+  }, [onRemove]);
+
   return (
     <div className="rounded-lg border border-neutral-400 p-4 md:flex md:items-start md:p-6">
       <div className="flex items-center justify-between md:hidden">
         <StockIndicator inStock={inStock} />
-        <RemoveButton onRemove={onRemove} />
+        <RemoveButton onRemove={handleRemove} />
       </div>
 
       <div className="relative mx-auto mt-2 h-[124px] w-[124px] md:mr-8 md:h-[140px] md:w-[140px]">
@@ -86,7 +90,7 @@ const PurchaseListItem = ({
 
       <div className="mt-4 flex flex-col justify-start gap-8 md:mt-0 md:shrink-0 md:self-stretch md:text-end">
         <div className="hidden md:block">
-          <RemoveButton onRemove={onRemove} />
+          <RemoveButton onRemove={handleRemove} />
         </div>
 
         <div className="flex flex-col gap-3 md:items-end">

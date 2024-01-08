@@ -3,6 +3,9 @@
   "size": "Size",
   "finish": "Finish",
   "quantity": "Quantity",
+  "add.to.list": "Add to shopping list",
+  "details": "Product details",
+  "specifications": "Specifications",
   "product.info": "Product information",
   "product.desc": "Product description",
   "bag.add": "Add to bag",
@@ -56,5 +59,6 @@
   "categories.id": "Category",
   "variants.scopedPrice.value": "Scoped Price",
   "variants.price": "Price",
-  "variants.attributes.brand": "Brand"
+  "variants.attributes.brand": "Brand",
+  "search.results": "Search Results"
 }

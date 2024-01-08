@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/preview/order-page",
+  "name": "Order preview",
+  "category": "Previews",
+  "icon": "picture_in_picture",
+  "dataSourceType": "frontastic/order",
+  "isMultiple": true
+}

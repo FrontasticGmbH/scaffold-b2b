@@ -12,7 +12,7 @@ const ViewToggle = () => {
   ] as const;
 
   return (
-    <div className="flex h-[40px] items-center gap-6 rounded-md border border-gray-300 px-[14px] py-3">
+    <div className="flex h-[40px] items-center gap-6 rounded-md border border-gray-300 px-[14px] py-2 xl:h-[32px] xl:gap-3 xl:px-3">
       {views.map(({ key, Icon }) => (
         <Icon
           key={key}

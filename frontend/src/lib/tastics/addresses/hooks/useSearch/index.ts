@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react';
 import { Address } from '@shared/types/account/Address';
 import { Props } from './types';
 
-const useSearch = ({ accountAddresses }: Props) => {
-  const [search, setSearch] = useState({ accountAddresses: '' });
+const useSearch = ({ addresses }: Props) => {
+  const [search, setSearch] = useState({ addresses: '' });
 
   const handleSearch = useCallback(
     (key: keyof typeof search) => {
@@ -22,7 +22,7 @@ const useSearch = ({ accountAddresses }: Props) => {
   };
 
   return {
-    searchedAccountAddresses: accountAddresses.filter((address) => searchAddresses(address, search.accountAddresses)),
+    searchedAddresses: addresses.filter((address) => searchAddresses(address, search.addresses)),
     handleSearch,
   };
 };

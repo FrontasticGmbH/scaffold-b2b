@@ -1,0 +1,7 @@
+.navigation-slider .slick-current img {
+  border: 1.5px solid #173a5f;
+}
+
+.navigation-slider .slick-slide:not(.slick-current) img {
+  border: 1px solid #dce0eb;
+}

@@ -1,0 +1,7 @@
+{
+  "customDataSourceType": "frontastic/orders",
+  "name": "Orders",
+  "category": "Orders",
+  "icon": "view_list",
+  "schema": []
+}

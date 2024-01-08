@@ -6,7 +6,7 @@ import 'react-day-picker/dist/style.css';
 import './styles/index.css';
 
 export const DatePicker: FC<DayPickerProps> = ({ ...props }) => {
-  return <DayPicker captionLayout="dropdown" modifiersClassNames={{ outside: 'custom-disabled' }} {...props} />;
+  return <DayPicker {...props} />;
 };
 
 export default DatePicker;

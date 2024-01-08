@@ -22,12 +22,4 @@ export class StoreMapper {
       }),
     };
   }
-
-  static mapStoreToSmallerStore(store: Store): Store {
-    return {
-      name: store.name,
-      storeId: store.storeId,
-      key: store.key,
-    };
-  }
 }

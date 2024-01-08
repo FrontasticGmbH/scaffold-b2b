@@ -7,7 +7,7 @@ import Truncator from './components/truncator';
 
 const Breadcrumb = ({
   children,
-  Separator = '/',
+  Separator = '|',
   className = '',
   disabled = false,
   maxItems = React.Children.count(children),
@@ -39,7 +39,9 @@ const Breadcrumb = ({
         const isLastElement = index === breadcrumb.length - 1;
 
         const itemClassName = classnames('text-12 leading-tight transition', {
-          'text-gray-700': disabled || isLastElement,
+          'text-gray-300': disabled,
+          'hover:font-medium hover:text-gray-700': !disabled,
+          'text-gray-700': !disabled && isLastElement,
           'text-primary': !disabled && !isLastElement,
         });
 

@@ -8,12 +8,26 @@ import QuickOrderCSVUpload from './quick-order-csv-upload';
 import { QuickOrderDesktopProps } from '../types';
 import { QuickOrderDesktopProvider } from './quick-order-csv-upload/context';
 
-const QuickOrderDesktop = ({ items, downloadLink }: QuickOrderDesktopProps) => {
+const QuickOrderDesktop = ({
+  searchText,
+  items,
+  downloadLink,
+  csvProducts,
+  onSearch,
+  addItem,
+  handleSKUsUpdate,
+}: QuickOrderDesktopProps) => {
   const { translate } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <QuickOrderDesktopProvider downloadLink={downloadLink}>
+    <QuickOrderDesktopProvider
+      csvProducts={csvProducts}
+      downloadLink={downloadLink}
+      addItem={addItem}
+      handleSKUsUpdate={handleSKUsUpdate}
+      onClose={onClose}
+    >
       <div className="cursor-pointer underline-offset-4 hover:underline">
         <div onClick={onOpen}>
           <Typography fontSize={16} className="whitespace-nowrap text-gray-700">
@@ -24,7 +38,13 @@ const QuickOrderDesktop = ({ items, downloadLink }: QuickOrderDesktopProps) => {
       <Drawer direction="right" isOpen={isOpen} headline="Quick add to cart" onClose={onClose}>
         <div className="h-full overflow-y-scroll">
           <div className="mt-10 px-4 lg:px-5">
-            <QuickOrderAccordion items={items} />
+            <QuickOrderAccordion
+              searchText={searchText}
+              items={items}
+              onSearch={onSearch}
+              addItem={addItem}
+              closeMenu={onClose}
+            />
           </div>
           <div className="mt-5 hidden px-4 lg:block lg:px-5">
             <QuickOrderCSVUpload />

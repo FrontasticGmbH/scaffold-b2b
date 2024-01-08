@@ -1,4 +1,4 @@
-import { Variant } from './Variant';
+import { Variant } from '../product';
 
 export interface LineItem {
   lineItemId: string;

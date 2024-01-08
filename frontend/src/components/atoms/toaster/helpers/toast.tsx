@@ -1,11 +1,11 @@
-import { toast as ReactToast } from 'react-hot-toast';
-import { getToastOptions } from './getToastOptions';
+import { ToastOptions } from 'react-hot-toast';
+import { getToast } from './getToast';
 
 const toast = {
-  info: (message: string) => ReactToast(message, getToastOptions('info')),
-  success: ReactToast.success,
-  warning: (message: string) => ReactToast(message, getToastOptions('warning')),
-  error: ReactToast.error,
+  info: (message: string, options?: ToastOptions) => getToast(message, 'info', options),
+  success: (message: string, options?: ToastOptions) => getToast(message, 'success', options),
+  warning: (message: string, options?: ToastOptions) => getToast(message, 'warning', options),
+  error: (message: string, options?: ToastOptions) => getToast(message, 'error', options),
 };
 
 export default toast;

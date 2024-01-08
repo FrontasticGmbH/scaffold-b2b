@@ -2,12 +2,12 @@ import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { CartApi } from '../apis/CartApi';
 import { getCurrency, getLocale } from './Request';
-import { BaseCartFetcher } from './BaseCartFetcher';
 
-export class CartFetcher extends BaseCartFetcher {
+export class CartFetcher {
   static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> | undefined {
-    const businessUnitKey = request?.query?.['businessUnitKey'] ?? request?.body?.['businessUnitKey'];
-    const storeKey = request?.query?.['storeKey'] ?? request?.body?.['storeKey'];
+    const body = request?.body ?? JSON.parse(request.body);
+    const businessUnitKey = request?.query?.['businessUnitKey'] ?? body?.['businessUnitKey'];
+    const storeKey = request?.query?.['storeKey'] ?? body?.['storeKey'];
 
     const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
 
@@ -26,10 +26,3 @@ export class CartFetcher extends BaseCartFetcher {
     return undefined;
   }
 }
-
-// Override the BaseCartFetcher with new CartFetcher functions
-Object.getOwnPropertyNames(CartFetcher).forEach((key) => {
-  if (typeof CartFetcher[key] === 'function') {
-    BaseCartFetcher[key] = CartFetcher[key];
-  }
-});

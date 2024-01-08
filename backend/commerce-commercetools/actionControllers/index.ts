@@ -11,7 +11,7 @@ export const actions = {
   cart: CartActions,
   'business-unit': BusinessUnitActions,
   product: ProductAction,
-  wishlist: WishlistAction,
-  quote: QuoteAction,
   project: ProjectActions,
+  quote: QuoteAction,
+  wishlist: WishlistAction,
 };

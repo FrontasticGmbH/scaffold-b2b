@@ -4,96 +4,92 @@ import React from 'react';
 import Dashboard from '@/components/pages/dashboard';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import OrdersPage from '@/components/pages/dashboard/pages/orders';
+import useAccount from '@/lib/hooks/useAccount';
+import { OrdersPageProps } from '@/components/pages/dashboard/pages/orders/types';
 
 const OrdersTastic = () => {
+  const { account } = useAccount();
+
+  const mockOrders: OrdersPageProps['orders'] = [
+    {
+      id: '2353 2245 6631',
+      status: 'confirmed',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+    {
+      id: '2353 2245 6632',
+      status: 'returned',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+    {
+      id: '2353 2245 6633',
+      status: 'delivered',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+    {
+      id: '2353 2245 6634',
+      status: 'cancelled',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+    {
+      id: '2353 2245 6635',
+      status: 'delivered',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+    {
+      id: '2353 2245 6636',
+      status: 'returned',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+    {
+      id: '2353 2245 6637',
+      status: 'cancelled',
+      creationDate: '11/03/2023',
+      businessUnit: 'Greenville',
+      subtotal: 5225.66,
+      total: 5225.66,
+      currency: 'USD',
+      items: [],
+    },
+  ];
+
   return (
-    <Dashboard href={DashboardLinks.orders}>
+    <Dashboard href={DashboardLinks.orders} userName={account?.firstName}>
       <OrdersPage
-        orders={[
-          {
-            id: '2353 2245 6631',
-            status: 'confirmed',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6632',
-            status: 'returned',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6633',
-            status: 'delivered',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6634',
-            status: 'cancelled',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6635',
-            status: 'delivered',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6636',
-            status: 'returned',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6637',
-            status: 'cancelled',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-          {
-            id: '2353 2245 6638',
-            status: 'confirmed',
-            creationDate: '11/03/2023',
-            businessUnit: 'Greenville',
-            subtotal: 5225.66,
-            total: 5225.66,
-            currency: 'USD',
-            items: [],
-          },
-        ]}
+        orders={mockOrders}
         filters={{}}
-        page={0}
-        totalItems={100}
+        page={1}
+        totalItems={mockOrders.length}
         limit={25}
         sortOptions={[
           { name: 'Date', value: 'date' },

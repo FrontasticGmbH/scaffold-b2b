@@ -1,0 +1,18 @@
+{
+  "tasticType": "commercetools/ui/checkout",
+  "name": "Checkout",
+  "category": "Checkout",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Terms & Conditions Link",
+          "field": "termsAndConditionsLink",
+          "type": "reference",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

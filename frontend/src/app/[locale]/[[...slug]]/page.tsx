@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { sdk } from '@/sdk';
 import { PageProps } from '@/types/next';
 import { getLocalizationInfo } from '@/project.config';
@@ -10,10 +11,12 @@ import { authenticate } from '@/utils/server/authenticate';
 import { Providers } from '@/providers';
 import getServerOptions from '@/utils/server/getServerOptions';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale: nextLocale, slug } = params;
 
-  sdk.configureForNext(nextLocale);
+  sdk.defaultConfigure(nextLocale);
 
   const response = await sdk.page.getPage({ path: `/${slug?.join('/') ?? ''}` });
 
@@ -30,15 +33,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export const revalidate = 300; // 5 minutes
-export const fetchCache = 'force-cache';
-
 export default async function Page({ params, searchParams }: PageProps) {
   const { locale, slug } = params;
 
-  sdk.configureForNext(locale);
+  sdk.defaultConfigure(locale);
 
-  const auth = await authenticate(slug);
+  const { loggedIn, attemptingToAuth, auth } = await authenticate(slug);
+
+  if (!loggedIn && !attemptingToAuth) return redirect('/login');
 
   const response = await sdk.page.getPage({
     path: `/${slug?.join('/') ?? ''}`,
@@ -70,7 +72,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 
   return (
-    <Providers translations={translations} locale={locale} accountResult={auth}>
+    <Providers translations={translations} locale={locale} accountResult={auth.isError ? {} : auth.data}>
       <Renderer data={response.data} tastics={tastics} searchParams={searchParams} />
       <Toaster />
     </Providers>

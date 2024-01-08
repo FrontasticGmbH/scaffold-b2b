@@ -4,18 +4,18 @@ import SearchPanel from '../../components/search-panel';
 import AddressesTable from '../company-admin/components/addresses-table';
 import { AddressesPageProps } from './types';
 
-const AddressesPage = ({ onDeleteAccountAddress, accountAddresses, onSearchAccountAddresses }: AddressesPageProps) => {
+const AddressesPage = ({ addresses, onDeleteAddress, onSearchAddresses }: AddressesPageProps) => {
   const { translate } = useTranslation();
 
   return (
     <SearchPanel
       translations={{ button: translate('dashboard.address.add') }}
       buttonLink={`?subPath=add-address`}
-      onSearchChange={onSearchAccountAddresses}
-      isEmpty={!accountAddresses.length}
+      onSearchChange={onSearchAddresses}
+      isEmpty={!addresses.length}
       entity={translate('common.addresses')}
     >
-      <AddressesTable onDeleteAddress={onDeleteAccountAddress} addresses={accountAddresses} />
+      <AddressesTable onDeleteAddress={onDeleteAddress} addresses={addresses} />
     </SearchPanel>
   );
 };

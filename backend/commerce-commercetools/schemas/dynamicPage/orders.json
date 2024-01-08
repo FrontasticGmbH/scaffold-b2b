@@ -1,8 +1,8 @@
 {
-  "dynamicPageType": "frontastic/orders",
+  "dynamicPageType": "frontastic/orders-page",
   "name": "Orders",
   "category": "Orders",
   "icon": "shopping_cart",
-  "dataSourceType": "frontastic/product-list",
+  "dataSourceType": "frontastic/orders",
   "isMultiple": true
 }

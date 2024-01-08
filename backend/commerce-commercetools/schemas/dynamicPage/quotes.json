@@ -1,8 +1,8 @@
 {
-  "dynamicPageType": "frontastic/quotes",
-  "name": "Quotes page",
+  "dynamicPageType": "frontastic/quotes-page",
+  "name": "Quotes",
   "category": "Quotes",
   "icon": "group",
-  "dataSourceType": "frontastic/product-list",
+  "dataSourceType": "frontastic/quotes",
   "isMultiple": true
 }

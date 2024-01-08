@@ -22,23 +22,25 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
           <Table.Head>
             <Table.Row>
               <Table.Cell>{translate('common.list.name')}</Table.Cell>
-              <Table.Cell className="hidden md:table-cell">{translate('common.store')}</Table.Cell>
-              <Table.Cell className="hidden md:table-cell">{translate('common.description')}</Table.Cell>
-              <Table.Cell className="hidden md:table-cell">{translate('common.items')}</Table.Cell>
-              <Table.Cell />
+              <Table.Cell>{translate('common.store')}</Table.Cell>
+              <Table.Cell>{translate('common.description')}</Table.Cell>
+              <Table.Cell className="text-right">{translate('common.items')}</Table.Cell>
+              <Table.Cell isButtonsHead />
             </Table.Row>
           </Table.Head>
           <Table.Body>
             {purchaseLists.map(({ id, name, store, description, items }) => (
               <Table.Row key={id}>
                 <Table.Cell>{name}</Table.Cell>
-                <Table.Cell className="hidden md:table-cell">{store}</Table.Cell>
-                <Table.Cell className="hidden md:table-cell">{description}</Table.Cell>
-                <Table.Cell className="hidden md:table-cell">{items.length > 0 ? items.length : '-'}</Table.Cell>
-                <Table.Cell className="flex items-center justify-end">
-                  <Link href={DashboardLinks.shoppingListDetail(id)} underlineOnHover={false}>
-                    <Button variant="secondary">{translate('common.view')}</Button>
-                  </Link>
+                <Table.Cell>{store}</Table.Cell>
+                <Table.Cell>{description}</Table.Cell>
+                <Table.Cell>{items.length > 0 ? items.length : '-'}</Table.Cell>
+                <Table.Cell isButtonsCell>
+                  <div className="flex justify-end">
+                    <Link href={DashboardLinks.shoppingListDetail(id)} underlineOnHover={false}>
+                      <Button variant="secondary">{translate('common.view')}</Button>
+                    </Link>
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}

@@ -1,0 +1,28 @@
+{
+  "name": "Product Slider",
+  "category": "Products",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Headline",
+          "field": "headline",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Data Source",
+      "fields": [
+        {
+          "label": "Products",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/product-list",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

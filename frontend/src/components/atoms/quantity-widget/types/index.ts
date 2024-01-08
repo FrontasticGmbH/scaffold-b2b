@@ -4,4 +4,5 @@ export interface Props {
   defaultValue?: number;
   maxValue?: number;
   onChange?: (val: number) => void;
+  disabled?: boolean;
 }

@@ -1,5 +1,5 @@
 {
-  "auth.wrong": "Fel e-postadress eller lösenord",
+  "auth.wrong": "Ogiltig e-postadress eller lösenord. Kontrollera och försök igen.",
   "wentWrong": "Det är ledsamt. Något gick fel.",
   "password.noMatch": "Lösenorden matchar inte",
   "password.not.valid": "Lösenordet måste vara minst 8 tecken långt och innehålla minst en stor bokstav.",

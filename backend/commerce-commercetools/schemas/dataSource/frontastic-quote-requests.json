@@ -1,0 +1,7 @@
+{
+    "customDataSourceType": "frontastic/quote-requests",
+    "name": "Quote requests",
+    "category": "Quotes",
+    "icon": "picture_in_picture",
+    "schema": []
+}

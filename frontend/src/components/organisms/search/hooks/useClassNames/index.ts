@@ -13,8 +13,8 @@ const useClassNames = (variant: SearchVariant, focused: boolean) => {
   });
   const resolveSearchPanel = cva({
     xs: 'top-[48px] max-h-[200px] rounded-md py-2 shadow-500',
-    sm: 'top-[52px] max-h-[200px] rounded-md py-2 shadow-500',
-    lg: 'top-[66px] mt-3 max-h-full rounded-b-md py-2 md:mt-0 md:max-h-[404px] lg:top-[74px] lg:max-h-[460px]',
+    sm: 'top-[52px] max-h-[288px] rounded-md shadow-500',
+    lg: 'top-[60px] max-h-full rounded-b-md py-2 md:mt-0 md:max-h-[404px] lg:top-[66px] lg:max-h-[460px]',
   });
 
   const SearchWrapperClassNames = classnames(

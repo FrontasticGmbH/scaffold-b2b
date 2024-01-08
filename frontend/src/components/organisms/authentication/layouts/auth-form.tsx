@@ -2,6 +2,7 @@ import { PropsWithChildren } from 'react';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import Typography from '@/components/atoms/typography';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { AuthFormProps } from '../types';
 
 const AuthForm = ({
@@ -12,6 +13,8 @@ const AuthForm = ({
   buttonLabel,
   footerLabel,
   footerLink,
+  error,
+  includeCheckIcon,
   footerOnClick,
   footerLinkLabel,
   onSubmit,
@@ -20,7 +23,9 @@ const AuthForm = ({
   return (
     <>
       <div className="grid h-fit gap-5">
-        <Typography as="h1" fontSize={18} fontWeight="extrabold" className="text-gray-700">
+        {includeCheckIcon && <CheckCircleIcon className="h-6 w-6 text-primary" />}
+
+        <Typography as="h1" fontSize={18} fontWeight="bold" className="text-gray-700 md:text-20 lg:text-24">
           {title}
         </Typography>
 
@@ -30,7 +35,10 @@ const AuthForm = ({
               {subtitle}
             </Typography>
             {subtitleLink && subtitleLinkLabel && (
-              <Link className="text-14 font-medium leading-loose text-gray-600 underline" href={subtitleLink}>
+              <Link
+                className="text-14 font-medium leading-loose text-gray-600 underline hover:text-gray-500"
+                href={subtitleLink}
+              >
                 {subtitleLinkLabel}
               </Link>
             )}
@@ -38,9 +46,18 @@ const AuthForm = ({
         )}
       </div>
 
-      <div className="mt-6 grid gap-3 md:mt-9">{children}</div>
+      {children && (
+        <div className="mt-6 grid gap-3 md:mt-9">
+          {error && (
+            <Typography fontSize={14} fontWeight="medium" className="text-red-500">
+              {error}
+            </Typography>
+          )}
+          {children}
+        </div>
+      )}
 
-      <Button className="mt-6 text-14 md:mt-9" onClick={onSubmit}>
+      <Button size="l" className="mt-6 text-14 md:mt-9" onClick={onSubmit}>
         {buttonLabel}
       </Button>
 
@@ -51,7 +68,11 @@ const AuthForm = ({
           </Typography>
         )}
         {footerLink && footerLinkLabel && (
-          <Link href={footerLink} onClick={footerOnClick} className="text-14 leading-loose text-gray-600 underline">
+          <Link
+            href={footerLink}
+            onClick={footerOnClick}
+            className="text-14 leading-loose text-gray-600 underline hover:text-gray-500"
+          >
             {footerLinkLabel}
           </Link>
         )}

@@ -1,34 +1,42 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, forwardRef, ForwardedRef } from 'react';
 import Slick from 'react-slick';
 import { classnames } from '@/utils/classnames/classnames';
 import useResponsiveValue from '@/hooks/useResponsiveValue';
-import { ArrowProps, SliderProps } from './types';
 import Slide from './components/slide';
-import Arrow from './components/arrow';
 import 'slick-carousel/slick/slick.css';
 import './styles/index.css';
+import { ArrowProps, SliderProps } from './types';
+import Arrow from './components/arrow';
 
-const Slider = ({
-  children,
-  slideWidth,
-  slidesToShow = 1,
-  infinite = false,
-  swipeToSlide = true,
-  spaceBetween = 10,
-  arrows = true,
-  arrowSize = 32,
-  arrowStyles = {},
-  arrowClassName = '',
-  arrowVariant = 'default',
-  ...props
-}: SliderProps) => {
+const Slider = (
+  {
+    children,
+    slideWidth,
+    slidesToShow = 1,
+    infinite = false,
+    swipeToSlide = true,
+    spaceBetween = 10,
+    arrows = true,
+    arrowSize = 32,
+    arrowStyles = {},
+    arrowClassName = '',
+    arrowIconClassName = '',
+    arrowVariant = 'default',
+    overlayDarkArrow = false,
+    containerClassName = '',
+    ...props
+  }: SliderProps,
+  ref: ForwardedRef<Slick | null>,
+) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slidesCount = React.Children.count(children);
 
-  const containerClassName = classnames('relative overflow-hidden', { 'px-12': arrows && arrowVariant !== 'overlay' });
+  const containerClassNames = classnames({ relative: arrows }, containerClassName);
+
+  const arrowProps = { size: arrowSize, customClassName: arrowClassName, customStyles: arrowStyles } as ArrowProps;
 
   const responsiveSpaceBetween = useResponsiveValue(
     typeof spaceBetween === 'number' ? { base: spaceBetween } : spaceBetween,
@@ -42,13 +50,8 @@ const Slider = ({
     typeof slidesToShow === 'number' ? { base: slidesToShow } : slidesToShow ?? {},
   ) as number;
 
-  const arrowProps = {
-    size: arrowSize,
-    customClassName: arrowClassName,
-  } as ArrowProps;
-
   return (
-    <div className={containerClassName}>
+    <div className={containerClassNames}>
       <Slick
         beforeChange={(...args) => setCurrentSlide(args[1])}
         slidesToShow={responsiveSlidesToShow}
@@ -64,6 +67,8 @@ const Slider = ({
               ...arrowStyles,
               ...(responsiveSpaceBetween ? { left: `${Math.floor(responsiveSpaceBetween / 2)}px` } : {}),
             }}
+            iconClassName={arrowIconClassName}
+            overlayDarkArrow={overlayDarkArrow}
           />
         }
         nextArrow={
@@ -75,9 +80,12 @@ const Slider = ({
               ...arrowStyles,
               ...(responsiveSpaceBetween ? { right: `${Math.floor(responsiveSpaceBetween / 2)}px` } : {}),
             }}
+            iconClassName={arrowIconClassName}
+            overlayDarkArrow={overlayDarkArrow}
           />
         }
         variableWidth={!!slideWidth}
+        ref={ref}
         {...props}
       >
         {React.Children.map(children, (Child, index) => (
@@ -97,4 +105,5 @@ const Slider = ({
   );
 };
 
-export default Slider;
+const SliderWithRef = forwardRef(Slider);
+export default SliderWithRef;

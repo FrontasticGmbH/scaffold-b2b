@@ -5,10 +5,13 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
 import Select from '@/components/atoms/select';
 import { Associate } from '@/types/entity/associate';
+import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
 const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOptions }: CompanyAdminPageProps) => {
   const { translate } = useTranslation();
+
+  const { showSavedMessage, showFailedMessage } = useEntityToasters('associate');
 
   const router = useRouter();
 
@@ -28,10 +31,13 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
   );
 
   const handleSubmit = useCallback(async () => {
-    await (id ? onUpdateAssociate?.(data) : onAddAssociate?.(data as Associate));
+    const success = await (id ? onUpdateAssociate?.(data) : onAddAssociate?.(data as Associate));
+
+    if (success) showSavedMessage();
+    else showFailedMessage();
 
     router.back();
-  }, [onAddAssociate, onUpdateAssociate, data, id, router]);
+  }, [onAddAssociate, onUpdateAssociate, data, id, router, showSavedMessage, showFailedMessage]);
 
   return (
     <EntityForm
@@ -44,7 +50,7 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
           name="email"
           label={translate('common.email')}
           required
-          value={data.email}
+          value={data.email ?? ''}
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
@@ -52,7 +58,7 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
           label={translate('common.role')}
           placeholder={translate('common.select')}
           required
-          value={data.role}
+          value={data.role ?? ''}
           className="max-w-[400px]"
           onChange={(role) => setData({ ...data, role })}
           options={roleOptions}

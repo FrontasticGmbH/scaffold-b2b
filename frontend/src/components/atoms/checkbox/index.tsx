@@ -5,6 +5,7 @@ import { classnames } from '@/utils/classnames/classnames';
 import useControllableState from '@/hooks/useControllableState';
 import { CheckboxProps } from './types';
 import useClassNames from './hooks/useClassNames';
+import styles from './styles/index.module.css';
 
 const Checkbox = ({
   label,
@@ -38,7 +39,7 @@ const Checkbox = ({
     <label className={containerClassNames}>
       <input
         type="checkbox"
-        className={classnames(checkboxClassName, className)}
+        className={classnames(checkboxClassName, className, styles.checkbox)}
         disabled={disabled}
         checked={checked}
         onChange={handleChange}

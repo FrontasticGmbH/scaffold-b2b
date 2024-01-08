@@ -1,11 +1,13 @@
 import { Wishlist } from '@Types/wishlist/Wishlist';
-import { ShoppingList, StoreKeyReference } from '@commercetools/platform-sdk';
+import { ShoppingList, ShoppingListLineItem, StoreKeyReference } from '@commercetools/platform-sdk';
 import { ShoppingListDraft } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
 import { Store } from '@Types/store/Store';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { BaseWishlistMapper } from './BaseWishlistMapper';
+import { LineItem } from '@Types/wishlist';
+import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
+import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
 
-export class WishlistMapper extends BaseWishlistMapper {
+export class WishlistMapper {
   static commercetoolsShoppingListToWishlist = (commercetoolsShoppingList: ShoppingList, locale: Locale): Wishlist => {
     return {
       wishlistId: commercetoolsShoppingList.id,
@@ -20,11 +22,20 @@ export class WishlistMapper extends BaseWishlistMapper {
     };
   };
 
-  private static commercetoolsStoreRefToStore = (commercetoolsStoreRef: StoreKeyReference): Store => {
-    return {
-      key: commercetoolsStoreRef?.key,
+  static commercetoolsLineItemToLineItem(commercetoolsLineItem: ShoppingListLineItem, locale: Locale): LineItem {
+    const lineItem: LineItem = {
+      lineItemId: commercetoolsLineItem.id,
+      productId: commercetoolsLineItem.productId,
+      name: commercetoolsLineItem.name[locale.language],
+      type: 'variant',
+      addedAt: new Date(commercetoolsLineItem.addedAt),
+      count: commercetoolsLineItem.quantity,
+      variant: ProductMapper.commercetoolsProductVariantToVariant(commercetoolsLineItem.variant, locale),
     };
-  };
+
+    lineItem._url = ProductRouter.generateUrlFor(lineItem);
+    return lineItem;
+  }
 
   static wishlistToCommercetoolsShoppingListDraft = (wishlist: Wishlist, locale: Locale): ShoppingListDraft => {
     return {
@@ -34,11 +45,10 @@ export class WishlistMapper extends BaseWishlistMapper {
       store: !wishlist?.store?.key ? undefined : { typeId: 'store', key: wishlist.store.key },
     };
   };
-}
 
-// Override the BaseMapper with new Mapper functions
-Object.getOwnPropertyNames(WishlistMapper).forEach((key) => {
-  if (typeof WishlistMapper[key] === 'function') {
-    BaseWishlistMapper[key] = WishlistMapper[key];
-  }
-});
+  private static commercetoolsStoreRefToStore = (commercetoolsStoreRef: StoreKeyReference): Store => {
+    return {
+      key: commercetoolsStoreRef?.key,
+    };
+  };
+}

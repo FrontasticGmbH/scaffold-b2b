@@ -1,13 +1,12 @@
 import { SearchVariant } from '@/components/atoms/search-input/types';
-import { Image } from '@/types/image';
 
-export interface Suggestion {
+export interface ProductSuggestion {
   id: string;
   sku: string;
   name: string;
+  url: string;
+  image: string;
   maxQuantity?: number;
-  url?: string;
-  image?: Image;
 }
 export interface SearchProps {
   scrollControl: boolean;
@@ -15,14 +14,16 @@ export interface SearchProps {
   disabled?: boolean;
   searchValue?: string;
   handleOnChange?: (value: string) => void;
-  searchResult?: Suggestion[];
+  searchResult?: ProductSuggestion[];
   filterSearch: boolean;
   placeholder: string;
-  suggestions?: Suggestion[];
-  onClick?: (product: Suggestion) => void;
+  suggestions?: ProductSuggestion[];
+  onProductClick?: (product: ProductSuggestion) => void;
+  handleSearchAction?: () => void;
 }
 export interface SearchPanelProps {
+  variant: SearchVariant;
+  panelItems: ProductSuggestion[];
   className?: string;
-  panelItems: Suggestion[];
-  onClick?: (product: Suggestion) => void;
+  onClick?: (product: ProductSuggestion) => void;
 }

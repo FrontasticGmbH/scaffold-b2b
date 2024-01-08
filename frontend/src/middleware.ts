@@ -17,7 +17,9 @@ export function middleware(request: NextRequest) {
     const storedLocale = request.cookies.get('locale')?.value;
     const preferredLocale = new Negotiator({ headers }).language(i18nConfig.locales);
 
-    locale = storedLocale || preferredLocale || i18nConfig.defaultLocale;
+    locale = [storedLocale, preferredLocale, i18nConfig.defaultLocale]
+      .filter(Boolean)
+      .filter((l) => i18nConfig.locales.includes(l as string))[0] as string;
 
     response = NextResponse.redirect(new URL(`/${locale}${path}`, request.url));
   } else {

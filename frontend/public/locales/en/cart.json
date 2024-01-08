@@ -20,6 +20,7 @@
   "order.summary": "Order summary",
   "order.summary.login": "Log in to use your personal offers!",
   "shipping.estimate": "Est. Shipping",
+  "shipping.est": "Est. {date}",
   "shipping.calculation.learnMore": "Learn more about how shipping is calculated",
   "discounts.calculation.learnMore": "Learn more about how discounts are calculated",
   "items.in.view": "items in cart, view cart",
@@ -52,6 +53,7 @@
   "move.to.wishlist": "Move to wishlist",
   "checkout.go": "Go to checkout",
   "go": "Go to cart",
+  "delivery.time": "Delivery time",
   "delivery.standard": "Standard Delivery",
   "delivery.express": "Express Delivery",
   "add.postcode": "Add postcode for availability",
@@ -65,5 +67,7 @@
   "submit.quote": "Submit quote",
   "quote.submitted": "Your Quote has been submitted!",
   "quote.submitted.desc": "A Sales Representative will provide you with a quote as soon as possible. You will be notified of quote updates on {email}",
-  "view.quote": "View quote"
+  "view.quote": "View quote",
+  "item.was.removed": "was removed from your cart.",
+  "attempt.with.outofstock.item": "You have an item that is out of stock, please remove it to proceed."
 }

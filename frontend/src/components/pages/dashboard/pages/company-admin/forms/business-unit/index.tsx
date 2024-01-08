@@ -5,6 +5,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
 import Checkbox from '@/components/atoms/checkbox';
 import { BusinessUnit } from '@/types/entity/business-unit';
+import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps, BusinessUnitPayload } from '../../types';
 
 const BusinessUnitForm = ({
@@ -14,6 +15,8 @@ const BusinessUnitForm = ({
   storeName,
 }: CompanyAdminPageProps) => {
   const { translate } = useTranslation();
+
+  const { showSavedMessage, showFailedMessage } = useEntityToasters('businessunit');
 
   const router = useRouter();
 
@@ -33,10 +36,13 @@ const BusinessUnitForm = ({
   );
 
   const handleSubmit = useCallback(async () => {
-    await (id ? onUpdateBusinessUnit?.(data) : onAddBusinessUnit?.(data as BusinessUnitPayload));
+    const success = await (id ? onUpdateBusinessUnit?.(data) : onAddBusinessUnit?.(data as BusinessUnitPayload));
+
+    if (success) showSavedMessage();
+    else showFailedMessage();
 
     router.back();
-  }, [onAddBusinessUnit, onUpdateBusinessUnit, data, id, router]);
+  }, [onAddBusinessUnit, onUpdateBusinessUnit, data, id, router, showSavedMessage, showFailedMessage]);
 
   return (
     <EntityForm
@@ -54,7 +60,7 @@ const BusinessUnitForm = ({
           name="name"
           label={translate('common.name')}
           required
-          value={data.name}
+          value={data.name ?? ''}
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
@@ -62,7 +68,7 @@ const BusinessUnitForm = ({
           name="email"
           label={translate('common.email')}
           required
-          value={data.email}
+          value={data.email ?? ''}
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />

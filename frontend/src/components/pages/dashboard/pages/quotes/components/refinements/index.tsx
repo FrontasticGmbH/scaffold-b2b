@@ -1,10 +1,8 @@
 import React from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import SearchInput from '@/components/atoms/search-input';
-import Dropdown from '@/components/atoms/dropdown';
-import Checkbox from '@/components/atoms/checkbox';
-import DatePicker from '@/components/molecules/date-picker';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
+import RefinementDropdown from '@/components/atoms/refinement-dropdown';
 import { QuotesPageProps } from '../../types';
 
 const Refinements = ({
@@ -12,7 +10,6 @@ const Refinements = ({
   onSearch,
   statusOptions,
   onStatusRefine,
-  onCreationDateRefine,
   onInfoClick,
 }: Partial<QuotesPageProps & { onInfoClick: () => void }>) => {
   const { translate } = useTranslation();
@@ -22,7 +19,7 @@ const Refinements = ({
       title: 'dashboard.quote.search',
       Component: (
         <SearchInput
-          className="w-[360px]"
+          className="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
           placeholder={`${translate('dashboard.search.by.id.sku')}...`}
@@ -33,37 +30,21 @@ const Refinements = ({
     {
       title: 'common.status',
       Component: (
-        <Dropdown size="sm" className="w-[200px]">
-          <Dropdown.Button>{translate('common.select')}</Dropdown.Button>
-          <Dropdown.Options className="min-w-fit">
-            {(statusOptions ?? []).map(({ name, value, count }) => (
-              <div key={value} className="flex items-center justify-between gap-8 p-2">
-                <span className="text-14 text-gray-700">{name}</span>
-                <div className="flex items-center gap-2">
-                  {/* <span className="text-12 text-gray-600">{count}</span> */}
-                  <Checkbox checked={!!filters?.status?.includes(value)} onChecked={() => onStatusRefine?.(value)} />
-                </div>
-              </div>
-            ))}
-          </Dropdown.Options>
-        </Dropdown>
+        <RefinementDropdown
+          size="lg"
+          className="w-[200px]"
+          options={(statusOptions ?? []).map(({ name, value, count }) => ({
+            name,
+            value,
+            count,
+            selected: !!filters?.status?.includes(value),
+            onSelected: () => onStatusRefine?.(value),
+          }))}
+        >
+          {translate('common.select')}
+        </RefinementDropdown>
       ),
     },
-    // {
-    //   title: 'dashboard.creation.date',
-    //   Component: (
-    //     <Dropdown size="sm" className="w-[200px]">
-    //       <Dropdown.Button>{filters?.creationDate ?? translate('common.select')}</Dropdown.Button>
-    //       <Dropdown.Options className="max-h-[unset] w-max">
-    //         <DatePicker
-    //           mode="single"
-    //           selected={filters?.creationDate ? new Date(filters.creationDate) : undefined}
-    //           onSelect={(date) => onCreationDateRefine?.(date ? new Date(date).toLocaleDateString() : '')}
-    //         />
-    //       </Dropdown.Options>
-    //     </Dropdown>
-    //   ),
-    // },
   ];
 
   return (

@@ -1,4 +1,4 @@
-import { register } from '../commerce-commercetools/actionControllers/BaseAccountController';
+import { register } from '../commerce-commercetools/actionControllers/AccountController';
 import { Request } from '@frontastic/extension-types';
 
 const dummyActionContext = {

@@ -11,7 +11,10 @@ export default {
 const Template: StoryFn<typeof PurchaseListItem> = (args) => {
   const [quantity, setQuantity] = useState(0);
 
-  const handleChange = async (qty: number) => setQuantity(qty);
+  const handleChange = async (qty: number) => {
+    setQuantity(qty);
+    return true;
+  };
 
   return <PurchaseListItem {...args} item={{ ...args.item, quantity }} onQuantityChange={handleChange} />;
 };

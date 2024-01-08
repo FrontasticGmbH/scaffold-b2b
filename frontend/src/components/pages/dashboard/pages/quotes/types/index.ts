@@ -1,5 +1,5 @@
 import { Option } from '@/components/atoms/select/types';
-import { TablePaginationProps } from '@/components/atoms/table/components/table-pagination';
+import { TablePaginationProps } from '@/components/atoms/table/types';
 import { Quote } from '@/types/entity/quote';
 
 export interface QuotesPageProps {

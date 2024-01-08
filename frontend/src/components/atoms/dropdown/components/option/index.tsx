@@ -14,7 +14,7 @@ const DropdownOption = ({ children, value }: React.PropsWithChildren<Props>) => 
       value={{ value }}
     >
       <div
-        className={classnames('block truncate p-2 text-14 text-gray-700', {
+        className={classnames('block truncate px-3 py-[10px] text-14 text-gray-700 lg:py-1', {
           'bg-neutral-200': value === selectedValue || value === defaultValue,
         })}
       >

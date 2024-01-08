@@ -1,44 +1,68 @@
 import React from 'react';
-import { ChevronRightIcon as NextIcon, ChevronLeftIcon as PrevIcon } from '@heroicons/react/24/solid';
+import {
+  ChevronRightIcon as NextIcon,
+  ChevronLeftIcon as PrevIcon,
+  ChevronUpIcon as UpIcon,
+  ChevronDownIcon as DownIcon,
+} from '@heroicons/react/24/solid';
 import { classnames } from '@/utils/classnames/classnames';
 import { cva } from '@/utils/classnames/cva';
 import { ArrowProps } from '../../types';
 
 const Arrow = ({
   onClick,
-  position,
+  align = 'horizontal',
+  position = 'prev',
   className = '',
   customClassName = '',
   style = {},
   customStyles = {},
   variant = 'default',
   size = 32,
+  iconClassName = '',
+  overlayDarkArrow = false,
 }: ArrowProps) => {
-  const arrowPosition = cva({
+  const arrowVa = cva({
     position: {
-      prev: 'left-0',
-      next: 'right-0',
+      prev: align == 'horizontal' ? 'left-0' : '-top-2',
+      next: align == 'horizontal' ? 'right-0' : 'bottom-2',
+    },
+    align: {
+      vertical: 'left-1/2 -translate-x-1/2',
+      horizontal: 'top-1/2 -translate-y-1/2',
     },
   });
 
   const arrowClassName = classnames(
     className,
     customClassName,
-    'absolute top-1/2 z-50 -translate-y-1/2 cursor-pointer',
-    arrowPosition(`position.${position}`) as string,
+    'absolute z-[49] cursor-pointer',
+    arrowVa(`align.${align}`) as string,
+    arrowVa(`position.${position}`) as string,
     { 'p-4 transition lg:hover:bg-[#778DA9]': variant === 'overlay' },
   );
 
-  const Icon = position === 'prev' ? PrevIcon : NextIcon;
+  const IconRef = {
+    horizontal: {
+      prev: PrevIcon,
+      next: NextIcon,
+    },
+    vertical: {
+      prev: UpIcon,
+      next: DownIcon,
+    },
+  };
+
+  const Icon = IconRef[align][position];
 
   return (
-    <div className={arrowClassName} style={{ ...style, ...customStyles }} onClick={onClick}>
+    <div className={arrowClassName} style={{ ...style, ...customStyles, width: size, height: size }} onClick={onClick}>
       <Icon
         width={size}
         height={size}
-        className={classnames('transition', {
+        className={classnames(iconClassName, 'transition', {
           'text-gray-600 hover:text-gray-800': variant === 'default',
-          'text-white': variant === 'overlay',
+          [overlayDarkArrow ? 'text-gray-800' : 'text-white']: variant === 'overlay',
         })}
       />
     </div>

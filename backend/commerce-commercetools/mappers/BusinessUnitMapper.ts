@@ -61,29 +61,6 @@ export class BusinessUnitMapper {
     };
   }
 
-  static trimBusinessUnit(businessUnit: BusinessUnit, accountId: string): BusinessUnit {
-    return {
-      ...businessUnit,
-      addresses: [],
-      // @ts-ignore
-      stores: businessUnit.stores.map((store) => ({ key: store.key, name: store.name })),
-      associates: businessUnit.associates
-        ?.filter((associate) => associate.accountId === accountId)
-        ?.map((associate) => {
-          const trimmedAssociate: Associate = {
-            accountId: associate.accountId,
-            email: associate.email,
-            roles: associate.roles?.map((role) => {
-              const trimmedAssociateRole: AssociateRole = { key: role.key };
-              return trimmedAssociateRole;
-            }),
-          };
-
-          return trimmedAssociate;
-        }),
-    };
-  }
-
   static mapReferencedAssociatesToAssociate(
     commercetoolsAssociates: CommercetoolsAssociate[],
     locale: Locale,
