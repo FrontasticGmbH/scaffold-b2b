@@ -13,6 +13,7 @@ const TasticWrapper = ({ tastics, data, searchParams, dataSources, isHighlighted
 
   return (
     <div id={data?.tasticId} className={`${highlight(isHighlighted)} ${deviceVisibility(data.configuration)}`}>
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore*/}
       <Tastic id={data?.tasticId} data={resolvedTasticData} searchParams={searchParams} />
     </div>
