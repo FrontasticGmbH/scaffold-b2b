@@ -15,6 +15,7 @@ export const getConfig = (context: Context, engine: string, locale: string | nul
     categoryIdField: getFromProjectConfig(`${prefix}_CATEGORY_ID_FIELD`, context),
     associateRoleAdminKey: getFromProjectConfig(`${prefix}_ASSOCIATE_ROLE_ADMIN_KEY`, context),
     associateRoleBuyerKey: getFromProjectConfig(`${prefix}_ASSOCIATE_ROLE_BUYER_KEY`, context),
+    defaultStoreKey: getFromProjectConfig(`${prefix}_DEFAULT_STORE_KEY`, context),
   };
 
   if (!clientConfig.authUrl) {
@@ -47,6 +48,10 @@ export const getConfig = (context: Context, engine: string, locale: string | nul
 
   if (!clientConfig.associateRoleBuyerKey) {
     clientConfig.associateRoleBuyerKey = context.project.configuration?.[engine]?.associateRoleBuyerKey;
+  }
+
+  if (!clientConfig.defaultStoreKey) {
+    clientConfig.defaultStoreKey = context.project.configuration?.[engine]?.defaultStoreKey;
   }
 
   return clientConfig;

@@ -9,4 +9,5 @@ export interface ClientConfig {
   categoryIdField?: string;
   associateRoleAdminKey?: string;
   associateRoleBuyerKey?: string;
+  defaultStoreKey: string;
 }

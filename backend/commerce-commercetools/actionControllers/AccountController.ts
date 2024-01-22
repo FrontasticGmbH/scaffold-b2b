@@ -7,11 +7,7 @@ import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
 import { BusinessUnitApi } from '@Commerce-commercetools/apis/BusinessUnitApi';
 import { StoreApi } from '@Commerce-commercetools/apis/StoreApi';
 import { ValidationError } from '../utils/Errors';
-import { Store } from '@Types/store/Store';
-import {
-  businessUnitKeyFormatter,
-  businessUnitNameNormalizer,
-} from '@Commerce-commercetools/utils/BussinessUnitFormatter';
+import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
 import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
@@ -166,19 +162,10 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
   const account = await accountApi.create(accountData, cart);
 
-  // Create the store for the account
   const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-  const storeRequest = { ...request };
-  storeRequest.body = JSON.stringify({
-    account: JSON.parse(request.body),
-  });
 
-  const storeData: Store = {
-    key: `store_${businessUnitNameNormalizer(accountData.companyName)}`,
-    name: accountData.companyName,
-  };
-
-  const store = await storeApi.create(storeData);
+  const defaultStoreKey = storeApi.getDefaultKey();
+  const store = await storeApi.get(defaultStoreKey);
 
   // Create the business unit for the account
   try {

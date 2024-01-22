@@ -119,6 +119,13 @@
           "type": "string",
           "translatable": false,
           "required": true
+        },
+        {
+          "label": "Store Key",
+          "field": "EXTENSION_COMMERCETOOLS_DEFAULT_STORE_KEY",
+          "type": "string",
+          "translatable": false,
+          "required": true
         }
       ]
     },

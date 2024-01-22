@@ -411,6 +411,7 @@ export abstract class BaseApi {
   protected clientHashKey: string;
   protected token: Token;
   protected currency: string;
+  protected defaultStoreKey: string;
   protected frontasticContext: Context;
 
   constructor(frontasticContext: Context, locale: string | null, currency: string | null) {
@@ -430,6 +431,7 @@ export abstract class BaseApi {
     this.associateRoleAdminKey = this.clientSettings?.associateRoleAdminKey || 'admin';
     this.associateRoleBuyerKey = this.clientSettings?.associateRoleBuyerKey || 'buyer';
 
+    this.defaultStoreKey = this.clientSettings.defaultStoreKey;
     this.token = clientTokensStored.get(this.getClientHashKey());
 
     this.frontasticContext = frontasticContext;
