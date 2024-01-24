@@ -160,20 +160,32 @@ export class QuoteApi extends BaseApi {
       sortAttributes.push(`lastModifiedAt desc`);
     }
 
-    const whereClause = [`customer(id="${quoteQuery.accountId}")`];
+    const quoteRequestWhereClause = [`customer(id="${quoteQuery.accountId}")`];
     if (quoteQuery.quoteIds !== undefined && quoteQuery.quoteIds.length !== 0) {
-      whereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
+      quoteRequestWhereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
     }
+
     if (quoteQuery.quoteStates !== undefined && quoteQuery.quoteStates.length > 0) {
-      whereClause.push(`quoteRequestState in ("${quoteQuery.quoteStates.join('","')}")`);
+      const quoteRequestStates = quoteQuery.quoteStates.filter((state) => {
+        return state !== QuoteRequestState.InProgress && state !== QuoteRequestState.Sent;
+      });
+
+      if (
+        quoteQuery.quoteStates.includes(QuoteRequestState.InProgress) ||
+        quoteQuery.quoteStates.includes(QuoteRequestState.Sent)
+      ) {
+        quoteRequestStates.push(QuoteRequestState.Accepted);
+      }
+      quoteRequestWhereClause.push(`quoteRequestState in ("${quoteRequestStates.join('","')}")`);
     }
+
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
     const result = await this.requestBuilder()
       .quoteRequests()
       .get({
         queryArgs: {
-          where: whereClause,
+          where: quoteRequestWhereClause,
           sort: sortAttributes,
           limit: limit,
           offset: getOffsetFromCursor(quoteQuery.cursor),
@@ -201,15 +213,31 @@ export class QuoteApi extends BaseApi {
         throw error;
       });
 
-    const quoteRequestIdsWhereClause = `quoteRequest(id in (${(result.items as QuoteRequest[])
-      .map((quoteRequest) => `"${quoteRequest.quoteRequestId}"`)
-      .join(' ,')}))`;
+    if (result.items.length === 0) {
+      return result;
+    }
+
+    const stagedQuoteStates = quoteQuery.quoteStates.filter((state) => {
+      return (
+        state === QuoteRequestState.InProgress || state === QuoteRequestState.Sent || state === QuoteRequestState.Closed
+      );
+    });
+
+    const stageQuoteWhereClause = [
+      `quoteRequest(id in (${(result.items as QuoteRequest[])
+        .map((quoteRequest) => `"${quoteRequest.quoteRequestId}"`)
+        .join(' ,')}))`,
+    ];
+
+    if (stagedQuoteStates !== undefined && stagedQuoteStates.length > 0) {
+      stageQuoteWhereClause.push(`stagedQuoteState in ("${stagedQuoteStates.join('","')}")`);
+    }
 
     await this.requestBuilder()
       .stagedQuotes()
       .get({
         queryArgs: {
-          where: quoteRequestIdsWhereClause,
+          where: stageQuoteWhereClause,
         },
       })
       .execute()

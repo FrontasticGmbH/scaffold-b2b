@@ -1,5 +1,6 @@
 {
   "auth.wrong": "Invalid email or password. Please check and try again.",
+  "auth.action.verify": "Action Required: Verify your email using the sent verification email.",
   "wentWrong": "Sorry, something went wrong..",
   "wentWrong.retry": "Entschuldigung, etwas ist schief gelaufen. Bitte versuchen Sie es in 5 Minuten erneut.",
   "password.noMatch": "Passwords don't match.",
@@ -7,6 +8,7 @@
   "account.create.fail": "Sorry. We couldn't create your account..",
   "email.enter": "Please enter your email address",
   "email": "Email is not valid.",
+  "email.exists": "The email address is invalid or already exists.",
   "name": "Name has to be at least two characters.",
   "verify.failed": "Verification failed",
   "verify.failed.description": "Sorry, we failed to verify your account. A new verification link has been sent to your email address. "

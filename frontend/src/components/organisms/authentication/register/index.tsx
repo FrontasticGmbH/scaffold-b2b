@@ -19,6 +19,7 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
 
   const [data, setData] = useState<Account>({});
   const [confirmed, setConfirmed] = useState(false);
+  const [emailError, setEmailError] = useState<string>();
 
   const inputArray = [
     { label: translate('common.emailAddress'), name: 'email' },
@@ -39,8 +40,10 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
         .then(() => {
           setConfirmed(true);
         })
-        .catch(() => {
-          toast.error(translate('account.account.create.fail'));
+        .catch((err) => {
+          if (err.message.includes('409')) {
+            setEmailError(translate('error.email.exists'));
+          } else toast.error(translate('account.account.create.fail'));
         });
     }
   };
@@ -58,6 +61,8 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = target;
     setData({ ...data, [name]: value });
+
+    if (name === 'email') setEmailError(undefined);
   };
 
   return (
@@ -84,6 +89,7 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
                 value={(data[name as keyof Account] as string) ?? ''}
                 required
                 label={label}
+                error={name === 'email' ? emailError : undefined}
                 {...commonProps}
               />
             ))}

@@ -27,7 +27,7 @@ export type SpecsVariantsProps = {
 
 export type ShoppingListCTAProps = {
   getWishlists: () => Promise<Array<Wishlist> | undefined>;
-  addToWishlist: (wishlistId: string) => Promise<Wishlist>;
+  addToWishlists: (wishlistIds: string[]) => Promise<Wishlist[]>;
 };
 
 export type ShippingMethod = {

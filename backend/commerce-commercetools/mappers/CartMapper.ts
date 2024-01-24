@@ -1,8 +1,10 @@
 import {
   Cart as CommercetoolsCart,
+  CartDiscountReference,
   CartOrigin as CommercetoolsCartOrigin,
   LineItem as CommercetoolsLineItem,
   Order as CommercetoolsOrder,
+  Reference,
   ReturnItemDraft,
 } from '@commercetools/platform-sdk';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
@@ -355,7 +357,10 @@ export class CartMapper {
     commercetoolsDiscountedLineItemPricesForQuantity?.forEach((commercetoolsDiscountedLineItemPriceForQuantity) => {
       commercetoolsDiscountedLineItemPriceForQuantity.discountedPrice.includedDiscounts.forEach(
         (commercetoolsDiscountedLineItemPortion) => {
-          discountTexts.push(commercetoolsDiscountedLineItemPortion.discount.obj?.name[locale.language]);
+          if (this.isCartDiscountReference(commercetoolsDiscountedLineItemPortion.discount)) {
+            const discount = commercetoolsDiscountedLineItemPortion.discount;
+            discountTexts.push(discount.obj.name[locale.language]);
+          }
         },
       );
     });
@@ -392,7 +397,7 @@ export class CartMapper {
       ),
     };
 
-    if (commercetoolsDiscountedLineItemPortion.discount.obj) {
+    if (this.isCartDiscountReference(commercetoolsDiscountedLineItemPortion.discount)) {
       const commercetoolsCartDiscount = commercetoolsDiscountedLineItemPortion.discount.obj;
 
       discount = {
@@ -490,5 +495,9 @@ export class CartMapper {
       shipmentState: 'Returned', //Initial state for Return Items that are refundable.
       comment: item?.comment,
     }));
+  }
+
+  static isCartDiscountReference(reference: Reference): reference is CartDiscountReference {
+    return (reference as CartDiscountReference).obj !== undefined;
   }
 }

@@ -12,7 +12,7 @@ const ProductDetails = ({
   shippingMethods,
   addToCart,
   getWishlists,
-  addToWishlist,
+  addToWishlists,
   onChangeVariant,
 }: ProductDetailsProps) => {
   return (
@@ -29,7 +29,7 @@ const ProductDetails = ({
           currentSpecs={currentSpecs}
           addToCart={addToCart}
           getWishlists={getWishlists}
-          addToWishlist={addToWishlist}
+          addToWishlists={addToWishlists}
           onChangeVariant={onChangeVariant}
           shippingMethods={shippingMethods}
         />

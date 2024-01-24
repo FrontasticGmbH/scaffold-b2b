@@ -4,6 +4,7 @@ import { AuthLayoutProps, AuthTemplatesProps } from '../../types';
 
 const useAuthProps: UseAuthProps = ({
   resetting,
+  requested,
   image,
   logo,
   logoLink,
@@ -19,7 +20,7 @@ const useAuthProps: UseAuthProps = ({
     logoLink,
   };
 
-  const authLayoutProps: { [key in 'reset' | 'login']: AuthTemplatesProps } = {
+  const authLayoutProps: { [key in 'reset' | 'login' | 'requested']: AuthTemplatesProps } = {
     login: {
       onSubmit: handleLoginSubmit,
       title: translate('account.account.login.yours'),
@@ -38,9 +39,16 @@ const useAuthProps: UseAuthProps = ({
       footerOnClick: goBackToLogin,
       ...commonProps,
     },
+    requested: {
+      title: translate('account.password.req.sent.headline'),
+      buttonLabel: translate('account.account.back.login'),
+      onSubmit: goBackToLogin,
+      ...commonProps,
+    },
   };
 
-  return authLayoutProps[resetting ? 'reset' : 'login'];
+  const targetLayout = requested ? 'requested' : resetting ? 'reset' : 'login';
+  return authLayoutProps[targetLayout];
 };
 
 export default useAuthProps;

@@ -119,13 +119,6 @@
           "type": "string",
           "translatable": false,
           "required": true
-        },
-        {
-          "label": "Store Key",
-          "field": "EXTENSION_COMMERCETOOLS_DEFAULT_STORE_KEY",
-          "type": "string",
-          "translatable": false,
-          "required": true
         }
       ]
     },
@@ -164,6 +157,13 @@
           "label": "Hmac Key",
           "field": "EXTENSION_ADYEN_HMAC_KEY",
           "type": "encrypted",
+          "translatable": false,
+          "required": true
+        },
+        {
+          "label": "Store Key",
+          "field": "EXTENSION_COMMERCETOOLS_DEFAULT_STORE_KEY",
+          "type": "string",
           "translatable": false,
           "required": true
         }

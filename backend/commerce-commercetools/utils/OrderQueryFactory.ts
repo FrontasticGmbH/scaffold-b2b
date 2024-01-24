@@ -1,4 +1,4 @@
-import { DataSourceConfiguration, Request } from '@frontastic/extension-types';
+import { Request } from '@frontastic/extension-types';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
 import { Account } from '@Types/account/Account';
@@ -17,12 +17,14 @@ export class OrderQueryFactory {
       orderIds: queryParamsToIds('orderIds', request.query),
       orderNumbers: queryParamsToIds('orderNumbers', request.query),
       orderState: queryParamsToStates('orderStates', request.query),
+      shipmentState: queryParamsToStates('shipmentStates', request.query),
       sortAttributes: OrderQueryFactory.queryParamsToSortAttributes(request.query),
       businessUnitKey: request.query?.businessUnitKey ?? undefined,
       created: {
-        from: new Date(request.query?.createdFrom) ?? undefined,
-        to: new Date(request.query?.createdTo) ?? undefined,
+        from: request.query?.createdFrom ? new Date(request.query?.createdFrom) : undefined,
+        to: request.query?.createdTo ? new Date(request.query?.createdTo) : undefined,
       },
+      query: request.query?.query ?? undefined,
     };
 
     return orderQuery;

@@ -15,7 +15,7 @@ const MainInfo = ({
   shippingMethods,
   addToCart,
   getWishlists,
-  addToWishlist,
+  addToWishlists,
   onChangeVariant,
 }: PDPMainInfoProps) => {
   const { formatCurrency } = useFormat();
@@ -66,7 +66,7 @@ const MainInfo = ({
 
         <CartCTA addToCart={addToCart} />
 
-        <ShoppingListCTA getWishlists={getWishlists} addToWishlist={addToWishlist} />
+        <ShoppingListCTA getWishlists={getWishlists} addToWishlists={addToWishlists} />
 
         <Shipping shippingMethods={shippingMethods} currency={product.currency} />
       </div>

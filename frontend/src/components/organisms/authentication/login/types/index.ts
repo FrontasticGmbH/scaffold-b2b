@@ -9,6 +9,7 @@ export type LoginProps = AuthLayoutProps & {
 export type UseAuthProps = (
   props: AuthLayoutProps & {
     resetting: boolean;
+    requested: boolean;
     handleLoginSubmit: () => void;
     handleResetSubmit: () => void;
     goBackToLogin: () => void;

@@ -1,7 +1,7 @@
 import { Cart, CartOrigin } from './Cart';
 import { Discount } from './Discount';
 import { LineItem, LineItemShippingAddress } from './LineItem';
-import { Order, OrderState, ReturnInfo, ReturnLineItem, ReturnShipmentState, ShipmentState } from './Order';
+import { Order, OrderState, ReturnInfo, ReturnLineItem, ShipmentState } from './Order';
 import { Payment, PaymentStatuses } from './Payment';
 import { ShippingInfo } from './ShippingInfo';
 import { ShippingLocation } from './ShippingLocation';
@@ -29,5 +29,4 @@ export {
   type Tax,
   type TaxPortion,
   type ShipmentState,
-  type ReturnShipmentState,
 };

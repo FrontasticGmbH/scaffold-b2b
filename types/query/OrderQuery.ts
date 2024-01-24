@@ -1,5 +1,5 @@
 import { PaginatedQuery, SortAttributes } from '../query';
-import { OrderState, ReturnShipmentState, ShipmentState } from '../cart';
+import { OrderState, ShipmentState } from '../cart';
 
 export interface OrderQuery extends PaginatedQuery {
   accountId?: string;
@@ -9,9 +9,9 @@ export interface OrderQuery extends PaginatedQuery {
   sortAttributes?: SortAttributes;
   businessUnitKey?: string;
   shipmentState?: ShipmentState[];
-  returnShipmentState?: ReturnShipmentState[];
   created?: {
     from?: Date;
     to?: Date;
   };
+  query?: string;
 }

@@ -5,7 +5,7 @@ import useDisclosure from '@/hooks/useDisclosure';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { ShoppingListCTAProps, Wishlist } from '../types';
 
-const ShoppingListCTA = ({ getWishlists, addToWishlist }: ShoppingListCTAProps) => {
+const ShoppingListCTA = ({ getWishlists, addToWishlists }: ShoppingListCTAProps) => {
   const { translate } = useTranslation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,8 +35,8 @@ const ShoppingListCTA = ({ getWishlists, addToWishlist }: ShoppingListCTAProps) 
     setCheckedBoxes(checkedBoxes ?? {});
   }, [getWishlists]);
 
-  const handleSubmit = (lists: Array<Wishlist>) => {
-    addToWishlist(lists[0].id).then(() => {
+  const handleSubmit = () => {
+    addToWishlists(selectedIds).then(() => {
       onClose();
     });
   };

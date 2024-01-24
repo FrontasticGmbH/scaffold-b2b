@@ -107,14 +107,12 @@ export class BusinessUnitMapper {
     associateRoleAssigment: CommercetoolsAssociateRoleAssignment,
   ): AssociateRole {
     return {
-      associateRoleId: associateRoleAssigment.associateRole.id,
       key: associateRoleAssigment.associateRole.key,
     };
   }
 
   static mapCommercetoolsAssociateRoleToAssociateRole(associateRole: CommercetoolsAssociateRole): AssociateRole {
     return {
-      associateRoleId: associateRole.id,
       key: associateRole.key,
       name: associateRole.name,
     };

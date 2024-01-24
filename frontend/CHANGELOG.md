@@ -1,4 +1,17 @@
 
+## Version 1.5 (2024-01-24)
+
+** New Features and Improvements **
+
+- User is able to add product to one or multiple wishlists
+- Store key is being passed to product query when user search products
+
+** Bug fixes **
+
+- Fixed all images
+- Missing component tastics added to fixture, header links are fixed
+
+
 ## Version 1.4.0 (2024-01-08)
 
 * backporting latest b2b changes

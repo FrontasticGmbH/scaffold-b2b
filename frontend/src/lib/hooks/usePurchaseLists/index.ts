@@ -83,6 +83,28 @@ const usePurchaseLists = (storeKey?: string) => {
     [mutate],
   );
 
+  const addItems = useCallback(
+    async ({ wishlistIds, sku, count }: { wishlistIds: string[]; sku: string; count: number }) => {
+      const result = await sdk.callAction<Wishlist[]>({
+        actionName: 'wishlist/addToWishlists',
+        payload: {
+          wishlistIds,
+          variant: { sku },
+          count,
+        },
+      });
+
+      mutate();
+
+      if (!result.isError) {
+        return { data: result?.data };
+      }
+
+      return {};
+    },
+    [mutate],
+  );
+
   return {
     purchaseLists: response.data?.isError ? [] : response.data?.data ?? [],
     createPurchaseList,
@@ -90,6 +112,7 @@ const usePurchaseLists = (storeKey?: string) => {
     deletePurchaseList,
     removeItem,
     addItem,
+    addItems,
   };
 };
 

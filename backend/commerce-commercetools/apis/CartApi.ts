@@ -1065,10 +1065,6 @@ export class CartApi extends BaseApi {
       whereClause.push(`shipmentState in ("${orderQuery.shipmentState.join('","')}")`);
     }
 
-    if (orderQuery.returnShipmentState !== undefined && orderQuery.returnShipmentState.length > 0) {
-      whereClause.push(`returnShipmentState in ("${orderQuery.returnShipmentState.join('","')}")`);
-    }
-
     if (orderQuery.businessUnitKey !== undefined) {
       whereClause.push(`businessUnit(key="${orderQuery.businessUnitKey}")`);
     }
@@ -1090,6 +1086,7 @@ export class CartApi extends BaseApi {
           limit: limit,
           offset: getOffsetFromCursor(orderQuery.cursor),
           sort: sortAttributes,
+          [`text.${locale.language}`]: orderQuery.query,
         },
       })
       .execute()

@@ -8,6 +8,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Checkbox from '@/components/atoms/checkbox';
 import Link from '@/components/atoms/link';
 import toast from '@/components/atoms/toaster/helpers/toast';
+import Typography from '@/components/atoms/typography';
 import AuthLayout from '../layouts/auth-layout';
 import useAuthProps from './hooks/useAuthProps';
 import { LoginProps } from './types';
@@ -18,9 +19,12 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const [data, setData] = useState<Account & { rememberMe?: boolean }>({});
   const [resetting, setResetting] = useState(false);
+  const [requested, setRequested] = useState(false);
   const [error, setError] = useState<string>();
+  const [inputError, setInputError] = useState<string>();
 
   const goBackToLogin = () => {
+    setRequested(false);
     setResetting(false);
   };
 
@@ -33,9 +37,13 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const handleLoginSubmit = async () => {
     if (data.email && data.password) {
-      const res = await login(data.email, data.password, data.rememberMe);
-
-      if (!res.accountId) setError(translate('error.auth.wrong'));
+      login(data.email, data.password, data.rememberMe).catch((err: Error) => {
+        if (err.message.includes('unverified')) {
+          setInputError(translate('error.auth.action.verify'));
+        } else {
+          setError(translate('error.auth.wrong'));
+        }
+      });
     } else {
       setError(translate('error.auth.wrong'));
     }
@@ -45,7 +53,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
     if (data.email) {
       requestPasswordReset(data.email)
         .then(() => {
-          setResetting(false);
+          setRequested(true);
         })
         .catch(() => {
           toast.error(translate('error.email'));
@@ -60,21 +68,29 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
     handleLoginSubmit,
     handleResetSubmit,
     resetting,
+    requested,
     goBackToLogin,
   });
 
   return (
     <AuthLayout image={image} logo={logo} logoLink={logoLink}>
-      <AuthForm {...formProps} error={error}>
-        <Input
-          containerClassName="w-full"
-          className="w-full"
-          name="email"
-          required
-          label={translate('common.emailAddress')}
-          value={data.email ?? ''}
-          onChange={handleChange}
-        />
+      <AuthForm {...formProps} error={error} includeCheckIcon={requested}>
+        {requested ? (
+          <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
+            {translate('account.password.req.sent.desc')}
+          </Typography>
+        ) : (
+          <Input
+            containerClassName="w-full"
+            className="w-full"
+            name="email"
+            required
+            label={translate('common.emailAddress')}
+            value={data.email ?? ''}
+            onChange={handleChange}
+            error={inputError}
+          />
+        )}
 
         {!resetting && (
           <>

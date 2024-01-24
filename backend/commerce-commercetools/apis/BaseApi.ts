@@ -430,7 +430,6 @@ export abstract class BaseApi {
     this.categoryIdField = this.clientSettings?.categoryIdField || 'key';
     this.associateRoleAdminKey = this.clientSettings?.associateRoleAdminKey || 'admin';
     this.associateRoleBuyerKey = this.clientSettings?.associateRoleBuyerKey || 'buyer';
-
     this.defaultStoreKey = this.clientSettings.defaultStoreKey;
     this.token = clientTokensStored.get(this.getClientHashKey());
 

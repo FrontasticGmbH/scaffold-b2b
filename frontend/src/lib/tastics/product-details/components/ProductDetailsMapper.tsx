@@ -22,7 +22,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
   const { selectedLocation } = useShipAndLanguage();
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { purchaseLists: wishlists, addItem: CTAddToWishlist } = usePurchaseLists(selectedStore?.key);
+  const { purchaseLists: wishlists, addItems: CTAddToWishlists } = usePurchaseLists(selectedStore?.key);
   const { addItem, shippingMethods } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
   const addToCart = useCallback(
@@ -73,18 +73,20 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
     [product.variants],
   );
 
-  const addToWishlist = useCallback(
-    async (wishlistId: string) => {
-      return await CTAddToWishlist({ wishlistId, sku: product.variants[currentVariantIndex].sku ?? '', count: 1 }).then(
-        (res) => {
-          return {
-            label: res.data?.name,
-            id: res.data?.wishlistId,
-          } as Wishlist;
-        },
-      );
+  const addToWishlists = useCallback(
+    async (wishlistIds: string[]) => {
+      return await CTAddToWishlists({
+        wishlistIds,
+        sku: product.variants[currentVariantIndex].sku ?? '',
+        count: 1,
+      }).then((res) => {
+        return res.data?.map((wishlist) => ({
+          label: wishlist.name,
+          id: wishlist.wishlistId,
+        })) as Wishlist[];
+      });
     },
-    [CTAddToWishlist, currentVariantIndex, product.variants],
+    [CTAddToWishlists, currentVariantIndex, product.variants],
   );
 
   const mapColorAttributes = useCallback((variant: Variant): Attribute => {
@@ -137,7 +139,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
       shippingMethods: getShippingMethods(),
       addToCart,
       getWishlists,
-      addToWishlist,
+      addToWishlists,
       onChangeVariant,
     };
   }, [
@@ -152,7 +154,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
     getShippingMethods,
     addToCart,
     getWishlists,
-    addToWishlist,
+    addToWishlists,
     onChangeVariant,
   ]);
 

@@ -31,13 +31,6 @@ export enum ShipmentState {
   Shipped = 'Shipped',
 }
 
-export enum ReturnShipmentState {
-  Advised = 'Advised',
-  BackInStock = 'BackInStock',
-  Returned = 'Returned',
-  Unusable = 'Unusable',
-}
-
 export interface Order extends Cart {
   orderId?: string;
   orderVersion?: string;
@@ -48,5 +41,4 @@ export interface Order extends Cart {
   returnInfo?: ReturnInfo[];
   purchaseOrderNumber?: string;
   shipmentState?: ShipmentState;
-  returnShipmentState?: ReturnShipmentState;
 }

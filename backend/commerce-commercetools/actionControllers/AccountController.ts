@@ -160,7 +160,19 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
   const cart = await CartFetcher.fetchCart(request, actionContext);
 
-  const account = await accountApi.create(accountData, cart);
+  let account: Account;
+
+  try {
+    account = await accountApi.create(accountData, cart);
+  } catch (error) {
+    const errorInfo = error as Error;
+
+    return {
+      statusCode: 400,
+      body: JSON.stringify(errorInfo.message),
+      sessionData: request.sessionData,
+    };
+  }
 
   const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
 

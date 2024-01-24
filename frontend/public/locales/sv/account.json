@@ -49,6 +49,8 @@
   "verification.resent": "Ett mail har skickats till {email}",
   "password.reset.headline": "Återställ ditt lösenord",
   "password.reset.desc": "Fyll i fälten nedan för att återställa ditt lösenord",
+  "password.req.sent.headline": "Email sent",
+  "password.req.sent.desc": "We sent you password reset instructions. If it doesn't show up soon, check your spam folder.",
   "password.reset.keyword": "Återställ",
   "account.security.warning": "Var försiktig när du använder den här inställningen.",
   "orders.history": "Min beställningshistorik",

@@ -1,7 +1,6 @@
-import { Account } from '../account/Account';
+import { Account } from '../account';
 
 export interface AssociateRole {
-  associateRoleId?: string;
   key?: string;
   name?: string;
 }

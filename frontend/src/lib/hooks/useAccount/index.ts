@@ -46,7 +46,12 @@ const useAccount = () => {
     mutate('/action/account/getAccount');
     mutate('/action/wishlist/getWishlist');
 
-    return res.isError ? ({} as Account) : res.data;
+    if (res.isError) {
+      if (res.error.message.includes('not yet verified')) throw new Error('unverified');
+      else throw new Error(res.error.message);
+    }
+
+    return res.data;
   }, []);
 
   const logout = useCallback(async () => {
@@ -59,7 +64,10 @@ const useAccount = () => {
   const register = useCallback(async (account: Account): Promise<Account> => {
     const res = await sdk.composableCommerce.account.register(account as RegisterAccountPayload);
 
-    if (res.isError) throw new Error(res.error.message);
+    if (res.isError) {
+      if (res.error.message.includes('already exist')) throw new Error('409');
+      throw new Error(res.error.message);
+    }
 
     return res.isError ? ({} as Account) : res.data;
   }, []);
