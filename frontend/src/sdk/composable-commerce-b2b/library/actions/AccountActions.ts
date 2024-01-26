@@ -1,5 +1,5 @@
 import {
-	rememberMeCookie,
+	rememberMeCookieAsync,
 	SDK,
 	ServerOptions,
 } from "@commercetools/frontend-sdk";
@@ -94,17 +94,23 @@ export const getAccountActions = (
 
 			if (response.isError === false) {
 				if (remember) {
-					rememberMeCookie.set(true, options.serverOptions);
+					await rememberMeCookieAsync.set(
+						true,
+						options.serverOptions
+					);
 				}
 			}
 
 			return response;
 		},
-		logout: async (options?: { serverOptions?: ServerOptions }) => {
+		logout: async (options: { serverOptions?: ServerOptions } = {}) => {
 			const response = await sdk.callAction<void>({
 				actionName: "account/logout",
 				serverOptions: options?.serverOptions,
 			});
+			if (response.isError === false) {
+				await rememberMeCookieAsync.remove(options.serverOptions);
+			}
 			return response;
 		},
 		register: async (

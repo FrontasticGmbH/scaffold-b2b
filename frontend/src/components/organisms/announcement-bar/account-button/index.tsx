@@ -77,8 +77,8 @@ const AccountButton = ({
             />
           </div>
         </div>
-        {accountLinks.map((account) => (
-          <div key={account.categoryId} className="flex items-center justify-between border-t">
+        {accountLinks.map((account, key) => (
+          <div key={key} className="flex items-center justify-between border-t">
             <Link href={account.path ?? '/'} className="px-4 py-3 text-14">
               {account.name}
             </Link>

@@ -11,6 +11,7 @@ import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
 import { Token } from '@Types/Token';
 import { tokenHasExpired } from '../utils/Token';
 import * as crypto from 'crypto';
+import { ByProjectKeyAsAssociateByAssociateIdRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/as-associate/by-project-key-as-associate-by-associate-id-request-builder';
 
 const defaultCurrency = 'USD';
 
@@ -436,71 +437,6 @@ export abstract class BaseApi {
     this.frontasticContext = frontasticContext;
   }
 
-  private commercetoolsTokenCache(): TokenCache {
-    return (() => {
-      const get = () => {
-        if (this.token === undefined) {
-          return undefined;
-        }
-
-        const tokenStore: TokenStore = {
-          token: this.token.token,
-          expirationTime: this.token.expirationTime,
-          refreshToken: this.token.refreshToken,
-        };
-
-        return tokenStore;
-      };
-
-      const set = (tokenStore: TokenStore) => {
-        this.token = {
-          token: tokenStore.token,
-          expirationTime: tokenStore.expirationTime,
-          refreshToken: tokenStore.refreshToken,
-        };
-        clientTokensStored.set(this.getClientHashKey(), this.token);
-      };
-
-      return { get, set };
-    })();
-  }
-
-  private getClientHashKey(): string {
-    if (this.clientHashKey) {
-      return this.clientHashKey;
-    }
-
-    this.clientHashKey = crypto
-      .createHash('md5')
-      .update(this.clientSettings.clientId + this.clientSettings.clientSecret + this.clientSettings.projectKey)
-      .digest('hex');
-
-    return this.clientHashKey;
-  }
-
-  private getApiRoot(): ApiRoot {
-    let refreshToken: string | undefined;
-    if (this.apiRoot && tokenHasExpired(this.token)) {
-      this.apiRoot = undefined;
-      refreshToken = this.token?.refreshToken;
-    }
-
-    if (this.apiRoot) {
-      return this.apiRoot;
-    }
-
-    const client = ClientFactory.factor(
-      this.clientSettings,
-      this.environment,
-      this.commercetoolsTokenCache(),
-      refreshToken,
-    );
-
-    this.apiRoot = createApiBuilderFromCtpClient(client);
-
-    return this.apiRoot;
-  }
-
   protected requestBuilder(): ByProjectKeyRequestBuilder {
     return this.getApiRoot().withProjectKey({ projectKey: this.projectKey });
   }
@@ -592,5 +528,74 @@ export abstract class BaseApi {
     };
 
     return project;
+  }
+
+  protected associateRequestBuilder(accountId: string): ByProjectKeyAsAssociateByAssociateIdRequestBuilder {
+    return this.requestBuilder().asAssociate().withAssociateIdValue({ associateId: accountId });
+  }
+
+  private commercetoolsTokenCache(): TokenCache {
+    return (() => {
+      const get = () => {
+        if (this.token === undefined) {
+          return undefined;
+        }
+
+        const tokenStore: TokenStore = {
+          token: this.token.token,
+          expirationTime: this.token.expirationTime,
+          refreshToken: this.token.refreshToken,
+        };
+
+        return tokenStore;
+      };
+
+      const set = (tokenStore: TokenStore) => {
+        this.token = {
+          token: tokenStore.token,
+          expirationTime: tokenStore.expirationTime,
+          refreshToken: tokenStore.refreshToken,
+        };
+        clientTokensStored.set(this.getClientHashKey(), this.token);
+      };
+
+      return { get, set };
+    })();
+  }
+
+  private getClientHashKey(): string {
+    if (this.clientHashKey) {
+      return this.clientHashKey;
+    }
+
+    this.clientHashKey = crypto
+      .createHash('md5')
+      .update(this.clientSettings.clientId + this.clientSettings.clientSecret + this.clientSettings.projectKey)
+      .digest('hex');
+
+    return this.clientHashKey;
+  }
+
+  private getApiRoot(): ApiRoot {
+    let refreshToken: string | undefined;
+    if (this.apiRoot && tokenHasExpired(this.token)) {
+      this.apiRoot = undefined;
+      refreshToken = this.token?.refreshToken;
+    }
+
+    if (this.apiRoot) {
+      return this.apiRoot;
+    }
+
+    const client = ClientFactory.factor(
+      this.clientSettings,
+      this.environment,
+      this.commercetoolsTokenCache(),
+      refreshToken,
+    );
+
+    this.apiRoot = createApiBuilderFromCtpClient(client);
+
+    return this.apiRoot;
   }
 }

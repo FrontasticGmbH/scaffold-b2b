@@ -37,7 +37,12 @@
   "creation.date": "Creation date",
   "search": "Search by ID or SKU...",
   "cancel.order": "Cancel Order",
-  "download.invoice":"Download Invoice",
-  "return":"Return",
-  "reorder":"Reorder"
+  "download.invoice": "Download Invoice",
+  "return": "Return",
+  "reorder": "Reorder",
+  "status.pending": "Pending",
+  "status.confirmed": "Confirmed",
+  "status.cancelled": "Cancelled",
+  "status.delivered": "Delivered",
+  "status.returned": "Returned"
 }

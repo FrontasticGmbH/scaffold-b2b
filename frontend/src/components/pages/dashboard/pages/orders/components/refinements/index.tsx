@@ -20,7 +20,7 @@ const Refinements = ({
       title: 'orders.label',
       Component: (
         <SearchInput
-          className="w-[360px]"
+          className="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
           placeholder={`${translate('dashboard.search.by.id.sku')}...`}
@@ -32,7 +32,7 @@ const Refinements = ({
       title: 'common.status',
       Component: (
         <RefinementDropdown
-          size="sm"
+          size="lg"
           className="w-[200px]"
           options={(statusOptions ?? []).map(({ name, value, count }) => ({
             name,
@@ -49,7 +49,7 @@ const Refinements = ({
     {
       title: 'dashboard.creation.date',
       Component: (
-        <Dropdown size="sm" className="w-[200px]">
+        <Dropdown size="lg" className="w-[200px]">
           <Dropdown.Button>{filters?.creationDate ?? translate('common.select')}</Dropdown.Button>
           <Dropdown.Options className="max-h-[unset] w-max">
             <DatePicker

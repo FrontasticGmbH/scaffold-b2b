@@ -1,4 +1,12 @@
 
+## Version 1.5.1 (2024-01-26)
+
+** New Features and Improvemnets **
+- Implemented order summary
+
+** Bug fixes **
+- Fixed wishlist bugs
+
 ## Version 1.5 (2024-01-24)
 
 ** New Features and Improvements **

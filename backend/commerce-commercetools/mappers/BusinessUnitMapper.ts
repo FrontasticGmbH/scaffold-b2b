@@ -90,6 +90,8 @@ export class BusinessUnitMapper {
             key: storeObj.key,
             typeId: 'store',
             storeId: storeObj.storeId,
+            distributionChannels: storeObj?.distributionChannels,
+            supplyChannels: storeObj?.supplyChannels,
           }
         : (store as Store);
     });

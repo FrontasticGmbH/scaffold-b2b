@@ -1,3 +1,4 @@
+import { OrderState, ShipmentState } from "@shared/types/cart";
 import { OrderQuery } from "@shared/types/query";
 
 type GetCartQuery = {
@@ -91,10 +92,17 @@ type CancelOrderQuery = {
 	storeKey?: string;
 };
 
-type QueryOrdersQuery = Omit<
-    OrderQuery,
-    "filters" | "facets" | "sortAttributes" | "storeKey" | "created"
->;
+type QueryOrdersQuery = {
+	limit?: number;
+	cursor?: string;
+	accountId?: string;
+	orderIds?: string[];
+	orderNumbers?: string[];
+	orderState?: OrderState[];
+	businessUnitKey?: string;
+	shipmentState?: ShipmentState[];
+	query?: string;
+};
 
 export {
 	type GetCartQuery,

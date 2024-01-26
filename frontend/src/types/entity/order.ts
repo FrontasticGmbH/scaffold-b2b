@@ -1,7 +1,7 @@
 import { Currency } from '../currency';
 import { Product } from './product';
 
-export type OrderStatus = 'confirmed' | 'cancelled' | 'returned' | 'delivered';
+export type OrderStatus = 'Pending' | 'Confirmed' | 'Cancelled' | 'Returned' | 'Delivered';
 
 export interface Order {
   id: string;

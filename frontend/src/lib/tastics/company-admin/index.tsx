@@ -23,7 +23,6 @@ const CompanyAdminTastic = () => {
   const {
     addBusinessUnit,
     updateBusinessUnit,
-    removeBusinessUnit,
     addAssociate,
     updateAssociate,
     removeAssociate,
@@ -99,11 +98,6 @@ const CompanyAdminTastic = () => {
     },
     onUpdateGeneralInfo: async ({ name, email, key }) => {
       const businessUnit = await updateBusinessUnit({ name: name ?? '', contactEmail: email ?? '', key: key ?? '' });
-      return !!businessUnit.businessUnitId;
-    },
-    onDeleteBusinessUnit: async (id) => {
-      const target = businessUnits.find((businessUnit) => businessUnit.businessUnitId === id);
-      const businessUnit = await removeBusinessUnit(target?.key as string);
       return !!businessUnit.businessUnitId;
     },
     canAddBusinessUnit: !!selectedStore,

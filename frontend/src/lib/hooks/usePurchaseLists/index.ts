@@ -83,7 +83,7 @@ const usePurchaseLists = (storeKey?: string) => {
     [mutate],
   );
 
-  const addItems = useCallback(
+  const addToWishlists = useCallback(
     async ({ wishlistIds, sku, count }: { wishlistIds: string[]; sku: string; count: number }) => {
       const result = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/addToWishlists',
@@ -112,7 +112,7 @@ const usePurchaseLists = (storeKey?: string) => {
     deletePurchaseList,
     removeItem,
     addItem,
-    addItems,
+    addToWishlists,
   };
 };
 

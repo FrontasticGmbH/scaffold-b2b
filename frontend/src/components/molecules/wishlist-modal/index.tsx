@@ -34,7 +34,7 @@ const WishlistModal = ({
         <div className="custom-scrollbar max-h-[284px] overflow-y-scroll px-6 lg:px-0">
           <div className="lg:mx-auto lg:max-w-[400px]">
             <div className="" />
-            {lists.map(({ label, id }, index) => (
+            {lists?.map(({ label, id }, index) => (
               <Checkbox
                 key={id}
                 label={label}

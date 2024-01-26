@@ -1,4 +1,17 @@
 
+## Version 1.3.0 (2024-01-24)
+
+** New Features and Improvements **
+
+- Implemented index and session storage for Pages
+- Added dynamic page handlers from ordes and quotes
+- Add filter query params
+- Modified the verification mail for b2b associate
+
+** Bug fixes **
+
+- Parse body before use it in cart fetcher
+
 ## Version 1.2.0 (2023-10-24)
 
 ** New Features and Improvements **

@@ -19,7 +19,7 @@ const PurchaseListsTastic = () => {
   const { purchaseLists, createPurchaseList } = usePurchaseLists(selectedStore?.key);
 
   const purchaseListProps = {
-    purchaseLists: purchaseLists.map(mapPurchaseList),
+    purchaseLists: purchaseLists?.map(mapPurchaseList),
     onAddPurchaseList: async (purchaseList) => {
       if (!selectedStore) return;
 

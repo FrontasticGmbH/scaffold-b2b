@@ -22,7 +22,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
   const { selectedLocation } = useShipAndLanguage();
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { purchaseLists: wishlists, addItems: CTAddToWishlists } = usePurchaseLists(selectedStore?.key);
+  const { purchaseLists: wishlists, addToWishlists: CTAddToWishlists } = usePurchaseLists(selectedStore?.key);
   const { addItem, shippingMethods } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
   const addToCart = useCallback(

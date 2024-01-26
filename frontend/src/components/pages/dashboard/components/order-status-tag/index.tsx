@@ -6,10 +6,11 @@ import { OrderStatusTagProps } from './types';
 
 const OrderStatusTag = ({ status }: OrderStatusTagProps) => {
   const statusVariant = {
-    confirmed: 'warning',
-    cancelled: 'danger',
-    returned: 'primary',
-    delivered: 'success',
+    Pending: 'warning',
+    Confirmed: 'primary',
+    Cancelled: 'danger',
+    Returned: 'secondary',
+    Delivered: 'success',
   } as Record<OrderStatus, TagVariant>;
 
   return (

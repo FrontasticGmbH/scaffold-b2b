@@ -145,7 +145,7 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
   const businessUnitKey = businessUnitKeyFormatter(accountData.companyName);
   try {
-    const businessUnit = await businessUnitApi.getByKey(businessUnitKey);
+    const businessUnit = await businessUnitApi.getByKey(businessUnitKey, accountData.accountId);
 
     if (!!businessUnit) {
       return {

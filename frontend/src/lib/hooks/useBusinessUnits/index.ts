@@ -49,17 +49,6 @@ const useBusinessUnits = () => {
     [mutateBusinessUnits],
   );
 
-  const removeBusinessUnit = useCallback(
-    async (key: string) => {
-      const response = await sdk.composableCommerce.businessUnit.removeBusinessUnit({ key });
-
-      mutateBusinessUnits();
-
-      return response.isError ? {} : response.data;
-    },
-    [mutateBusinessUnits],
-  );
-
   const addAssociate = useCallback(
     async ({ email, role, businessUnit }: Partial<Associate> & { businessUnit: string }) => {
       const response = await sdk.composableCommerce.businessUnit.addAssociate(
@@ -140,7 +129,6 @@ const useBusinessUnits = () => {
     defaultBusinessUnit: data?.isError ? undefined : data?.data[0],
     addBusinessUnit,
     updateBusinessUnit,
-    removeBusinessUnit,
     addAssociate,
     updateAssociate,
     removeAssociate,
