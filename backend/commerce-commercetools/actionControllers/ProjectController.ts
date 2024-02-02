@@ -6,9 +6,9 @@ import handleError from '@Commerce-commercetools/utils/handleError';
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export const getProjectSettings: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const projectApi = new ProjectApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
   try {
+    const projectApi = new ProjectApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+
     const project = await projectApi.getProjectSettings();
 
     const response: Response = {

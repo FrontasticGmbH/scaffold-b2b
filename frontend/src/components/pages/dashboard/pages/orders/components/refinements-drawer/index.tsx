@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import useDisclosure from '@/hooks/useDisclosure';
 import { AdjustmentsHorizontalIcon as FiltersIcon } from '@heroicons/react/24/outline';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
@@ -28,8 +28,6 @@ const RefinementsDrawer = ({
 
   const { isOpen: isDatePickerOpen, onClose: onCloseDatePicker, onToggle: onToggleDatePicker } = useDisclosure();
 
-  const [data, setData] = useState({ creationDate: '' });
-
   const refinements = [
     {
       title: 'product.sortBy',
@@ -47,7 +45,7 @@ const RefinementsDrawer = ({
         <SearchInput
           searchValue={filters?.search ?? ''}
           variant="sm"
-          placeholder={`${translate('dashboard.search.by.id.sku')}...`}
+          placeholder={`${translate('dashboard.search.for.orders')}...`}
           handleOnChange={(val) => onSearch?.(val)}
         />
       ),
@@ -75,14 +73,21 @@ const RefinementsDrawer = ({
             onClick={onToggleDatePicker}
             className="rounded-md border border-gray-300 px-3 py-2 text-14 text-gray-600"
           >
-            {filters?.creationDate ?? 'dd/mm/yy'}
+            {filters?.createdFrom || filters?.createdTo
+              ? `${filters.createdFrom ? new Date(filters.createdFrom).toLocaleDateString() : ''} : ${
+                  filters.createdTo ? new Date(filters.createdTo).toLocaleDateString() : ''
+                }`
+              : 'dd/mm/yy'}
           </div>
           {isDatePickerOpen && (
             <div>
               <DatePicker
-                mode="single"
-                selected={filters?.creationDate ? new Date(filters.creationDate) : undefined}
-                onSelect={(date) => setData({ ...data, creationDate: date?.toLocaleDateString() ?? '' })}
+                mode="range"
+                selected={{
+                  from: filters?.createdFrom ? new Date(filters?.createdFrom) : undefined,
+                  to: filters?.createdTo ? new Date(filters?.createdTo) : undefined,
+                }}
+                onSelect={(range) => onCreationDateRefine?.({ from: range?.from, to: range?.to })}
               />
               <div className="mt-2 flex items-center justify-end gap-8 pr-8">
                 <span className="text-14 font-medium uppercase text-primary" onClick={onCloseDatePicker}>
@@ -91,7 +96,6 @@ const RefinementsDrawer = ({
                 <span
                   className="text-14 font-medium uppercase text-primary"
                   onClick={() => {
-                    onCreationDateRefine?.(data.creationDate ?? '');
                     onCloseDatePicker();
                   }}
                 >

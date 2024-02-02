@@ -47,7 +47,7 @@ export type ShippingProps = {
 };
 
 export type CartCTAProps = {
-  addToCart: (count: number) => void;
+  addToCart: (count: number) => Promise<void>;
 };
 
 export type PDPMainInfoProps = CartCTAProps &

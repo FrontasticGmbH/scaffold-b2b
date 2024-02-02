@@ -5,9 +5,9 @@ import { RangeFilter } from '@Types/query/RangeFilter';
 import { FacetDefinition } from '@Types/product/FacetDefinition';
 import { ProductMapper } from '../mappers/ProductMapper';
 import { Category } from '@Types/product/Category';
-import { CategoryQuery } from '@Types/query/CategoryQuery';
+import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
 import { Product } from '@Types/product/Product';
-import { ExternalError } from '@Commerce-commercetools/utils/Errors';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { FilterField, FilterFieldTypes } from '@Types/product/FilterField';
@@ -176,7 +176,7 @@ export class ProductApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -198,7 +198,7 @@ export class ProductApi extends BaseApi {
       .get()
       .execute()
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(response.body.results, locale);
@@ -208,7 +208,7 @@ export class ProductApi extends BaseApi {
       field: 'categoryIds',
       type: FilterFieldTypes.ENUM,
       label: 'Category',
-      values: await this.queryCategories({ limit: 250 }).then((result) => {
+      values: await this.queryCategories({ limit: 250, format: CategoryQueryFormat.TREE }).then((result) => {
         return (result.items as Category[]).map((item) => {
           return {
             value: item.categoryId,
@@ -264,7 +264,7 @@ export class ProductApi extends BaseApi {
     return await this.getCommercetoolsCategoryPagedQueryResponse(methodArgs)
       .then((response) => {
         const items =
-          categoryQuery.format === 'tree'
+          categoryQuery.format === CategoryQueryFormat.TREE
             ? ProductMapper.commercetoolsCategoriesToTreeCategory(response.body.results, this.categoryIdField, locale)
             : response.body.results.map((category) =>
                 ProductMapper.commercetoolsCategoryToCategory(category, this.categoryIdField, locale),
@@ -282,7 +282,7 @@ export class ProductApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -292,7 +292,7 @@ export class ProductApi extends BaseApi {
       .get(methodArgs)
       .execute()
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 }

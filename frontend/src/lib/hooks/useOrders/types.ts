@@ -3,4 +3,6 @@ export interface Options {
   limit?: number;
   ids?: string[];
   states?: string[];
+  createdFrom?: string;
+  createdTo?: string;
 }

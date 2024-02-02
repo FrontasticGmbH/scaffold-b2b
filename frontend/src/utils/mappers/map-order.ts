@@ -4,11 +4,10 @@ import { Order } from '@shared/types/cart/Order';
 import { mapLineItem } from './map-lineitem';
 
 const orderStatus = (order: Order): OrderStatus => {
-  if (order.returnInfo && order.returnInfo.length > 0) return 'Returned';
-  else if (order.shipmentState === 'Delivered' || order.orderState === 'Complete') return 'Delivered';
+  if (order.shipmentState === 'Delivered' || order.orderState === 'Complete') return 'Delivered';
   else if (order.orderState === 'Open') return 'Pending';
-  else if (order.orderState === 'Confirmed') return 'Confirmed';
-  else return 'Cancelled';
+  else if (order.orderState === 'Confirmed') return order.shipmentState === 'Shipped' ? 'Shipped' : 'Confirmed';
+  else return 'Returned';
 };
 
 export const mapOrder = (order: Order): MappedOrder => {
@@ -17,7 +16,8 @@ export const mapOrder = (order: Order): MappedOrder => {
   const mappedStatus = orderStatus(order);
 
   return {
-    id: order.orderNumber ?? order.orderId ?? order.cartId,
+    id: order.orderId ?? '',
+    number: order.orderNumber ?? '',
     businessUnit: order.businessUnitKey ?? '',
     creationDate: new Date(order.createdAt ?? Date.now()).toLocaleDateString(),
     status: mappedStatus,
@@ -26,6 +26,7 @@ export const mapOrder = (order: Order): MappedOrder => {
     subtotal:
       (order.lineItems ?? []).reduce((acc, curr) => acc + (curr.totalPrice?.centAmount ?? 0), 0) /
       Math.pow(10, fractionDigits),
+    shippingCosts: (order.shippingInfo?.price?.centAmount ?? 0) / Math.pow(10, fractionDigits),
     total: (order.sum?.centAmount ?? 0) / Math.pow(10, fractionDigits),
   };
 };

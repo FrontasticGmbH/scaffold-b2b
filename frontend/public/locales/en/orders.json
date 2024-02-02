@@ -2,6 +2,7 @@
   "orders": "Orders",
   "orders.subtitle": "Check status of recent orders, manage your returns and download invoices.",
   "all.orders": "All orders",
+  "placed": "Order placed",
   "Open": "Registered",
   "Confirmed": "Registered",
   "Complete": "Delivered",
@@ -28,6 +29,7 @@
   "tax": "Tax",
   "ordered": "Ordered",
   "shipped": "Shipped",
+  "returned": "Returned",
   "delivered": "Delivered",
   "estimated.shipping": "Estimated Shipping",
   "est.shipping": "Est. Shipping",
@@ -40,9 +42,12 @@
   "download.invoice": "Download Invoice",
   "return": "Return",
   "reorder": "Reorder",
+  "status.open": "Pending",
   "status.pending": "Pending",
   "status.confirmed": "Confirmed",
-  "status.cancelled": "Cancelled",
+  "status.cancelled": "Returned",
   "status.delivered": "Delivered",
-  "status.returned": "Returned"
+  "status.complete": "Delivered",
+  "status.returned": "Returned",
+  "status.shipped": "Confirmed"
 }

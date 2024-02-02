@@ -19,6 +19,7 @@ Primary.args = {
       items: [
         {
           id: '0',
+          sku: '54af877',
           name: 'Brake Pad Set, disc brake DELPHI LP20',
           model: 'SHXM4AY55N',
           inStock: true,

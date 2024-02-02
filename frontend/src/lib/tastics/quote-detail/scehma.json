@@ -10,7 +10,7 @@
           "label": "Products",
           "field": "data",
           "type": "dataSource",
-          "dataSourceType": "frontastic/product-list",
+          "dataSourceType": "frontastic/quote",
           "required": true
         }
       ]

@@ -8,6 +8,7 @@ import { AccountAuthenticationError } from '@Commerce-commercetools/errors/Accou
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import { Wishlist, WishlistQuery } from '@Types/wishlist';
 import { Account } from '@Types/account';
+import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 type WishlistBody = {
@@ -27,7 +28,7 @@ function fetchAccountFromSession(request: Request): Account | undefined {
 function fetchAccountFromSessionEnsureLoggedIn(request: Request): Account {
   const account = fetchAccountFromSession(request);
   if (!account) {
-    throw new Error('Not logged in.');
+    throw new AccountAuthenticationError({ message: 'Not logged in.' });
   }
   return account;
 }
@@ -50,8 +51,9 @@ async function fetchWishlist(request: Request, wishlistApi: WishlistApi): Promis
 }
 
 export const getWishlist: ActionHook = async (request, actionContext) => {
-  const wishlistApi = getWishlistApi(request, actionContext);
   try {
+    const wishlistApi = getWishlistApi(request, actionContext);
+
     const wishlist = await fetchWishlist(request, wishlistApi);
     return {
       statusCode: 200,
@@ -91,14 +93,14 @@ export const getWishlists: ActionHook = async (request, actionContext) => {
 };
 
 export const queryWishlists: ActionHook = async (request, actionContext) => {
-  const wishlistApi = getWishlistApi(request, actionContext);
-
-  const account = fetchAccountFromSession(request);
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
   try {
+    const wishlistApi = getWishlistApi(request, actionContext);
+
+    const account = fetchAccountFromSession(request);
+    if (account === undefined) {
+      throw new AccountAuthenticationError({ message: 'Not logged in.' });
+    }
+
     const wishlistQuery: WishlistQuery = {
       name: request.query?.name ?? undefined,
       accountId: account.accountId,
@@ -123,22 +125,22 @@ export const queryWishlists: ActionHook = async (request, actionContext) => {
 };
 
 export const createWishlist: ActionHook = async (request, actionContext) => {
-  const wishlistApi = getWishlistApi(request, actionContext);
-
-  const body: {
-    name?: string;
-    description?: string;
-  } = JSON.parse(request.body);
-
-  const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
-  const storeKey = request.query?.['storeKey'];
-
-  if (!storeKey) {
-    throw new Error('No storeKey');
-  }
-
   try {
+    const wishlistApi = getWishlistApi(request, actionContext);
+
+    const body: {
+      name?: string;
+      description?: string;
+    } = JSON.parse(request.body);
+
+    const account = fetchAccountFromSessionEnsureLoggedIn(request);
+
+    const storeKey = request.query?.['storeKey'];
+
+    if (!storeKey) {
+      throw new ValidationError({ message: 'No storeKey' });
+    }
+
     const wishlist = await wishlistApi.create({
       accountId: account.accountId,
       name: body.name ?? 'Wishlist',
@@ -233,13 +235,13 @@ export const addToWishlist: ActionHook = async (request, actionContext) => {
 };
 
 export const addToWishlists: ActionHook = async (request, actionContext) => {
-  const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
-  const wishlistApi = getWishlistApi(request, actionContext);
-
-  const wishlistBody = parseRequestBody<WishlistBody>(request.body);
-
   try {
+    const account = fetchAccountFromSessionEnsureLoggedIn(request);
+
+    const wishlistApi = getWishlistApi(request, actionContext);
+
+    const wishlistBody = parseRequestBody<WishlistBody>(request.body);
+
     const wishlistQuery: WishlistQuery = {
       accountId: account.accountId,
       wishlistIds: wishlistBody.wishlistIds,

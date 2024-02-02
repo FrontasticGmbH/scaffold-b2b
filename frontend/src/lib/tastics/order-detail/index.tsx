@@ -1,29 +1,44 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { DataSource } from '@/types/lib/datasources';
 import Dashboard from '@/components/pages/dashboard';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import OrderDetailsPage from '@/components/pages/dashboard/pages/order-details';
 import useAccount from '@/lib/hooks/useAccount';
+import { mapOrder } from '@/utils/mappers/map-order';
+import useOrders from '@/lib/hooks/useOrders';
 import { TasticProps } from '../types';
 import { DataSourceProps } from './types';
 
 const OrderDetailTastic = ({ data }: TasticProps<DataSource<DataSourceProps>>) => {
+  const router = useRouter();
+
   const { account } = useAccount();
-  if (!data.data?.dataSource?.order) return <div>Im an Order Detail</div>;
+
+  const order = data.data?.dataSource?.order;
+
+  const { cancelOrder, replicateOrder } = useOrders({}, order?.businessUnitKey);
+
+  if (!order) return <></>;
 
   return (
     <Dashboard href={DashboardLinks.orders} userName={account?.firstName}>
       <OrderDetailsPage
-        order={{
-          id: '2353 2245 6631',
-          status: 'Confirmed',
-          creationDate: '11/03/2023',
-          businessUnit: 'Greenville',
-          subtotal: 5225.66,
-          total: 5225.66,
-          currency: 'USD',
-          items: [],
+        order={mapOrder(order)}
+        onReturn={async () => {
+          const res = await cancelOrder(order);
+          router.refresh();
+          return !!res.orderId;
+        }}
+        onReorder={async () => {
+          const res = await replicateOrder(order.orderId as string);
+
+          const success = !!res.orderId;
+
+          if (success) router.push(`/thank-you?orderId=${res.orderId}`);
+
+          return !!res.orderId;
         }}
       />
     </Dashboard>

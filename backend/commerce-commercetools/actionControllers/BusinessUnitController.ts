@@ -4,9 +4,7 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Store } from '@Types/store/Store';
 import { getCurrency, getLocale } from '../utils/Request';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
-import { CartApi } from '../apis/CartApi';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import { Account } from '@Types/account/Account';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
@@ -14,6 +12,9 @@ import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import { Address } from '@Types/account/Address';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
+import getCartApi from '@Commerce-commercetools/utils/getCartApi';
+import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
+import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -26,21 +27,19 @@ export interface BusinessUnitRequestBody {
 }
 
 export const getBusinessUnits: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const expandStores = request.query?.['expandStores'] === 'true';
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const expandStores = request.query?.['expandStores'] === 'true';
+
     const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId, expandStores);
 
     return {
@@ -56,22 +55,14 @@ export const getBusinessUnits: ActionHook = async (request: Request, actionConte
 };
 
 export const getBusinessUnitOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const cartApi = new CartApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
-  const businessUnitKey = request?.query?.['key'];
-
-  if (!businessUnitKey) {
-    const error = new Error('No business unit key');
-    return handleError(error, request);
-  }
   try {
-    const orders = await cartApi.getBusinessUnitOrders(businessUnitKey, account);
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+    const businessUnitKey = request?.query?.['key'];
+
+    if (!businessUnitKey) {
+      throw new ValidationError({ message: 'No business unit key' });
+    }
+    const orders = await cartApi.getBusinessUnitOrders();
 
     const response: Response = {
       statusCode: 200,
@@ -86,21 +77,17 @@ export const getBusinessUnitOrders: ActionHook = async (request: Request, action
 };
 
 export const create: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const businessUnitRequestBody: BusinessUnitRequestBody = JSON.parse(request.body);
-
   try {
+    assertIsAuthenticated(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const businessUnitRequestBody: BusinessUnitRequestBody = JSON.parse(request.body);
+
     const businessUnit = await businessUnitApi.createForAccountAndStore(
       businessUnitRequestBody.account,
       businessUnitRequestBody.store,
@@ -119,25 +106,23 @@ export const create: ActionHook = async (request: Request, actionContext: Action
 };
 
 export const addAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const locale = getLocale(request);
-  const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-  const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const locale = getLocale(request);
+    const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
+
     let accountAssociate = await accountApi.getAccountByEmail(addUserBody.email);
     if (!accountAssociate) {
       const accountData = {
@@ -173,21 +158,19 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
 };
 
 export const removeAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const { accountId: associateAccountId } = JSON.parse(request.body);
-  const businessUnitKey = request.query['key'];
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const { accountId: associateAccountId } = JSON.parse(request.body);
+    const businessUnitKey = request.query['key'];
     const businessUnit = await businessUnitApi.removeAssociate(businessUnitKey, account.accountId, associateAccountId);
 
     return {
@@ -201,22 +184,20 @@ export const removeAssociate: ActionHook = async (request: Request, actionContex
 };
 
 export const updateAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const { accountId: associateId, roleKeys }: { accountId: string; roleKeys: string[] } = JSON.parse(request.body);
-  const businessUnitKey = request.query['key'];
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const { accountId: associateId, roleKeys }: { accountId: string; roleKeys: string[] } = JSON.parse(request.body);
+    const businessUnitKey = request.query['key'];
+
     const businessUnit = await businessUnitApi.updateAssociate(
       businessUnitKey,
       account.accountId,
@@ -235,28 +216,26 @@ export const updateAssociate: ActionHook = async (request: Request, actionContex
 };
 
 export const updateBusinessUnit: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const requestData = parseRequestBody<BusinessUnitRequestBody>(request.body);
-
-  const businessUnitRequestData: BusinessUnit = {
-    ...requestData,
-    contactEmail: requestData.contactEmail,
-    name: requestData.name,
-    key: request.query['key'],
-  };
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const requestData = parseRequestBody<BusinessUnitRequestBody>(request.body);
+
+    const businessUnitRequestData: BusinessUnit = {
+      ...requestData,
+      contactEmail: requestData.contactEmail,
+      name: requestData.name,
+      key: request.query['key'],
+    };
+
     const businessUnit = await businessUnitApi.updateBusinessUnit(businessUnitRequestData, account.accountId);
 
     return {
@@ -270,24 +249,22 @@ export const updateBusinessUnit: ActionHook = async (request: Request, actionCon
 };
 
 export const addBusinessUnitAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const requestData = parseRequestBody<{ address: Address }>(request.body);
-
-  const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
-  const businessUnitKey = request.query['key'];
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const requestData = parseRequestBody<{ address: Address }>(request.body);
+
+    const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
+    const businessUnitKey = request.query['key'];
+
     const businessUnit = await businessUnitApi.addBusinessUnitAddress(businessUnitKey, account.accountId, addressData);
 
     return {
@@ -301,24 +278,22 @@ export const addBusinessUnitAddress: ActionHook = async (request: Request, actio
 };
 
 export const updateBusinessUnitAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const requestData = parseRequestBody<{ address: Address }>(request.body);
-
-  const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
-
-  const businessUnitKey = request.query['key'];
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const requestData = parseRequestBody<{ address: Address }>(request.body);
+
+    const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
+
+    const businessUnitKey = request.query['key'];
+
     const businessUnit = await businessUnitApi.updateBusinessUnitAddress(
       businessUnitKey,
       account.accountId,
@@ -336,23 +311,21 @@ export const updateBusinessUnitAddress: ActionHook = async (request: Request, ac
 };
 
 export const removeBusinessUnitAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const requestData = parseRequestBody<{ addressId: string }>(request.body);
-  const addressId = requestData.addressId;
-
-  const businessUnitKey = request.query['key'];
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const requestData = parseRequestBody<{ addressId: string }>(request.body);
+    const addressId = requestData.addressId;
+
+    const businessUnitKey = request.query['key'];
+
     const businessUnit = await businessUnitApi.removeBusinessUnitAddress(businessUnitKey, account.accountId, addressId);
 
     return {
@@ -366,21 +339,19 @@ export const removeBusinessUnitAddress: ActionHook = async (request: Request, ac
 };
 
 export const getByKey: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
-  const businessUnitKey = request.query?.['key'];
-
   try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const businessUnitKey = request.query?.['key'];
+
     const businessUnit = await businessUnitApi.get(businessUnitKey, account.accountId);
 
     return {
@@ -394,19 +365,15 @@ export const getByKey: ActionHook = async (request: Request, actionContext: Acti
 };
 
 export const getAssociateRoles: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const account = fetchAccountFromSession(request);
-
-  if (account === undefined) {
-    throw new AccountAuthenticationError({ message: 'Not logged in.' });
-  }
-
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
-
   try {
+    assertIsAuthenticated(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
     const associateRoles = await businessUnitApi.getAssociateRoles();
 
     const response: Response = {

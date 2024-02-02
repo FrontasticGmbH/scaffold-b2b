@@ -9,10 +9,11 @@ import {
 import { BusinessUnitMapper } from '../mappers/BusinessUnitMapper';
 import { Store } from '@Types/store/Store';
 import { Account } from '@Types/account/Account';
-import { ExternalError } from '@Commerce-commercetools/utils/Errors';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
 import { AssociateRole } from '@Types/business-unit/Associate';
 import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 const MAX_LIMIT = 50;
 
@@ -66,14 +67,14 @@ export class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body, locale, [store]);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
   async update(businessUnitKey: string, accountId: string, actions: BusinessUnitUpdateAction[]): Promise<BusinessUnit> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.getByKey(businessUnitKey, accountId).then((businessUnit) =>
+    return this.getByKey(businessUnitKey).then((businessUnit) =>
       this.associateRequestBuilder(accountId)
         .businessUnits()
         .withKey({ key: businessUnitKey })
@@ -88,33 +89,34 @@ export class BusinessUnitApi extends BaseApi {
           return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body, locale);
         })
         .catch((error) => {
-          throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         }),
     );
   }
 
   async query(accountId: string, businessUnitKey?: string): Promise<BusinessUnitPagedQueryResponse> {
-    try {
-      const whereClause = [];
-      if (businessUnitKey) {
-        whereClause.push(`key in ("${businessUnitKey}")`);
-      }
-      const expand = 'associates[*].customer';
-
-      return this.associateRequestBuilder(accountId)
-        .businessUnits()
-        .get({
-          queryArgs: {
-            whereClause,
-            expand,
-            limit: MAX_LIMIT,
-          },
-        })
-        .execute()
-        .then((res) => res.body as BusinessUnitPagedQueryResponse);
-    } catch (e) {
-      throw e;
+    const whereClause = [];
+    if (businessUnitKey) {
+      whereClause.push(`key in ("${businessUnitKey}")`);
     }
+    const expand = 'associates[*].customer';
+
+    return this.associateRequestBuilder(accountId)
+      .businessUnits()
+      .get({
+        queryArgs: {
+          whereClause,
+          expand,
+          limit: MAX_LIMIT,
+        },
+      })
+      .execute()
+      .then((response) => {
+        return response.body;
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
   }
 
   async get(businessUnitKey: string, accountId: string): Promise<BusinessUnit> {
@@ -122,41 +124,36 @@ export class BusinessUnitApi extends BaseApi {
 
     const storeApi = new StoreApi(this.frontasticContext, this.locale, this.currency);
 
-    try {
-      const businessUnit = await this.query(accountId, businessUnitKey).then((response) => {
-        if (response.count >= 1) {
-          return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.results[0], locale);
-        }
+    const businessUnit = await this.query(accountId, businessUnitKey).then((response) => {
+      if (response.count >= 1) {
+        return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.results[0], locale);
+      }
 
-        throw new Error(`Business unit "${businessUnitKey}" not found for this account`);
-      });
+      throw new ResourceNotFoundError({ message: `Business unit "${businessUnitKey}" not found for this account` });
+    });
 
-      const storeKeys = businessUnit?.stores?.map((store) => `"${store.key}"`).join(' ,');
-      const allStores = await storeApi.query(`key in (${storeKeys})`);
+    const storeKeys = businessUnit?.stores?.map((store) => `"${store.key}"`).join(' ,');
+    const allStores = await storeApi.query(`key in (${storeKeys})`);
 
-      businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);
+    businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);
 
-      return businessUnit;
-    } catch (e) {
-      throw e;
-    }
+    return businessUnit;
   }
 
-  async getByKey(businessUnitKey: string, accountId: string): Promise<BusinessUnit> {
+  async getByKey(businessUnitKey: string): Promise<BusinessUnit> {
     const locale = await this.getCommercetoolsLocal();
 
-    try {
-      return this.associateRequestBuilder(accountId)
-        .businessUnits()
-        .withKey({ key: businessUnitKey })
-        .get()
-        .execute()
-        .then((response) => {
-          return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body, locale);
-        });
-    } catch (e) {
-      throw e;
-    }
+    return this.requestBuilder()
+      .businessUnits()
+      .withKey({ key: businessUnitKey })
+      .get()
+      .execute()
+      .then((response) => {
+        return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body, locale);
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
   }
 
   async getBusinessUnitsForUser(accountId: string, expandStores?: boolean): Promise<BusinessUnit[]> {
@@ -190,22 +187,18 @@ export class BusinessUnitApi extends BaseApi {
   }
 
   async getAssociateRoles(): Promise<AssociateRole[]> {
-    try {
-      return this.requestBuilder()
-        .associateRoles()
-        .get()
-        .execute()
-        .then((response) => {
-          return response.body.results
-            .filter((associateRole) => associateRole.buyerAssignable)
-            .map((associateRole) => BusinessUnitMapper.mapCommercetoolsAssociateRoleToAssociateRole(associateRole));
-        })
-        .catch((error) => {
-          throw error;
-        });
-    } catch {
-      throw '';
-    }
+    return this.requestBuilder()
+      .associateRoles()
+      .get()
+      .execute()
+      .then((response) => {
+        return response.body.results
+          .filter((associateRole) => associateRole.buyerAssignable)
+          .map((associateRole) => BusinessUnitMapper.mapCommercetoolsAssociateRoleToAssociateRole(associateRole));
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
   }
 
   async updateBusinessUnit(requestData: BusinessUnit, accountId: string): Promise<BusinessUnit> {

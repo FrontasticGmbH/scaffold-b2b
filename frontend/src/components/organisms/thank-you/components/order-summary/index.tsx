@@ -15,7 +15,7 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
   return (
     <div>
       <h5 className="lg:hidden">{translate('thank-you.order.details')}</h5>
-      <h5 className="hidden lg:block">{translate('thank-you.order.summary')}</h5>
+      <h5 className="hidden text-18 lg:block">{translate('thank-you.order.summary')}</h5>
 
       <div className="lg:hidden">
         {lineItems.map(({ id, name, price, currency, quantity, images }) => (
@@ -35,12 +35,12 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
         ))}
       </div>
 
-      <Accordion className="mt-6 hidden border-none lg:block" defaultIsExpanded>
+      <Accordion className="mt-6 hidden border-none pb-4 lg:block" defaultIsExpanded>
         <Accordion.Button defaultSpacing={false} className="border-t border-neutral-400 pt-4">
           {translate('thank-you.your.order')}
         </Accordion.Button>
-        <Accordion.Panel defaultSpacing={false} className="pt-4">
-          <div className="hidden pb-6 pt-2 lg:block">
+        <Accordion.Panel defaultSpacing={false} className="py-4">
+          <div className="hidden pt-2 lg:block">
             <div className="flex items-center gap-4">
               {lineItems.slice(0, 3).map(({ id, images, name }) => (
                 <div className="relative h-[88px] w-[88px]" key={id}>
@@ -53,7 +53,7 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
         </Accordion.Panel>
       </Accordion>
 
-      <div className="pt-4 lg:pt-6">
+      <div className="pt-4 lg:border-t lg:border-neutral-400 lg:pt-6">
         <Costs
           subtotal={transaction.subtotal}
           shipping={transaction.shipping}
@@ -66,7 +66,7 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
         />
       </div>
 
-      <Button className="mt-5 hidden w-full lg:block" variant="secondary" size="m">
+      <Button className="mt-5 hidden w-full lg:block" variant="secondary" size="m" disabled>
         {translate('thank-you.download.invoice')}
       </Button>
     </div>

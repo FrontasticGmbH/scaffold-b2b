@@ -1,4 +1,5 @@
 import { Request } from '@frontastic/extension-types';
+import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 
 export const getPath = (request: Request): string | null => {
   return getHeader(request, 'frontastic-path') ?? request.query.path;
@@ -11,7 +12,7 @@ export const getLocale = (request: Request): string => {
     return getHeader(request, 'frontastic-locale') ?? request.query.locale;
   }
 
-  throw new Error(`Locale is missing from request ${request}`);
+  throw new ValidationError({ message: `Locale is missing from request ${request}` });
 };
 
 export const getCurrency = (request: Request): string | null => {

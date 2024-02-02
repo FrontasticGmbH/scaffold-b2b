@@ -9,13 +9,14 @@ export interface OrdersPageProps {
     sort?: string;
     search?: string;
     status?: string[];
-    creationDate?: string;
+    createdFrom?: string;
+    createdTo?: string;
   };
   sortOptions: Option[];
-  statusOptions: Array<Option & { count: number }>;
+  statusOptions: Array<Option & { count?: number }>;
   onClearRefinements?: () => void;
   onStatusRefine?: (status: string) => void;
-  onCreationDateRefine?: (date: string) => void;
+  onCreationDateRefine?: (args: { from?: Date; to?: Date }) => void;
   onSearch?: (search: string) => void;
   onSortBy?: (sort: string) => void;
   page: number;

@@ -32,7 +32,7 @@ const OrdersTable = ({
           <Table.Cell isButtonsHead />
         </Table.Head>
         <Table.Body>
-          {(orders ?? []).map(({ id, status, creationDate, businessUnit, total, currency }) => (
+          {(orders ?? []).map(({ id, number, status, creationDate, businessUnit, total, currency }) => (
             <Table.Row key={id}>
               <Table.Cell>
                 <div className="flex items-center justify-between gap-2">
@@ -40,7 +40,7 @@ const OrdersTable = ({
                 </div>
               </Table.Cell>
               <Table.Cell>
-                <span className="block max-w-full truncate">{id}</span>
+                <span className="block max-w-full truncate">{number}</span>
               </Table.Cell>
               <Table.Cell>{creationDate}</Table.Cell>
               <Table.Cell>{businessUnit}</Table.Cell>

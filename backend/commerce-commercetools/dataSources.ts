@@ -3,12 +3,13 @@ import { getCurrency, getLocale } from './utils/Request';
 import { ProductApi } from './apis/ProductApi';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import { CartApi } from '@Commerce-commercetools/apis/CartApi';
+
 import { QuoteApi } from '@Commerce-commercetools/apis/QuoteApi';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
+import getCartApi from '@Commerce-commercetools/utils/getCartApi';
 
 function productQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
   const productApi = new ProductApi(
@@ -24,7 +25,7 @@ function productQueryFromContext(context: DataSourceContext, config: DataSourceC
 function orderQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
   const account = fetchAccountFromSessionEnsureLoggedIn(context.request);
 
-  const cartApi = new CartApi(context.frontasticContext, getLocale(context.request), getCurrency(context.request));
+  const cartApi = getCartApi(context.request, context.frontasticContext);
 
   const orderQuery = OrderQueryFactory.queryFromParams(context.request, account);
 

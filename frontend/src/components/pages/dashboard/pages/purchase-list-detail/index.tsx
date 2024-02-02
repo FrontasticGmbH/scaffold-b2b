@@ -40,6 +40,7 @@ const PurchaseListDetailPage = ({
             <Button
               className="w-full px-[0px] py-[8px] md:order-[2] md:w-[75px]"
               size="m"
+              disabled
               onClick={() => onOrderPurchaseList?.(purchaseList.id)}
             >
               {translate('common.order')}

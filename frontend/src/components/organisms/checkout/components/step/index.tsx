@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { Props } from './types';
@@ -6,8 +6,17 @@ import { Props } from './types';
 const Step = ({ number, title, isActive, isCompleted, onNavigate, children }: React.PropsWithChildren<Props>) => {
   const { translate } = useTranslation();
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isActive) {
+      (ref.current as HTMLDivElement).scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  }, [isActive]);
+
   return (
     <div
+      ref={ref}
       className={classnames('rounded-md bg-white lg:p-9', { 'border border-neutral-400 lg:border-none': !isActive })}
     >
       <div

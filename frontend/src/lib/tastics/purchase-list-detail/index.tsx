@@ -10,6 +10,7 @@ import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import useAccount from '@/lib/hooks/useAccount';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import useCart from '@/lib/hooks/useCart';
 import { TasticProps } from '../types';
 import { DataSourceProps } from './types';
 
@@ -18,9 +19,11 @@ const PurchaseListDetailTastic = ({ data }: TasticProps<DataSource<DataSourcePro
 
   const { account } = useAccount();
 
-  const { selectedStore } = useStoreAndBusinessUnits();
+  const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { updatePurchaseList, deletePurchaseList, removeItem } = usePurchaseLists(selectedStore?.key);
+  const { addItem: addItemToCart } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
+
+  const { updatePurchaseList, deletePurchaseList, removeItem, updateItem } = usePurchaseLists(selectedStore?.key);
 
   const wishlist = data?.data?.dataSource?.wishlist.items[0];
 
@@ -44,6 +47,22 @@ const PurchaseListDetailTastic = ({ data }: TasticProps<DataSource<DataSourcePro
           const res = await removeItem({ wishlistId: wishlist.wishlistId, store: wishlist.store, lineItemId: id });
           router.refresh();
           return !!res?.wishlistId;
+        }}
+        onUpdateItem={async (item) => {
+          if (!item.sku || !item.id) return false;
+          const res = await updateItem({
+            wishlistId: wishlist.wishlistId,
+            lineItemId: item.id,
+            count: item.quantity ?? 1,
+          });
+          router.refresh();
+          return !!res;
+        }}
+        onAddItemToCart={async (item) => {
+          if (!item.sku) return false;
+          const res = await addItemToCart([{ sku: item.sku, count: item.quantity ?? 1 }]);
+          router.refresh();
+          return !!res;
         }}
       />
     </Dashboard>

@@ -4,7 +4,7 @@ import { QuoteMapper } from '../mappers/QuoteMapper';
 import { Cart } from '@Types/cart/Cart';
 import { QuoteRequest, QuoteRequestState } from '@Types/quote/QuoteRequest';
 import { Quote, QuoteState } from '@Types/quote/Quote';
-import { ExternalError } from '@Commerce-commercetools/utils/Errors';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
 import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
@@ -40,7 +40,7 @@ export class QuoteApi extends BaseApi {
         return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -64,7 +64,7 @@ export class QuoteApi extends BaseApi {
           throw new ResourceNotFoundError({ message: error.message });
         }
 
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -87,7 +87,7 @@ export class QuoteApi extends BaseApi {
           throw new ResourceNotFoundError({ message: error.message });
         }
 
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -142,7 +142,7 @@ export class QuoteApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -285,7 +285,7 @@ export class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
         })
         .catch((error) => {
-          throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
   };
@@ -316,7 +316,7 @@ export class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
         })
         .catch((error) => {
-          throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
   };
@@ -350,7 +350,7 @@ export class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
         })
         .catch((error) => {
-          throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
   };
@@ -378,7 +378,7 @@ export class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale);
         })
         .catch((error) => {
-          throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
   };

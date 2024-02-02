@@ -1,4 +1,13 @@
 
+## Version 1.5.2 (2024-02-02)
+
+** New Features and Improvements **
+
+** Bug fixes **
+
+ - User is able to change/update product quantity in purchase list
+ - User is able to add item to cart from wishlist
+
 ## Version 1.5.1 (2024-01-26)
 
 ** New Features and Improvemnets **

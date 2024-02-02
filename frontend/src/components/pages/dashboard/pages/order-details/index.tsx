@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
-import Link from '@/components/atoms/link';
-import Typography from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
 import { OrderDetailsPageProps } from './types';
 import OrderStatusBar from './components/order-status-bar';
+import PreviousPageLink from '../../components/previous-page-link';
 
-const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
+const OrderDetailsPage = ({ order, onReturn, onReorder }: OrderDetailsPageProps) => {
   const { translate } = useTranslation();
 
-  const { formatCurrency } = useFormat();
+  const { formatCurrency, formatLocalDate } = useFormat();
+
+  const [loading, setLoading] = useState({ return: false, reorder: false });
+
+  const handleReturn = useCallback(async () => {
+    setLoading({ ...loading, return: true });
+
+    await onReturn?.();
+
+    setLoading({ ...loading, return: false });
+  }, [loading, onReturn]);
+
+  const handleReorder = useCallback(async () => {
+    setLoading({ ...loading, reorder: true });
+
+    await onReorder?.();
+
+    setLoading({ ...loading, reorder: false });
+  }, [loading, onReorder]);
 
   if (!order) return <></>;
 
@@ -22,34 +39,41 @@ const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
           {translate('dashboard.order.details')}
         </h1>
         <div className="hidden items-center justify-normal gap-x-3 md:flex">
-          <Link href="?hash=orders" underlineOnHover className="hidden text-blue-700 lg:block">
-            <Typography className="text-14 text-blue-700">{translate('common.back.to.previous.page')}</Typography>
-          </Link>
-          <Button size="s" variant="secondary">
+          <PreviousPageLink />
+
+          <Button size="s" variant="secondary" onClick={handleReturn} loading={loading.return}>
             {translate('orders.return')}
           </Button>
-          <Button size="s" variant="secondary">
+          <Button size="s" variant="secondary" disabled>
             {translate('orders.download.invoice')}
           </Button>
-          <Button size="s" variant="primary">
+          <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
             {translate('orders.reorder')}
           </Button>
         </div>
       </div>
+
       <h3 className="text-14 text-gray-600">
-        {translate('dashboard.order.id')}: {order.id}
+        {translate('dashboard.order.id')}: {order.number}
       </h3>
 
-      <OrderStatusBar />
+      {order.creationDate && (
+        <h3 className="mt-4 text-14 text-gray-600">
+          {translate('dashboard.order.date')}: {formatLocalDate(order.creationDate)}
+        </h3>
+      )}
+
+      <div className="pb-8 pt-12 md:border-b md:border-neutral-400 md:pb-12 md:pt-[56px] lg:pb-[56px]">
+        <OrderStatusBar order={order} />
+      </div>
 
       <div className="flex flex-col items-center justify-normal gap-y-4 md:hidden">
-        <Link href="?hash=orders" underlineOnHover className="hidden text-blue-700 lg:block">
-          <Typography className="text-14 text-blue-700">{translate('common.back.to.previous.page')}</Typography>
-        </Link>
+        <PreviousPageLink />
+
         <Button size="full" variant="secondary">
           {translate('orders.return')}
         </Button>
-        <Button size="full" variant="secondary">
+        <Button size="full" variant="secondary" disabled>
           {translate('orders.download.invoice')}
         </Button>
         <Button size="full" variant="primary">
@@ -95,7 +119,7 @@ const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
         </table>
       </div>
 
-      <div className="flex justify-end border-b border-neutral-400 pb-7 pt-6">
+      <div className="flex justify-end pb-7 pt-6">
         <div className="flex w-full flex-col gap-2 lg:w-1/2">
           <div className="flex items-center justify-between text-14 text-gray-600">
             <span>{translate('common.subtotal')}</span>
@@ -123,8 +147,8 @@ const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
         </div>
       </div>
 
-      <div>
-        <h5 className="pb-7 pt-6 text-gray-700">{translate('dashboard.shipping.and.payment')}</h5>
+      {/* <div>
+        <h5 className="pb-7 pt-6 text-gray-700 border-t border-neutral-400">{translate('dashboard.shipping.and.payment')}</h5>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
           <div>
@@ -147,7 +171,7 @@ const OrderDetailsPage = ({ order }: OrderDetailsPageProps) => {
             <p className="mt-2 whitespace-pre-line text-14 text-gray-700">{order.paymentMethod}</p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

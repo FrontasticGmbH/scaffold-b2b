@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Cart from '@/components/organisms/cart';
 import useCart from '@/lib/hooks/useCart';
 import useAccount from '@/lib/hooks/useAccount';
@@ -18,10 +18,14 @@ const CartTastic = ({}: TasticProps<Props>) => {
     selectedStore?.key,
   );
 
-  const { defaultShippingAddress } = useAccount();
+  const defaultShippingAddress =
+    selectedBusinessUnit?.addresses.find((address) => address.isDefaultShipping) ?? selectedBusinessUnit?.addresses[0];
+
+  const shippingAddressUpdated = useRef(false);
 
   useEffect(() => {
-    if (!cart?.shippingAddress?.addressId && defaultShippingAddress) {
+    if (defaultShippingAddress && !shippingAddressUpdated.current) {
+      shippingAddressUpdated.current = true;
       updateCart({ shipping: defaultShippingAddress });
     }
   }, [cart?.shippingAddress?.addressId, defaultShippingAddress, updateCart]);

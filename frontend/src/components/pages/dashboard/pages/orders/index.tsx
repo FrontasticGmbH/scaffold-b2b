@@ -4,6 +4,7 @@ import { OrdersPageProps } from './types';
 import RefinementsDrawer from './components/refinements-drawer';
 import Refinements from './components/refinements';
 import OrdersTable from './components/orders-table';
+import CurrentRefinements from './components/current-refinements';
 
 const OrdersPage = ({
   orders,
@@ -35,6 +36,8 @@ const OrdersPage = ({
     statusOptions,
   };
 
+  const currentRefinementsProps = { onClearRefinements, filters, onSearch, onStatusRefine, onCreationDateRefine };
+
   const tableProps = { orders, totalItems, page, limit, onPageChange, onRowsPerPageChange };
 
   return (
@@ -46,6 +49,7 @@ const OrdersPage = ({
       <div className="overflow-visible">
         <RefinementsDrawer {...refinementProps} />
         <Refinements {...refinementProps} />
+        <CurrentRefinements {...currentRefinementsProps} />
         <OrdersTable {...tableProps} />
       </div>
     </div>

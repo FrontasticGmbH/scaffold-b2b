@@ -42,13 +42,18 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (!loggedIn && !attemptingToAuth) return redirect('/login');
 
-  const response = await sdk.page.getPage({
+  const page = await sdk.page.getPage({
     path: `/${slug?.join('/') ?? ''}`,
     query: searchParams as Record<string, string>,
     ...getServerOptions(),
   });
 
-  if (response.isError) return <></>;
+  if (page.isError) return <></>;
+
+  const businessUnits = await sdk.composableCommerce.businessUnit.getBusinessUnits(
+    { expandStores: true },
+    { ...getServerOptions() },
+  );
 
   const translations = await getTranslations(
     [locale],
@@ -72,8 +77,15 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 
   return (
-    <Providers translations={translations} locale={locale} accountResult={auth.isError ? {} : auth.data}>
-      <Renderer data={response.data} tastics={tastics} searchParams={searchParams} />
+    <Providers
+      translations={translations}
+      locale={locale}
+      initialData={{
+        account: auth.isError ? {} : auth.data,
+        businessUnits: businessUnits.isError ? [] : businessUnits.data,
+      }}
+    >
+      <Renderer data={page.data} tastics={tastics} searchParams={searchParams} />
       <Toaster />
     </Providers>
   );

@@ -1,10 +1,11 @@
 import { Currency } from '../currency';
 import { Product } from './product';
 
-export type OrderStatus = 'Pending' | 'Confirmed' | 'Cancelled' | 'Returned' | 'Delivered';
+export type OrderStatus = 'Pending' | 'Confirmed' | 'Cancelled' | 'Returned' | 'Delivered' | 'Shipped';
 
 export interface Order {
   id: string;
+  number: string;
   status: OrderStatus;
   creationDate: string;
   businessUnit: string;

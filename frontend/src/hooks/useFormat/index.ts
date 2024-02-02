@@ -24,7 +24,19 @@ const useFormat = () => {
     }, ${address.country}`.replace(/[^\S\r\n]+/g, ' ');
   }, []);
 
-  return { formatCurrency, formatAddress };
+  const formatLocalDate = useCallback((date: Date | string) => {
+    const dateToFormat = date instanceof Date ? date : new Date(date);
+
+    const [day, month, year] = [
+      dateToFormat.getDate().toString().padStart(2, '0'),
+      (dateToFormat.getMonth() + 1).toString().padStart(2, '0'),
+      dateToFormat.getFullYear().toString(),
+    ];
+
+    return `${day}-${month}-${year}`;
+  }, []);
+
+  return { formatCurrency, formatAddress, formatLocalDate };
 };
 
 export default useFormat;

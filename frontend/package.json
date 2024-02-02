@@ -1,6 +1,6 @@
 {
   "name": "@frontastic/components-b2b",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "license": "MIT",
   "main": "index.js",
   "private": true,

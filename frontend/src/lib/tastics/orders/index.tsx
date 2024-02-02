@@ -25,13 +25,18 @@ const OrdersTastic = () => {
     search,
     debouncedSearch,
     setSearch,
+    date,
+    ISODate,
+    onCreationDateRefine,
   } = useRefinements();
 
   const { orders } = useOrders({
     limit,
     cursor,
     ...(states.length ? { states } : {}),
-    ...(debouncedSearch ? { ids: [debouncedSearch] } : {}),
+    ...(debouncedSearch ? { ids: [debouncedSearch.trim()] } : {}),
+    createdFrom: ISODate.from,
+    createdTo: ISODate.to,
   });
 
   const mappedOrders = orders.items?.map(mapOrder);
@@ -46,7 +51,7 @@ const OrdersTastic = () => {
     <Dashboard href={DashboardLinks.orders} userName={account?.firstName}>
       <OrdersPage
         orders={mappedOrders ?? []}
-        filters={{ search, status: states }}
+        filters={{ search, status: states, createdFrom: date.from?.toString(), createdTo: date.to?.toString() }}
         sortOptions={[]}
         statusOptions={orderStatusOptions}
         onSearch={(val) => setSearch(val)}
@@ -57,6 +62,7 @@ const OrdersTastic = () => {
           else removeState(status);
         }}
         onClearRefinements={clearRefinements}
+        onCreationDateRefine={onCreationDateRefine}
         page={page}
         totalItems={total}
         limit={limit}

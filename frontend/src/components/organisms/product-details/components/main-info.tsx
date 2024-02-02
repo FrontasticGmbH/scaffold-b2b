@@ -1,5 +1,6 @@
 import Typography from '@/components/atoms/typography';
 import useFormat from '@/hooks/useFormat';
+import { useAddToCartOverlay } from '@/providers/add-to-cart-overlay';
 import { PDPMainInfoProps } from '../types';
 import ColoredVariants from './color-variants';
 import SpecsVariants from './specs-variants';
@@ -19,7 +20,11 @@ const MainInfo = ({
   onChangeVariant,
 }: PDPMainInfoProps) => {
   const { formatCurrency } = useFormat();
-
+  const { showModal } = useAddToCartOverlay();
+  const handleOnAddToCart = async (count: number) => {
+    await addToCart(count);
+    showModal(product);
+  };
   return (
     <div className={className}>
       <div className="grid gap-6">
@@ -64,7 +69,7 @@ const MainInfo = ({
           />
         )}
 
-        <CartCTA addToCart={addToCart} />
+        <CartCTA addToCart={handleOnAddToCart} />
 
         <ShoppingListCTA getWishlists={getWishlists} addToWishlists={addToWishlists} />
 

@@ -1,8 +1,11 @@
-import { ErrorProps, ExtensionError } from '../utils/Errors';
+import { ExtensionError, ExtensionErrorProperties } from './Errors';
 
 export class ResourceNotFoundError extends ExtensionError {
-  constructor(options: ErrorProps) {
+  static RESOURCE_NOT_FOUND_ERROR_NAME: 'resource_not_found_error';
+
+  constructor(options: ExtensionErrorProperties) {
     super(options);
-    this.code = 'resource_not_found_error';
+    this.errorName = ResourceNotFoundError.RESOURCE_NOT_FOUND_ERROR_NAME;
+    this.statusCode = options.statusCode ?? 404;
   }
 }

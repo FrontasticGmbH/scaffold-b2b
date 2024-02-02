@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useDebounce } from '@/hooks/useDebounce';
 
 const useRefinements = () => {
@@ -6,6 +6,7 @@ const useRefinements = () => {
   const [cursor, setCursor] = useState<string>('offset:0');
   const [states, setStates] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [date, setDate] = useState<{ from?: Date; to?: Date }>({ from: undefined, to: undefined });
 
   const debouncedSearch = useDebounce(search);
 
@@ -14,10 +15,31 @@ const useRefinements = () => {
   const addState = useCallback((state: string) => setStates([...states, state]), [states]);
   const removeState = useCallback((state: string) => setStates(states.filter((s) => s !== state)), [states]);
 
+  const extractDate = useCallback((date: Date) => {
+    const [day, month, year] = [
+      date.getDate().toString().padStart(2, '0'),
+      (date.getMonth() + 1).toString().padStart(2, '0'),
+      date.getFullYear(),
+    ];
+
+    return `${year}-${month}-${day}T00:00:00.000Z`;
+  }, []);
+
+  const ISODate = useMemo(() => {
+    const result = {} as { from?: string; to?: string };
+
+    if (date.from) result.from = extractDate(date.from);
+
+    if (date.to) result.to = extractDate(date.to);
+
+    return result;
+  }, [date, extractDate]);
+
   const clearRefinements = useCallback(() => {
     setLimit(25);
     setStates([]);
     setSearch('');
+    setDate({ from: undefined, to: undefined });
   }, []);
 
   return {
@@ -33,6 +55,9 @@ const useRefinements = () => {
     search,
     debouncedSearch,
     setSearch,
+    date,
+    ISODate,
+    onCreationDateRefine: setDate,
     clearRefinements,
   };
 };

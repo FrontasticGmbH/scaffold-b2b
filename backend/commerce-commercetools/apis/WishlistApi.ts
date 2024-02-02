@@ -1,5 +1,4 @@
 import { Wishlist } from '@Types/wishlist/Wishlist';
-import { ExternalError } from '@Commerce-commercetools/utils/Errors';
 import { Account } from '@Types/account/Account';
 import { ShoppingListUpdateAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
 import { PaginatedResult } from '@Types/result';
@@ -8,6 +7,7 @@ import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { WishlistQuery } from '@Types/wishlist';
 import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { WishlistMapper } from '@Commerce-commercetools/mappers/WishlistMapper';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
 const expandVariants = ['lineItems[*].variant', 'store'];
 
@@ -35,7 +35,7 @@ export class WishlistApi extends BaseApi {
         );
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -55,7 +55,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -77,7 +77,7 @@ export class WishlistApi extends BaseApi {
         );
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -98,7 +98,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -114,7 +114,7 @@ export class WishlistApi extends BaseApi {
       })
       .execute()
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -144,7 +144,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -173,7 +173,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -203,7 +203,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -223,7 +223,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -267,7 +267,7 @@ export class WishlistApi extends BaseApi {
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
@@ -314,7 +314,7 @@ export class WishlistApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ status: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 }

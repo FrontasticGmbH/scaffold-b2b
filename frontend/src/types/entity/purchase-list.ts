@@ -2,6 +2,7 @@ import { Currency } from '../currency';
 
 export interface PurchaseListItem {
   id: string;
+  sku: string;
   name: string;
   model?: string;
   manufacturer?: string;

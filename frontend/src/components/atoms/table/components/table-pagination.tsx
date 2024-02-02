@@ -23,7 +23,7 @@ const TablePagination = ({
 
   const { from, to } = useMemo(() => {
     const from = totalItems === 0 ? '0' : ((page - 1) * limit + 1).toString();
-    const to = Math.min(page + limit - 1, totalItems).toString();
+    const to = Math.min((page - 1) * limit + limit, totalItems).toString();
 
     return { from, to };
   }, [limit, page, totalItems]);

@@ -83,6 +83,27 @@ const usePurchaseLists = (storeKey?: string) => {
     [mutate],
   );
 
+  const updateItem = useCallback(
+    async ({ wishlistId, lineItemId, count }: Partial<Wishlist> & { lineItemId: string; count: number }) => {
+      const result = await sdk.composableCommerce.wishlist.updateItem(
+        {
+          lineItem: { id: lineItemId },
+          count,
+        },
+        { id: wishlistId },
+      );
+
+      mutate();
+
+      if (!result.isError) {
+        return { data: result?.data };
+      }
+
+      return {};
+    },
+    [mutate],
+  );
+
   const addToWishlists = useCallback(
     async ({ wishlistIds, sku, count }: { wishlistIds: string[]; sku: string; count: number }) => {
       const result = await sdk.callAction<Wishlist[]>({
@@ -112,6 +133,7 @@ const usePurchaseLists = (storeKey?: string) => {
     deletePurchaseList,
     removeItem,
     addItem,
+    updateItem,
     addToWishlists,
   };
 };

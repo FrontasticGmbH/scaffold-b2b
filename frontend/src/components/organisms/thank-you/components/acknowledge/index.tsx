@@ -13,7 +13,7 @@ const Acknowledge = ({ account }: Pick<ThankYouProps, 'account'>) => {
         {translate('thank-you.email.sent')} <span className="font-medium">{account.email}</span>,{' '}
         {translate('thank-you.email.sent.issue')}
       </p>
-      <Button className="mt-6 w-full md:w-[228px] lg:hidden" variant="secondary" size="m">
+      <Button className="mt-6 w-full md:w-[228px] lg:hidden" variant="secondary" size="m" disabled>
         {translate('thank-you.download.invoice')}
       </Button>
     </div>

@@ -6,6 +6,7 @@ import { Currency } from '@/types/currency';
 export const mapPurchaseItem = ({ lineItemId, name, count, variant }: LineItem): PurchaseListItem => {
   return {
     id: lineItemId,
+    sku: variant?.sku ?? '',
     name: name ?? '',
     quantity: count ?? 1,
     image: variant?.images?.[0],

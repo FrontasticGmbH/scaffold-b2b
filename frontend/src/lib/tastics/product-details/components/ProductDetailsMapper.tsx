@@ -27,7 +27,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
 
   const addToCart = useCallback(
     async (count: number) => {
-      return await addItem([{ sku: product.variants[currentVariantIndex].sku ?? '', count }]);
+      await addItem([{ sku: product.variants[currentVariantIndex].sku ?? '', count }]);
     },
     [addItem, currentVariantIndex, product.variants],
   );

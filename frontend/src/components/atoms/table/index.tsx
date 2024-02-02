@@ -18,12 +18,7 @@ const Table: FC<HTMLAttributes<HTMLDivElement>> & {
   Cell: typeof TableCell;
   Pagination: typeof TablePagination;
 } = ({ className = '', ...props }) => {
-  return (
-    <div
-      className={classnames('overflow-x-auto whitespace-pre scrollbar-hide lg:scrollbar-default', className)}
-      {...props}
-    />
-  );
+  return <div className={classnames('whitespace-pre scrollbar-hide lg:scrollbar-default', className)} {...props} />;
 };
 
 Table.Container = TableContainer;

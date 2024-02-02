@@ -51,5 +51,6 @@
   "cart.discount.enter": "Ange rabattkod",
   "checkout.go": "Gå till kassan",
   "we.accept": "Vi accepterar",
-  "order.summary.login": "Logga in för att använda dina personliga erbjudanden!"
+  "order.summary.login": "Logga in för att använda dina personliga erbjudanden!",
+  "item.added": "Artikel tillagd i varukorgen"
 }

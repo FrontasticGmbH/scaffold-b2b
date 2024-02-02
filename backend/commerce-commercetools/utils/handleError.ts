@@ -1,11 +1,17 @@
-import { ExternalError } from './Errors';
 import { Request } from '@frontastic/extension-types';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
+import { ExtensionError } from '@Commerce-commercetools/errors/Errors';
 
-const handleError = (error: ExternalError | Error | unknown, request?: Request) => {
-  if (error instanceof ExternalError) {
+const handleError = (error: ExternalError | ExtensionError | Error | unknown, request?: Request) => {
+  if (error instanceof ExternalError || error instanceof ExtensionError) {
+    const statusCode = error.statusCode ?? 400;
+
     return {
-      statusCode: error.status,
-      body: JSON.stringify(error.body),
+      statusCode: statusCode,
+      body: JSON.stringify({
+        statusCode: statusCode,
+        message: error.message,
+      }),
       sessionData: request?.sessionData,
     };
   }
@@ -13,8 +19,11 @@ const handleError = (error: ExternalError | Error | unknown, request?: Request) 
   const errorResponse = error as Error;
 
   return {
-    statusCode: 400,
-    message: errorResponse.message,
+    statusCode: 500,
+    body: JSON.stringify({
+      statusCode: 500,
+      message: errorResponse?.message,
+    }),
     sessionData: request?.sessionData,
   };
 };

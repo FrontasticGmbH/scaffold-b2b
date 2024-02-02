@@ -56,7 +56,7 @@ const Arrow = ({
   const Icon = IconRef[align][position];
 
   return (
-    <div className={arrowClassName} style={{ ...style, ...customStyles, width: size, height: size }} onClick={onClick}>
+    <div className={arrowClassName} style={{ ...style, ...customStyles }} onClick={onClick}>
       <Icon
         width={size}
         height={size}

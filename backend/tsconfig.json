@@ -14,12 +14,6 @@
             "@Commerce-commercetools/*": [
                 "./commerce-commercetools/*"
             ],
-            "@Payment-adyen": [
-                "./payment-adyen"
-            ],
-            "@Payment-adyen/*": [
-                "./payment-adyen/*"
-            ],
             "@Content-contentful": [
                 "./content-contentful"
             ],

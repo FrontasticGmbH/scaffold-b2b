@@ -22,7 +22,7 @@ const CurrentRefinements = ({ filters, onClearRefinements, onStatusRefine }: Par
             key={state}
             className="flex items-center gap-2 rounded-md border border-neutral-200 bg-neutral-200 px-2 py-[6px] text-14 leading-[20px] text-gray-700"
           >
-            <span>{state}</span>
+            <span>{translate(`dashboard.quote.status.${state.toLowerCase()}`)}</span>
             <CloseIcon
               className="cursor-pointer text-gray-700"
               width={16}

@@ -23,7 +23,7 @@ const Refinements = ({
           className="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
-          placeholder={`${translate('dashboard.search.by.id.sku')}...`}
+          placeholder={`${translate('dashboard.search.for.orders')}...`}
           handleOnChange={(val) => onSearch?.(val)}
         />
       ),
@@ -50,12 +50,15 @@ const Refinements = ({
       title: 'dashboard.creation.date',
       Component: (
         <Dropdown size="lg" className="w-[200px]">
-          <Dropdown.Button>{filters?.creationDate ?? translate('common.select')}</Dropdown.Button>
+          <Dropdown.Button>{translate('common.select')}</Dropdown.Button>
           <Dropdown.Options className="max-h-[unset] w-max">
             <DatePicker
-              mode="single"
-              selected={filters?.creationDate ? new Date(filters.creationDate) : undefined}
-              onSelect={(date) => onCreationDateRefine?.(date ? new Date(date).toLocaleDateString() : '')}
+              mode="range"
+              selected={{
+                from: filters?.createdFrom ? new Date(filters?.createdFrom) : undefined,
+                to: filters?.createdTo ? new Date(filters?.createdTo) : undefined,
+              }}
+              onSelect={(range) => onCreationDateRefine?.({ from: range?.from, to: range?.to })}
             />
           </Dropdown.Options>
         </Dropdown>

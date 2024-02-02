@@ -1,7 +1,7 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { ProductQueryFactory } from '../utils/ProductQueryFactory';
 import { ProductQuery } from '@Types/query/ProductQuery';
-import { CategoryQuery } from '@Types/query/CategoryQuery';
+import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
 import { getCurrency, getLocale } from '../utils/Request';
 import { ProductApi } from '../apis/ProductApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
@@ -9,23 +9,23 @@ import handleError from '@Commerce-commercetools/utils/handleError';
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export const getProduct: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
-  let productQuery: ProductQuery = {};
-
-  if ('id' in request.query) {
-    productQuery = {
-      productIds: [request.query['id']],
-    };
-  }
-
-  if ('sku' in request.query) {
-    productQuery = {
-      skus: [request.query['sku']],
-    };
-  }
-
   try {
+    const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+
+    let productQuery: ProductQuery = {};
+
+    if ('id' in request.query) {
+      productQuery = {
+        productIds: [request.query['id']],
+      };
+    }
+
+    if ('sku' in request.query) {
+      productQuery = {
+        skus: [request.query['sku']],
+      };
+    }
+
     const product = await productApi.getProduct(productQuery);
 
     const response: Response = {
@@ -41,11 +41,11 @@ export const getProduct: ActionHook = async (request: Request, actionContext: Ac
 };
 
 export const query: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
-  const productQuery = ProductQueryFactory.queryFromParams(request);
-
   try {
+    const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+
+    const productQuery = ProductQueryFactory.queryFromParams(request);
+
     const queryResult = await productApi.query(productQuery);
 
     const response: Response = {
@@ -61,17 +61,17 @@ export const query: ActionHook = async (request: Request, actionContext: ActionC
 };
 
 export const queryCategories: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
-  const categoryQuery: CategoryQuery = {
-    limit: request.query?.limit ?? undefined,
-    cursor: request.query?.cursor ?? undefined,
-    slug: request.query?.slug ?? undefined,
-    parentId: request.query?.parentId ?? undefined,
-    format: request.query?.format ?? 'flat',
-  };
-
   try {
+    const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+
+    const categoryQuery: CategoryQuery = {
+      limit: request.query?.limit ?? undefined,
+      cursor: request.query?.cursor ?? undefined,
+      slug: request.query?.slug ?? undefined,
+      parentId: request.query?.parentId ?? undefined,
+      format: request.query?.format ?? CategoryQueryFormat.FLAT,
+    };
+
     const queryResult = await productApi.queryCategories(categoryQuery);
 
     const response: Response = {
@@ -87,9 +87,9 @@ export const queryCategories: ActionHook = async (request: Request, actionContex
 };
 
 export const searchableAttributes: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
   try {
+    const productApi = new ProductApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+
     const result = await productApi.getSearchableAttributes();
 
     const response: Response = {

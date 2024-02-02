@@ -3,7 +3,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
-import Checkbox from '@/components/atoms/checkbox';
 import { BusinessUnit } from '@/types/entity/business-unit';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps, BusinessUnitPayload } from '../../types';
@@ -72,10 +71,10 @@ const BusinessUnitForm = ({
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
-        <Checkbox
+        {/* <Checkbox
           label={translate('dashboard.business.unit.create.specific.store')}
           onChecked={(checked) => setData({ ...data, createStore: checked })}
-        />
+        /> */}
       </div>
     </EntityForm>
   );

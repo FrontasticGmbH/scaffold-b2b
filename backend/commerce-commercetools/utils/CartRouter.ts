@@ -1,12 +1,11 @@
 import { Context, Request } from '@frontastic/extension-types';
-import { getCurrency, getLocale, getPath } from './Request';
-import { CartApi } from '../apis/CartApi';
+import { getPath } from './Request';
 import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
 import { Order } from '@Types/cart/Order';
-import { OrderQuery } from '@Types/query/OrderQuery';
 import { PaginatedResult } from '@Types/result';
-import { Account } from '@Types/account';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import getCartApi from '@Commerce-commercetools/utils/getCartApi';
 
 const orderRegex = /\/order\/([^\/]+)/;
 const ordersRegex = /\/orders/;
@@ -84,13 +83,13 @@ export default class CartRouter {
       return 'frontastic/thank-you-page';
     }
 
-    throw new Error('Page type not found');
+    throw new ResourceNotFoundError({ message: 'Page type not found' });
   }
 
   private static async getOrder(request: Request, frontasticContext: Context, orderId: string) {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
-    const cartApi = new CartApi(frontasticContext, getLocale(request), getCurrency(request));
+    const cartApi = getCartApi(request, frontasticContext);
 
     const orderQuery = OrderQueryFactory.queryFromParams(request, account);
 
@@ -104,7 +103,7 @@ export default class CartRouter {
   private static async getOrders(request: Request, frontasticContext: Context) {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
-    const cartApi = new CartApi(frontasticContext, getLocale(request), getCurrency(request));
+    const cartApi = getCartApi(request, frontasticContext);
 
     const orderQuery = OrderQueryFactory.queryFromParams(request, account);
 

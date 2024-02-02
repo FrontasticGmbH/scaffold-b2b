@@ -2,15 +2,6 @@
 # yarn lockfile v1
 
 
-"@adyen/api-library@^11.0.0":
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/@adyen/api-library/-/api-library-11.0.0.tgz#09ecd9b3c0d8cf1d2a71ec7c7714d1cc23b99c48"
-  integrity sha512-kw3ywZor6HI8mR3cF4Nzqhda13zy1oKgIVEcDs46LtfH39VOMrNWZYYZAs/caxMRuFfsp8MC0Zje94h2y6g9ww==
-  dependencies:
-    https-proxy-agent "5.0.1"
-  optionalDependencies:
-    "@types/node" "14.0.9"
-
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
@@ -1676,11 +1667,6 @@
   version "16.11.12"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.11.12.tgz#ac7fb693ac587ee182c3780c26eb65546a1a3c10"
   integrity sha512-+2Iggwg7PxoO5Kyhvsq9VarmPbIelXP070HMImEpbtGCoyWNINQj4wzjbQCXzdHTRXnqufutJb5KAURZANNBAw==
-
-"@types/node@14.0.9":
-  version "14.0.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.9.tgz#43896ab87fc82bda1dfd600cdf44a0c8a64e11d2"
-  integrity sha512-0sCTiXKXELOBxvZLN4krQ0FPOAA7ij+6WwvD0k/PHd9/KAkr4dXel5J9fh6F4x1FwAQILqAWkmpeuS6mjf1iKA==
 
 "@types/node@^14.14.35":
   version "14.18.0"
@@ -4074,14 +4060,6 @@ https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
   integrity sha512-J+FkSdyD+0mA0N+81tMotaRMfSL9SGi+xpD3T6YApKsc3bGSXJlfXri3VyFOeYkfLRQisDk1W+jIFFKBeUBbBg==
-
-https-proxy-agent@5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-5.0.1.tgz#c59ef224a04fe8b754f3db0063a25ea30d0005d6"
-  integrity sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==
-  dependencies:
-    agent-base "6"
-    debug "4"
 
 https-proxy-agent@^5.0.0:
   version "5.0.0"
