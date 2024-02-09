@@ -33,7 +33,6 @@ export interface CompanyAdminPageProps {
   onDeleteAssociate?: (id: string) => Promise<boolean>;
   onAddBusinessUnit?: (businessUnit: BusinessUnitPayload) => Promise<boolean>;
   onUpdateBusinessUnit?: (businessUnit: Partial<BusinessUnitPayload>) => Promise<boolean>;
-  onDeleteBusinessUnit?: (id: string) => Promise<boolean>;
   onSearchAddresses?: (val: string) => void;
   onSearchAccountAddresses?: (val: string) => void;
   onSearchAssociates?: (val: string) => void;

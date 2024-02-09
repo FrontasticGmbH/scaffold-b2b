@@ -22,6 +22,7 @@ import {
   RemoveBusinessUnitAddressQuery,
   UpdateBusinessUnitQuery,
   GetBusinessUnitQuery,
+  SetBusinessUnitAndStoreKeysQuery,
 } from '../queries/BusinessUnitQueries';
 
 type GetBusinessUnitAction = (
@@ -112,6 +113,13 @@ type RemoveBusinessUnitAddressAction = (
   },
 ) => Promise<SDKResponse<BusinessUnit>>;
 
+type SetBusinessUnitAndStoreKeysAction = (
+  query: SetBusinessUnitAndStoreKeysQuery,
+  options?: {
+    serverOptions?: ServerOptions;
+  },
+) => Promise<SDKResponse<void>>;
+
 export {
   type GetBusinessUnitAction,
   type GetBusinessUnitsAction,
@@ -126,4 +134,5 @@ export {
   type AddBusinessUnitAddressAction,
   type UpdateBusinessUnitAddressAction,
   type RemoveBusinessUnitAddressAction,
+  type SetBusinessUnitAndStoreKeysAction,
 };

@@ -8,6 +8,7 @@ import useQuotes from '@/lib/hooks/useQuotes';
 import { mapQuote, mapQuoteRequest } from '@/utils/mappers/map-quote';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import useAccount from '@/lib/hooks/useAccount';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useRefinements from './hooks/useRefinements';
 import useStatusesOptions from './hooks/useStatusesOptions';
 
@@ -15,6 +16,8 @@ const QuotesTastic = () => {
   const router = useRouter();
 
   const { account } = useAccount();
+
+  const { selectedBusinessUnit } = useStoreAndBusinessUnits();
 
   const searchParams = useSearchParams();
 
@@ -41,6 +44,7 @@ const QuotesTastic = () => {
   } = selected === 'quotes' ? quoteRefinements : quoteRequestsRefinements;
 
   const { quotes, quoteRequests } = useQuotes({
+    businessUnitKey: selectedBusinessUnit?.key ?? '',
     limit,
     cursor,
     ...(states.length ? { states } : {}),

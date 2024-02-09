@@ -1,16 +1,18 @@
 import { SDKResponse, ServerOptions } from "@commercetools/frontend-sdk";
+import { PaginatedResult } from "@shared/types/result";
 import { Wishlist } from "@shared/types/wishlist";
 import {
 	CreateWishlistPayload,
 	UpdateWishlistPayload,
 	AddToWishlistPayload,
+    AddToWishlistsPayload,
 	UpdateWishlistItemPayload,
 	RemoveFromWishlistPayload,
 } from "../payloads/WishlistPayloads";
 import {
 	CreateWishlistQuery,
 	GetWishlistQuery,
-	GetWishlistsQuery,
+    QueryWishlistsQuery,
 	UpdateWishlistQuery,
 	ClearWishlistQuery,
 	DeleteWishlistQuery,
@@ -34,12 +36,12 @@ type GetWishlistAction = (
 	}
 ) => Promise<SDKResponse<Wishlist>>;
 
-type GetWishlistsAction = (
-	query?: GetWishlistsQuery,
+type QueryWishlistsAction = (
+	query: QueryWishlistsQuery,
 	options?: {
 		serverOptions?: ServerOptions;
 	}
-) => Promise<SDKResponse<Wishlist[]>>;
+) => Promise<SDKResponse<PaginatedResult<Wishlist>>>;
 
 type UpdateWishlistAction = (
 	payload: UpdateWishlistPayload,
@@ -71,6 +73,13 @@ type AddToWishlistAction = (
 	}
 ) => Promise<SDKResponse<Wishlist>>;
 
+type AddToWishlistsAction = (
+	payload: AddToWishlistsPayload,
+	options?: {
+		serverOptions?: ServerOptions;
+	}
+) => Promise<SDKResponse<Wishlist[]>>;
+
 type UpdateWishlistItemAction = (
 	payload: UpdateWishlistItemPayload,
 	query?: UpdateWishlistItemQuery,
@@ -90,11 +99,12 @@ type RemoveFromWishlistAction = (
 export {
 	type CreateWishlistAction,
 	type GetWishlistAction,
-	type GetWishlistsAction,
+    type QueryWishlistsAction,
 	type UpdateWishlistAction,
 	type ClearWishlistAction,
 	type DeleteWishlistAction,
 	type AddToWishlistAction,
+    type AddToWishlistsAction,
 	type UpdateWishlistItemAction,
 	type RemoveFromWishlistAction,
 };

@@ -2,6 +2,7 @@ import { QuoteRequest } from './QuoteRequest';
 import { LineItem } from '../cart/LineItem';
 import { Money } from '../product/Money';
 import { Tax } from '../cart/Tax';
+import { Account } from '../account';
 
 export enum QuoteState {
   Accepted = 'Accepted', // Accepted by the buyer.
@@ -19,12 +20,16 @@ export interface Quote {
   quoteState?: QuoteState;
   createdAt?: Date;
   lastModifiedAt?: Date;
+  account?: Account;
   buyerComment?: string;
   sellerComment?: string;
   lineItems?: LineItem[];
   sum?: Money;
+  // @deprecated use taxed instead
   tax?: Tax;
+  taxed?: Tax;
   expirationDate?: Date;
   quoteRequest?: QuoteRequest;
   quoteVersion?: number;
+  orderNumber?: string;
 }

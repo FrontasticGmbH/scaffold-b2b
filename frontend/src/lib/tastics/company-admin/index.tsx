@@ -70,15 +70,15 @@ const CompanyAdminTastic = () => {
     associates: searchedAssociates.map(mapAssociate),
     onSearchAssociates: handleSearch('associates'),
     onAddAssociate: async (associate) => {
-      const associateRes = await addAssociate({ ...associate, businessUnit: activeBusinessUnit?.key as string });
+      const associateRes = await addAssociate({ ...associate, businessUnitKey: activeBusinessUnit?.key as string });
       return !!associateRes.businessUnitId;
     },
     onUpdateAssociate: async (associate) => {
-      const associateRes = await updateAssociate({ ...associate, businessUnit: activeBusinessUnit?.key as string });
+      const associateRes = await updateAssociate({ ...associate, businessUnitKey: activeBusinessUnit?.key as string });
       return !!associateRes.businessUnitId;
     },
     onDeleteAssociate: async (id) => {
-      const associate = await removeAssociate({ id, businessUnit: activeBusinessUnit?.key as string });
+      const associate = await removeAssociate({ id, businessUnitKey: activeBusinessUnit?.key as string });
       return !!associate.businessUnitId;
     },
     businessUnits: searchedBusinessUnits.map(mapBusinessUnit),
@@ -93,30 +93,38 @@ const CompanyAdminTastic = () => {
       return !!businessUnit.businessUnitId;
     },
     onUpdateBusinessUnit: async ({ name, email, key }) => {
-      const businessUnit = await updateBusinessUnit({ name: name ?? '', contactEmail: email ?? '', key: key ?? '' });
+      const businessUnit = await updateBusinessUnit({
+        name: name ?? '',
+        contactEmail: email ?? '',
+        businessUnitKey: key ?? '',
+      });
       return !!businessUnit.businessUnitId;
     },
     onUpdateGeneralInfo: async ({ name, email, key }) => {
-      const businessUnit = await updateBusinessUnit({ name: name ?? '', contactEmail: email ?? '', key: key ?? '' });
+      const businessUnit = await updateBusinessUnit({
+        name: name ?? '',
+        contactEmail: email ?? '',
+        businessUnitKey: key ?? '',
+      });
       return !!businessUnit.businessUnitId;
     },
     canAddBusinessUnit: !!selectedStore,
     onAddAddress: async (address) => {
       if (!activeBusinessUnit.key) return;
 
-      const businessUnit = await addAddress({ ...mapCoCoAddress(address), businessUnit: activeBusinessUnit.key });
+      const businessUnit = await addAddress({ ...mapCoCoAddress(address), businessUnitKey: activeBusinessUnit.key });
       return !!businessUnit.businessUnitId;
     },
     onUpdateAddress: async (address) => {
       if (!activeBusinessUnit.key) return;
 
-      const businessUnit = await updateAddress({ ...mapCoCoAddress(address), businessUnit: activeBusinessUnit.key });
+      const businessUnit = await updateAddress({ ...mapCoCoAddress(address), businessUnitKey: activeBusinessUnit.key });
       return !!businessUnit.businessUnitId;
     },
     onDeleteAddress: async (id) => {
       if (!activeBusinessUnit.key) return;
 
-      const businessUnit = await removeAddress({ addressId: id, businessUnit: activeBusinessUnit.key });
+      const businessUnit = await removeAddress({ addressId: id, businessUnitKey: activeBusinessUnit.key });
       return !!businessUnit.businessUnitId;
     },
   } as CompanyAdminPageProps;

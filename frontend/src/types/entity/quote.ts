@@ -16,6 +16,7 @@ export type QuoteStatus =
 
 export interface QuoteActivity {
   title: string;
+  titleValues?: Record<string, string>;
   date?: string;
   author?: string;
   comment?: string;
@@ -23,18 +24,23 @@ export interface QuoteActivity {
   reply?: boolean;
   renegotiate?: boolean;
   revoke?: boolean;
+  checkout?: boolean;
+  viewOrder?: boolean;
 }
 
 export interface Quote {
   id: string;
+  author?: string;
   status: QuoteStatus;
   creationDate: string;
+  lastModifiedDate: string;
   businessUnit: string;
   items: Partial<Product>[];
   activity: QuoteActivity[];
   total: number;
   subtotal: number;
   shippingCosts?: number;
+  discount?: number;
   taxCosts?: number;
   currency: Currency;
   isNew?: boolean;

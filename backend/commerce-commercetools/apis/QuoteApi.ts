@@ -1,21 +1,34 @@
 import { QuoteRequestDraft } from '@commercetools/platform-sdk';
-import { BaseApi } from './BaseApi';
-import { QuoteMapper } from '../mappers/QuoteMapper';
 import { Cart } from '@Types/cart/Cart';
 import { QuoteRequest, QuoteRequestState } from '@Types/quote/QuoteRequest';
 import { Quote, QuoteState } from '@Types/quote/Quote';
-import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
-import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
-import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import { PaginatedResult } from '@Types/result';
+import { Context } from '@frontastic/extension-types';
+import { QuoteMapper } from '../mappers/QuoteMapper';
+import { BaseApi } from './BaseApi';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
+import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
 export class QuoteApi extends BaseApi {
-  createQuoteRequest: (quoteDraft: QuoteRequest, cart: Cart) => Promise<QuoteRequest> = async (
-    quoteDraft: QuoteRequest,
-    cart: Cart,
-  ) => {
+  protected accountId: string;
+  protected businessUnitKey: string;
+
+  constructor(
+    context: Context,
+    locale: string | null,
+    currency: string | null,
+    accountId?: string,
+    businessUnitKey?: string,
+  ) {
+    super(context, locale, currency);
+    this.accountId = accountId;
+    this.businessUnitKey = businessUnitKey;
+  }
+
+  async createQuoteRequest(quoteDraft: QuoteRequest, cart: Cart): Promise<QuoteRequest> {
     const cartVersion = parseInt(cart.cartVersion, 10);
     const locale = await this.getCommercetoolsLocal();
 
@@ -28,7 +41,7 @@ export class QuoteApi extends BaseApi {
       comment: quoteDraft.buyerComment,
     };
 
-    return this.requestBuilder()
+    return this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quoteRequests()
       .post({
         body: {
@@ -42,12 +55,12 @@ export class QuoteApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  };
+  }
 
-  getQuoteRequest: (quoteRequestId: string) => Promise<QuoteRequest> = async (quoteRequestId: string) => {
+  async getQuoteRequest(quoteRequestId: string): Promise<QuoteRequest> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.requestBuilder()
+    const quoteRequest = await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quoteRequests()
       .withId({ ID: quoteRequestId })
       .get({
@@ -66,16 +79,37 @@ export class QuoteApi extends BaseApi {
 
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  };
 
-  getQuote: (quoteId: string) => Promise<Quote> = async (quoteId: string) => {
+    const stageQuoteWhereClause = [`quoteRequest(id="${quoteRequest.quoteRequestId}")`];
+
+    await this.requestBuilder()
+      .stagedQuotes()
+      .get({
+        queryArgs: {
+          where: stageQuoteWhereClause,
+        },
+      })
+      .execute()
+      .then((response) => {
+        if (response.body.results.length !== 0) {
+          QuoteMapper.updateQuoteRequestFromCommercetoolsStagedQuote(quoteRequest, response.body.results[0]);
+        }
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
+
+    return quoteRequest;
+  }
+
+  async getQuote(quoteId: string): Promise<Quote> {
     const locale = await this.getCommercetoolsLocal();
     return this.requestBuilder()
       .quotes()
       .withId({ ID: quoteId })
       .get({
         queryArgs: {
-          expand: ['customer', 'quoteRequest', 'stagedQuote'],
+          expand: ['customer', 'quoteRequest', 'quoteRequest.customer', 'stagedQuote'],
         },
       })
       .execute()
@@ -89,7 +123,7 @@ export class QuoteApi extends BaseApi {
 
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  };
+  }
 
   async query(quoteQuery: QuoteQuery): Promise<PaginatedResult<Quote>> {
     const locale = await this.getCommercetoolsLocal();
@@ -105,7 +139,7 @@ export class QuoteApi extends BaseApi {
       sortAttributes.push(`lastModifiedAt desc`);
     }
 
-    const whereClause = [`customer(id="${quoteQuery.accountId}")`];
+    const whereClause = [];
     if (quoteQuery.quoteIds !== undefined && quoteQuery.quoteIds.length !== 0) {
       whereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
     }
@@ -114,7 +148,7 @@ export class QuoteApi extends BaseApi {
     }
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
-    return this.requestBuilder()
+    return this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quotes()
       .get({
         queryArgs: {
@@ -160,7 +194,7 @@ export class QuoteApi extends BaseApi {
       sortAttributes.push(`lastModifiedAt desc`);
     }
 
-    const quoteRequestWhereClause = [`customer(id="${quoteQuery.accountId}")`];
+    const quoteRequestWhereClause = [];
     if (quoteQuery.quoteIds !== undefined && quoteQuery.quoteIds.length !== 0) {
       quoteRequestWhereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
     }
@@ -181,7 +215,7 @@ export class QuoteApi extends BaseApi {
 
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
-    const result = await this.requestBuilder()
+    const result = await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quoteRequests()
       .get({
         queryArgs: {
@@ -210,7 +244,7 @@ export class QuoteApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw error;
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     if (result.items.length === 0) {
@@ -253,17 +287,17 @@ export class QuoteApi extends BaseApi {
         });
       })
       .catch((error) => {
-        throw error;
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     return result;
   }
 
-  acceptQuote: (quoteId: string) => Promise<Quote> = async (quoteId: string) => {
+  async acceptQuote(quoteId: string): Promise<Quote> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.getQuote(quoteId).then((quote) => {
-      return this.requestBuilder()
+    return this.getQuote(quoteId).then(async (quote) => {
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .quotes()
         .withId({ ID: quoteId })
         .post({
@@ -288,13 +322,13 @@ export class QuoteApi extends BaseApi {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
-  };
+  }
 
-  declineQuote: (quoteId: string) => Promise<Quote> = async (quoteId: string) => {
+  async declineQuote(quoteId: string): Promise<Quote> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.getQuote(quoteId).then((quote) => {
-      return this.requestBuilder()
+    return this.getQuote(quoteId).then(async (quote) => {
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .quotes()
         .withId({ ID: quoteId })
         .post({
@@ -319,16 +353,13 @@ export class QuoteApi extends BaseApi {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
-  };
+  }
 
-  renegotiateQuote: (quoteId: string, buyerComment?: string) => Promise<Quote> = async (
-    quoteId: string,
-    buyerComment?: string,
-  ) => {
+  async renegotiateQuote(quoteId: string, buyerComment?: string): Promise<Quote> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.getQuote(quoteId).then((quote) => {
-      return this.requestBuilder()
+    return this.getQuote(quoteId).then(async (quote) => {
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .quotes()
         .withId({ ID: quoteId })
         .post({
@@ -353,13 +384,13 @@ export class QuoteApi extends BaseApi {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
-  };
+  }
 
-  cancelQuoteRequest: (quoteRequestId: string) => Promise<QuoteRequest> = async (quoteRequestId: string) => {
+  async cancelQuoteRequest(quoteRequestId: string): Promise<QuoteRequest> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.getQuoteRequest(quoteRequestId).then((quoteRequest) => {
-      return this.requestBuilder()
+    return this.getQuoteRequest(quoteRequestId).then(async (quoteRequest) => {
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .quoteRequests()
         .withId({ ID: quoteRequestId })
         .post({
@@ -381,5 +412,5 @@ export class QuoteApi extends BaseApi {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
     });
-  };
+  }
 }

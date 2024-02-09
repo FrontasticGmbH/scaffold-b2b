@@ -1,8 +1,8 @@
 import { Context, Request } from '@frontastic/extension-types';
-import { getPath } from './Request';
-import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
 import { Order } from '@Types/cart/Order';
 import { PaginatedResult } from '@Types/result';
+import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
+import { getPath } from './Request';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import getCartApi from '@Commerce-commercetools/utils/getCartApi';

@@ -4,7 +4,7 @@ import { highlight } from '../../utils/highlight';
 import { deviceVisibility } from '../../utils/device-visibility';
 import { injectDataSources } from '../../utils/inject-datasources';
 
-const TasticWrapper = ({ tastics, data, searchParams, dataSources, isHighlighted }: TasticWrapperProps) => {
+const TasticWrapper = ({ tastics, data, params, searchParams, dataSources, isHighlighted }: TasticWrapperProps) => {
   const Tastic = tastics[data.tasticType];
 
   if (!Tastic) return <></>;
@@ -15,7 +15,7 @@ const TasticWrapper = ({ tastics, data, searchParams, dataSources, isHighlighted
     <div className={`${highlight(isHighlighted)} ${deviceVisibility(data.configuration)}`} id={data.tasticId}>
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore*/}
-      <Tastic id={data?.tasticId} data={resolvedTasticData} searchParams={searchParams} />
+      <Tastic id={data?.tasticId} data={resolvedTasticData} params={params} searchParams={searchParams} />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Typography from '@/components/atoms/typography';
 import useFormat from '@/hooks/useFormat';
 import { useAddToCartOverlay } from '@/providers/add-to-cart-overlay';
@@ -18,13 +19,20 @@ const MainInfo = ({
   getWishlists,
   addToWishlists,
   onChangeVariant,
+  addToNewWishlist,
 }: PDPMainInfoProps) => {
+  const [quantity, setQuantity] = useState(1);
   const { formatCurrency } = useFormat();
   const { showModal } = useAddToCartOverlay();
   const handleOnAddToCart = async (count: number) => {
     await addToCart(count);
     showModal(product);
   };
+
+  const handleQuantityChange = (count: number) => {
+    setQuantity(count);
+  };
+
   return (
     <div className={className}>
       <div className="grid gap-6">
@@ -69,9 +77,13 @@ const MainInfo = ({
           />
         )}
 
-        <CartCTA addToCart={handleOnAddToCart} />
+        <CartCTA countChange={handleQuantityChange} addToCart={handleOnAddToCart} />
 
-        <ShoppingListCTA getWishlists={getWishlists} addToWishlists={addToWishlists} />
+        <ShoppingListCTA
+          getWishlists={getWishlists}
+          addToWishlists={(wishlistIds) => addToWishlists(wishlistIds, quantity)}
+          addToNewWishlist={(list) => addToNewWishlist(list, quantity)}
+        />
 
         <Shipping shippingMethods={shippingMethods} currency={product.currency} />
       </div>

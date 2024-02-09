@@ -1,10 +1,11 @@
 import { useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import usePath from '@/hooks/usePath';
 import { Facet, RangeFacet, TermFacet, NavigationFacet } from '@/types/entity/facet';
 
 const useRefinement = () => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const { pathWithoutQuery } = usePath();
 

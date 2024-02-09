@@ -1,10 +1,10 @@
 import { Context, Request } from '@frontastic/extension-types';
-import { getCurrency, getLocale, getPath } from './Request';
 import { Wishlist } from '@Types/wishlist/Wishlist';
-import { WishlistApi } from '../apis/WishlistApi';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { WishlistQuery } from '@Types/wishlist';
 import { PaginatedResult } from '@Types/result';
+import { WishlistApi } from '../apis/WishlistApi';
+import { getCurrency, getLocale, getPath } from './Request';
+import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 
 export default class WishlistRouter {
   static identifyFrom(request: Request) {

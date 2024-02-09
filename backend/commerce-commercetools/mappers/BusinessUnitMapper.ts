@@ -6,13 +6,13 @@ import {
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Store } from '@Types/store/Store';
 import { Associate, AssociateRole } from '@Types/business-unit/Associate';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import {
   AssociateRoleAssignment as CommercetoolsAssociateRoleAssignment,
   BusinessUnitKeyReference as CommercetoolsBusinessUnitKeyReference,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/business-unit';
 import { AssociateRole as CommercetoolsAssociateRole } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/associate-role';
+import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 export class BusinessUnitMapper {
   static commercetoolsBusinessUnitToBusinessUnit(

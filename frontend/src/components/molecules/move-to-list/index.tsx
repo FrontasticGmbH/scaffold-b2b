@@ -6,7 +6,7 @@ import { MoveToListProps } from './types';
 import WishlistModal from '../wishlist-modal';
 import { Wishlist } from '../wishlist-modal/types';
 
-const MoveToList = ({ lists, onSubmit }: MoveToListProps) => {
+const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,6 @@ const MoveToList = ({ lists, onSubmit }: MoveToListProps) => {
   const handleChange = (id: string, checked: boolean) => {
     const updated = { ...checkedBoxes };
     updated[id] = checked;
-
     setCheckedBoxes(updated);
   };
 
@@ -44,6 +43,7 @@ const MoveToList = ({ lists, onSubmit }: MoveToListProps) => {
         variant="ghost"
         className="flex-1 text-center text-14 font-medium text-gray-700 md:flex-[unset] md:text-start"
         onClick={onOpen}
+        disabled={disabled}
       >
         {translate('wishlist.move.to.list')}
       </Button>
@@ -55,6 +55,7 @@ const MoveToList = ({ lists, onSubmit }: MoveToListProps) => {
         selectedIds={selectedIds}
         onSubmit={handleSubmit}
         loading={loading}
+        onAddToNewList={onAddNewList}
       />
     </>
   );

@@ -1,21 +1,16 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { WishlistApi } from '../apis/WishlistApi';
+import { Wishlist, WishlistQuery } from '@Types/wishlist';
+import { Account } from '@Types/account';
 import { getCurrency, getLocale } from '../utils/Request';
+import { WishlistApi } from '../apis/WishlistApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { WishlistFetcher } from '@Commerce-commercetools/utils/WishlistFetcher';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
-import { Wishlist, WishlistQuery } from '@Types/wishlist';
-import { Account } from '@Types/account';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
-type WishlistBody = {
-  wishlistIds: string[];
-  variant?: { sku?: string };
-  count?: number;
-};
 
 function getWishlistApi(request: Request, actionContext: ActionContext) {
   return new WishlistApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
@@ -62,30 +57,6 @@ export const getWishlist: ActionHook = async (request, actionContext) => {
         ...request.sessionData,
         wishlistId: wishlist.wishlistId,
       },
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-/**
- * @deprecated  Use `queryWishlists` instead.
- */
-export const getWishlists: ActionHook = async (request, actionContext) => {
-  try {
-    const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
-    const storeKey = request.query?.['storeKey'] ?? undefined;
-
-    const wishlistApi = getWishlistApi(request, actionContext);
-    const wishlists = storeKey
-      ? await wishlistApi.getByStoreKeyForAccount(storeKey, account)
-      : await wishlistApi.getForAccount(account);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(wishlists),
-      sessionData: request.sessionData,
     };
   } catch (error) {
     return handleError(error, request);
@@ -240,7 +211,11 @@ export const addToWishlists: ActionHook = async (request, actionContext) => {
 
     const wishlistApi = getWishlistApi(request, actionContext);
 
-    const wishlistBody = parseRequestBody<WishlistBody>(request.body);
+    const wishlistBody = parseRequestBody<{
+      wishlistIds: string[];
+      variant?: { sku: string };
+      count?: number;
+    }>(request.body);
 
     const wishlistQuery: WishlistQuery = {
       accountId: account.accountId,

@@ -6,7 +6,7 @@ import Input from '@/components/atoms/input';
 import { DiscountFormProps } from './types';
 import Accordion from '../accordion';
 
-const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) => {
+const DiscountsForm = ({ className, discounts, onSubmit, customError }: DiscountFormProps) => {
   const { translate } = useTranslation();
 
   const [code, setCode] = useState('');
@@ -64,7 +64,7 @@ const DiscountsForm = ({ className, discounts, onSubmit }: DiscountFormProps) =>
               onChange={handleChange}
               disabled={processing}
               icon={codeIsInvalid ? <XMarkIcon className="h-[20px] w-[20px] cursor-pointer" /> : null}
-              error={codeIsInvalid ? translate('cart.codeNotValid') : undefined}
+              error={codeIsInvalid ? customError || translate('cart.codeNotValid') : undefined}
             />
           </form>
 

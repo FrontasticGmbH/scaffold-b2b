@@ -29,11 +29,14 @@ export interface QuoteRequest {
   businessUnit?: BusinessUnit;
   lineItems?: LineItem[];
   sum?: Money;
+  // @deprecated use taxed instead
   tax?: Tax;
+  taxed?: Tax;
   shippingAddress?: Address;
   billingAddress?: Address;
   quoteRequestState?: QuoteRequestState;
   itemShippingAddresses?: Address[];
+  // @deprecated
   expirationDate?: Date;
   quotationCart?: Cart;
   quoteRequestVersion?: number;

@@ -1,6 +1,7 @@
 import { ComposableCommerceEventsB2B } from "../../types/events/ComposableCommerceEventsB2B";
 import { SDK, ServerOptions } from "@commercetools/frontend-sdk";
 import {
+    ClearCartAction,
 	GetCartAction,
 	UpdateCartAction,
 	ReassignCartAction,
@@ -31,6 +32,7 @@ import {
 	RedeemDiscountCodePayload,
 	RemoveCartItemPayload,
 	RemoveDiscountCodePayload,
+	ReplicateOrderPayload,
 	ReturnOrderItemsPayload,
 	SetCartShippingMethodPayload,
 	SplitCartItemPayload,
@@ -62,6 +64,7 @@ import {
 import { PaginatedResult } from "@shared/types/result";
 
 export type CartActions = {
+    clearCart: ClearCartAction;
 	getCart: GetCartAction;
 	updateCart: UpdateCartAction;
 	reassignCart: ReassignCartAction;
@@ -87,6 +90,15 @@ export const getCartActions = (
 	sdk: SDK<ComposableCommerceEventsB2B>
 ): CartActions => {
 	return {
+		clearCart: async (
+			options?: { serverOptions?: ServerOptions }
+		) => {
+			const response = await sdk.callAction<void>({
+				actionName: "cart/clearCart",
+				serverOptions: options?.serverOptions,
+			});
+			return response;
+		},
 		getCart: async (
 			query?: GetCartQuery,
 			options?: { serverOptions?: ServerOptions }
@@ -129,11 +141,13 @@ export const getCartActions = (
 			return response;
 		},
 		replicateOrder: async (
+            payload: ReplicateOrderPayload,
 			query?: ReplicateOrderQuery,
 			options?: { serverOptions?: ServerOptions }
 		) => {
 			const response = await sdk.callAction<Cart>({
-				actionName: "cart/replicateCart",
+				actionName: "cart/replicateOrder",
+                payload,
 				query,
 				serverOptions: options?.serverOptions,
 			});

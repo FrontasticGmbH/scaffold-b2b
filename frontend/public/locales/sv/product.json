@@ -28,5 +28,7 @@
   "quick.view": "Snabbvy",
   "items.all": "Alla artiklar",
   "showing": "Visar {current} av {total}",
-  "load.more": "Ladda mer"
+  "load.more": "Ladda mer",
+  "add.to.new.list": "Lägg till i ny lista",
+  "save.and.add": "Spara och lägg till"
 }

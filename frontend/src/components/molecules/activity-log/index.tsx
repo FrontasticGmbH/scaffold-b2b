@@ -20,6 +20,8 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
 
   const [replyProcessing, setReplyProcessing] = useState<Record<number, boolean>>({});
 
+  const [actionProcessing, setActionProcess] = useState<Record<number, boolean>>({});
+
   return (
     <div className="flex flex-col">
       {activities.map(
@@ -31,18 +33,23 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
             commentLabel,
             commentDisabled,
             onCommentUpdate,
+            onCommentCancel,
             reply,
             onAccept,
             onReject,
             ctaLink,
             onCtaLinkClick,
+            ctaButton,
+            onCtaButtonClick,
           },
           index,
           arr,
         ) => (
           <div
             key={index}
-            className={classnames('relative pb-9 pl-6', { 'border-l border-neutral-400': index < arr.length - 1 })}
+            className={classnames('relative pb-9 pl-6 lg:pb-12', {
+              'border-l border-neutral-400': index < arr.length - 1,
+            })}
           >
             <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/4 rounded-full bg-white p-2">
               <div className="h-[20px] w-[20px] rounded-full bg-[#778DA9]" />
@@ -68,7 +75,8 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                   className={classnames('mt-3 max-w-[350px]', {
                     'pointer-events-none cursor-default': commentDisabled,
                   })}
-                  fitContent
+                  style={{ height: ctaLink ? 150 : 45 }}
+                  fitContent={!ctaLink}
                   error={
                     commentLength[index] && commentLength[index] > maximumCommentCharacters
                       ? translate('dashboard.message.too.long', {
@@ -85,9 +93,17 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                 />
                 {commentFocused[index] && (
                   <div className="mt-9 flex gap-3">
-                    <Button variant="secondary">{translate('common.cancel')}</Button>
+                    <Button
+                      variant="secondary"
+                      size="l"
+                      onClick={onCommentCancel}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      {translate('common.cancel')}
+                    </Button>
                     <Button
                       type="submit"
+                      size="l"
                       variant="primary"
                       disabled={!!(commentLength[index] && commentLength[index] > maximumCommentCharacters)}
                       loading={commentProcessing[index]}
@@ -130,8 +146,29 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
               </div>
             )}
 
+            {ctaButton && (
+              <div className="mt-7">
+                <Button
+                  variant="primary"
+                  size="l"
+                  className="w-full max-w-[350px] py-[12px] leading-[16px]"
+                  loading={actionProcessing[index]}
+                  onClick={async () => {
+                    setActionProcess({ ...actionProcessing, [index]: true });
+                    await onCtaButtonClick?.();
+                    setActionProcess({ ...actionProcessing, [index]: false });
+                  }}
+                >
+                  {ctaButton}
+                </Button>
+              </div>
+            )}
+
             {ctaLink && (
-              <span className="mt-5 block cursor-pointer text-14 text-[#274082]" onClick={onCtaLinkClick}>
+              <span
+                className="mt-5 block cursor-pointer text-14 text-[#274082] underline underline-offset-2"
+                onClick={onCtaLinkClick}
+              >
                 {ctaLink}
               </span>
             )}

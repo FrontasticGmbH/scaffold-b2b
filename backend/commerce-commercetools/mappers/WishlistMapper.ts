@@ -2,8 +2,8 @@ import { Wishlist } from '@Types/wishlist/Wishlist';
 import { ShoppingList, ShoppingListLineItem, StoreKeyReference } from '@commercetools/platform-sdk';
 import { ShoppingListDraft } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
 import { Store } from '@Types/store/Store';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import { LineItem } from '@Types/wishlist';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
 

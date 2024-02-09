@@ -14,6 +14,7 @@ const ProductDetails = ({
   getWishlists,
   addToWishlists,
   onChangeVariant,
+  addToNewWishlist,
 }: ProductDetailsProps) => {
   return (
     <div className="px-4 md:px-6 lg:px-12">
@@ -32,6 +33,7 @@ const ProductDetails = ({
           addToWishlists={addToWishlists}
           onChangeVariant={onChangeVariant}
           shippingMethods={shippingMethods}
+          addToNewWishlist={addToNewWishlist}
         />
       </div>
 

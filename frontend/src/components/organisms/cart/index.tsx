@@ -22,6 +22,8 @@ const Cart = ({
   onRequestQuote,
   account,
   lineItems: lineItemsProp,
+  onClear,
+  isQuotationCart = false,
   ...props
 }: CartProps) => {
   const [submittedQuote, setSubmittedQuote] = useState<Partial<Quote>>();
@@ -59,6 +61,8 @@ const Cart = ({
       text: translate('cart.checkout.go'),
       link: '/checkout',
       onCheckout: closeFlyouts,
+      isQuotationCart,
+      onClear,
       onRequestQuote: async ({ buyerComment }) => {
         closeFlyouts();
         const quote = await onRequestQuote({ buyerComment });
@@ -66,11 +70,11 @@ const Cart = ({
       },
       disabled: (lineItems ?? []).filter((item) => !item.deleted).some((item) => !item.variant?.isOnStock),
     };
-  }, [closeFlyouts, translate, onRequestQuote, lineItems]);
+  }, [closeFlyouts, translate, onRequestQuote, lineItems, isQuotationCart, onClear]);
 
   if (submittedQuote && submittedQuote.id) {
     return (
-      <div className="relative min-h-[50vh] bg-neutral-200 p-4 md:px-5 md:py-6 lg:p-12">
+      <div className="relative min-h-[80vh] bg-neutral-200 p-4 md:px-5 md:py-6 lg:p-12">
         <div className="grid w-full place-items-center gap-12 rounded-lg bg-white py-9">
           <div className="grid place-items-center gap-6">
             <Typography fontSize={20} className="text-gray-700">
@@ -93,11 +97,12 @@ const Cart = ({
   }
 
   return (
-    <div className="relative min-h-[50vh] bg-neutral-200">
+    <div className="relative min-h-[80vh] bg-neutral-200">
       <div className="flex flex-col bg-white py-4 md:py-6 lg:flex-row lg:items-start lg:gap-6 lg:bg-transparent lg:p-12">
         <CartContent
           lineItems={lineItems}
           className="grow bg-white px-4 py-3 md:px-6 lg:rounded-lg lg:p-9"
+          isQuotationCart={isQuotationCart}
           {...props}
         />
 

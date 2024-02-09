@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import Button from '@/components/atoms/button';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PasswordInput from '@/components/atoms/password-input';
@@ -9,7 +9,7 @@ import { Props } from './types';
 const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
   const { translate } = useTranslation();
 
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const [data, setData] = useState({ password: '' });
 

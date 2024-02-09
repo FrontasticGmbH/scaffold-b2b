@@ -3,6 +3,7 @@ import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
 import { desktop } from '@/constants/screensizes';
 import DiscountsForm from '@/components/molecules/discounts-form';
+import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import OrderPaymentSection from '../order-payment-section';
 import { OrderSummaryProps } from './types';
 import SummaryAccordion from './components/summary-accordion';
@@ -14,8 +15,11 @@ const OrderSummary = ({
   includeSummaryAccordion,
   includeItemsList,
   transaction,
+  isQuotationCart,
   ...props
 }: OrderSummaryProps) => {
+  const { translate } = useTranslation();
+
   const [isDesktopSize] = useMediaQuery(desktop);
 
   const itemsListClassName = classnames('mb-6 border-y border-neutral-400', props.classNames?.itemsList);
@@ -39,7 +43,12 @@ const OrderSummary = ({
       )}
 
       {!isDesktopSize && includeSummaryAccordion && (
-        <DiscountsForm className={props.classNames?.applyDiscountButton} discounts={[]} />
+        <DiscountsForm
+          className={props.classNames?.applyDiscountButton}
+          discounts={[]}
+          onSubmit={isQuotationCart ? () => Promise.reject() : async () => false}
+          customError={translate('cart.quote.cannot.apply.discount')}
+        />
       )}
 
       {(isDesktopSize || !includeSummaryAccordion) && (

@@ -1,12 +1,13 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Account } from '@Types/account/Account';
+import { Address } from '@Types/account';
+import { ValidationError } from '../errors/ValidationError';
 import { getCurrency, getLocale } from '@Commerce-commercetools/utils/Request';
 import { AccountApi } from '@Commerce-commercetools/apis/AccountApi';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
 import { BusinessUnitApi } from '@Commerce-commercetools/apis/BusinessUnitApi';
 import { StoreApi } from '@Commerce-commercetools/apis/StoreApi';
-import { ValidationError } from '../errors/ValidationError';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
 import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
@@ -14,7 +15,6 @@ import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAcco
 import handleError from '@Commerce-commercetools/utils/handleError';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
-import { Address } from '@Types/account';
 import { BusinessUnitDuplicatedError } from '@Commerce-commercetools/errors/BusinessUnitDuplicatedError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
@@ -64,16 +64,28 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
     });
   }
 
-  const response: Response = {
+  const businessUnitApi = new BusinessUnitApi(
+    actionContext.frontasticContext,
+    getLocale(request),
+    getCurrency(request),
+  );
+
+  const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId);
+
+  // By default, we'll select the first business unit and store for the user.
+  const businessUnitKey = businessUnits?.[0]?.key;
+  const storeKey = businessUnits?.[0]?.stores?.[0]?.key;
+
+  return {
     statusCode: 200,
     body: JSON.stringify(account),
     sessionData: {
       ...request.sessionData,
-      account: account,
+      account,
+      businessUnitKey,
+      storeKey,
     },
   };
-
-  return response;
 }
 
 export const getAccount: ActionHook = async (request: Request) => {

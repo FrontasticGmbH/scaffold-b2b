@@ -1,29 +1,12 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Table from '@/components/atoms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
-import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
-import Confirmation from '@/components/organisms/confirmation';
+import { PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
-import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
-const BusinessUnitsTable = ({ onDeleteBusinessUnit, businessUnits = [] }: Partial<CompanyAdminPageProps>) => {
+const BusinessUnitsTable = ({ businessUnits = [] }: Partial<CompanyAdminPageProps>) => {
   const { translate } = useTranslation();
-
-  const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('businessunit');
-
-  const isDeleteDisabled = businessUnits.length === 1;
-
-  const handleDelete = useCallback(
-    async (id: string) => {
-      const success = await onDeleteBusinessUnit?.(id);
-
-      if (success) showDeletedMessage();
-      else showDeletedFailedMessage();
-    },
-    [showDeletedMessage, showDeletedFailedMessage, onDeleteBusinessUnit],
-  );
-
   return (
     <Table>
       <Table.Container>
@@ -41,22 +24,6 @@ const BusinessUnitsTable = ({ onDeleteBusinessUnit, businessUnits = [] }: Partia
               <Table.Cell>{email}</Table.Cell>
               <Table.Cell>
                 <div className="flex items-center justify-end gap-5 text-primary">
-                  <Confirmation
-                    translations={{
-                      title: translate('dashboard.business.unit.delete'),
-                      summary: translate(
-                        isDeleteDisabled
-                          ? 'dashboard.business.unit.delete.disabled'
-                          : 'dashboard.business.unit.delete.confirm',
-                      ),
-                      cancel: translate(isDeleteDisabled ? 'common.close' : 'common.cancel'),
-                      confirm: translate('common.delete'),
-                    }}
-                    disabled={isDeleteDisabled}
-                    onConfirm={() => handleDelete(id)}
-                  >
-                    <DeleteIcon className="cursor-pointer" width={20} />
-                  </Confirmation>
                   <Link href={`?subPath=edit-business-unit&id=${id}`}>
                     <EditIcon className="cursor-pointer" width={20} />
                   </Link>

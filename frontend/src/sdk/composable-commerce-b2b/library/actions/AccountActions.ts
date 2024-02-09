@@ -44,6 +44,7 @@ import {
 } from "../../types/payloads/AccountPayloads";
 import { ComposableCommerceEventsB2B } from "../../types/events/ComposableCommerceEventsB2B";
 import { Account } from "@shared/types/account";
+import { LoginAccountQuery, RegisterAccountQuery, RequestAccountConfirmationEmailQuery  } from "../../types/queries/AccountQueries";
 
 export type AccountActions = {
 	getAccount: GetAccountAction;
@@ -79,6 +80,7 @@ export const getAccountActions = (
 		},
 		login: async (
 			payload: LoginAccountPayload,
+            query?: LoginAccountQuery,
 			options: {
 				serverOptions?: ServerOptions;
 			} = {}
@@ -89,6 +91,7 @@ export const getAccountActions = (
 			const response = await sdk.callAction<Account>({
 				actionName: "account/login",
 				payload,
+                query,
 				serverOptions: options?.serverOptions,
 			});
 
@@ -115,6 +118,7 @@ export const getAccountActions = (
 		},
 		register: async (
 			payload: RegisterAccountPayload,
+            query?: RegisterAccountQuery,
 			options?: {
 				serverOptions?: ServerOptions;
 			}
@@ -122,6 +126,7 @@ export const getAccountActions = (
 			const response = await sdk.callAction<Account>({
 				actionName: "account/register",
 				payload,
+                query,
 				serverOptions: options?.serverOptions,
 			});
 			return response;
@@ -141,6 +146,7 @@ export const getAccountActions = (
 		},
 		requestConfirmationEmail: async (
 			payload: RequestAccountConfirmationEmailPayload,
+            query?: RequestAccountConfirmationEmailQuery,
 			options?: {
 				serverOptions?: ServerOptions;
 			}
@@ -148,6 +154,7 @@ export const getAccountActions = (
 			const response = await sdk.callAction<void>({
 				actionName: "account/requestConfirmationEmail",
 				payload,
+                query,
 				serverOptions: options?.serverOptions,
 			});
 			return response;

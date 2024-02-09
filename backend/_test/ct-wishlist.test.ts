@@ -1,5 +1,5 @@
-import { addToWishlist, getWishlist } from '../commerce-commercetools/actionControllers/WishlistController';
 import { Request } from '@frontastic/extension-types';
+import { addToWishlist, getWishlist } from '../commerce-commercetools/actionControllers/WishlistController';
 import { dummyAccount, dummyActionContext } from './data-provider';
 
 describe.skip('commerce-commercetools:: Wishlist Functionalities', () => {

@@ -2,7 +2,7 @@ import { Currency } from '@/types/currency';
 import { Transaction } from '@/types/transaction';
 import { Cart } from '@shared/types/cart/Cart';
 
-export const calculateTransaction = (cart: Cart): Transaction => {
+export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
   if (!cart.lineItems) {
     return {
       subtotal: { centAmount: 0, currencyCode: 'USD', fractionDigits: 2 },
@@ -27,12 +27,20 @@ export const calculateTransaction = (cart: Cart): Transaction => {
     0,
   );
 
-  const totalTax = totalAmount > 0 ? cart.taxed?.amount.centAmount ?? 0 : 0;
+  const excludedTaxes =
+    cart.lineItems
+      .filter((item) => !item.taxIncludedInPrice)
+      .reduce((acc, curr) => acc + (curr.taxed?.taxAmount?.centAmount ?? 0), 0) +
+    (!cart.shippingInfo?.taxIncludedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount ?? 0 : 0);
+
+  const totalTax = totalAmount > 0 ? cart.taxed?.taxAmount?.centAmount ?? 0 : 0;
 
   const totalShipping =
     totalAmount > 0
       ? cart.shippingInfo?.price?.centAmount ?? cart.availableShippingMethods?.[0]?.rates?.[0]?.price?.centAmount ?? 0
       : 0;
+
+  const isEstimatedShipping = !cart.shippingInfo;
 
   return {
     subtotal: {
@@ -49,6 +57,7 @@ export const calculateTransaction = (cart: Cart): Transaction => {
       centAmount: totalShipping / Math.pow(10, fractionDigits),
       currencyCode,
       fractionDigits,
+      isEstimated: isEstimatedShipping,
     },
     tax: {
       centAmount: totalTax / Math.pow(10, fractionDigits),
@@ -56,7 +65,8 @@ export const calculateTransaction = (cart: Cart): Transaction => {
       fractionDigits,
     },
     total: {
-      centAmount: (totalAmount + totalShipping) / Math.pow(10, fractionDigits),
+      centAmount:
+        (totalAmount + (isEstimatedShipping ? totalShipping : 0) + excludedTaxes) / Math.pow(10, fractionDigits),
       currencyCode,
       fractionDigits,
     },

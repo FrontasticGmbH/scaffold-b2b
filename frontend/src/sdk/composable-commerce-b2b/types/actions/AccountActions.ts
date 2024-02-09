@@ -18,6 +18,7 @@ import {
 	SetDefaultAccountShippingAddressPayload,
 	DeleteAccountPayload,
 } from "../payloads/AccountPayloads";
+import { LoginAccountQuery, RegisterAccountQuery, RequestAccountConfirmationEmailQuery  } from "../../types/queries/AccountQueries";
 
 type GetAccountActionReturn =
 	| {
@@ -34,6 +35,7 @@ type GetAccountAction = (options?: {
 
 type LoginAccountAction = (
 	payload: LoginAccountPayload,
+    query?: LoginAccountQuery,
 	options?: {
 		serverOptions?: ServerOptions;
 	}
@@ -45,6 +47,7 @@ type LogoutAccountAction = (options?: {
 
 type RegisterAccountAction = (
 	payload: RegisterAccountPayload,
+    query?: RegisterAccountQuery,
 	options?: {
 		serverOptions?: ServerOptions;
 	}
@@ -59,6 +62,7 @@ type ConfirmAccountAction = (
 
 type RequestAccountConfirmationEmailAction = (
 	payload: RequestAccountConfirmationEmailPayload,
+    query?: RequestAccountConfirmationEmailQuery,
 	options?: {
 		serverOptions?: ServerOptions;
 	}

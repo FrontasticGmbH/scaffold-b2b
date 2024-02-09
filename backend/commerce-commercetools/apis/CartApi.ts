@@ -24,28 +24,25 @@ import {
   CartUpdate,
   ItemShippingTarget,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/cart';
-import { isReadyForCheckout } from '../utils/Cart';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { CartMapper } from '../mappers/CartMapper';
-import { ByProjectKeyAsAssociateByAssociateIdInBusinessUnitKeyByBusinessUnitKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/in-business-unit/by-project-key-as-associate-by-associate-id-in-business-unit-key-by-business-unit-key-request-builder';
-import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { PaginatedResult } from '@Types/result';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
-import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { Discount, Payment, ShippingMethod } from '@Types/cart';
 import {
   PaymentDraft,
   PaymentUpdateAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
+import { Context } from '@frontastic/extension-types';
+import { CartMapper } from '../mappers/CartMapper';
+import { isReadyForCheckout } from '../utils/Cart';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
+import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
+import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
+import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
+import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPaymentNotFoundError';
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
-import { Context } from '@frontastic/extension-types';
-
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
-import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 
 export class CartApi extends BaseApi {
   protected accountId: string;
@@ -66,7 +63,7 @@ export class CartApi extends BaseApi {
   async getById(cartId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .withId({
         ID: cartId,
@@ -105,13 +102,13 @@ export class CartApi extends BaseApi {
   }
 
   async getAllCarts(storeKey?: string): Promise<CommercetoolsCart[]> {
-    const where = [`cartState="Active"`];
+    const where = [`cartState="Active"`, `origin!="Quote"`];
 
     if (storeKey) {
       where.push(`store(key="${storeKey}")`);
     }
 
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .get({
         queryArgs: {
@@ -152,7 +149,7 @@ export class CartApi extends BaseApi {
       customerId: this.accountId,
     };
 
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .post({
         queryArgs: {
@@ -370,7 +367,7 @@ export class CartApi extends BaseApi {
       throw new CartNotCompleteError({ message: 'Cart not complete yet.' });
     }
 
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .post({
         queryArgs: {
@@ -392,7 +389,7 @@ export class CartApi extends BaseApi {
   async getOrder(orderId: string): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .withOrderNumber({ orderNumber: orderId })
       .get({
@@ -419,7 +416,7 @@ export class CartApi extends BaseApi {
       if (order.orderState === OrderState.Complete) {
         throw 'Cannot cancel a Completed order.';
       }
-      return this.associateEndpoints()
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .orders()
         .withOrderNumber({ orderNumber: orderId })
         .post({
@@ -453,7 +450,7 @@ export class CartApi extends BaseApi {
     const returnItems = CartMapper.returnLineItemToCommercetoolsReturnItemDraft(returnLineItems);
 
     return await this.getOrder(orderId).then(async (order) => {
-      return this.associateEndpoints()
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .orders()
         .withOrderNumber({ orderNumber: orderId })
         .post({
@@ -743,7 +740,7 @@ export class CartApi extends BaseApi {
   async getBusinessUnitOrders(): Promise<Order[]> {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .get({
         queryArgs: {
@@ -774,7 +771,7 @@ export class CartApi extends BaseApi {
 
   async replicateCart(orderId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .replicate()
       .post({
@@ -793,7 +790,7 @@ export class CartApi extends BaseApi {
   }
 
   async deleteCart(cart: Cart): Promise<void> {
-    await this.associateEndpoints()
+    await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .withId({
         ID: cart.cartId,
@@ -912,7 +909,7 @@ export class CartApi extends BaseApi {
       whereClause.push(`createdAt < "${orderQuery.created.to.toISOString()}"`);
     }
 
-    return this.associateEndpoints()
+    return this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .get({
         queryArgs: {
@@ -944,20 +941,6 @@ export class CartApi extends BaseApi {
       });
   }
 
-  protected associateEndpoints(): ByProjectKeyAsAssociateByAssociateIdInBusinessUnitKeyByBusinessUnitKeyRequestBuilder {
-    if (!this.accountId && !this.businessUnitKey) {
-      throw new ValidationError({
-        message: 'AccountID and/or BusinessUnitKey are required!',
-      });
-    }
-    return this.requestBuilder()
-      .asAssociate()
-      .withAssociateIdValue({ associateId: this.accountId })
-      .inBusinessUnitKeyWithBusinessUnitKeyValue({
-        businessUnitKey: this.businessUnitKey,
-      });
-  }
-
   protected async assertCorrectLocale(commercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {
     if (commercetoolsCart.totalPrice.currencyCode !== locale.currency.toLocaleUpperCase()) {
       return this.recreate(commercetoolsCart, locale);
@@ -973,7 +956,7 @@ export class CartApi extends BaseApi {
           } as CartSetCountryAction,
           {
             action: 'setLocale',
-            country: locale.language,
+            locale: locale.language,
           } as CartSetLocaleAction,
         ],
       };
@@ -1028,7 +1011,7 @@ export class CartApi extends BaseApi {
       }
     }
 
-    let replicatedCommercetoolsCart = await this.associateEndpoints()
+    let replicatedCommercetoolsCart = await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .post({
         queryArgs: {
@@ -1078,7 +1061,7 @@ export class CartApi extends BaseApi {
   }
 
   protected async updateCart(cartId: string, cartUpdate: CartUpdate): Promise<CommercetoolsCart> {
-    return await this.associateEndpoints()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .withId({
         ID: cartId,

@@ -4,7 +4,7 @@ import { sdk } from '@/sdk';
 import useSWR from 'swr';
 import { Address } from '@shared/types/account/Address';
 import { Order } from '@shared/types/cart';
-import { calculateTransaction } from './utils';
+import { calculateTransaction } from '@/lib/utils/calculate-transaction';
 import { CheckoutPayload } from './types';
 
 const useCart = (businessUnitKey?: string, storeKey?: string) => {
@@ -19,6 +19,8 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
 
   const { data, mutate } = useSWR(['/action/cart/getCart', businessUnitKey, storeKey], getCart);
 
+  const isQuotationCart = data?.origin === 'Quote';
+
   const addItem = useCallback(
     async (lineItems: Array<{ sku: string; count: number }>) => {
       const payload = { lineItems: lineItems.map(({ sku, count }) => ({ variant: { sku }, count })), businessUnitKey };
@@ -28,7 +30,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         storeKey: storeKey as string,
       });
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? {} : result.data;
     },
@@ -44,7 +46,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         storeKey: storeKey as string,
       });
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? {} : result.data;
     },
@@ -60,7 +62,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         storeKey: storeKey as string,
       });
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? {} : result.data;
     },
@@ -88,7 +90,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? ({} as Partial<Cart>) : result.data;
     },
@@ -102,7 +104,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? ({} as Partial<Cart>) : result.data;
     },
@@ -116,12 +118,18 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? ({} as Partial<Cart>) : result.data;
     },
     [mutate, businessUnitKey, storeKey],
   );
+
+  const clearCart = useCallback(async () => {
+    await sdk.composableCommerce.cart.clearCart();
+
+    mutate();
+  }, [mutate]);
 
   const checkout = useCallback(
     async ({ purchaseOrderNumber }: CheckoutPayload) => {
@@ -147,7 +155,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     return result.isError ? [] : result.data;
   }, [businessUnitKey, storeKey]);
 
-  const { data: shippingMethods, mutate: mutateShippingMethods } = useSWR(
+  const { data: shippingMethods } = useSWR(
     ['/action/cart/getShippingMethods', businessUnitKey, storeKey],
     getShippingMethods,
   );
@@ -159,16 +167,16 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 
-      mutateShippingMethods();
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? ({} as Partial<Cart>) : result.data;
     },
-    [businessUnitKey, storeKey, mutateShippingMethods, mutate],
+    [businessUnitKey, storeKey, mutate],
   );
 
   return {
     cart: data ? { ...data, transaction: calculateTransaction(data) } : undefined,
+    isQuotationCart,
     shippingMethods,
     totalItems: data?.lineItems?.reduce((acc, curr) => acc + (curr.count ?? 1), 0) ?? 0,
     addItem,
@@ -180,6 +188,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     redeemDiscount,
     removeDiscount,
     checkout,
+    clearCart,
   };
 };
 

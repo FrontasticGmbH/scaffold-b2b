@@ -14,7 +14,7 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
     <SearchPanel
       translations={{ button: translate('dashboard.purchase.list.add') }}
       buttonLink={`?subPath=add-purchase-list`}
-      isEmpty={!purchaseLists.length}
+      isEmpty={!purchaseLists?.length}
       entity={translate('common.purchase.lists')}
     >
       <Table>
@@ -29,7 +29,7 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
             </Table.Row>
           </Table.Head>
           <Table.Body>
-            {purchaseLists.map(({ id, name, store, description, items }) => (
+            {purchaseLists?.map(({ id, name, store, description, items }) => (
               <Table.Row key={id}>
                 <Table.Cell>{name}</Table.Cell>
                 <Table.Cell>{store}</Table.Cell>

@@ -60,5 +60,7 @@
   "variants.scopedPrice.value": "Scoped Price",
   "variants.price": "Price",
   "variants.attributes.brand": "Brand",
-  "search.results": "Search Results"
+  "search.results": "Search Results",
+  "add.to.new.list": "Add to new list",
+  "save.and.add": "Save & Add"
 }

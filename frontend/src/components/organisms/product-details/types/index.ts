@@ -1,4 +1,5 @@
 import { Attribute, Product } from '@/types/entity/product';
+import { Wishlist as SharedWishlist } from '@shared/types/wishlist/Wishlist';
 
 export type Wishlist = {
   label: string;
@@ -27,7 +28,8 @@ export type SpecsVariantsProps = {
 
 export type ShoppingListCTAProps = {
   getWishlists: () => Promise<Array<Wishlist> | undefined>;
-  addToWishlists: (wishlistIds: string[]) => Promise<Wishlist[]>;
+  addToWishlists: (wishlistIds: string[], count?: number) => Promise<Wishlist[]>;
+  addToNewWishlist: (list: Pick<SharedWishlist, 'name' | 'description' | 'store'>, count?: number) => Promise<void>;
 };
 
 export type ShippingMethod = {
@@ -48,9 +50,10 @@ export type ShippingProps = {
 
 export type CartCTAProps = {
   addToCart: (count: number) => Promise<void>;
+  countChange: (count: number) => void;
 };
 
-export type PDPMainInfoProps = CartCTAProps &
+export type PDPMainInfoProps = Omit<CartCTAProps, 'countChange'> &
   Omit<ShippingProps, 'currency'> &
   ShoppingListCTAProps &
   Partial<Pick<ColorVariantsProps, 'currentColor'>> &

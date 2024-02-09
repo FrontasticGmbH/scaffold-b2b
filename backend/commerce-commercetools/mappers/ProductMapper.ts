@@ -6,17 +6,24 @@ import {
   CategoryReference,
   ProductVariant as CommercetoolsProductVariant,
   TypedMoney,
+  ProductSearchRequest,
+  ProductSearchFacetResultExpression,
+  _ProductSearchFacetExpression,
+  ProductSearchFacetRangesExpression,
+  ProductSearchFacetDistinctExpression,
+  ProductSearchFacetCountExpression,
+  ProductSearchNumberRangeExpression,
+  ProductSearchExactExpression,
+  ProductSearchFacetBucketResult,
+  _ProductSearchQuery,
+  ProductSearchAndExpression,
+  ProductSearchFacetResultCount,
 } from '@commercetools/platform-sdk';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import {
   Attribute as CommercetoolsAttribute,
-  FacetResults as CommercetoolsFacetResults,
   ProductProjection as CommercetoolsProductProjection,
-  RangeFacetResult as CommercetoolsRangeFacetResult,
-  TermFacetResult as CommercetoolsTermFacetResult,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { Attributes, FacetDefinition, Money, Product } from '@Types/product';
-import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
 import { ProductDiscount as CommercetoolsProductDiscount } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-discount';
 import {
   Money as CommercetoolsMoney,
@@ -27,19 +34,13 @@ import {
   AttributeEnumType,
   AttributeLocalizedEnumType,
   AttributeSetType,
-  AttributeType,
   ProductType as CommercetoolsProductType,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-type';
 import { FilterField, FilterFieldTypes, FilterFieldValue } from '@Types/product/FilterField';
-import {
-  Facet as QueryFacet,
-  ProductQuery,
-  RangeFacet as QueryRangeFacet,
-  TermFacet as QueryTermFacet,
-} from '@Types/query';
-import { RangeFacet as ResultRangeFacet, Term, TermFacet } from '@Types/result';
+import { RangeFacet, Term } from '@Types/result';
 import { Facet, FacetTypes } from '@Types/result/Facet';
-import { FilterTypes } from '@Types/query/Filter';
+import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 const TypeMap = new Map<string, string>([
   ['boolean', FilterFieldTypes.BOOLEAN],
@@ -294,16 +295,16 @@ export class ProductMapper {
     commercetoolsAttributeDefinition: CommercetoolsAttributeDefinition,
     locale: Locale,
   ): FilterField {
-    let commercetoolsAttributeType = commercetoolsAttributeDefinition.type.name;
+    let commercetoolsAttributeTypeName = commercetoolsAttributeDefinition.type.name;
 
     let commercetoolsAttributeValues = commercetoolsAttributeDefinition.type?.hasOwnProperty('values')
       ? (commercetoolsAttributeDefinition.type as AttributeEnumType | AttributeLocalizedEnumType).values
       : [];
 
-    if (commercetoolsAttributeType === 'set' && commercetoolsAttributeDefinition.type?.hasOwnProperty('elementType')) {
-      const elementType: AttributeType = (commercetoolsAttributeDefinition.type as AttributeSetType).elementType;
+    if (commercetoolsAttributeTypeName === 'set') {
+      const elementType = (commercetoolsAttributeDefinition.type as AttributeSetType).elementType;
 
-      commercetoolsAttributeType = elementType.name;
+      commercetoolsAttributeTypeName = elementType.name;
       commercetoolsAttributeValues = elementType?.hasOwnProperty('values')
         ? (elementType as AttributeEnumType | AttributeLocalizedEnumType).values
         : [];
@@ -314,15 +315,15 @@ export class ProductMapper {
     for (const value of commercetoolsAttributeValues) {
       filterFieldValues.push({
         value: value.key,
-        name: value.label?.[locale.language] ?? value.label,
+        name: commercetoolsAttributeTypeName === 'enum' ? value.label : value.label?.[locale.language] ?? undefined,
       });
     }
 
     return {
       field: `variants.attributes.${commercetoolsAttributeDefinition.name}`,
-      type: TypeMap.has(commercetoolsAttributeType)
-        ? TypeMap.get(commercetoolsAttributeType)
-        : commercetoolsAttributeType,
+      type: TypeMap.has(commercetoolsAttributeTypeName)
+        ? TypeMap.get(commercetoolsAttributeTypeName)
+        : commercetoolsAttributeTypeName,
       label: commercetoolsAttributeDefinition.label?.[locale.language] ?? commercetoolsAttributeDefinition.name,
       values: filterFieldValues.length > 0 ? filterFieldValues : undefined,
     };
@@ -361,238 +362,180 @@ export class ProductMapper {
     return facetDefinitions;
   }
 
-  static facetDefinitionsToCommercetoolsQueryArgFacets(facetDefinitions: FacetDefinition[], locale: Locale): string[] {
-    const queryArgFacets: string[] = [];
-
-    facetDefinitions?.forEach((facetDefinition) => {
-      let facet: string;
-
-      switch (facetDefinition.attributeType) {
-        case 'money':
-          facet = `${facetDefinition.attributeId}.centAmount:range (0 to *)`;
-          break;
-
-        case 'enum':
-          facet = `${facetDefinition.attributeId}.label`;
-          break;
-
-        case 'lenum':
-          facet = `${facetDefinition.attributeId}.label.${locale.language}`;
-          break;
-
-        case 'ltext':
-          facet = `${facetDefinition.attributeId}.${locale.language}`;
-          break;
-
-        case 'number':
-        case 'boolean':
-        case 'text':
-        case 'reference':
-        default:
-          facet = facetDefinition.attributeId;
-          break;
-      }
-
-      // Alias to identifier used by us
-      queryArgFacets.push(`${facet} as ${facetDefinition.attributeId}`);
-    });
-
-    return queryArgFacets;
-  }
-
-  static facetDefinitionsToFilterFacets(
-    queryFacets: QueryFacet[],
+  static productSearchFacetResultsToFacets(
+    facets: ProductSearchFacetResultExpression[],
+    productSearchQuery: ProductSearchRequest,
     facetDefinitions: FacetDefinition[],
-    locale: Locale,
-  ): string[] {
-    const filterFacets: string[] = [];
-    const typeLookup: { [key: string]: string } = {};
-
-    if (facetDefinitions.length === 0) {
-      return filterFacets;
-    }
-
-    facetDefinitions.forEach((facetDefinition) => {
-      typeLookup[facetDefinition.attributeId] = facetDefinition.attributeType;
-    });
-
-    queryFacets.forEach((queryFacet) => {
-      if (!typeLookup?.hasOwnProperty(queryFacet.identifier)) {
-        return;
-      }
-
-      switch (typeLookup[queryFacet.identifier]) {
-        case 'money':
-          filterFacets.push(
-            `${queryFacet.identifier}.centAmount:range (${(queryFacet as QueryRangeFacet).min} to ${
-              (queryFacet as QueryRangeFacet).max
-            })`,
-          );
-          break;
-        case 'enum':
-          filterFacets.push(`${queryFacet.identifier}.label:"${(queryFacet as QueryTermFacet).terms.join('","')}"`);
-          break;
-        case 'lenum':
-          filterFacets.push(
-            `${queryFacet.identifier}.label.${locale.language}:"${(queryFacet as QueryTermFacet).terms.join('","')}"`,
-          );
-          break;
-        case 'ltext':
-          filterFacets.push(
-            `${queryFacet.identifier}.${locale.language}:"${(queryFacet as QueryTermFacet).terms.join('","')}"`,
-          );
-          break;
-        case 'number':
-        case 'boolean':
-        case 'text':
-        case 'reference':
-        default:
-          if (queryFacet.type === FilterTypes.TERM || queryFacet.type === FilterTypes.BOOLEAN) {
-            filterFacets.push(`${queryFacet.identifier}:"${(queryFacet as QueryTermFacet).terms.join('","')}"`);
-          } else {
-            filterFacets.push(
-              `${queryFacet.identifier}:range (${(queryFacet as QueryRangeFacet).min} to ${
-                (queryFacet as QueryRangeFacet).max
-              })`,
-            );
-          }
-          break;
-      }
-    });
-
-    return filterFacets;
-  }
-
-  static commercetoolsFacetResultsToFacets(
-    facetDefinitions: FacetDefinition[],
-    commercetoolsFacetResults: CommercetoolsFacetResults,
-    productQuery: ProductQuery,
     locale: Locale,
   ): Facet[] {
-    const facets: Facet[] = [];
-    let facetLabel: string;
-
-    for (const [facetKey, facetResult] of Object.entries(commercetoolsFacetResults)) {
-      const facetQuery = this.findFacetQuery(productQuery, facetKey);
-
-      facetDefinitions.filter((facet) => {
-        if (facet.attributeId === facetKey) {
-          facetLabel = facet.attributeLabel;
-        }
-      });
-
-      switch (facetResult.type) {
-        case 'range':
-          facets.push(
-            this.commercetoolsRangeFacetResultToRangeFacet(
-              facetLabel,
-              facetKey,
-              facetResult as CommercetoolsRangeFacetResult,
-              facetQuery as QueryRangeFacet | undefined,
-            ),
-          );
-          break;
-
-        case 'terms':
-          if (facetResult.dataType === 'number') {
-            facets.push(
-              this.commercetoolsTermNumberFacetResultToRangeFacet(
-                facetLabel,
-                facetKey,
-                facetResult as CommercetoolsTermFacetResult,
-                facetQuery as QueryRangeFacet | undefined,
-              ),
+    return facets
+      .map((facetResult) => {
+        const facetQuery = this.findFacetQueryProductSearch(productSearchQuery.facets, facetResult.name);
+        if (facetQuery) {
+          if ('ranges' in facetQuery) {
+            return this.facetResultToRangeFacet(
+              facetQuery as ProductSearchFacetRangesExpression,
+              facetResult as ProductSearchFacetBucketResult,
             );
-            break;
           }
-
-          facets.push(
-            this.commercetoolsTermFacetResultToTermFacet(
-              facetLabel,
-              facetKey,
-              facetResult as CommercetoolsTermFacetResult,
-              facetQuery as QueryTermFacet | undefined,
-            ),
-          );
-          break;
-        case 'filter': // Currently, we are not mapping FilteredFacetResult
-        default:
-          break;
-      }
-    }
-
-    return facets;
+          if ('count' in facetQuery) {
+            return this.facetResultToCountTermFacet(
+              facetQuery as ProductSearchFacetCountExpression,
+              facetResult as ProductSearchFacetResultCount,
+              facetDefinitions,
+            );
+          }
+          if ('distinct' in facetQuery) {
+            return this.facetResultToTermFacet(
+              facetQuery as ProductSearchFacetDistinctExpression,
+              facetResult as ProductSearchFacetBucketResult,
+            );
+          }
+        }
+        return null;
+      })
+      .filter((facet) => facet);
   }
 
-  static commercetoolsRangeFacetResultToRangeFacet(
-    facetLabel: string,
-    facetKey: string,
-    facetResult: CommercetoolsRangeFacetResult,
-    facetQuery: QueryRangeFacet | undefined,
-  ) {
-    const rangeFacet: ResultRangeFacet = {
+  static facetResultToRangeFacet = (
+    facetQuery: ProductSearchFacetRangesExpression,
+    facetResult: ProductSearchFacetBucketResult,
+  ): RangeFacet => {
+    const min = parseInt(facetResult.buckets[0].key.substring(0, facetResult.buckets[0].key.indexOf('-')));
+    const max = parseInt(facetResult.buckets[0].key.substring(facetResult.buckets[0].key.indexOf('-') + 1));
+    const selected = this.getSelectedFilterFromFacetSearchQuery(
+      facetResult.name,
+      facetQuery,
+      'ranges',
+    ) as ProductSearchNumberRangeExpression[];
+    return {
       type: FacetTypes.RANGE,
-      identifier: facetKey,
-      label: facetLabel,
-      key: facetKey,
-      min: facetResult.ranges[0].min,
-      max: facetResult.ranges[0].max,
-      selected: facetQuery !== undefined,
-      minSelected: facetQuery ? facetQuery.min : undefined,
-      maxSelected: facetQuery ? facetQuery.max : undefined,
+      identifier: facetResult.name,
+      label: facetResult.name,
+      key: facetResult.name,
+      min: isNaN(min) ? 0 : min,
+      max: isNaN(max) ? Number.MAX_SAFE_INTEGER : max,
+      selected: !!selected,
+      minSelected: selected ? selected[0]?.range?.gt : undefined,
+      maxSelected: selected ? selected[0]?.range?.lt : undefined,
     };
+  };
 
-    return rangeFacet;
-  }
+  static facetResultToCountTermFacet = (
+    facetQuery: ProductSearchFacetCountExpression,
+    facetResult: ProductSearchFacetResultCount,
+    facetDefinitions: FacetDefinition[],
+  ): Facet => {
+    const selected = this.getSelectedFilterFromFacetSearchQuery(facetResult.name, facetQuery, 'count');
+    const definition = facetDefinitions.find((facetDefinition) => facetDefinition.attributeId === facetResult.name);
+    return {
+      type: definition.attributeType === FacetTypes.BOOLEAN ? FacetTypes.BOOLEAN : FacetTypes.TERM,
+      identifier: facetResult.name,
+      label: facetResult.name,
+      key: facetResult.name,
+      selected: !!selected,
+      // @ts-ignore
+      count: facetResult.value,
+    };
+  };
 
-  static commercetoolsTermFacetResultToTermFacet(
-    facetLabel: string,
-    facetKey: string,
-    facetResult: CommercetoolsTermFacetResult,
-    facetQuery: QueryTermFacet | undefined,
-  ) {
-    const termFacet: TermFacet = {
+  static facetResultToTermFacet = (
+    facetQuery: ProductSearchFacetDistinctExpression,
+    facetResult: ProductSearchFacetBucketResult,
+  ): Facet => {
+    const selected = this.getSelectedFilterFromFacetSearchQuery(facetResult.name, facetQuery, 'distinct');
+
+    return {
       type: FacetTypes.TERM,
-      identifier: facetKey,
-      label: facetLabel,
-      key: facetKey,
+      identifier: facetResult.name,
+      label: facetResult.name,
+      key: facetResult.name,
       selected: facetQuery !== undefined,
-      terms: facetResult.terms.map((facetResultTerm) => {
+      terms: facetResult.buckets.map((facetResultTerm) => {
         const term: Term = {
-          identifier: facetResultTerm.term.toString(),
-          label: facetResultTerm.term.toString(),
+          identifier: facetResultTerm.key.toString(),
+          label: facetResultTerm.key.toString(),
           count: facetResultTerm.count,
-          key: facetResultTerm.term.toString(),
-          selected: facetQuery !== undefined && facetQuery.terms.includes(facetResultTerm.term.toString()),
+          key: facetResultTerm.key.toString(),
+          selected: selected?.some((andQuery) => 'exact' in andQuery && andQuery.exact?.value === facetResultTerm.key),
         };
         return term;
       }),
     };
-    return termFacet;
-  }
+  };
 
-  static commercetoolsTermNumberFacetResultToRangeFacet(
-    facetLabel: string,
+  static findFacetQueryProductSearch = (
+    queryFacets: _ProductSearchFacetExpression[],
     facetKey: string,
-    facetResult: CommercetoolsTermFacetResult,
-    facetQuery: QueryRangeFacet | undefined,
-  ) {
-    const rangeFacet: ResultRangeFacet = {
-      type: FacetTypes.RANGE,
-      identifier: facetKey,
-      label: facetLabel,
-      key: facetKey,
-      count: facetResult.total,
-      min: Math.min(...facetResult.terms.map((facetResultTerm) => facetResultTerm.term)) ?? Number.MIN_SAFE_INTEGER,
-      max: Math.max(...facetResult.terms.map((facetResultTerm) => facetResultTerm.term)) ?? Number.MAX_SAFE_INTEGER,
-    };
+  ):
+    | ProductSearchFacetRangesExpression
+    | ProductSearchFacetCountExpression
+    | ProductSearchFacetDistinctExpression
+    | undefined => {
+    return queryFacets.find(
+      (facet) =>
+        (facet as ProductSearchFacetRangesExpression).ranges?.name === facetKey ||
+        (facet as ProductSearchFacetCountExpression).count?.name === facetKey ||
+        (facet as ProductSearchFacetDistinctExpression).distinct?.name === facetKey,
+    ) as
+      | ProductSearchFacetRangesExpression
+      | ProductSearchFacetCountExpression
+      | ProductSearchFacetDistinctExpression
+      | undefined;
+  };
 
+  static getSelectedFilterFromFacetSearchQuery = (
+    facetResultName: string,
+    facetQuery:
+      | ProductSearchFacetRangesExpression
+      | ProductSearchFacetCountExpression
+      | ProductSearchFacetDistinctExpression,
+    type: 'ranges' | 'count' | 'distinct',
+  ): _ProductSearchQuery[] | undefined => {
     if (facetQuery) {
-      rangeFacet.selected = true;
-      rangeFacet.minSelected = facetQuery.min;
-      rangeFacet.maxSelected = facetQuery.max;
+      let filterExpression: _ProductSearchQuery;
+      let attributeType: string;
+      switch (type) {
+        case 'ranges':
+          filterExpression = (facetQuery as ProductSearchFacetRangesExpression).ranges.filter;
+          attributeType = (facetQuery as ProductSearchFacetRangesExpression).ranges.attributeType;
+          break;
+        case 'count':
+          filterExpression = (facetQuery as ProductSearchFacetCountExpression).count.filter;
+          break;
+        case 'distinct':
+          filterExpression = (facetQuery as ProductSearchFacetDistinctExpression).distinct.filter;
+          attributeType = (facetQuery as ProductSearchFacetDistinctExpression).distinct.attributeType;
+          break;
+      }
+
+      const facetResultIdentifier = this.getfacetIdentifier(facetResultName, attributeType);
+
+      if (filterExpression) {
+        if ('and' in filterExpression) {
+          return (filterExpression as ProductSearchAndExpression).and.filter((andQuery) => {
+            return (
+              (andQuery as ProductSearchNumberRangeExpression).range?.field === facetResultIdentifier ||
+              (andQuery as ProductSearchExactExpression).exact?.field === facetResultIdentifier
+            );
+          });
+        }
+        return (filterExpression as ProductSearchExactExpression).exact?.field === facetResultIdentifier
+          ? [filterExpression]
+          : (filterExpression as ProductSearchNumberRangeExpression).range?.field === facetResultIdentifier
+            ? [filterExpression]
+            : undefined;
+      }
     }
-    return rangeFacet;
+    return undefined;
+  };
+  private static getfacetIdentifier(facetResultName: string, attributeType: string) {
+    switch (attributeType) {
+      case 'enum':
+        return `${facetResultName}.label`;
+      default:
+        return facetResultName;
+    }
   }
 
   static commercetoolsAttributeGroupToString(body: AttributeGroup): string[] {
@@ -605,18 +548,6 @@ export class ProductMapper {
 
   static calculateNextCursor(offset: number, count: number, total: number) {
     return offset + count < total ? `offset:${offset + count}` : undefined;
-  }
-
-  private static findFacetQuery(productQuery: ProductQuery, facetKey: string) {
-    if (productQuery.facets !== undefined) {
-      for (const facet of productQuery.facets) {
-        if (facet.identifier === facetKey) {
-          return facet;
-        }
-      }
-    }
-
-    return undefined;
   }
 
   static commercetoolsCategoryToCategory: (

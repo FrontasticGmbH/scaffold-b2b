@@ -1,15 +1,15 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { LineItem } from '@Types/cart/LineItem';
 import { OrderState, ReturnLineItem } from '@Types/cart/Order';
-import { getLocale } from '../utils/Request';
 import { Cart } from '@Types/cart/Cart';
 import { Address } from '@Types/account/Address';
-import { CartFetcher } from '../utils/CartFetcher';
-import { EmailApiFactory } from '../utils/EmailApiFactory';
-import handleError from '@Commerce-commercetools/utils/handleError';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { Discount, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
+import { EmailApiFactory } from '../utils/EmailApiFactory';
+import { CartFetcher } from '../utils/CartFetcher';
+import { getLocale } from '../utils/Request';
+import handleError from '@Commerce-commercetools/utils/handleError';
+import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
@@ -62,6 +62,17 @@ export const getCart: ActionHook = async (request: Request, actionContext: Actio
   } catch (error) {
     return handleError(error, request);
   }
+};
+
+export const clearCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  return {
+    statusCode: 200,
+    body: JSON.stringify({}),
+    sessionData: {
+      ...request.sessionData,
+      cartId: undefined,
+    },
+  } as Response;
 };
 
 export const addToCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
@@ -162,7 +173,7 @@ export const cancelOrder: ActionHook = async (request: Request, actionContext: A
   }
 };
 
-export const replicateCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
+export const replicateOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
 

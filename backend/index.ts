@@ -4,19 +4,6 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import commercetoolsExtension from '@Commerce-commercetools';
-import contentfulExtensions from '@Content-contentful';
-
-// Integration tests
-import appHealthExtension from './extensions-runner-test';
-
-const extensionsToMerge = [
-  commercetoolsExtension,
-  contentfulExtensions,
-  appHealthExtension,
-] as Array<ExtensionRegistry>;
-// END: List of used extensions
-
 import {
   ExtensionRegistry,
   ActionRegistry,
@@ -24,6 +11,19 @@ import {
   DynamicPageRedirectResult,
   DynamicPageSuccessResult,
 } from '@frontastic/extension-types';
+
+import appHealthExtension from './extensions-runner-test';
+import commercetoolsExtension from '@Commerce-commercetools';
+import contentfulExtensions from '@Content-contentful';
+
+// Integration tests
+
+const extensionsToMerge = [
+  commercetoolsExtension,
+  contentfulExtensions,
+  appHealthExtension,
+] as Array<ExtensionRegistry>;
+// END: List of used extensions
 
 const mergeActions = (extensions: Array<ExtensionRegistry>): ActionRegistry => {
   const actionNamespaces = {};

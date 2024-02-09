@@ -70,5 +70,10 @@
   "view.quote": "View quote",
   "item.was.removed": "was removed from your cart.",
   "attempt.with.outofstock.item": "You have an item that is out of stock, please remove it to proceed.",
-  "item.added": "Item added to cart"
+  "item.added": "Item added to cart",
+  "request.quote": "Request quote",
+  "clear.quote": "Empty quotation cart",
+  "clear.quote.desc": "Are you sure you want to delete this Quotation Cart? Once deleted, it can only be retrieved from the Accepted Quote.",
+  "quotation.cart": "Quotation Cart",
+  "quote.cannot.apply.discount": "No discounts can be applied to quotation carts"
 }

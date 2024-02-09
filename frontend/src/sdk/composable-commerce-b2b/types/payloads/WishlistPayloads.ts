@@ -13,6 +13,12 @@ type AddToWishlistPayload = {
 	count?: number;
 };
 
+type AddToWishlistsPayload = {
+    wishlistIds: string[];
+    variant?: { sku?: string };
+    count?: number;
+}
+
 type UpdateWishlistItemPayload = {
 	lineItem: { id: string };
 	count: number;
@@ -26,6 +32,7 @@ export {
 	type CreateWishlistPayload,
 	type UpdateWishlistPayload,
 	type AddToWishlistPayload,
+    type AddToWishlistsPayload,
 	type UpdateWishlistItemPayload,
 	type RemoveFromWishlistPayload,
 };

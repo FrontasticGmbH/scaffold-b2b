@@ -1,6 +1,7 @@
 import { Discount } from './Discount';
 import { Variant } from '../product/Variant';
 import { Money } from '../product/Money';
+import { Tax } from './Tax';
 
 export interface LineItemShippingAddress {
   addressKey: string;
@@ -18,6 +19,8 @@ export interface LineItem {
   discountTexts?: string[]; // Discount texts, if any applied
   discounts?: Discount[];
   totalPrice?: Money;
+  taxed?: Tax;
+  taxIncludedInPrice?: boolean;
   variant?: Variant;
   isGift?: boolean;
   _url?: string;

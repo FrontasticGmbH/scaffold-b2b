@@ -9,12 +9,15 @@ import Checkbox from '@/components/atoms/checkbox';
 import Link from '@/components/atoms/link';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import Typography from '@/components/atoms/typography';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import AuthLayout from '../layouts/auth-layout';
 import useAuthProps from './hooks/useAuthProps';
 import { LoginProps } from './types';
 import AuthForm from '../layouts/auth-form';
 
 const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
+  const router = useCustomRouter();
+
   const { translate } = useTranslation();
 
   const [data, setData] = useState<Account & { rememberMe?: boolean }>({});
@@ -37,13 +40,18 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const handleLoginSubmit = async () => {
     if (data.email && data.password) {
-      login(data.email, data.password, data.rememberMe).catch((err: Error) => {
-        if (err.message.includes('unverified')) {
-          setInputError(translate('error.auth.action.verify'));
-        } else {
-          setError(translate('error.auth.wrong'));
-        }
-      });
+      login(data.email, data.password, data.rememberMe)
+        .then(() => {
+          router.refresh();
+          router.push('/');
+        })
+        .catch((err: Error) => {
+          if (err.message.includes('unverified')) {
+            setInputError(translate('error.auth.action.verify'));
+          } else {
+            setError(translate('error.auth.wrong'));
+          }
+        });
     } else {
       setError(translate('error.auth.wrong'));
     }

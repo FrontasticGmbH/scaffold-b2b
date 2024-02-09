@@ -1,5 +1,5 @@
-import { getProjectSettings } from '../commerce-commercetools/actionControllers/ProjectController';
 import { Context, Request, Response } from '@frontastic/extension-types';
+import { getProjectSettings } from '../commerce-commercetools/actionControllers/ProjectController';
 import { dummyAccount, dummyActionContext } from './data-provider';
 
 describe.skip('commerce-commercetools:: Project Functionalities', () => {

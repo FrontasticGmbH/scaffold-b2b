@@ -1,6 +1,6 @@
 import { createClient, ContentfulClientApi } from 'contentful';
-import { ContentfulMapper } from '../mappers/ContentfulMapper';
 import { Context } from '@frontastic/extension-types';
+import { ContentfulMapper } from '../mappers/ContentfulMapper';
 
 export default class ContentApi {
   private client: ContentfulClientApi;

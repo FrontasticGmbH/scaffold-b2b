@@ -1,17 +1,19 @@
-import { ApiRoot, createApiBuilderFromCtpClient, ProductType, Project } from '@commercetools/platform-sdk';
-import { ClientFactory } from '../ClientFactory';
-import { Context } from '@frontastic/extension-types';
-import { getConfig } from '../utils/GetConfig';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { LocaleError } from '../errors/LocaleError';
-import { ExternalError } from '../errors/ExternalError';
-import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
-import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
-import { Token } from '@Types/Token';
-import { tokenHasExpired } from '../utils/Token';
 import * as crypto from 'crypto';
+import { ApiRoot, createApiBuilderFromCtpClient, ProductType, Project } from '@commercetools/platform-sdk';
+import { Context } from '@frontastic/extension-types';
+import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
+import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
+import { Token } from '@Types/Token';
 import { ByProjectKeyAsAssociateByAssociateIdRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/as-associate/by-project-key-as-associate-by-associate-id-request-builder';
+import { ByProjectKeyAsAssociateByAssociateIdInBusinessUnitKeyByBusinessUnitKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/in-business-unit/by-project-key-as-associate-by-associate-id-in-business-unit-key-by-business-unit-key-request-builder';
+import { tokenHasExpired } from '../utils/Token';
+import { ExternalError } from '../errors/ExternalError';
+import { LocaleError } from '../errors/LocaleError';
+import { getConfig } from '../utils/GetConfig';
+import { ClientFactory } from '../ClientFactory';
+import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
+import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 const defaultCurrency = 'USD';
 
@@ -532,6 +534,24 @@ export abstract class BaseApi {
 
   protected associateRequestBuilder(accountId: string): ByProjectKeyAsAssociateByAssociateIdRequestBuilder {
     return this.requestBuilder().asAssociate().withAssociateIdValue({ associateId: accountId });
+  }
+
+  protected associateEndpoints(
+    accountId: string,
+    businessUnitKey: string,
+  ): ByProjectKeyAsAssociateByAssociateIdInBusinessUnitKeyByBusinessUnitKeyRequestBuilder {
+    if (!accountId || !businessUnitKey) {
+      throw new ValidationError({
+        message: 'Account or business unit key is missing.',
+      });
+    }
+
+    return this.requestBuilder()
+      .asAssociate()
+      .withAssociateIdValue({ associateId: accountId })
+      .inBusinessUnitKeyWithBusinessUnitKeyValue({
+        businessUnitKey,
+      });
   }
 
   private commercetoolsTokenCache(): TokenCache {

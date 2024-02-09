@@ -11,7 +11,7 @@ export interface SortAttributes {
 }
 
 export interface QuoteQuery extends PaginatedQuery {
-  accountId: string;
+  accountId?: string;
   quoteIds?: string[];
   quoteStates?: (QuoteState | QuoteRequestState)[];
   sortAttributes?: SortAttributes;

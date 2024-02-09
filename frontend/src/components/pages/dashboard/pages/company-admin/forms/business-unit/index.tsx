@@ -5,7 +5,8 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
 import { BusinessUnit } from '@/types/entity/business-unit';
 import useEntityToasters from '@/hooks/useEntityToasters';
-import { CompanyAdminPageProps, BusinessUnitPayload } from '../../types';
+import Typography from '@/components/atoms/typography';
+import { BusinessUnitPayload, CompanyAdminPageProps } from '../../types';
 
 const BusinessUnitForm = ({
   onUpdateBusinessUnit,
@@ -55,6 +56,7 @@ const BusinessUnitForm = ({
             {translate('dashboard.add.business.unit.to')} <span className="font-semibold">{storeName}</span>
           </p>
         )}
+        {id && <Typography>{translate('dashboard.entity.update.how.to.delete')}</Typography>}
         <Input
           name="name"
           label={translate('common.name')}

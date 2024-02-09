@@ -12,7 +12,14 @@ import CartItemHeader from './cart-item-header';
 import CartItemFooter from './cart-item-footer';
 import { CartItemProps } from '../types';
 
-const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemove, onUndoRemove }) => {
+const CartItem = ({
+  item,
+  onUpdateQuantity,
+  onRemove,
+  onUndoRemove,
+  onAddToNewWishlist,
+  isQuotationCart,
+}: CartItemProps) => {
   const { locale } = useParams();
 
   const { translate } = useTranslation();
@@ -55,7 +62,13 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemove, o
           <div>
             <CartItemHeader className="hidden md:block" item={item} />
 
-            <CartItemFooter className="hidden md:flex" onRemove={onRemove} item={item} />
+            <CartItemFooter
+              className="hidden md:flex"
+              onRemove={onRemove}
+              item={item}
+              onAddToNewWishlist={onAddToNewWishlist}
+              isQuotationCart={isQuotationCart}
+            />
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2 lg:gap-3">
@@ -65,7 +78,13 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemove, o
               </Typography>
             )}
 
-            <QuantityWidget showLabel={false} defaultValue={1} value={item.count} onChange={onUpdateQuantity} />
+            <QuantityWidget
+              showLabel={false}
+              defaultValue={1}
+              value={item.count}
+              onChange={onUpdateQuantity}
+              disabled={isQuotationCart}
+            />
 
             <div className="w-full gap-1 md:gap-2">
               {item.discountedPrice ? (
@@ -105,7 +124,13 @@ const CartItem: React.FC<CartItemProps> = ({ item, onUpdateQuantity, onRemove, o
         </div>
       </div>
 
-      <CartItemFooter className="justify-between md:hidden" onRemove={onRemove} item={item} />
+      <CartItemFooter
+        onAddToNewWishlist={onAddToNewWishlist}
+        className="justify-between md:hidden"
+        onRemove={onRemove}
+        item={item}
+        isQuotationCart={isQuotationCart}
+      />
     </div>
   );
 };

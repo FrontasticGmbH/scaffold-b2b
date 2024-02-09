@@ -12,7 +12,7 @@ export interface QuotesPageProps {
     creationDate?: string;
   };
   sortOptions: Option[];
-  statusOptions: Array<Option & { count: number }>;
+  statusOptions: Array<Option & { count?: number }>;
   onClearRefinements?: () => void;
   onStatusRefine?: (status: string) => void;
   onCreationDateRefine?: (date: string) => void;

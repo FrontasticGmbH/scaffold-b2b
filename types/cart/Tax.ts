@@ -1,8 +1,10 @@
 import { TaxPortion } from './TaxPortion';
-import { Money } from '../product/Money';
+import { Money } from '../product';
 
 export interface Tax {
-  amount: Money;
+  netAmount?: Money;
+  grossAmount?: Money;
+  taxAmount?: Money;
   name?: string;
   taxPortions?: TaxPortion[];
 }

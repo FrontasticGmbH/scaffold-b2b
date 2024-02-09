@@ -8,6 +8,7 @@ import { Product } from '@shared/types/product';
 import { mapProduct } from '@/utils/mappers/map-product';
 import useCart from '@/lib/hooks/useCart';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import usePath from '@/hooks/usePath';
 import { TasticProps } from '../types';
 
 const ProductSliderTastic = ({
@@ -15,11 +16,15 @@ const ProductSliderTastic = ({
 }: TasticProps<DataSource<{ items: Product[] }> & Pick<ProductSliderProps, 'headline'>>) => {
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
+  const { isQuotationCart, addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
+
+  const { path } = usePath();
 
   const items = data?.data?.dataSource?.items;
 
   if (!items) return <></>;
+
+  if (path === '/cart/' && isQuotationCart) return <></>;
 
   return (
     <ProductSlider

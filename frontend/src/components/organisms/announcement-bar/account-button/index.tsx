@@ -42,7 +42,7 @@ const AccountButton = ({
       onClose={onClose}
       buttonElement={() => <ButtonElement onOpen={onOpen} />}
     >
-      <div className="w-[330px] py-4">
+      <div className="max-h-[90vh] w-[330px] overflow-y-auto py-4">
         <div className="px-4">
           <div className="pt-2">
             <Typography fontSize={18} fontWeight="bold" className="text-primary">

@@ -1,4 +1,20 @@
 
+## Version 1.5.3 (2024-02-09)
+
+** New Features and Improvements **
+
+- User can initiate the quote request process
+- Quotes request details page is available
+- Buyers can decline, renegotiate or accept revised quotes
+- User can review order details page
+- User can filter orders in order summary list page
+
+
+** Bug fixes **
+
+- After user logins in he is redirected to homepage, no more blank screen, need to refresh page
+- Password reset was not showing password was changed succesfully page, now it does
+
 ## Version 1.5.2 (2024-02-02)
 
 ** New Features and Improvements **

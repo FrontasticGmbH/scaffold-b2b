@@ -8,6 +8,7 @@ import { highlight } from './utils/highlight';
 
 const Renderer = ({
   data: pageData,
+  params,
   searchParams,
   tastics,
   currentHighlight,
@@ -47,6 +48,7 @@ const Renderer = ({
                 <TasticWrapper
                   key={tastic.tasticId}
                   data={tastic}
+                  params={params}
                   searchParams={searchParams}
                   dataSources={data.dataSources}
                   tastics={tastics}

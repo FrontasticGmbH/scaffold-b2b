@@ -6,8 +6,18 @@ import TextArea from '@/components/atoms/text-area';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import { CheckoutCTAProps } from '../types';
+import Confirmation from '../../confirmation';
 
-const CheckoutCTA = ({ className, link, disabled, text, onCheckout, onRequestQuote }: CheckoutCTAProps) => {
+const CheckoutCTA = ({
+  className,
+  link,
+  disabled,
+  text,
+  onCheckout,
+  onRequestQuote,
+  isQuotationCart,
+  onClear,
+}: CheckoutCTAProps) => {
   const { translate } = useTranslation();
 
   const [isSubmittingQuoteRequest, setIsSubmittingQuoteRequest] = useState(false);
@@ -59,9 +69,27 @@ const CheckoutCTA = ({ className, link, disabled, text, onCheckout, onRequestQuo
         </Button>
       </Link>
 
-      <Button size="full" variant="secondary" disabled={disabled} onClick={() => setIsSubmittingQuoteRequest(true)}>
-        Request Quote
-      </Button>
+      {!isQuotationCart && (
+        <Button size="full" variant="secondary" disabled={disabled} onClick={() => setIsSubmittingQuoteRequest(true)}>
+          {translate('cart.request.quote')}
+        </Button>
+      )}
+
+      {isQuotationCart && (
+        <Confirmation
+          onConfirm={onClear}
+          translations={{
+            title: translate('cart.clear.quote'),
+            summary: translate('cart.clear.quote.desc'),
+            confirm: translate('common.delete'),
+            cancel: translate('common.cancel'),
+          }}
+        >
+          <p className="mt-3 cursor-pointer text-center font-medium capitalize text-primary">
+            {translate('cart.clear.quote')}
+          </p>
+        </Confirmation>
+      )}
     </div>
   );
 };

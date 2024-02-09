@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react';
+import { FormEvent, PropsWithChildren } from 'react';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import Typography from '@/components/atoms/typography';
@@ -20,6 +20,11 @@ const AuthForm = ({
   onSubmit,
   children,
 }: PropsWithChildren<AuthFormProps>) => {
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit?.();
+  };
+
   return (
     <>
       <div className="grid h-fit gap-5">
@@ -46,20 +51,23 @@ const AuthForm = ({
         )}
       </div>
 
-      {children && (
-        <div className="mt-6 grid gap-3 md:mt-9">
-          {error && (
-            <Typography fontSize={14} fontWeight="medium" className="text-red-500">
-              {error}
-            </Typography>
-          )}
-          {children}
-        </div>
-      )}
+      <form onSubmit={handleSubmit}>
+        {children && (
+          <div className="mt-6 grid gap-3 md:mt-9">
+            {error && (
+              <Typography fontSize={14} fontWeight="medium" className="text-red-500">
+                {error}
+              </Typography>
+            )}
 
-      <Button size="l" className="mt-6 text-14 md:mt-9" onClick={onSubmit}>
-        {buttonLabel}
-      </Button>
+            {children}
+          </div>
+        )}
+
+        <Button type="submit" size="full" className="mt-6 text-14 md:mt-9">
+          {buttonLabel}
+        </Button>
+      </form>
 
       <div className="mt-4 flex w-full flex-wrap justify-center gap-1">
         {footerLabel && (

@@ -18,7 +18,6 @@ type ReassignCartQuery = {
 
 type ReplicateOrderQuery = {
 	businessUnitKey?: string;
-	storeKey?: string;
 };
 
 type AddCartItemQuery = {
@@ -88,18 +87,17 @@ type ReturnOrderItemsQuery = {
 };
 
 type CancelOrderQuery = {
-	businessUnitKey?: string;
-	storeKey?: string;
+	businessUnitKey: string;
 };
 
 type QueryOrdersQuery = {
+	businessUnitKey?: string;
 	limit?: number;
 	cursor?: string;
 	accountId?: string;
 	orderIds?: string[];
 	orderNumbers?: string[];
 	orderState?: OrderState[];
-	businessUnitKey?: string;
 	shipmentState?: ShipmentState[];
 	query?: string;
 };

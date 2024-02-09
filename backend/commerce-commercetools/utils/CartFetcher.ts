@@ -1,31 +1,26 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
+import { Account } from '@Types/account';
 import { CartApi } from '../apis/CartApi';
 import { getCurrency, getLocale } from './Request';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import parseQueryParams from '@Commerce-commercetools/utils/parseRequestParams';
-import { Account } from '@Types/account';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
-interface CartFetcherRequest {
+interface CartFetcherRequestQuery {
   storeKey?: string;
   businessUnitKey?: string;
-  key?: string;
 }
 
 export class CartFetcher {
   static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
-    const requestBody = parseRequestBody<CartFetcherRequest>(request.body);
-    const requestParams = parseQueryParams<CartFetcherRequest>(request.query);
-
-    const queryBusinessUnitKey = requestParams?.businessUnitKey || requestParams?.key;
+    const requestParams = parseQueryParams<CartFetcherRequestQuery>(request.query);
 
     const account: Account = request.sessionData?.account;
     const cartId = request.sessionData?.cartId;
-    const businessUnitKey = queryBusinessUnitKey !== undefined ? queryBusinessUnitKey : requestParams.businessUnitKey;
-
-    const storeKey = requestBody?.storeKey !== undefined ? requestBody.storeKey : requestParams.storeKey;
+    const businessUnitKey = requestParams?.businessUnitKey;
+    const storeKey = requestParams.storeKey;
 
     if (businessUnitKey && account) {
       const cartApi = new CartApi(

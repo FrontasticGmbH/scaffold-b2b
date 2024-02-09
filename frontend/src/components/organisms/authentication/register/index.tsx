@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import Input from '@/components/atoms/input';
 import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
@@ -15,7 +15,7 @@ import useAuthProps from './hooks/useAuthProps';
 const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const { translate } = useTranslation();
 
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const [data, setData] = useState<Account>({});
   const [confirmed, setConfirmed] = useState(false);

@@ -6,8 +6,14 @@ type GetWishlistQuery = {
 	wishlistId?: string;
 };
 
-type GetWishlistsQuery = {
-	storeKey?: string;
+type QueryWishlistsQuery = {
+    name?: string;
+    accountId: string;
+    limit?: number;
+    cursor?: string;
+    storeKey?: string;
+    wishlistIds?: string[];
+    query?: string;
 };
 
 type UpdateWishlistQuery = {
@@ -47,7 +53,7 @@ type RemoveFromWishlistQuery = {
 export {
 	type CreateWishlistQuery,
 	type GetWishlistQuery,
-	type GetWishlistsQuery,
+    type QueryWishlistsQuery,
 	type UpdateWishlistQuery,
 	type ClearWishlistQuery,
 	type DeleteWishlistQuery,

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccount from '@/lib/hooks/useAccount';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useCart from '@/lib/hooks/useCart';
@@ -18,7 +19,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { mapCsvProduct } from '@/utils/mappers/map-csv-product';
 
 const useHeaderData = () => {
-  const router = useRouter();
+  const router = useCustomRouter();
   const { translate } = useTranslation();
 
   const searchParams = useSearchParams();
@@ -66,13 +67,13 @@ const useHeaderData = () => {
   const { categories } = useCategories();
   const navigationCategories = categories.map(mapCategory).filter((category) => !!category.name || !!category.path);
 
-  const { quotes } = useQuotes({});
+  const { quotes } = useQuotes({ businessUnitKey: selectedBusinessUnit?.key ?? '' });
   const quotesMapped = quotes?.items?.filter((quote: Quote) => quote?.quoteState === 'Pending');
 
   const { account, logout } = useAccount();
 
   const onLogoutClick = () => {
-    logout().then(() => router.push('login'));
+    logout().then(() => router.push('/login'));
   };
 
   const mappedBusinessUnits: Option[] = businessUnits?.map(({ name, key }) => {

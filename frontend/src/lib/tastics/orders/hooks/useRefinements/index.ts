@@ -22,15 +22,15 @@ const useRefinements = () => {
       date.getFullYear(),
     ];
 
-    return `${year}-${month}-${day}T00:00:00.000Z`;
+    return `${year}-${month}-${day}`;
   }, []);
 
   const ISODate = useMemo(() => {
     const result = {} as { from?: string; to?: string };
 
-    if (date.from) result.from = extractDate(date.from);
+    if (date.from) result.from = `${extractDate(date.from)}T00:00:00.000Z`;
 
-    if (date.to) result.to = extractDate(date.to);
+    if (date.to) result.to = `${extractDate(date.to)}T23:59:59.999Z`;
 
     return result;
   }, [date, extractDate]);

@@ -4,12 +4,13 @@ import QuantityWidget from '@/components/atoms/quantity-widget';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { CartCTAProps } from '../types';
 
-const CartCTA = ({ addToCart }: CartCTAProps) => {
+const CartCTA = ({ addToCart, countChange }: CartCTAProps) => {
   const { translate } = useTranslation();
 
   const [count, setCount] = useState(1);
 
   const handleCountChange = (count: number) => {
+    countChange(count);
     setCount(count);
   };
 

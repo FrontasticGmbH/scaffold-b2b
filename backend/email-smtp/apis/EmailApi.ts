@@ -1,14 +1,14 @@
 import * as nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { Context } from '@frontastic/extension-types';
-import { SmtpConfig } from '../interfaces/SmtpConfig';
-import { SmtpConfigurationError } from '../errors/SmtpConfigurationError';
 import { Account } from '@Types/account/Account';
 import { Order } from '@Types/cart/Order';
-import getCustomerName from '../utils/get-customer-name';
-import { getFromProjectConfig } from '../utils/Context';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { AccountToken } from '@Types/account/AccountToken';
+import { SmtpConfig } from '../interfaces/SmtpConfig';
+import { SmtpConfigurationError } from '../errors/SmtpConfigurationError';
+import getCustomerName from '../utils/get-customer-name';
+import { getFromProjectConfig } from '../utils/Context';
 
 export class EmailApi {
   // Email transporter

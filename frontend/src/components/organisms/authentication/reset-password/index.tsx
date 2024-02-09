@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Typography from '@/components/atoms/typography';
@@ -10,6 +11,8 @@ import { ResetPasswordData, ResetPasswordProps } from './types';
 import AuthForm from '../layouts/auth-form';
 
 const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordProps) => {
+  const router = useCustomRouter();
+
   const searchParams = useSearchParams();
 
   const { translate } = useTranslation();
@@ -28,6 +31,10 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
   const handleSubmit = () => {
     const token = searchParams.get('token');
 
+    if (reset) {
+      router.push('/');
+    }
+
     if (token && data.password == data.confirmPassword) {
       resetPassword(token, data.password).then(() => {
         setReset(true);
@@ -40,9 +47,11 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
       <AuthForm
         onSubmit={handleSubmit}
         includeCheckIcon={reset}
-        title={reset ? translate('account.password.reset.success') : translate('account.password.reset.headline')}
+        title={
+          reset ? translate('account.password.reset.success.headline') : translate('account.password.reset.headline')
+        }
         buttonLabel={reset ? translate('account.account.login') : translate('account.password.reset.keyword')}
-        footerLinkLabel={translate('account.account.back.login')}
+        footerLinkLabel={reset ? '' : translate('account.account.back.login')}
         footerLink="/login"
       >
         {reset ? (

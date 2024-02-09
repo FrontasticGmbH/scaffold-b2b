@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import ActivityLog from '@/components/molecules/activity-log';
 import Image from '@/components/atoms/Image';
@@ -9,15 +9,20 @@ import PreviousPageLink from '../../components/previous-page-link';
 
 const QuoteDetailsPage = ({
   quote,
+  isQuoteRequest,
   onAccept,
   onCommentUpdate,
   onReject,
   onRenegotiate,
   onRevoke,
+  onCheckout,
+  onViewOrder,
 }: QuoteDetailsPageProps) => {
   const { translate } = useTranslation();
 
   const { formatCurrency } = useFormat();
+
+  const [isRenegotiating, setIsRenegotiating] = useState<Record<number, boolean>>({});
 
   if (!quote) return <></>;
 
@@ -25,18 +30,33 @@ const QuoteDetailsPage = ({
     <div>
       <div className="flex items-center justify-between py-6 md:py-7 lg:py-9">
         <h1 className="text-18 font-extrabold leading-[100%] text-gray-800 md:text-20 lg:text-24">
-          {translate('dashboard.quote.details')}
+          {translate(isQuoteRequest ? 'dashboard.quote.request.details' : 'dashboard.quote.details')}
         </h1>
         <PreviousPageLink className="hidden md:block" />
       </div>
-      <h3 className="text-14 text-gray-600">
-        {translate('dashboard.quote.id')}: {quote.id}
-      </h3>
 
-      <h3 className="mt-2 flex items-center gap-2">
-        <span className="text-14 text-gray-600">{translate('common.status')}:</span>
-        <QuoteStatusTag status={quote.status} />
-      </h3>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-[80px] lg:grid-cols-3 lg:gap-x-[120px]">
+        <h3 className="text-14 text-gray-600 lg:order-1">
+          {translate(isQuoteRequest ? 'dashboard.quote.request.id' : 'dashboard.quote.id')}: {quote.id}
+        </h3>
+
+        <h3 className="text-14 text-gray-600 lg:order-2">
+          {translate('dashboard.creation.date')}: {quote.creationDate.replace(/\//g, '-')}
+        </h3>
+
+        <h3 className="flex items-center gap-2 lg:order-4">
+          <span className="text-14 text-gray-600">{translate('common.status')}:</span>
+          <QuoteStatusTag status={quote.status} />
+        </h3>
+
+        <h3 className="text-14 text-gray-600 lg:order-5">
+          {translate('dashboard.owner')}: {quote.author}
+        </h3>
+
+        <h3 className="text-14 text-gray-600 lg:order-3">
+          {translate('dashboard.last.modified.date')}: {quote.lastModifiedDate.replace(/\//g, '-')}
+        </h3>
+      </div>
 
       <div className="mt-6 border-y border-neutral-400 pb-9">
         <h5 className="pb-7 pt-6 text-gray-700">{translate('common.activity')}</h5>
@@ -44,21 +64,54 @@ const QuoteDetailsPage = ({
         <div className="pl-[10px]">
           <ActivityLog
             activities={quote.activity.map(
-              ({ title, date, author, comment, commentBy, reply, renegotiate, revoke }) => ({
-                title: translate(title),
+              (
+                {
+                  title,
+                  titleValues,
+                  date,
+                  author,
+                  comment,
+                  commentBy,
+                  reply,
+                  renegotiate,
+                  revoke,
+                  checkout,
+                  viewOrder,
+                },
+                index,
+              ) => ({
+                title: translate(title, { values: titleValues }),
                 summary: date || author ? `${date ?? ''} - ${translate('common.by')} ${author ?? ''}` : '',
-                comment,
+                comment: comment || (isRenegotiating[index] ? ' ' : undefined),
                 commentLabel: `${translate('common.comment.by')} ${translate(
-                  commentBy === 'author' ? 'common.author' : 'common.seller',
+                  commentBy === 'author' || isRenegotiating[index] ? 'common.buyer' : 'common.seller',
                 )}`,
-                commentDisabled: commentBy !== 'author',
-                onCommentUpdate,
-                reply,
+                commentDisabled: !renegotiate,
+                onCommentUpdate: onCommentUpdate ?? (renegotiate ? onRenegotiate : undefined),
+                onCommentCancel: () => setIsRenegotiating({ ...isRenegotiating, [index]: false }),
+                reply: reply && !isRenegotiating[index],
                 onAccept,
                 onReject,
                 ctaLink:
                   renegotiate || revoke ? translate(`dashboard.cta.${renegotiate ? 'renegotiate' : 'revoke'}`) : '',
-                onCtaLinkClick: renegotiate || revoke ? (renegotiate ? onRenegotiate : onRevoke) : undefined,
+                onCtaLinkClick:
+                  renegotiate || revoke
+                    ? renegotiate
+                      ? () => setIsRenegotiating({ ...isRenegotiating, [index]: true })
+                      : onRevoke
+                    : undefined,
+                ...(checkout
+                  ? {
+                      ctaButton: translate('dashboard.go.to.checkout'),
+                      onCtaButtonClick: onCheckout,
+                    }
+                  : {}),
+                ...(viewOrder
+                  ? {
+                      ctaButton: translate('dashboard.view.order.details'),
+                      onCtaButtonClick: onViewOrder,
+                    }
+                  : {}),
               }),
             )}
           />
@@ -82,7 +135,7 @@ const QuoteDetailsPage = ({
               </tr>
             </thead>
             <tbody>
-              {quote.items.map(({ id, images, name, sku, quantity, price, currency }) => (
+              {quote.items.map(({ id, images, name, sku, quantity, price, discountedPrice, currency }) => (
                 <tr key={id} className="p-4 text-14 text-gray-600 shadow-[0px_-1px_0px_0px_#E4E4E7_inset]">
                   <td className="whitespace-pre p-4 text-left">
                     <div className="flex items-center gap-3">
@@ -94,9 +147,24 @@ const QuoteDetailsPage = ({
                   </td>
                   <td className="whitespace-pre p-4 text-left">{sku}</td>
                   <td className="p-4 text-right">{quantity}</td>
-                  <td className="p-4 text-right">{formatCurrency(price ?? 0, currency ?? 'USD')}</td>
+                  <td className="p-4 text-right">
+                    {discountedPrice ? (
+                      <>
+                        <span className="mr-2 text-12 text-gray-500 line-through">
+                          {formatCurrency(price ?? 0, currency ?? 'USD')}
+                        </span>
+                        <span className="font-semibold text-gray-800">
+                          {formatCurrency(discountedPrice ?? 0, currency ?? 'USD')}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <span>{formatCurrency(price ?? 0, currency ?? 'USD')}</span>
+                      </>
+                    )}
+                  </td>
                   <td className="p-4 text-right lg:table-cell">
-                    {formatCurrency((price ?? 0) * (quantity ?? 1), currency ?? 'USD')}
+                    {formatCurrency((discountedPrice || price || 0) * (quantity ?? 1), currency ?? 'USD')}
                   </td>
                 </tr>
               ))}
@@ -112,17 +180,24 @@ const QuoteDetailsPage = ({
             <span>{formatCurrency(quote.subtotal, quote.currency)}</span>
           </div>
 
-          {quote.shippingCosts && (
+          {quote.shippingCosts && quote.shippingCosts > 0 && (
             <div className="flex items-center justify-between text-14 text-gray-600">
               <span>{translate('common.shipping')}</span>
               <span>{formatCurrency(quote.shippingCosts, quote.currency)}</span>
             </div>
           )}
 
-          {quote.taxCosts && (
+          {quote.taxCosts && quote.taxCosts > 0 && (
             <div className="flex items-center justify-between text-14 text-gray-600">
               <span>{translate('common.tax')}</span>
               <span>{formatCurrency(quote.taxCosts, quote.currency)}</span>
+            </div>
+          )}
+
+          {quote.discount && quote.discount > 0 && (
+            <div className="flex items-center justify-between text-14 text-gray-600">
+              <span>{translate('common.tax')}</span>
+              <span>-{formatCurrency(quote.discount, quote.currency)}</span>
             </div>
           )}
 

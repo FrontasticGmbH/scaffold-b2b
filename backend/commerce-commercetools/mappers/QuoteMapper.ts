@@ -6,12 +6,12 @@ import {
   StagedQuote as CommercetoolsStagedQuote,
   StagedQuoteState as CommercetoolsStagedQuoteState,
 } from '@commercetools/platform-sdk';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { CartMapper } from './CartMapper';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import { QuoteRequest, QuoteRequestState } from '@Types/quote/QuoteRequest';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { Quote, QuoteState } from '@Types/quote/Quote';
+import { CartMapper } from './CartMapper';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
+import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 
 export class QuoteMapper {
   static commercetoolsQuoteToQuote(commercetoolsQuote: CommercetoolsQuote, locale: Locale): Quote {
@@ -29,14 +29,21 @@ export class QuoteMapper {
       quoteState: this.commercetoolsQuoteStateToQuoteState(commercetoolsQuote.quoteState),
       createdAt: new Date(commercetoolsQuote.createdAt),
       lastModifiedAt: new Date(commercetoolsQuote.lastModifiedAt),
+      account: {
+        accountId: commercetoolsQuote.customer.id,
+        firstName: commercetoolsQuote.customer.obj?.firstName,
+        lastName: commercetoolsQuote.customer.obj?.lastName,
+      },
       lineItems: CartMapper.commercetoolsLineItemsToLineItems(commercetoolsQuote.lineItems, locale),
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsQuote.totalPrice),
       tax: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuote.taxedPrice, locale),
+      taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuote.taxedPrice, locale),
       buyerComment: commercetoolsQuote.buyerComment,
       sellerComment: commercetoolsQuote.sellerComment,
       expirationDate: new Date(commercetoolsQuote.validTo),
       quoteRequest: quoteRequest,
       quoteVersion: commercetoolsQuote.version,
+      orderNumber: commercetoolsQuote.purchaseOrderNumber,
     };
   }
 
@@ -60,6 +67,7 @@ export class QuoteMapper {
       lineItems: CartMapper.commercetoolsLineItemsToLineItems(commercetoolsQuoteRequest.lineItems, locale),
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsQuoteRequest.totalPrice),
       tax: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuoteRequest.taxedPrice, locale),
+      taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuoteRequest.taxedPrice, locale),
       shippingAddress: AccountMapper.commercetoolsAddressToAddress(commercetoolsQuoteRequest.shippingAddress),
       billingAddress: AccountMapper.commercetoolsAddressToAddress(commercetoolsQuoteRequest.billingAddress),
       quoteRequestState: this.commercetoolsQuoteStateToQuoteDraftState(commercetoolsQuoteRequest.quoteRequestState),
@@ -79,7 +87,6 @@ export class QuoteMapper {
       commercetoolsStagedQuote.stagedQuoteState,
     );
     quoteRequest.lastModifiedAt = new Date(commercetoolsStagedQuote.lastModifiedAt);
-    quoteRequest.expirationDate = new Date(commercetoolsStagedQuote.validTo);
     quoteRequest.quotationCart = {
       cartId: commercetoolsStagedQuote.quotationCart?.id,
     };
@@ -90,8 +97,11 @@ export class QuoteMapper {
   ): QuoteRequestState {
     let quoteDraftState: QuoteRequestState;
 
+    // As we are merging quote request and staged quotes, we'll map the quote stage state "Sent" to "Accepted"
+    // and "InProgress" to "Submitted"
     switch (true) {
       case commercetoolsQuoteState === 'Accepted':
+      case commercetoolsQuoteState === 'Sent':
         quoteDraftState = QuoteRequestState.Accepted;
         break;
       case commercetoolsQuoteState === 'Cancelled':
@@ -108,10 +118,6 @@ export class QuoteMapper {
         break;
       case commercetoolsQuoteState === 'InProgress':
         quoteDraftState = QuoteRequestState.InProgress;
-        break;
-      case commercetoolsQuoteState === 'Sent':
-        quoteDraftState = QuoteRequestState.Sent;
-        break;
       default:
         break;
     }

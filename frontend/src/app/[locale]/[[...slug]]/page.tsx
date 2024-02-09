@@ -10,15 +10,20 @@ import Toaster from '@/components/atoms/toaster';
 import { authenticate } from '@/utils/server/authenticate';
 import { Providers } from '@/providers';
 import getServerOptions from '@/utils/server/getServerOptions';
+import fetchPageData from '@/utils/server/fetch-page-data';
+
+/* Start of Route Segments */
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+/* End of Route Segments */
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { locale: nextLocale, slug } = params;
 
   sdk.defaultConfigure(nextLocale);
 
-  const response = await sdk.page.getPage({ path: `/${slug?.join('/') ?? ''}` });
+  const response = await fetchPageData(slug, searchParams);
 
   if (response.isError) return {};
 
@@ -40,13 +45,11 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const { loggedIn, attemptingToAuth, auth } = await authenticate(slug);
 
-  if (!loggedIn && !attemptingToAuth) return redirect('/login');
+  if (!loggedIn && !attemptingToAuth) return redirect(`/${locale}/login/`);
 
-  const page = await sdk.page.getPage({
-    path: `/${slug?.join('/') ?? ''}`,
-    query: searchParams as Record<string, string>,
-    ...getServerOptions(),
-  });
+  if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
+
+  const page = await fetchPageData(slug, searchParams);
 
   if (page.isError) return <></>;
 
@@ -85,7 +88,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         businessUnits: businessUnits.isError ? [] : businessUnits.data,
       }}
     >
-      <Renderer data={page.data} tastics={tastics} searchParams={searchParams} />
+      <Renderer data={page.data} tastics={tastics} params={params} searchParams={searchParams} />
       <Toaster />
     </Providers>
   );

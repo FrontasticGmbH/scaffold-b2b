@@ -10,8 +10,10 @@ export type CheckoutCTAProps = {
   link: string;
   disabled?: boolean;
   text: string;
+  isQuotationCart?: boolean;
   onCheckout?: () => void;
   onRequestQuote: (args: { buyerComment?: string }) => Promise<void>;
+  onClear?: () => Promise<void>;
 };
 
 export interface ClassNames {
@@ -36,6 +38,7 @@ export type OrderSummaryProps = {
   dataReference?: 'order' | 'cart';
   button?: ReactElement;
   transaction?: Transaction;
+  isQuotationCart?: boolean;
 };
 
 export type SummaryAccordionProps = {

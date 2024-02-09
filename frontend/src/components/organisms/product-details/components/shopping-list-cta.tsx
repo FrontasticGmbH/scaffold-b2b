@@ -5,7 +5,7 @@ import useDisclosure from '@/hooks/useDisclosure';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { ShoppingListCTAProps, Wishlist } from '../types';
 
-const ShoppingListCTA = ({ getWishlists, addToWishlists }: ShoppingListCTAProps) => {
+const ShoppingListCTA = ({ getWishlists, addToWishlists, addToNewWishlist }: ShoppingListCTAProps) => {
   const { translate } = useTranslation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,10 +50,10 @@ const ShoppingListCTA = ({ getWishlists, addToWishlists }: ShoppingListCTAProps)
       <Typography onClick={onOpen} className="cursor-pointer leading-[16px] text-gray-700" fontSize={14}>
         {`+ ${translate('product.add.to.list')}`}
       </Typography>
-
       <WishlistModal
         lists={lists}
         isOpen={isOpen}
+        onAddToNewList={addToNewWishlist}
         onSubmit={handleSubmit}
         onClose={onClose}
         handleChange={handleChange}

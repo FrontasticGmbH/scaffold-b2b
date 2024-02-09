@@ -33,8 +33,8 @@ const SettingsTastic = () => {
     isAdmin,
     onUpdateAccount: async ({ businessUnit, role, ...accountPayload }) => {
       await updateAccount(accountPayload);
-      await removeAssociate({ id: account?.accountId, businessUnit: businessUnit ?? '' });
-      await addAssociate({ email: account?.email, role, businessUnit: businessUnit ?? '' });
+      await removeAssociate({ id: account?.accountId, businessUnitKey: businessUnit ?? '' });
+      await addAssociate({ email: account?.email, role, businessUnitKey: businessUnit ?? '' });
     },
     onChangePassword: async (oldPassword, newPassword) => {
       await changePassword(oldPassword, newPassword);

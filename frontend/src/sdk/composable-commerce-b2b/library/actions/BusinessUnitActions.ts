@@ -20,6 +20,7 @@ import {
   AddBusinessUnitAddressQuery,
   UpdateBusinessUnitAddressQuery,
   RemoveBusinessUnitAddressQuery,
+  SetBusinessUnitAndStoreKeysQuery,
 } from '../../types/queries/BusinessUnitQueries';
 import {
   GetBusinessUnitAction,
@@ -35,6 +36,7 @@ import {
   AddBusinessUnitAddressAction,
   UpdateBusinessUnitAddressAction,
   RemoveBusinessUnitAddressAction,
+  SetBusinessUnitAndStoreKeysAction,
 } from '../../types/actions/BusinessUnitActions';
 import { ComposableCommerceEventsB2B } from '../../types/events/ComposableCommerceEventsB2B';
 import { AssociateRole, BusinessUnit } from '@shared/types/business-unit';
@@ -54,6 +56,7 @@ export type BusinessUnitActions = {
   addAddress: AddBusinessUnitAddressAction;
   updateAddress: UpdateBusinessUnitAddressAction;
   removeAddress: RemoveBusinessUnitAddressAction;
+  setBusinessUnitAndStoreKeys: SetBusinessUnitAndStoreKeysAction;
 };
 
 export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): BusinessUnitActions => {
@@ -224,6 +227,19 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<BusinessUnit>({
         actionName: 'business-unit/removeBusinessUnitAddress',
         payload,
+        query,
+        serverOptions: options?.serverOptions,
+      });
+      return response;
+    },
+    setBusinessUnitAndStoreKeys: async (
+      query: SetBusinessUnitAndStoreKeysQuery,
+      options?: {
+        serverOptions?: ServerOptions;
+      },
+    ) => {
+      const response = await sdk.callAction<void>({
+        actionName: 'business-unit/setBusinessUnitAndStoreKeys',
         query,
         serverOptions: options?.serverOptions,
       });

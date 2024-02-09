@@ -6,12 +6,12 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/customer';
 import { CartResourceIdentifier } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/cart';
 import { Cart } from '@Types/cart/Cart';
+import { AccountToken, Address } from '@Types/account';
+import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { Guid } from '@Commerce-commercetools/utils/Guid';
 import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
-import { AccountToken, Address } from '@Types/account';
-import { BaseAddress } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { AccountEmailDuplicatedError } from '@Commerce-commercetools/errors/AccountEmailDuplicatedError';

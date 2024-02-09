@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import { Option } from '@/components/atoms/select/types';
 import usePath from '@/hooks/usePath';
 import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
@@ -13,7 +14,7 @@ const initialMarketState = {
 export const ShipAndLanguageContext = createContext(initialMarketState);
 
 const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
-  const router = useRouter();
+  const router = useCustomRouter();
   const { path } = usePath();
 
   const locations = [
@@ -44,7 +45,7 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
   const selectedLanguage = selectedLocation?.languages.find((language) => language.value === parameters.locale);
 
   const onLanguageSelect = (language: string) => {
-    router.push(`/${language}${path}`);
+    router.push(path, { locale: language });
   };
 
   const onLocationSelect = (location: string) => {

@@ -9,6 +9,7 @@ export const authenticate = async (slug: Params['slug']) => {
   const response = await login();
 
   const loggedIn = !response.isError && response.data.loggedIn;
+
   const attemptingToAuth = slug && authWhiteList.includes(slug[0]);
 
   return { loggedIn, attemptingToAuth, auth: response };

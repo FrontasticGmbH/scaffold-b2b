@@ -14,7 +14,6 @@ export interface SortAttributes {
 export interface ProductQuery extends PaginatedQuery {
   categories?: string[];
   productIds?: string[];
-  productType?: string;
   skus?: string[];
   query?: string;
   filters?: Filter[];
@@ -23,4 +22,5 @@ export interface ProductQuery extends PaginatedQuery {
   storeKey?: string;
   distributionChannelId?: string;
   supplyChannelId?: string;
+  productSelectionIds?: string[];
 }

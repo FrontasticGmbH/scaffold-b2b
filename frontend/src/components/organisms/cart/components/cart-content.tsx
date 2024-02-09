@@ -4,7 +4,15 @@ import CartItemsList from './cart-items-list';
 import EmptyCart from './empty-cart';
 import { CartContentProps } from '../types';
 
-const CartContent = ({ className, lineItems, onUpdateQuantity, onRemove, onAdd }: CartContentProps) => {
+const CartContent = ({
+  className,
+  lineItems,
+  onUpdateQuantity,
+  onRemove,
+  onAdd,
+  onAddToNewWishlist,
+  isQuotationCart,
+}: CartContentProps) => {
   const { translate } = useTranslation();
 
   const cartHasProducts = lineItems?.length ?? 0;
@@ -15,13 +23,20 @@ const CartContent = ({ className, lineItems, onUpdateQuantity, onRemove, onAdd }
         <>
           <div className="flex items-center gap-1">
             <Typography fontSize={16} className="text-gray-700 md:text-18 lg:text-20">
-              {translate('cart.cart')}
+              {translate(isQuotationCart ? 'cart.quotation.cart' : 'cart.cart')}
             </Typography>
             <Typography fontSize={16} className="text-neutral-900 md:text-18 lg:text-20">{`(${
               lineItems?.length
             } ${translate('cart.items')})`}</Typography>
           </div>
-          <CartItemsList lineItems={lineItems} onAdd={onAdd} onUpdateQuantity={onUpdateQuantity} onRemove={onRemove} />
+          <CartItemsList
+            lineItems={lineItems}
+            onAdd={onAdd}
+            onUpdateQuantity={onUpdateQuantity}
+            onRemove={onRemove}
+            onAddToNewWishlist={onAddToNewWishlist}
+            isQuotationCart={isQuotationCart}
+          />
         </>
       ) : (
         <EmptyCart />

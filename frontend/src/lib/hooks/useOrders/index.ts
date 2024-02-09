@@ -5,11 +5,11 @@ import { Result } from '@shared/types/quote/Result';
 import { Order } from '@shared/types/cart/Order';
 import { Options } from './types';
 
-const useOrders = ({ cursor, limit, states, ids, createdFrom, createdTo }: Options, businessUnitKey?: string) => {
+const useOrders = ({ cursor, limit, states, ids, businessUnitKey, createdFrom, createdTo }: Options) => {
   const { mutate: globalMutate } = useSWRConfig();
 
   const ordersResponse = useSWR(
-    ['/action/cart/queryOrders', limit, cursor, ids, states, createdFrom, createdTo],
+    ['/action/cart/queryOrders', limit, cursor, ids, states, createdFrom, createdTo, businessUnitKey],
     () =>
       sdk.composableCommerce.cart.queryOrders({
         ...(limit ? { limit } : {}),
@@ -18,6 +18,7 @@ const useOrders = ({ cursor, limit, states, ids, createdFrom, createdTo }: Optio
         ...(states ? { orderStates: states } : {}),
         ...(createdFrom ? { createdFrom } : {}),
         ...(createdTo ? { createdTo } : {}),
+        ...(businessUnitKey ? { businessUnitKey } : {}),
       }),
     { revalidateIfStale: true },
   );

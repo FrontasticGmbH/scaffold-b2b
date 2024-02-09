@@ -13,6 +13,7 @@ import { Variant } from '@shared/types/product';
 import { getLocalizationInfo } from '@/project.config';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
+import { Wishlist as SharedWishlist } from '@shared/types/wishlist';
 import { ProductDetailsMapperProps } from '../types';
 
 const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
@@ -22,9 +23,12 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
   const { selectedLocation } = useShipAndLanguage();
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { purchaseLists: wishlists, addToWishlists: CTAddToWishlists } = usePurchaseLists(selectedStore?.key);
+  const {
+    purchaseLists: wishlists,
+    createPurchaseList,
+    addToWishlists: CTAddToWishlists,
+  } = usePurchaseLists(selectedStore?.key);
   const { addItem, shippingMethods } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
-
   const addToCart = useCallback(
     async (count: number) => {
       await addItem([{ sku: product.variants[currentVariantIndex].sku ?? '', count }]);
@@ -34,7 +38,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
 
   const getWishlists = useCallback(async (): Promise<Wishlist[] | undefined> => {
     if (selectedStore?.key) {
-      const shoppingLists = wishlists?.map((wishlist) => ({
+      const shoppingLists = wishlists?.items.map((wishlist) => ({
         id: wishlist.wishlistId,
         label: wishlist.name,
         productIsInWishlist: !!wishlist.lineItems?.find((item) => item.productId === product.productId),
@@ -74,11 +78,11 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
   );
 
   const addToWishlists = useCallback(
-    async (wishlistIds: string[]) => {
+    async (wishlistIds: string[], count?: number) => {
       return await CTAddToWishlists({
         wishlistIds,
         sku: product.variants[currentVariantIndex].sku ?? '',
-        count: 1,
+        count: count ?? 1,
       }).then((res) => {
         return res.data?.map((wishlist) => ({
           label: wishlist.name,
@@ -88,7 +92,13 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
     },
     [CTAddToWishlists, currentVariantIndex, product.variants],
   );
-
+  const addToNewWishlist = useCallback(
+    async (wishlist: Pick<SharedWishlist, 'name' | 'description' | 'store'>, count?: number) => {
+      const result = await createPurchaseList(wishlist);
+      addToWishlists([result?.wishlistId ?? ''], count);
+    },
+    [addToWishlists, createPurchaseList],
+  );
   const mapColorAttributes = useCallback((variant: Variant): Attribute => {
     return {
       label: variant.attributes?.color.label,
@@ -141,6 +151,7 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
       getWishlists,
       addToWishlists,
       onChangeVariant,
+      addToNewWishlist,
     };
   }, [
     product.variants,

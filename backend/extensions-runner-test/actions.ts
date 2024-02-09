@@ -1,5 +1,5 @@
-import API from './api-source';
 import { Request, Response } from '@frontastic/extension-types/src/ts';
+import API from './api-source';
 
 type ActionHook = (request: Request) => Promise<Response>;
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import Checkout from '@/components/organisms/checkout';
 import countries from '@/static/countries.json';
 import { resolveReference } from '@/utils/lib/resolve-reference';
@@ -19,7 +19,7 @@ import { TasticProps } from '../types';
 import usePaymentMethods from './hooks/usePaymentMethods';
 
 const CheckoutTastic = ({ data }: TasticProps<Props>) => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const { account } = useAccount();
 
@@ -78,7 +78,7 @@ const CheckoutTastic = ({ data }: TasticProps<Props>) => {
       onAddAddress={async (address) => {
         if (!selectedBusinessUnit?.key) return false;
 
-        const response = await addAddress({ ...mapCoCoAddress(address), businessUnit: selectedBusinessUnit?.key });
+        const response = await addAddress({ ...mapCoCoAddress(address), businessUnitKey: selectedBusinessUnit?.key });
         return !!response.businessUnitId;
       }}
       onApplyDiscount={async (code) => {

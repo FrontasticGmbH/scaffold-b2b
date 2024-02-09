@@ -13,31 +13,31 @@ const Template: StoryFn<typeof Table> = () => (
     <Table.Container>
       <Table.Head>
         <Table.Row>
-          <Table.Cell className="w-1/5">LABEL</Table.Cell>
-          <Table.Cell className="w-1/5">LABEL</Table.Cell>
-          <Table.Cell className="w-1/5">LABEL</Table.Cell>
-          <Table.Cell className="w-1/5">LABEL</Table.Cell>
-          <Table.Cell className="text-right md:w-auto">LABEL</Table.Cell>
+          <Table.Cell>LABEL</Table.Cell>
+          <Table.Cell>LABEL</Table.Cell>
+          <Table.Cell>LABEL</Table.Cell>
+          <Table.Cell>LABEL</Table.Cell>
+          <Table.Cell className="text-right">LABEL</Table.Cell>
           <Table.Cell isButtonsHead />
         </Table.Row>
       </Table.Head>
       <Table.Body>
         <Table.Row>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="md:w-auto">{444444}</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell className="text-right">{444444}</Table.Cell>
           <Table.Cell isButtonsCell>
             <Button variant="secondary">view</Button>
           </Table.Cell>
         </Table.Row>
         <Table.Row>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="w-1/5">TEXT</Table.Cell>
-          <Table.Cell className="md:w-auto">{444444}</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell>TEXT</Table.Cell>
+          <Table.Cell className="text-right">{444444}</Table.Cell>
           <Table.Cell isButtonsCell>
             <Button variant="secondary">view</Button>
           </Table.Cell>

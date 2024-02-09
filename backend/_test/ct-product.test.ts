@@ -1,8 +1,8 @@
-import { getProduct, queryCategories } from '../commerce-commercetools/actionControllers/ProductController';
 import { Request } from '@frontastic/extension-types';
+import { getProduct, queryCategories } from '../commerce-commercetools/actionControllers/ProductController';
 import { Product } from '../../types/product';
-import { dummyAccount, dummyActionContext, frontasticSession } from './data-provider';
 import { ProductPaginatedResult } from '../../types/result';
+import { dummyAccount, dummyActionContext, frontasticSession } from './data-provider';
 
 jest.setTimeout(10000);
 

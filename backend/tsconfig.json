@@ -1,59 +1,37 @@
 {
-    "compilerOptions": {
-        "module": "esnext",
-        "target": "es2019",
-        "lib": [
-            "es2019"
-        ],
-        "baseUrl": "./",
-        "paths": {
-            "@Types/*": ["../types/*"],
-            "@Commerce-commercetools": [
-                "./commerce-commercetools"
-            ],
-            "@Commerce-commercetools/*": [
-                "./commerce-commercetools/*"
-            ],
-            "@Content-contentful": [
-                "./content-contentful"
-            ],
-            "@Content-contentful/*": [
-                "./content-contentful/*"
-            ]
-        },
-        "sourceMap": true,
-        "allowJs": true,
-        "moduleResolution": "node",
-        "outDir": "./",
-        "forceConsistentCasingInFileNames": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "noImplicitAny": true,
-        "strictNullChecks": false,
-        "suppressImplicitAnyIndexErrors": true,
-        "removeComments": true,
-        "skipLibCheck": true,
-        "typeRoots": [
-            "node_modules/@types",
-            "node_modules/@commercetools/platform-sdk/dist/declarations/src/index.d.ts"
-        ],
-        "types": [
-            "node",
-            "jest"
-        ],
-        "noUnusedLocals": false,
-        "resolveJsonModule": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "isolatedModules": true,
-        "noEmit": false
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es2019",
+    "lib": ["es2019"],
+    "baseUrl": "./",
+    "paths": {
+      "@Types/*": ["../types/*"],
+      "@Commerce-commercetools": ["./commerce-commercetools"],
+      "@Commerce-commercetools/*": ["./commerce-commercetools/*"],
+      "@Content-contentful": ["./content-contentful"],
+      "@Content-contentful/*": ["./content-contentful/*"]
     },
-    "include": [
-        "./*"
-    ],
-    "exclude": [
-        "node_modules/*",
-        "build",
-        "webpack"
-    ]
+    "sourceMap": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "outDir": "./",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types", "node_modules/@commercetools/platform-sdk/dist/declarations/src/index.d.ts"],
+    "types": ["node", "jest"],
+    "noUnusedLocals": false,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "isolatedModules": true,
+    "noEmit": false
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules/*", "build", "webpack"]
 }

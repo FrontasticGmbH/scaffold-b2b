@@ -21,7 +21,6 @@ const CompanyAdminPage = ({
   associates,
   businessUnits,
   onDeleteAssociate,
-  onDeleteBusinessUnit,
   onDeleteAddress,
   canAddBusinessUnit,
   onSearchAddresses,
@@ -100,7 +99,7 @@ const CompanyAdminPage = ({
                 isEmpty={!businessUnits.length}
                 entity={translate('common.business.units').toLowerCase()}
               >
-                <BusinessUnitsTable businessUnits={businessUnits} onDeleteBusinessUnit={onDeleteBusinessUnit} />
+                <BusinessUnitsTable businessUnits={businessUnits} />
               </SearchPanel>
             </Tabs.Panel>
           </Tabs.Panels>

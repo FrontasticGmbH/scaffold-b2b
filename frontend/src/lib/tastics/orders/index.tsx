@@ -6,6 +6,7 @@ import OrdersPage from '@/components/pages/dashboard/pages/orders';
 import useAccount from '@/lib/hooks/useAccount';
 import useOrders from '@/lib/hooks/useOrders';
 import { mapOrder } from '@/utils/mappers/map-order';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useRefinements from './hooks/useRefinements';
 import useStatusesOptions from './hooks/useStatusesOptions';
 
@@ -30,6 +31,8 @@ const OrdersTastic = () => {
     onCreationDateRefine,
   } = useRefinements();
 
+  const { selectedBusinessUnit } = useStoreAndBusinessUnits();
+
   const { orders } = useOrders({
     limit,
     cursor,
@@ -37,6 +40,7 @@ const OrdersTastic = () => {
     ...(debouncedSearch ? { ids: [debouncedSearch.trim()] } : {}),
     createdFrom: ISODate.from,
     createdTo: ISODate.to,
+    businessUnitKey: selectedBusinessUnit?.key,
   });
 
   const mappedOrders = orders.items?.map(mapOrder);

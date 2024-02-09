@@ -2,7 +2,14 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import CartItem from './cart-item';
 import { CartItemsListProps } from '../types';
 
-const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd }: CartItemsListProps) => {
+const CartItemsList = ({
+  lineItems,
+  onUpdateQuantity,
+  onRemove,
+  onAdd,
+  onAddToNewWishlist,
+  isQuotationCart,
+}: CartItemsListProps) => {
   const { translate } = useTranslation();
 
   const inStockItems = lineItems?.filter((item) => !!item.variant?.isOnStock) ?? [];
@@ -13,6 +20,7 @@ const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd }: CartIte
       {inStockItems?.map((lineItem) => (
         <div key={lineItem.lineItemId}>
           <CartItem
+            onAddToNewWishlist={(list) => onAddToNewWishlist(list, lineItem.variant?.sku, lineItem.count ?? 1)}
             item={lineItem}
             classNames={{ moveToWishlist: 'text-14' }}
             onUndoRemove={() => onAdd(lineItem.variant?.sku as string, lineItem.count ?? 1)}
@@ -20,6 +28,7 @@ const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd }: CartIte
               qty === 0 ? onRemove(lineItem.lineItemId as string) : onUpdateQuantity(lineItem.lineItemId as string, qty)
             }
             onRemove={() => onRemove(lineItem.lineItemId as string)}
+            isQuotationCart={isQuotationCart}
           />
         </div>
       ))}
@@ -31,6 +40,7 @@ const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd }: CartIte
             {soldOutItems.map((lineItem) => (
               <div key={lineItem.lineItemId}>
                 <CartItem
+                  onAddToNewWishlist={(list) => onAddToNewWishlist(list, lineItem.variant?.sku)}
                   item={lineItem}
                   classNames={{ moveToWishlist: 'text-14' }}
                   onUpdateQuantity={(qty) =>

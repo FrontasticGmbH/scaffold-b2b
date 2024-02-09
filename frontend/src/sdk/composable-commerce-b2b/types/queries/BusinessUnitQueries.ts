@@ -1,5 +1,5 @@
 type GetBusinessUnitQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type GetBusinessUnitsQuery = {
@@ -7,38 +7,40 @@ type GetBusinessUnitsQuery = {
 };
 
 type UpdateBusinessUnitQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type AddAssociateQuery = {
-  /*
-   * Business unit key
-   **/
-  key: string;
+  businessUnitKey: string;
 };
 
 type UpdateAssociateQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type RemoveAssociateQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type GetBusinessUnitOrdersQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type AddBusinessUnitAddressQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type UpdateBusinessUnitAddressQuery = {
-  key: string;
+  businessUnitKey: string;
 };
 
 type RemoveBusinessUnitAddressQuery = {
-  key: string;
+  businessUnitKey: string;
+};
+
+type SetBusinessUnitAndStoreKeysQuery = {
+  businessUnitKey: string;
+  storeKey: string;
 };
 
 export {
@@ -52,4 +54,5 @@ export {
   type AddBusinessUnitAddressQuery,
   type UpdateBusinessUnitAddressQuery,
   type RemoveBusinessUnitAddressQuery,
+  type SetBusinessUnitAndStoreKeysQuery,
 };

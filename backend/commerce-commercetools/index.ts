@@ -5,21 +5,21 @@ import {
   ExtensionRegistry,
   Request,
 } from '@frontastic/extension-types';
-import { getPath } from './utils/Request';
-import { ProductRouter } from './utils/ProductRouter';
 import { Product } from '@Types/product/Product';
-import { SearchRouter } from './utils/SearchRouter';
-import { CategoryRouter } from './utils/CategoryRouter';
-import dataSources from './dataSources';
-import { actions } from './actionControllers';
-import WishlistRouter from '@Commerce-commercetools/utils/WishlistRouter';
-import QuoteRouter from '@Commerce-commercetools/utils/QuoteRouter';
-import CartRouter from '@Commerce-commercetools/utils/CartRouter';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { Quote } from '@Types/quote/Quote';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { Order } from '@Types/cart/Order';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
+import { actions } from './actionControllers';
+import dataSources from './dataSources';
+import { CategoryRouter } from './utils/CategoryRouter';
+import { SearchRouter } from './utils/SearchRouter';
+import { ProductRouter } from './utils/ProductRouter';
+import { getPath } from './utils/Request';
+import CartRouter from '@Commerce-commercetools/utils/CartRouter';
+import QuoteRouter from '@Commerce-commercetools/utils/QuoteRouter';
+import WishlistRouter from '@Commerce-commercetools/utils/WishlistRouter';
 
 export default {
   'dynamic-page-handler': async (
@@ -213,7 +213,7 @@ export default {
       });
     }
 
-    // Identify Quotes and Preview Quotes
+    // Identify Quotes Requests and Preview Quotes
     if (QuoteRouter.identifyQuoteRequestsFrom(request)) {
       return QuoteRouter.loadQuoteRequestsFor(request, context.frontasticContext).then(
         (result: PaginatedResult<QuoteRequest>) => {

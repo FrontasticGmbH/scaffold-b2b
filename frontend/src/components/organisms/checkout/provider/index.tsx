@@ -1,12 +1,13 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import { CheckoutProviderShape } from './types';
 import { CheckoutProps } from '../types';
 
 const CheckoutContext = React.createContext({} as CheckoutProviderShape);
 
 const CheckoutProvider = ({ children }: React.PropsWithChildren<Partial<CheckoutProps>>) => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const [tempData, setTempData] = useState<Record<string, string>>({});
 

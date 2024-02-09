@@ -1,5 +1,5 @@
 import { DataSourceConfiguration, Request } from '@frontastic/extension-types';
-import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
+import { SortAttributes, SortOrder, ProductQuery } from '@Types/query/ProductQuery';
 import { Filter, FilterTypes } from '@Types/query/Filter';
 import { RangeFilter } from '@Types/query/RangeFilter';
 import { TermFilter } from '@Types/query/TermFilter';
@@ -7,7 +7,6 @@ import { FilterFieldTypes } from '@Types/product/FilterField';
 import { Facet } from '@Types/query/Facet';
 import { TermFacet } from '@Types/query/TermFacet';
 import { RangeFacet } from '@Types/query/RangeFacet';
-import { ProductQuery } from '@Types/query/ProductQuery';
 
 export class ProductQueryFactory {
   static queryFromParams: (request: Request, config?: DataSourceConfiguration) => ProductQuery = (
@@ -191,6 +190,16 @@ export class ProductQueryFactory {
      */
     productQuery.storeKey = queryParams?.storeKey || undefined;
 
+    /**
+     * Map distributionChannelId
+     */
+    productQuery.distributionChannelId = queryParams?.distributionChannelId || undefined;
+
+    /**
+     * Map supplyChannelId
+     */
+    productQuery.supplyChannelId = queryParams?.supplyChannelId || undefined;
+
     return productQuery;
   };
 
@@ -206,12 +215,14 @@ export class ProductQueryFactory {
       }
 
       switch (true) {
-        case facetData.min !== undefined && facetData.max !== undefined:
+        case facetData.min !== undefined || facetData.max !== undefined:
+          const min = parseInt(facetData.min);
+          const max = parseInt(facetData.max);
           facets.push({
             type: FilterTypes.RANGE,
             identifier: key,
-            min: +facetData.min,
-            max: +facetData.max,
+            min: isNaN(min) ? 0 : min,
+            max: isNaN(max) ? Number.MAX_SAFE_INTEGER : max,
           } as RangeFacet);
           break;
         case facetData.terms !== undefined:

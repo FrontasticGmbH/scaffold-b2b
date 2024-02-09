@@ -4,6 +4,7 @@ import { PaginatedResult } from "@shared/types/result";
 import {
 	UpdateCartPayload,
 	ReassignCartPayload,
+    ReplicateOrderPayload,
 	AddCartItemPayload,
 	UpdateCartItemPayload,
 	SplitCartItemPayload,
@@ -39,6 +40,12 @@ import {
 	QueryOrdersQuery,
 } from "../queries/CartQueries";
 
+type ClearCartAction = (
+	options?: {
+		serverOptions?: ServerOptions;
+	}
+) => Promise<SDKResponse<void>>;
+
 type GetCartAction = (
 	query?: GetCartQuery,
 	options?: {
@@ -63,6 +70,7 @@ type ReassignCartAction = (
 ) => Promise<SDKResponse<Cart>>;
 
 type ReplicateOrderAction = (
+    payload: ReplicateOrderPayload,
 	query?: ReplicateOrderQuery,
 	options?: {
 		serverOptions?: ServerOptions;
@@ -187,6 +195,7 @@ type QueryOrdersAction = (
 ) => Promise<SDKResponse<PaginatedResult<Order>>>;
 
 export {
+    type ClearCartAction,
 	type GetCartAction,
 	type UpdateCartAction,
 	type ReassignCartAction,

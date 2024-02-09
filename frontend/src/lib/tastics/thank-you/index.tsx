@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import { Order } from '@shared/types/cart';
 import { DataSource } from '@/types/lib/datasources';
 import ThankYou from '@/components/organisms/thank-you';
@@ -9,12 +9,12 @@ import useAccount from '@/lib/hooks/useAccount';
 import { mapAddress } from '@/utils/mappers/map-address';
 import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { Address } from '@shared/types/account';
-import { calculateTransaction } from '@/lib/hooks/useCart/utils';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
+import { calculateTransaction } from '@/lib/utils/calculate-transaction';
 import { TasticProps } from '../types';
 
 const ThankYouTastic = ({ data }: TasticProps<DataSource<{ order: Order }>>) => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const { account } = useAccount();
 

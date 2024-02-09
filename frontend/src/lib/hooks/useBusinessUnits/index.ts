@@ -33,13 +33,13 @@ const useBusinessUnits = () => {
   );
 
   const updateBusinessUnit = useCallback(
-    async (payload: { name: string; contactEmail: string; key: string }) => {
+    async (payload: { name: string; contactEmail: string; businessUnitKey: string }) => {
       const response = await sdk.composableCommerce.businessUnit.updateBusinessUnit(
         {
           name: payload.name,
           contactEmail: payload.contactEmail,
         },
-        { key: payload.key },
+        { businessUnitKey: payload.businessUnitKey },
       );
 
       mutateBusinessUnits();
@@ -50,10 +50,10 @@ const useBusinessUnits = () => {
   );
 
   const addAssociate = useCallback(
-    async ({ email, role, businessUnit }: Partial<Associate> & { businessUnit: string }) => {
+    async ({ email, role, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
       const response = await sdk.composableCommerce.businessUnit.addAssociate(
         { email: email as string, roleKeys: [role as string] },
-        { key: businessUnit },
+        { businessUnitKey },
       );
 
       mutateBusinessUnits();
@@ -64,10 +64,10 @@ const useBusinessUnits = () => {
   );
 
   const updateAssociate = useCallback(
-    async ({ id, role, businessUnit }: Partial<Associate> & { businessUnit: string }) => {
+    async ({ id, role, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
       const response = await sdk.composableCommerce.businessUnit.updateAssociate(
         { accountId: id as string, roleKeys: [role as string] },
-        { key: businessUnit },
+        { businessUnitKey },
       );
 
       mutateBusinessUnits();
@@ -78,10 +78,10 @@ const useBusinessUnits = () => {
   );
 
   const removeAssociate = useCallback(
-    async ({ id, businessUnit }: Partial<Associate> & { businessUnit: string }) => {
+    async ({ id, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
       const response = await sdk.composableCommerce.businessUnit.removeAssociate(
         { accountId: id ?? '' },
-        { key: businessUnit },
+        { businessUnitKey },
       );
 
       mutateBusinessUnits();
@@ -92,8 +92,8 @@ const useBusinessUnits = () => {
   );
 
   const addAddress = useCallback(
-    async ({ businessUnit, ...address }: Address & { businessUnit: string }) => {
-      const response = await sdk.composableCommerce.businessUnit.addAddress({ address }, { key: businessUnit });
+    async ({ businessUnitKey, ...address }: Address & { businessUnitKey: string }) => {
+      const response = await sdk.composableCommerce.businessUnit.addAddress({ address }, { businessUnitKey });
 
       mutateBusinessUnits();
 
@@ -103,8 +103,8 @@ const useBusinessUnits = () => {
   );
 
   const updateAddress = useCallback(
-    async ({ businessUnit, ...address }: Address & { businessUnit: string }) => {
-      const response = await sdk.composableCommerce.businessUnit.updateAddress({ address }, { key: businessUnit });
+    async ({ businessUnitKey, ...address }: Address & { businessUnitKey: string }) => {
+      const response = await sdk.composableCommerce.businessUnit.updateAddress({ address }, { businessUnitKey });
 
       mutateBusinessUnits();
 
@@ -114,8 +114,8 @@ const useBusinessUnits = () => {
   );
 
   const removeAddress = useCallback(
-    async ({ businessUnit, addressId }: { addressId: string; businessUnit: string }) => {
-      const response = await sdk.composableCommerce.businessUnit.removeAddress({ addressId }, { key: businessUnit });
+    async ({ businessUnitKey, addressId }: { addressId: string; businessUnitKey: string }) => {
+      const response = await sdk.composableCommerce.businessUnit.removeAddress({ addressId }, { businessUnitKey });
 
       mutateBusinessUnits();
 

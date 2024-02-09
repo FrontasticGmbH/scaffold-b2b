@@ -2,6 +2,10 @@ thead td {
   @apply font-semibold text-gray-500;
 }
 
+table {
+  @apply border-separate border-spacing-0 overflow-hidden rounded-[10px];
+}
+
 table tbody td {
   @apply text-gray-600;
 }

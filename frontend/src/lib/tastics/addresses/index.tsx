@@ -28,19 +28,22 @@ const AddressesTastic = () => {
     onAddAddress: async (address) => {
       if (!selectedBusinessUnit?.key) return false;
 
-      const addressRes = await addAddress({ ...mapCoCoAddress(address), businessUnit: selectedBusinessUnit?.key });
+      const addressRes = await addAddress({ ...mapCoCoAddress(address), businessUnitKey: selectedBusinessUnit?.key });
       return !!addressRes.businessUnitId;
     },
     onUpdateAddress: async (address) => {
       if (!selectedBusinessUnit?.key) return false;
 
-      const addressRes = await updateAddress({ ...mapCoCoAddress(address), businessUnit: selectedBusinessUnit?.key });
+      const addressRes = await updateAddress({
+        ...mapCoCoAddress(address),
+        businessUnitKey: selectedBusinessUnit?.key,
+      });
       return !!addressRes.businessUnitId;
     },
     onDeleteAddress: async (addressId) => {
       if (!selectedBusinessUnit?.key) return false;
 
-      const addressRes = await removeAddress({ addressId, businessUnit: selectedBusinessUnit?.key });
+      const addressRes = await removeAddress({ addressId, businessUnitKey: selectedBusinessUnit?.key });
       return !!addressRes.businessUnitId;
     },
     countryOptions: countries.map(({ name, code, states }) => ({

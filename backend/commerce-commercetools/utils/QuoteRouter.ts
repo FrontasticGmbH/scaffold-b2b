@@ -1,14 +1,15 @@
 import { Context, Request } from '@frontastic/extension-types';
-import { getCurrency, getLocale, getPath } from './Request';
 import { Quote } from '@Types/quote/Quote';
-import { QuoteApi } from '../apis/QuoteApi';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { PaginatedResult } from '@Types/result';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
+import { Account } from '@Types/account';
+import { QuoteApi } from '../apis/QuoteApi';
+import { getCurrency, getLocale, getPath } from './Request';
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
 import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import { Account } from '@Types/account';
+import getQuoteApi from '@Commerce-commercetools/utils/getQuoteApi';
 
 const quoteRegex = /\/quote\/([^\/]+)/;
 const quotePreviewRegex = /\/preview\/.+\/quote\/([^\/]+)/;
@@ -53,7 +54,7 @@ export default class QuoteRouter {
   }
 
   static loadQuoteFor = async (request: Request, frontasticContext: Context): Promise<Quote> => {
-    const quoteApi = new QuoteApi(frontasticContext, getLocale(request), getCurrency(request));
+    const quoteApi = getQuoteApi(request, frontasticContext);
 
     let urlMatches = getPath(request)?.match(quoteRegex);
 
@@ -71,7 +72,7 @@ export default class QuoteRouter {
   };
 
   static loadQuoteRequestFor = async (request: Request, frontasticContext: Context): Promise<QuoteRequest> => {
-    const quoteApi = new QuoteApi(frontasticContext, getLocale(request), getCurrency(request));
+    const quoteApi = getQuoteApi(request, frontasticContext);
 
     let urlMatches = getPath(request)?.match(quoteRequestRegex);
 
@@ -92,8 +93,7 @@ export default class QuoteRouter {
     request: Request,
     frontasticContext: Context,
   ): Promise<PaginatedResult<QuoteRequest>> => {
-    const quoteApi = new QuoteApi(frontasticContext, getLocale(request), getCurrency(request));
-
+    const quoteApi = getQuoteApi(request, frontasticContext);
     const urlMatches = getPath(request)?.match(quotesRegex) ?? getPath(request)?.match(quotesPreviewRegex) ?? null;
 
     if (urlMatches) {

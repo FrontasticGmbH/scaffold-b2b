@@ -13,6 +13,13 @@ export enum CartOrigin {
   Quote = 'Quote',
 }
 
+export enum CartState {
+  Active = 'Active',
+  Frozen = 'Frozen',
+  Merged = 'Merged',
+  Ordered = 'Ordered',
+}
+
 export interface Cart {
   cartId: string;
   cartVersion?: string;
@@ -27,7 +34,9 @@ export interface Cart {
   payments?: Payment[];
   discountCodes?: Discount[];
   taxed?: Tax;
+  discountedAmount?: Money;
   origin?: CartOrigin;
+  cartState?: CartState;
   accountId?: string;
   businessUnitKey?: string;
   storeKey?: string;

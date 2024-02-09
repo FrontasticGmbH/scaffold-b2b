@@ -1,7 +1,7 @@
-import { login, register, requestReset } from '../commerce-commercetools/actionControllers/AccountController';
 import { Request } from '@frontastic/extension-types';
-import { createFakeUser, dummyAccount, dummyActionContext, generateFakeEmailAddress } from './data-provider';
+import { login, register, requestReset } from '../commerce-commercetools/actionControllers/AccountController';
 import { Account } from '../../types/account/Account';
+import { createFakeUser, dummyAccount, dummyActionContext, generateFakeEmailAddress } from './data-provider';
 
 describe.skip('commerce-commercetools:: Account Functionalities', () => {
   beforeEach(() => {

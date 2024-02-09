@@ -1,7 +1,7 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { ProductQueryFactory } from '../utils/ProductQueryFactory';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
+import { ProductQueryFactory } from '../utils/ProductQueryFactory';
 import { getCurrency, getLocale } from '../utils/Request';
 import { ProductApi } from '../apis/ProductApi';
 import handleError from '@Commerce-commercetools/utils/handleError';

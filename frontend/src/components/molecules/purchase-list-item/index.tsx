@@ -51,11 +51,11 @@ const PurchaseListItem = ({
         <RemoveButton onRemove={handleRemove} />
       </div>
 
-      <div className="relative mx-auto mt-2 h-[124px] w-[124px] md:mr-8 md:h-[140px] md:w-[140px]">
+      <div className="relative mx-auto mt-2 h-[124px] w-[124px] shrink-0 md:mr-8 md:h-[140px] md:w-[140px]">
         <Image fill src={image} alt={name} />
       </div>
 
-      <div className="md:grow">
+      <div className="overflow-x-hidden md:grow">
         <div>
           <p className="max-w-full truncate text-16 font-semibold leading-loose text-gray-700">{name}</p>
           <div className="mt-1 flex items-center gap-3">
