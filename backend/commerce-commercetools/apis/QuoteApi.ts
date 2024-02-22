@@ -60,7 +60,7 @@ export class QuoteApi extends BaseApi {
   async getQuoteRequest(quoteRequestId: string): Promise<QuoteRequest> {
     const locale = await this.getCommercetoolsLocal();
 
-    const quoteRequest = await this.associateEndpoints(this.accountId, this.businessUnitKey)
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quoteRequests()
       .withId({ ID: quoteRequestId })
       .get({
@@ -79,27 +79,6 @@ export class QuoteApi extends BaseApi {
 
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-
-    const stageQuoteWhereClause = [`quoteRequest(id="${quoteRequest.quoteRequestId}")`];
-
-    await this.requestBuilder()
-      .stagedQuotes()
-      .get({
-        queryArgs: {
-          where: stageQuoteWhereClause,
-        },
-      })
-      .execute()
-      .then((response) => {
-        if (response.body.results.length !== 0) {
-          QuoteMapper.updateQuoteRequestFromCommercetoolsStagedQuote(quoteRequest, response.body.results[0]);
-        }
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-      });
-
-    return quoteRequest;
   }
 
   async getQuote(quoteId: string): Promise<Quote> {
@@ -109,7 +88,7 @@ export class QuoteApi extends BaseApi {
       .withId({ ID: quoteId })
       .get({
         queryArgs: {
-          expand: ['customer', 'quoteRequest', 'quoteRequest.customer', 'stagedQuote'],
+          expand: ['customer', 'quoteRequest', 'quoteRequest.customer', 'stagedQuote.quotationCart'],
         },
       })
       .execute()
@@ -153,7 +132,7 @@ export class QuoteApi extends BaseApi {
       .get({
         queryArgs: {
           where: whereClause,
-          expand: ['quoteRequest', 'stagedQuote'],
+          expand: ['quoteRequest', 'stagedQuote.quotationCart'],
           limit: limit,
           offset: getOffsetFromCursor(quoteQuery.cursor),
           sort: sortAttributes,
@@ -200,22 +179,12 @@ export class QuoteApi extends BaseApi {
     }
 
     if (quoteQuery.quoteStates !== undefined && quoteQuery.quoteStates.length > 0) {
-      const quoteRequestStates = quoteQuery.quoteStates.filter((state) => {
-        return state !== QuoteRequestState.InProgress && state !== QuoteRequestState.Sent;
-      });
-
-      if (
-        quoteQuery.quoteStates.includes(QuoteRequestState.InProgress) ||
-        quoteQuery.quoteStates.includes(QuoteRequestState.Sent)
-      ) {
-        quoteRequestStates.push(QuoteRequestState.Accepted);
-      }
-      quoteRequestWhereClause.push(`quoteRequestState in ("${quoteRequestStates.join('","')}")`);
+      quoteRequestWhereClause.push(`quoteRequestState in ("${quoteQuery.quoteStates.join('","')}")`);
     }
 
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
-    const result = await this.associateEndpoints(this.accountId, this.businessUnitKey)
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quoteRequests()
       .get({
         queryArgs: {
@@ -246,51 +215,6 @@ export class QuoteApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-
-    if (result.items.length === 0) {
-      return result;
-    }
-
-    const stagedQuoteStates = quoteQuery.quoteStates.filter((state) => {
-      return (
-        state === QuoteRequestState.InProgress || state === QuoteRequestState.Sent || state === QuoteRequestState.Closed
-      );
-    });
-
-    const stageQuoteWhereClause = [
-      `quoteRequest(id in (${(result.items as QuoteRequest[])
-        .map((quoteRequest) => `"${quoteRequest.quoteRequestId}"`)
-        .join(' ,')}))`,
-    ];
-
-    if (stagedQuoteStates !== undefined && stagedQuoteStates.length > 0) {
-      stageQuoteWhereClause.push(`stagedQuoteState in ("${stagedQuoteStates.join('","')}")`);
-    }
-
-    await this.requestBuilder()
-      .stagedQuotes()
-      .get({
-        queryArgs: {
-          where: stageQuoteWhereClause,
-        },
-      })
-      .execute()
-      .then((response) => {
-        return response.body.results.map((commercetoolsStagedQuote) => {
-          const quoteToUpdate = (result.items as QuoteRequest[]).find(
-            (quoteRequest) => quoteRequest.quoteRequestId === commercetoolsStagedQuote.quoteRequest.id,
-          );
-
-          if (quoteToUpdate) {
-            QuoteMapper.updateQuoteRequestFromCommercetoolsStagedQuote(quoteToUpdate, commercetoolsStagedQuote);
-          }
-        });
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-      });
-
-    return result;
   }
 
   async acceptQuote(quoteId: string): Promise<Quote> {

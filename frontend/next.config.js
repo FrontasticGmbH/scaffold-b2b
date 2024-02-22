@@ -16,6 +16,12 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 2280, 2460, 2640, 2820, 3000],
   },
 
+  env: {
+    NEXT_PUBLIC_EXT_BUILD_ID:
+      process.env.NEXT_PUBLIC_EXT_BUILD_ID ??
+      JSON.stringify(process.env.NETLIFY ? process.env.COMMIT_REF.substring(0, 7) : 'staging'),
+  },
+
   webpack(config) {
     if (!config.externals) config.externals = [];
 

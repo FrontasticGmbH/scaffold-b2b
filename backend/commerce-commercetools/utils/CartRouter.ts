@@ -88,16 +88,34 @@ export default class CartRouter {
 
   private static async getOrder(request: Request, frontasticContext: Context, orderId: string) {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
     const cartApi = getCartApi(request, frontasticContext);
-
     const orderQuery = OrderQueryFactory.queryFromParams(request, account);
+    let result;
 
-    orderQuery.orderIds = [orderId];
+    try {
+      orderQuery.orderIds = [orderId];
+      result = await cartApi.queryOrders(orderQuery);
 
-    const result = await cartApi.queryOrders(orderQuery);
+      if (result?.items.length > 0) {
+        return result?.items[0];
+      }
+    } catch (error) {
+      // We ignore the error deliberately, so we can try the next query
+    }
 
-    return result.items[0];
+    try {
+      delete orderQuery.orderIds;
+      orderQuery.orderNumbers = [orderId];
+      result = await cartApi.queryOrders(orderQuery);
+
+      if (result?.items.length > 0) {
+        return result?.items[0];
+      }
+    } catch (error) {
+      // We are not throwing the error, because we want to return null if the order is not found
+    }
+
+    return null;
   }
 
   private static async getOrders(request: Request, frontasticContext: Context) {

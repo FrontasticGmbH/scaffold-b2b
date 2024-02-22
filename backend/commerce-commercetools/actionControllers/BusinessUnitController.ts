@@ -6,7 +6,6 @@ import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { BusinessUnitApi } from '../apis/BusinessUnitApi';
 import { getBusinessUnitKey, getCurrency, getLocale, getStoreKey } from '../utils/Request';
 import { AccountApi } from '@Commerce-commercetools/apis/AccountApi';
-
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
@@ -124,6 +123,7 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
     const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
 
     let accountAssociate = await accountApi.getAccountByEmail(addUserBody.email);
+
     if (!accountAssociate) {
       const accountData = {
         email: addUserBody.email,
@@ -134,6 +134,7 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
       const passwordResetToken = await accountApi.generatePasswordResetToken(accountAssociate.email);
       emailApi.sendAssociateVerificationAndPasswordResetEmail(accountAssociate, passwordResetToken);
     }
+
     const businessUnitKey = request.query['businessUnitKey'];
 
     const businessUnit = await businessUnitApi.addAssociate(
@@ -338,7 +339,7 @@ export const removeBusinessUnitAddress: ActionHook = async (request: Request, ac
   }
 };
 
-export const getByKey: ActionHook = async (request: Request, actionContext: ActionContext) => {
+export const getBusinessUnit: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     assertIsAuthenticated(request);
 
@@ -352,7 +353,7 @@ export const getByKey: ActionHook = async (request: Request, actionContext: Acti
 
     const businessUnitKey = request.query?.['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.getByKeyForUser(businessUnitKey, account.accountId, true);
+    const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId, true);
 
     return {
       statusCode: 200,
@@ -417,6 +418,35 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
         storeKey,
       },
     };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const getAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+
+    const businessUnitApi = new BusinessUnitApi(
+      actionContext.frontasticContext,
+      getLocale(request),
+      getCurrency(request),
+    );
+
+    const associate = await businessUnitApi.getAssociate(businessUnitKey, account.accountId);
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(associate),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+
+    return response;
   } catch (error) {
     return handleError(error, request);
   }

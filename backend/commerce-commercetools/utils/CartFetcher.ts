@@ -3,7 +3,6 @@ import { Cart } from '@Types/cart/Cart';
 import { Account } from '@Types/account';
 import { CartApi } from '../apis/CartApi';
 import { getCurrency, getLocale } from './Request';
-import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import parseQueryParams from '@Commerce-commercetools/utils/parseRequestParams';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';

@@ -58,9 +58,9 @@ export class CartMapper {
       shippingAddress: this.commercetoolsAddressToAddress(commercetoolsCart.shippingAddress),
       billingAddress: this.commercetoolsAddressToAddress(commercetoolsCart.billingAddress),
       shippingInfo: this.commercetoolsShippingInfoToShippingInfo(commercetoolsCart.shippingInfo, locale),
-      payments: this.commercetoolsPaymentInfoToPayments(commercetoolsCart.paymentInfo, locale),
+      payments: this.commercetoolsPaymentInfoToPayments(commercetoolsCart.paymentInfo),
       discountCodes: this.commercetoolsDiscountCodesInfoToDiscount(commercetoolsCart.discountCodes, locale),
-      taxed: this.commercetoolsTaxedPriceToTaxed(commercetoolsCart.taxedPrice, locale),
+      taxed: this.commercetoolsTaxedPriceToTaxed(commercetoolsCart.taxedPrice),
       discountedAmount: ProductMapper.commercetoolsMoneyToMoney(
         commercetoolsCart.discountOnTotalPrice?.discountedAmount,
       ),
@@ -96,7 +96,7 @@ export class CartMapper {
           locale,
         ),
         totalPrice: ProductMapper.commercetoolsMoneyToMoney(commercetoolsLineItem.totalPrice),
-        taxed: this.commercetoolsTaxedItemPriceToTaxed(commercetoolsLineItem.taxedPrice, locale),
+        taxed: this.commercetoolsTaxedItemPriceToTaxed(commercetoolsLineItem.taxedPrice),
         taxIncludedInPrice: commercetoolsLineItem.taxRate?.includedInPrice,
         variant: ProductMapper.commercetoolsProductVariantToVariant(commercetoolsLineItem.variant, locale),
         isGift:
@@ -200,7 +200,7 @@ export class CartMapper {
       shippingAddress: this.commercetoolsAddressToAddress(commercetoolsOrder.shippingAddress),
       billingAddress: this.commercetoolsAddressToAddress(commercetoolsOrder.billingAddress),
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsOrder.totalPrice),
-      taxed: this.commercetoolsTaxedPriceToTaxed(commercetoolsOrder.taxedPrice, locale),
+      taxed: this.commercetoolsTaxedPriceToTaxed(commercetoolsOrder.taxedPrice),
       discountedAmount: ProductMapper.commercetoolsMoneyToMoney(
         commercetoolsOrder.discountOnTotalPrice?.discountedAmount,
       ),
@@ -235,7 +235,7 @@ export class CartMapper {
     return {
       ...shippingMethod,
       price: ProductMapper.commercetoolsMoneyToMoney(commercetoolsShippingInfo.price),
-      taxed: this.commercetoolsTaxedItemPriceToTaxed(commercetoolsShippingInfo.taxedPrice, locale),
+      taxed: this.commercetoolsTaxedItemPriceToTaxed(commercetoolsShippingInfo.taxedPrice),
       taxIncludedInPrice: commercetoolsShippingInfo.taxRate?.includedInPrice,
     };
   }
@@ -252,13 +252,12 @@ export class CartMapper {
         commercetoolsShippingMethod?.localizedDescription?.[locale.language] ||
         commercetoolsShippingMethod?.description ||
         undefined,
-      rates: this.commercetoolsZoneRatesToRates(commercetoolsShippingMethod?.zoneRates, locale),
+      rates: this.commercetoolsZoneRatesToRates(commercetoolsShippingMethod?.zoneRates),
     } as ShippingMethod;
   }
 
   static commercetoolsZoneRatesToRates(
     commercetoolsZoneRates: CommercetoolsZoneRate[] | undefined,
-    locale: Locale,
   ): ShippingRate[] | undefined {
     if (commercetoolsZoneRates === undefined) {
       return undefined;
@@ -298,22 +297,19 @@ export class CartMapper {
     return shippingRates;
   }
 
-  static commercetoolsPaymentInfoToPayments(
-    commercetoolsPaymentInfo: CommercetoolsPaymentInfo | undefined,
-    locale: Locale,
-  ): Payment[] {
+  static commercetoolsPaymentInfoToPayments(commercetoolsPaymentInfo: CommercetoolsPaymentInfo | undefined): Payment[] {
     const payments: Payment[] = [];
 
     commercetoolsPaymentInfo?.payments?.forEach((commercetoolsPayment) => {
       if (commercetoolsPayment.obj) {
-        payments.push(this.commercetoolsPaymentToPayment(commercetoolsPayment.obj, locale));
+        payments.push(this.commercetoolsPaymentToPayment(commercetoolsPayment.obj));
       }
     });
 
     return payments;
   }
 
-  static commercetoolsPaymentToPayment(commercetoolsPayment: CommercetoolsPayment, locale: Locale): Payment {
+  static commercetoolsPaymentToPayment(commercetoolsPayment: CommercetoolsPayment): Payment {
     return {
       id: commercetoolsPayment.id ?? null,
       paymentId: commercetoolsPayment.interfaceId ?? null,
@@ -425,10 +421,7 @@ export class CartMapper {
     return discount;
   }
 
-  static commercetoolsTaxedPriceToTaxed(
-    commercetoolsTaxedPrice: CommercetoolsTaxedPrice | undefined,
-    locale: Locale,
-  ): Tax | undefined {
+  static commercetoolsTaxedPriceToTaxed(commercetoolsTaxedPrice: CommercetoolsTaxedPrice | undefined): Tax | undefined {
     if (commercetoolsTaxedPrice === undefined) {
       return undefined;
     }
@@ -451,7 +444,6 @@ export class CartMapper {
 
   static commercetoolsTaxedItemPriceToTaxed(
     commercetoolsTaxedPrice: CommercetoolsTaxedItemPrice | undefined,
-    locale: Locale,
   ): Tax | undefined {
     if (commercetoolsTaxedPrice === undefined) {
       return undefined;

@@ -1,4 +1,5 @@
 import { SDKResponse, ServerOptions } from "@commercetools/frontend-sdk";
+import { Cart } from "@shared/types/cart";
 import { Quote, QuoteRequest } from "@shared/types/quote";
 import { PaginatedResult } from "@shared/types/result";
 import {
@@ -6,6 +7,7 @@ import {
 	RenegotiateQuotePayload,
 } from "../payloads/QuotePayloads";
 import {
+    GetQuotationCartQuery,
 	CreateQuoteQuery,
 	AcceptQuoteQuery,
 	QuoteQueryQuery,
@@ -14,6 +16,12 @@ import {
 	RenegotiateQuoteQuery,
 	CancelQuoteQuery,
 } from "../queries/QuoteQueries";
+
+type GetQuotationCartAction = (
+    query: GetQuotationCartQuery,
+	options?: {
+		serverOptions?: ServerOptions;
+}) => Promise<SDKResponse<Cart>>;
 
 type CreateQuoteAction = (
 	payload: CreateQuotePayload,
@@ -67,6 +75,7 @@ type CancelQuoteAction = (
 ) => Promise<SDKResponse<QuoteRequest>>;
 
 export {
+    type GetQuotationCartAction,
 	type CreateQuoteAction,
 	type QuoteQueryAction,
 	type QuoteRequestsQueryAction,

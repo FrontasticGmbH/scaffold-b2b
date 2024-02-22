@@ -21,8 +21,6 @@ export class AccountApi extends BaseApi {
     account: Account,
     cart?: Cart | undefined,
   ) => {
-    const locale = await this.getCommercetoolsLocal();
-
     const {
       commercetoolsAddresses,
       billingAddresses,
@@ -65,7 +63,7 @@ export class AccountApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return AccountMapper.commercetoolsCustomerToAccount(response.body.customer, locale);
+          return AccountMapper.commercetoolsCustomerToAccount(response.body.customer);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.status, message: error.message, body: error.body });
@@ -91,8 +89,6 @@ export class AccountApi extends BaseApi {
   };
 
   confirmEmail: (token: string) => Promise<Account> = async (token: string) => {
-    const locale = await this.getCommercetoolsLocal();
-
     return await this.requestBuilder()
       .customers()
       .emailConfirm()
@@ -103,7 +99,7 @@ export class AccountApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return AccountMapper.commercetoolsCustomerToAccount(response.body, locale);
+        return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -114,8 +110,6 @@ export class AccountApi extends BaseApi {
     account: Account,
     cart: Cart | undefined,
   ) => {
-    const locale = await this.getCommercetoolsLocal();
-
     account = await this.requestBuilder()
       .login()
       .post({
@@ -133,7 +127,7 @@ export class AccountApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return AccountMapper.commercetoolsCustomerToAccount(response.body.customer, locale);
+        return AccountMapper.commercetoolsCustomerToAccount(response.body.customer);
       })
       .catch((error) => {
         if (error.code && error.code === 400) {
@@ -188,8 +182,6 @@ export class AccountApi extends BaseApi {
     token: string,
     newPassword: string,
   ) => {
-    const locale = await this.getCommercetoolsLocal();
-
     return await this.requestBuilder()
       .customers()
       .passwordReset()
@@ -201,7 +193,7 @@ export class AccountApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return AccountMapper.commercetoolsCustomerToAccount(response.body, locale);
+        return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -213,8 +205,6 @@ export class AccountApi extends BaseApi {
     oldPassword: string,
     newPassword: string,
   ) => {
-    const locale = await this.getCommercetoolsLocal();
-
     const accountVersion = await this.fetchAccountVersion(account);
 
     account = await this.requestBuilder()
@@ -230,7 +220,7 @@ export class AccountApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return AccountMapper.commercetoolsCustomerToAccount(response.body, locale);
+        return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -240,8 +230,6 @@ export class AccountApi extends BaseApi {
   };
 
   getAccountByEmail: (email: string) => Promise<Account | null> = async (email: string) => {
-    const locale = await this.getCommercetoolsLocal();
-
     return this.requestBuilder()
       .customers()
       .get({
@@ -256,7 +244,7 @@ export class AccountApi extends BaseApi {
           return null;
         }
 
-        return AccountMapper.commercetoolsCustomerToAccount(response.body.results[0], locale);
+        return AccountMapper.commercetoolsCustomerToAccount(response.body.results[0]);
       });
   };
 
@@ -522,8 +510,6 @@ export class AccountApi extends BaseApi {
   }
 
   protected async updateAccount(account: Account, customerUpdateActions: CustomerUpdateAction[]) {
-    const locale = await this.getCommercetoolsLocal();
-
     const accountVersion = await this.fetchAccountVersion(account);
 
     const customerUpdate: CustomerUpdate = {
@@ -539,7 +525,7 @@ export class AccountApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return AccountMapper.commercetoolsCustomerToAccount(response.body, locale);
+        return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });

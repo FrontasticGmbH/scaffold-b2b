@@ -207,26 +207,6 @@ export class WishlistApi extends BaseApi {
       });
   };
 
-  clearWishlist = async (wishlist: Wishlist) => {
-    const locale = await this.getCommercetoolsLocal();
-
-    return await this.requestBuilder()
-      .shoppingLists()
-      .withId({ ID: wishlist.wishlistId })
-      .delete({
-        queryArgs: {
-          version: +wishlist.wishlistVersion,
-        },
-      })
-      .execute()
-      .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-      });
-  };
-
   setNameAndDescription = async (wishlist: Wishlist, name?: string, description?: string) => {
     const locale = await this.getCommercetoolsLocal();
 

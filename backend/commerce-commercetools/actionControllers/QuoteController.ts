@@ -2,6 +2,7 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
+import { CartState } from '@Types/cart/Cart';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
@@ -13,7 +14,6 @@ import { ValidationError } from '@Commerce-commercetools/errors/ValidationError'
 import parseQueryParams from '@Commerce-commercetools/utils/parseRequestParams';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/Request';
-import { CartState } from '@Types/cart/Cart';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -163,7 +163,7 @@ export const getQuotationCart: ActionHook = async (request: Request, actionConte
 
     const quote = await quoteApi.getQuote(quoteId);
 
-    let cart = await cartApi.getById(quote.quoteRequest.quotationCart.cartId);
+    let cart = quote.quotationCart;
 
     if (!cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)) {
       throw new ValidationError({ message: 'Cart does not belong to the current business unit or store.' });

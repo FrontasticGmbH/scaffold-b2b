@@ -304,21 +304,3 @@ export const updateLineItemCount: ActionHook = async (request, actionContext) =>
     return handleError(error, request);
   }
 };
-
-export const clearWishlist: ActionHook = async (request, actionContext) => {
-  try {
-    const wishlistApi = getWishlistApi(request, actionContext);
-    const wishlist = await fetchWishlist(request, wishlistApi);
-    await wishlistApi.clearWishlist(wishlist);
-    return {
-      statusCode: 200,
-      body: JSON.stringify({}),
-      sessionData: {
-        ...request.sessionData,
-        wishlistId: undefined,
-      },
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};

@@ -72,7 +72,10 @@ export class EmailApi {
   async sendEmail(data: { to: string; subject?: string; text?: string; html?: string }) {
     const from = this.sender;
     const { to, text, html, subject } = data;
-    return await this.transport.sendMail({ from, to, subject, text, html });
+
+    return await this.transport.sendMail({ from, to, subject, text, html }).catch((error) => {
+      console.error('Error sending email', error);
+    });
   }
 
   async sendAccountVerificationEmail(customer: Account) {

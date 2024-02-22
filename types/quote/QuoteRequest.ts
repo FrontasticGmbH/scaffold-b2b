@@ -13,8 +13,6 @@ export enum QuoteRequestState {
   Closed = 'Closed', // No further action that can be performed by any party.
   Rejected = 'Rejected', // Rejected by the seller.
   Submitted = 'Submitted', // Submitted by the buyer.
-  InProgress = 'InProgress', // The seller is preparing the Quote.
-  Sent = 'Sent', // Sent by the seller.
 }
 
 export interface QuoteRequest {
@@ -23,7 +21,6 @@ export interface QuoteRequest {
   createdAt?: Date;
   lastModifiedAt?: Date;
   account?: Account;
-  sellerComment?: string;
   buyerComment?: string;
   store?: Store;
   businessUnit?: BusinessUnit;

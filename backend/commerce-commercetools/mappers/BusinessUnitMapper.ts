@@ -1,32 +1,28 @@
 import {
   Associate as CommercetoolsAssociate,
+  AssociateRole as CommercetoolsAssociateRole,
+  InheritedAssociate as CommercetoolsInheritedAssociate,
   BusinessUnit as CommercetoolsBusinessUnit,
   StoreKeyReference as CommercetoolsStoreKeyReference,
+  Permission as CommercetoolsPermission,
+  AssociateRoleKeyReference as CommercetoolsAssociateRoleKeyReference,
+  BusinessUnitKeyReference as CommercetoolsBusinessUnitKeyReference,
 } from '@commercetools/platform-sdk';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Store } from '@Types/store/Store';
-import { Associate, AssociateRole } from '@Types/business-unit/Associate';
-import {
-  AssociateRoleAssignment as CommercetoolsAssociateRoleAssignment,
-  BusinessUnitKeyReference as CommercetoolsBusinessUnitKeyReference,
-} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/business-unit';
-import { AssociateRole as CommercetoolsAssociateRole } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/associate-role';
+import { Associate, AssociateRole, Permission } from '@Types/business-unit/Associate';
 import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 
 export class BusinessUnitMapper {
-  static commercetoolsBusinessUnitToBusinessUnit(
-    commercetoolsBusinessUnit: CommercetoolsBusinessUnit,
-    locale: Locale,
-    allStores?: Store[],
-  ): BusinessUnit {
-    const businessUnit: BusinessUnit = {
+  static commercetoolsBusinessUnitToBusinessUnit(commercetoolsBusinessUnit: CommercetoolsBusinessUnit): BusinessUnit {
+    return {
       businessUnitId: commercetoolsBusinessUnit.id,
       key: commercetoolsBusinessUnit.key,
       name: commercetoolsBusinessUnit.name,
       status: commercetoolsBusinessUnit.status,
       stores: commercetoolsBusinessUnit.stores?.map((commercetoolsStoreKeyReference) => {
-        return this.mapCommercetoolsStoreKeyReferencesToStore(commercetoolsStoreKeyReference);
+        return this.commercetoolsStoreKeyReferencesToStore(commercetoolsStoreKeyReference);
       }),
       storeMode: commercetoolsBusinessUnit.storeMode,
       unitType: commercetoolsBusinessUnit.unitType,
@@ -36,7 +32,10 @@ export class BusinessUnitMapper {
       }),
       defaultShippingAddressId: commercetoolsBusinessUnit.defaultShippingAddressId,
       defaultBillingAddressId: commercetoolsBusinessUnit.defaultBillingAddressId,
-      associates: this.mapReferencedAssociatesToAssociate(commercetoolsBusinessUnit.associates, locale),
+      associates: this.commercetoolsAssociatesToAssociate(
+        commercetoolsBusinessUnit.associates,
+        commercetoolsBusinessUnit.inheritedAssociates,
+      ),
       parentUnit: commercetoolsBusinessUnit.parentUnit
         ? this.commercetoolsBusinessUnitKeyReferenceToBusinessUnit(commercetoolsBusinessUnit.parentUnit)
         : undefined,
@@ -45,12 +44,6 @@ export class BusinessUnitMapper {
         : undefined,
       version: commercetoolsBusinessUnit.version,
     };
-
-    if (allStores) {
-      businessUnit.stores = this.expandStores(businessUnit.stores, allStores);
-    }
-
-    return businessUnit;
   }
 
   static commercetoolsBusinessUnitKeyReferenceToBusinessUnit(
@@ -61,24 +54,57 @@ export class BusinessUnitMapper {
     };
   }
 
-  static mapReferencedAssociatesToAssociate(
+  static commercetoolsAssociatesToAssociate(
     commercetoolsAssociates: CommercetoolsAssociate[],
-    locale: Locale,
+    commercetoolsInheritedAssociates?: CommercetoolsInheritedAssociate[],
   ): Associate[] {
-    return commercetoolsAssociates
+    const associates: Associate[] = [];
+
+    commercetoolsAssociates
       .filter((commercetoolsAssociate) => commercetoolsAssociate.customer?.obj)
       .map((commercetoolsAssociate) => {
-        const associate: Associate = AccountMapper.commercetoolsCustomerToAccount(
-          commercetoolsAssociate.customer?.obj,
-          locale,
+        const associate: Associate = AccountMapper.commercetoolsCustomerToAccount(commercetoolsAssociate.customer?.obj);
+
+        associate.roles = commercetoolsAssociate.associateRoleAssignments?.map(
+          (commercetoolsAssociateRoleAssigment) => {
+            return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(
+              commercetoolsAssociateRoleAssigment.associateRole,
+            );
+          },
         );
 
-        associate.roles = commercetoolsAssociate.associateRoleAssignments?.map((associateRoleAssigment) => {
-          return this.mapCommercetoolsAssociateRoleAssignmentToAssociateRole(associateRoleAssigment);
-        });
-
-        return associate;
+        associates.push(associate);
       });
+
+    if (commercetoolsInheritedAssociates !== undefined) {
+      commercetoolsInheritedAssociates
+        .filter((commercetoolsInheritedAssociate) => commercetoolsInheritedAssociate.customer?.obj)
+        .map((commercetoolsInheritedAssociate) => {
+          const associate: Associate = AccountMapper.commercetoolsCustomerToAccount(
+            commercetoolsInheritedAssociate.customer?.obj,
+          );
+
+          associate.roles = commercetoolsInheritedAssociate.associateRoleAssignments?.map(
+            (commercetoolsAssociateRoleAssigment) => {
+              return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(
+                commercetoolsAssociateRoleAssigment.associateRole,
+              );
+            },
+          );
+
+          associates.push(associate);
+        });
+    }
+
+    return associates;
+  }
+
+  static commercetoolsAssociateRoleKeyReferenceToAssociateRole(
+    commercetoolsAssociateRoleKeyReference: CommercetoolsAssociateRoleKeyReference,
+  ): AssociateRole {
+    return {
+      key: commercetoolsAssociateRoleKeyReference.key,
+    };
   }
 
   static expandStores(stores: Store[], allStores: Store[]): Store[] {
@@ -97,26 +123,70 @@ export class BusinessUnitMapper {
     });
   }
 
-  static mapCommercetoolsStoreKeyReferencesToStore(
-    commercetoolsStoreKeyReference: CommercetoolsStoreKeyReference,
-  ): Store {
+  static commercetoolsStoreKeyReferencesToStore(commercetoolsStoreKeyReference: CommercetoolsStoreKeyReference): Store {
     return {
       key: commercetoolsStoreKeyReference.key,
     };
   }
 
-  static mapCommercetoolsAssociateRoleAssignmentToAssociateRole(
-    associateRoleAssigment: CommercetoolsAssociateRoleAssignment,
-  ): AssociateRole {
-    return {
-      key: associateRoleAssigment.associateRole.key,
-    };
-  }
-
-  static mapCommercetoolsAssociateRoleToAssociateRole(associateRole: CommercetoolsAssociateRole): AssociateRole {
+  static commercetoolsAssociateRoleToAssociateRole(associateRole: CommercetoolsAssociateRole): AssociateRole {
     return {
       key: associateRole.key,
       name: associateRole.name,
+      permissions: this.commercetoolsPermissionsToPermissions(associateRole.permissions),
     };
+  }
+
+  static commercetoolsPermissionsToPermissions(commercetoolsPermissions: CommercetoolsPermission[]): Permission[] {
+    const permissions: Permission[] = [];
+
+    commercetoolsPermissions.forEach((commercetoolsPermission) => {
+      switch (commercetoolsPermission) {
+        case 'AcceptMyQuotes':
+        case 'AcceptOthersQuotes':
+        case 'AddChildUnits':
+        case 'CreateApprovalRules':
+        case 'CreateMyCarts':
+        case 'CreateMyOrdersFromMyCarts':
+        case 'CreateMyOrdersFromMyQuotes':
+        case 'CreateMyQuoteRequestsFromMyCarts':
+        case 'CreateOrdersFromOthersCarts':
+        case 'CreateOrdersFromOthersQuotes':
+        case 'CreateOthersCarts':
+        case 'CreateQuoteRequestsFromOthersCarts':
+        case 'DeclineMyQuotes':
+        case 'DeclineOthersQuotes':
+        case 'DeleteMyCarts':
+        case 'DeleteOthersCarts':
+        case 'ReassignMyQuotes':
+        case 'ReassignOthersQuotes':
+        case 'RenegotiateMyQuotes':
+        case 'RenegotiateOthersQuotes':
+        case 'UpdateApprovalFlows':
+        case 'UpdateApprovalRules':
+        case 'UpdateAssociates':
+        case 'UpdateBusinessUnitDetails':
+        case 'UpdateMyCarts':
+        case 'UpdateMyOrders':
+        case 'UpdateMyQuoteRequests':
+        case 'UpdateOthersCarts':
+        case 'UpdateOthersOrders':
+        case 'UpdateOthersQuoteRequests':
+        case 'UpdateParentUnit':
+        case 'ViewMyCarts':
+        case 'ViewMyOrders':
+        case 'ViewMyQuoteRequests':
+        case 'ViewMyQuotes':
+        case 'ViewOthersCarts':
+        case 'ViewOthersOrders':
+        case 'ViewOthersQuoteRequests':
+        case 'ViewOthersQuotes':
+          return permissions.push(commercetoolsPermission);
+        default:
+          throw new ValidationError({ message: 'Invalid permission' });
+      }
+    });
+
+    return permissions;
   }
 }

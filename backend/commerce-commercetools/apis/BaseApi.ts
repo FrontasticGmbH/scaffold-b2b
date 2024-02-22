@@ -1,5 +1,11 @@
 import * as crypto from 'crypto';
-import { ApiRoot, createApiBuilderFromCtpClient, ProductType, Project } from '@commercetools/platform-sdk';
+import {
+  ApiRoot,
+  createApiBuilderFromCtpClient,
+  ProductType as CommercetoolsProductType,
+  Project as CommercetoolsProject,
+  AssociateRole as CommercetoolsAssociateRole,
+} from '@commercetools/platform-sdk';
 import { Context } from '@frontastic/extension-types';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
@@ -331,13 +337,17 @@ const parseLocale = (locale: string, currency?: string): ParsedLocale => {
   };
 };
 
-const projectCacheTtlMilliseconds = 10 * 60 * 1000;
+const cacheTtlMilliseconds = 10 * 60 * 1000;
 const projectCache: {
-  [projectKey: string]: { project: Project; expiryTime: number };
+  [projectKey: string]: { project: CommercetoolsProject; expiryTime: number };
+} = {};
+
+const associateRolesCache: {
+  [projectKey: string]: { associateRoles: CommercetoolsAssociateRole[]; expiryTime: number };
 } = {};
 
 const productTypesCache: {
-  [projectKey: string]: { productTypes: ProductType[]; expiryTime: number };
+  [projectKey: string]: { productTypes: CommercetoolsProductType[]; expiryTime: number };
 } = {};
 
 const pickCandidate = (candidates: string[], availableOptions: string[]): string | undefined => {
@@ -406,8 +416,7 @@ export abstract class BaseApi {
   protected projectKey: string;
   protected productIdField: string;
   protected categoryIdField: string;
-  protected associateRoleAdminKey: string;
-  protected associateRoleBuyerKey: string;
+  protected defaultAssociateRoleKey: string;
   protected locale: string;
   protected defaultLocale: string;
   protected defaultCurrency: string;
@@ -425,14 +434,13 @@ export abstract class BaseApi {
     this.currency = currency;
 
     const engine = 'commercetools';
-    this.clientSettings = getConfig(frontasticContext, engine, this.locale);
+    this.clientSettings = getConfig(frontasticContext, engine);
 
     this.environment = frontasticContext.environment;
     this.projectKey = this.clientSettings.projectKey;
     this.productIdField = this.clientSettings?.productIdField || 'key';
     this.categoryIdField = this.clientSettings?.categoryIdField || 'key';
-    this.associateRoleAdminKey = this.clientSettings?.associateRoleAdminKey || 'admin';
-    this.associateRoleBuyerKey = this.clientSettings?.associateRoleBuyerKey || 'buyer';
+    this.defaultAssociateRoleKey = this.clientSettings?.defaultAssociateRoleKey || 'buyer';
     this.defaultStoreKey = this.clientSettings.defaultStoreKey;
     this.token = clientTokensStored.get(this.getClientHashKey());
 
@@ -446,7 +454,7 @@ export abstract class BaseApi {
   protected async getCommercetoolsLocal(): Promise<Locale> {
     const parsedLocale = parseLocale(this.locale, this.currency);
     const parsedDefaultLocale = parseLocale(this.defaultLocale, this.currency);
-    const project = await this.getProject();
+    const project = await this.getCommercetoolsProject();
 
     /**
      * Get a valid locale following the priority of:
@@ -475,7 +483,7 @@ export abstract class BaseApi {
     });
   }
 
-  protected async getProductTypes() {
+  protected async getCommercetoolsProductTypes() {
     const now = Date.now();
 
     if (this.projectKey in productTypesCache) {
@@ -495,7 +503,7 @@ export abstract class BaseApi {
 
         productTypesCache[this.projectKey] = {
           productTypes,
-          expiryTime: projectCacheTtlMilliseconds * 1000 + now,
+          expiryTime: cacheTtlMilliseconds * 1000 + now,
         };
 
         return productTypes;
@@ -505,7 +513,7 @@ export abstract class BaseApi {
       });
   }
 
-  protected async getProject() {
+  protected async getCommercetoolsProject() {
     const now = Date.now();
 
     if (this.projectKey in projectCache) {
@@ -526,10 +534,40 @@ export abstract class BaseApi {
 
     projectCache[this.projectKey] = {
       project,
-      expiryTime: projectCacheTtlMilliseconds * 1000 + now,
+      expiryTime: cacheTtlMilliseconds * 1000 + now,
     };
 
     return project;
+  }
+
+  protected async getCommercetoolsAssociatesRoles() {
+    const now = Date.now();
+
+    if (this.projectKey in associateRolesCache) {
+      const cacheEntry = associateRolesCache[this.projectKey];
+
+      if (now < cacheEntry.expiryTime) {
+        return cacheEntry.associateRoles;
+      }
+    }
+
+    return await this.requestBuilder()
+      .associateRoles()
+      .get()
+      .execute()
+      .then((response) => {
+        const associateRoles = response.body.results.filter((associateRole) => associateRole.buyerAssignable);
+
+        associateRolesCache[this.projectKey] = {
+          associateRoles,
+          expiryTime: cacheTtlMilliseconds * 1000 + now,
+        };
+
+        return associateRoles;
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
   }
 
   protected associateRequestBuilder(accountId: string): ByProjectKeyAsAssociateByAssociateIdRequestBuilder {

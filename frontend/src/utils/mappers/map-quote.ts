@@ -26,7 +26,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
   if (status === 'inprogress') {
     activity.push({
       title: 'dashboard.quote.accepted.by.seller',
-      comment: quote.sellerComment ?? '',
+      comment: '',
       commentBy: 'seller',
     });
 
@@ -54,7 +54,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
     activity.push(
       {
         title: 'dashboard.quote.accepted.by.seller',
-        comment: (quote as CoCoQuote).quoteRequest?.sellerComment ?? '',
+        comment: '',
         commentBy: 'seller',
       },
       {
@@ -67,7 +67,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
     activity.push(
       {
         title: 'dashboard.quote.accepted.by.seller',
-        comment: (quote as CoCoQuote).quoteRequest?.sellerComment ?? '',
+        comment: '',
         commentBy: 'seller',
       },
       {
@@ -85,7 +85,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
     activity.push(
       {
         title: 'dashboard.quote.accepted.by.seller',
-        comment: (quote as CoCoQuote).quoteRequest?.sellerComment ?? '',
+        comment: '',
         commentBy: 'seller',
       },
       {
@@ -95,7 +95,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
       },
       {
         title: 'dashboard.quote.accepted.by.seller',
-        comment: quote.sellerComment ?? '',
+        comment: '',
         commentBy: 'seller',
       },
     );
@@ -120,7 +120,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
     if ((quote as CoCoQuote).quoteRequest) {
       activity.push({
         title: 'dashboard.quote.accepted.by.seller',
-        comment: (quote as CoCoQuote).quoteRequest?.sellerComment ?? '',
+        comment: '',
         commentBy: 'seller',
       });
 
@@ -133,7 +133,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
           },
           {
             title: 'dashboard.quote.accepted.by.seller',
-            comment: quote.sellerComment ?? '',
+            comment: '',
             commentBy: 'seller',
           },
         );
@@ -195,7 +195,7 @@ export const mapQuote = (quote: CoCoQuote): Quote => {
     ).toLocaleLowerCase() as Quote['status']) || 'inprogress';
 
   return {
-    id: (quote.quoteId ?? '').replace(/-/g, ' '),
+    id: quote.quoteId ?? '',
     author: `${quote.quoteRequest?.account?.firstName} ${quote.quoteRequest?.account?.lastName}`,
     status,
     creationDate: quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : '-',
@@ -225,7 +225,7 @@ export const mapQuoteRequest = (quoteRequest: QuoteRequest): Quote => {
     ).toLocaleLowerCase() as Quote['status']) || 'inprogress';
 
   return {
-    id: (quoteRequest.quoteRequestId ?? '').replace(/-/g, ' '),
+    id: quoteRequest.quoteRequestId ?? '',
     author: `${quoteRequest?.account?.firstName} ${quoteRequest?.account?.lastName}`,
     status,
     creationDate: quoteRequest.createdAt ? new Date(quoteRequest.createdAt).toLocaleDateString() : '-',

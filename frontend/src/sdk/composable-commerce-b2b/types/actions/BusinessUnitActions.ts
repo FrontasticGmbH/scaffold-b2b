@@ -1,5 +1,5 @@
 import { SDKResponse, ServerOptions } from '@commercetools/frontend-sdk';
-import { AssociateRole, BusinessUnit } from '@shared/types/business-unit';
+import { Associate, AssociateRole, BusinessUnit } from '@shared/types/business-unit';
 import { Order } from '@shared/types/cart';
 import {
   CreateBusinessUnitPayload,
@@ -14,6 +14,7 @@ import {
 import {
   GetBusinessUnitsQuery,
   GetBusinessUnitOrdersQuery,
+  GetAssociateQuery,
   AddAssociateQuery,
   RemoveAssociateQuery,
   UpdateAssociateQuery,
@@ -55,6 +56,13 @@ type UpdateBusinessUnitAction = (
 ) => Promise<SDKResponse<BusinessUnit>>;
 
 type GetAssociateRolesAction = (options?: { serverOptions?: ServerOptions }) => Promise<SDKResponse<AssociateRole[]>>;
+
+type GetAssociateAction = (
+  query: GetAssociateQuery,
+  options?: {
+    serverOptions?: ServerOptions;
+  },
+) => Promise<SDKResponse<Associate>>;
 
 type AddAssociateAction = (
   payload: AddAssociatePayload,
@@ -126,6 +134,7 @@ export {
   type CreateBusinessUnitAction,
   type UpdateBusinessUnitAction,
   type GetAssociateRolesAction,
+  type GetAssociateAction,
   type AddAssociateAction,
   type UpdateAssociateAction,
   type RemoveAssociateAction,

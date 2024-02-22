@@ -40,7 +40,6 @@
     "swr": "^2.2.0"
   },
   "devDependencies": {
-    "@commercetools/frontend-netlify-plugin": "^0.2.0",
     "@frontastic/extension-types": "^0.0.12",
     "@next/bundle-analyzer": "^13.4.4",
     "@storybook/addon-essentials": "^7.0.18",

@@ -1,6 +1,7 @@
 import { SDK, ServerOptions } from "@commercetools/frontend-sdk";
 import { ComposableCommerceEventsB2B } from "../../types/events/ComposableCommerceEventsB2B";
 import {
+    GetQuotationCartAction,
 	CreateQuoteAction,
 	QuoteQueryAction,
 	QuoteRequestsQueryAction,
@@ -14,6 +15,7 @@ import {
 	RenegotiateQuotePayload,
 } from "../../types/payloads/QuotePayloads";
 import {
+    GetQuotationCartQuery,
 	CreateQuoteQuery,
 	AcceptQuoteQuery,
 	QuoteQueryQuery,
@@ -24,8 +26,10 @@ import {
 } from "../../types/queries/QuoteQueries";
 import { Quote, QuoteRequest } from "@shared/types/quote";
 import { PaginatedResult } from "@shared/types/result";
+import { Cart } from "@shared/types/cart";
 
 export type QuoteActions = {
+    getQuotationCart: GetQuotationCartAction;
 	createQuote: CreateQuoteAction;
 	query: QuoteQueryAction;
 	queryRequests: QuoteRequestsQueryAction;
@@ -39,6 +43,17 @@ export const getQuoteActions = (
 	sdk: SDK<ComposableCommerceEventsB2B>
 ): QuoteActions => {
 	return {
+        getQuotationCart: async (
+			query: GetQuotationCartQuery,
+			options: { serverOptions?: ServerOptions } = {}
+		) => {
+			const response = await sdk.callAction<Cart>({
+				actionName: "quote/getQuotationCart",
+				query,
+				serverOptions: options.serverOptions,
+			});
+			return response;
+		},
 		createQuote: async (
 			payload: CreateQuotePayload,
 			query: CreateQuoteQuery,

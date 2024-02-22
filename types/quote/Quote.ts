@@ -3,6 +3,7 @@ import { LineItem } from '../cart/LineItem';
 import { Money } from '../product/Money';
 import { Tax } from '../cart/Tax';
 import { Account } from '../account';
+import { Cart } from '../cart';
 
 export enum QuoteState {
   Accepted = 'Accepted', // Accepted by the buyer.
@@ -32,4 +33,5 @@ export interface Quote {
   quoteRequest?: QuoteRequest;
   quoteVersion?: number;
   orderNumber?: string;
+  quotationCart?: Cart;
 }

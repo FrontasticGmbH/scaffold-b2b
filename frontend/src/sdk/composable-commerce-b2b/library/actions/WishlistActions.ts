@@ -12,7 +12,6 @@ import {
   CreateWishlistQuery,
   GetWishlistQuery,
   UpdateWishlistQuery,
-  ClearWishlistQuery,
   DeleteWishlistQuery,
   AddToWishlistQuery,
   UpdateWishlistItemQuery,
@@ -24,7 +23,6 @@ import {
   GetWishlistAction,
   QueryWishlistsAction,
   UpdateWishlistAction,
-  ClearWishlistAction,
   DeleteWishlistAction,
   AddToWishlistAction,
   AddToWishlistsAction,
@@ -39,7 +37,6 @@ export type WishlistActions = {
   getWishlist: GetWishlistAction;
   queryWishlists: QueryWishlistsAction;
   updateWishlist: UpdateWishlistAction;
-  clearWishlist: ClearWishlistAction;
   deleteWishlist: DeleteWishlistAction;
   addToWishlist: AddToWishlistAction;
   addToWishlists: AddToWishlistsAction;
@@ -91,14 +88,6 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       });
       return response;
     },
-    clearWishlist: async (query?: ClearWishlistQuery, options: { serverOptions?: ServerOptions } = {}) => {
-      const response = await sdk.callAction<void>({
-        actionName: 'wishlist/clearWishlist',
-        query,
-        serverOptions: options.serverOptions,
-      });
-      return response;
-    },
     deleteWishlist: async (query?: DeleteWishlistQuery, options: { serverOptions?: ServerOptions } = {}) => {
       const response = await sdk.callAction<void>({
         actionName: 'wishlist/deleteWishlist',
@@ -120,10 +109,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       });
       return response;
     },
-    addToWishlists: async (
-      payload: AddToWishlistsPayload,
-      options: { serverOptions?: ServerOptions } = {},
-    ) => {
+    addToWishlists: async (payload: AddToWishlistsPayload, options: { serverOptions?: ServerOptions } = {}) => {
       const response = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/addToWishlists',
         payload,

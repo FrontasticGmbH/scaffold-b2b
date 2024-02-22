@@ -574,7 +574,6 @@ export class CartApi extends BaseApi {
   }
 
   async updatePayment(cart: Cart, payment: Payment): Promise<Payment> {
-    const locale = await this.getCommercetoolsLocal();
     const originalPayment = cart.payments.find((cartPayment) => cartPayment.id === payment.id);
 
     if (originalPayment === undefined) {
@@ -622,7 +621,7 @@ export class CartApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return CartMapper.commercetoolsPaymentToPayment(response.body, locale);
+        return CartMapper.commercetoolsPaymentToPayment(response.body);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -640,8 +639,6 @@ export class CartApi extends BaseApi {
   }
 
   async updateOrderPayment(paymentId: string, paymentDraft: Payment): Promise<any> {
-    const locale = await this.getCommercetoolsLocal();
-
     const paymentUpdateActions: PaymentUpdateAction[] = [];
 
     if (paymentDraft.paymentMethod) {
@@ -681,7 +678,7 @@ export class CartApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return CartMapper.commercetoolsPaymentToPayment(response.body, locale);
+        return CartMapper.commercetoolsPaymentToPayment(response.body);
         //return response;
       })
       .catch((error) => {

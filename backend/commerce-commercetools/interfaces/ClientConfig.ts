@@ -8,7 +8,6 @@ export interface ClientConfig {
   projectKey: string;
   productIdField?: string;
   categoryIdField?: string;
-  associateRoleAdminKey?: string;
-  associateRoleBuyerKey?: string;
+  defaultAssociateRoleKey?: string;
   defaultStoreKey: string;
 }

@@ -10,6 +10,10 @@ type UpdateBusinessUnitQuery = {
   businessUnitKey: string;
 };
 
+type GetAssociateQuery = {
+  businessUnitKey: string;
+};
+
 type AddAssociateQuery = {
   businessUnitKey: string;
 };
@@ -47,6 +51,7 @@ export {
   type GetBusinessUnitQuery,
   type GetBusinessUnitsQuery,
   type UpdateBusinessUnitQuery,
+  type GetAssociateQuery,
   type AddAssociateQuery,
   type UpdateAssociateQuery,
   type RemoveAssociateQuery,

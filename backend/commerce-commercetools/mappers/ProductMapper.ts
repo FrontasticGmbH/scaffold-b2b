@@ -366,7 +366,6 @@ export class ProductMapper {
     facets: ProductSearchFacetResultExpression[],
     productSearchQuery: ProductSearchRequest,
     facetDefinitions: FacetDefinition[],
-    locale: Locale,
   ): Facet[] {
     return facets
       .map((facetResult) => {

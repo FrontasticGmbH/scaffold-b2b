@@ -290,7 +290,6 @@ export class ProductSearchFactory {
   private static applyQueryCategories: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-    locale: Locale,
   ) => {
     if (productQuery.categories?.length) {
       const productSearchExactExpressions: ProductSearchExactExpression[] = [];
@@ -313,7 +312,6 @@ export class ProductSearchFactory {
   private static applyProductSelections: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-    locale: Locale,
   ) => {
     if (productQuery.productSelectionIds?.length) {
       if (productQuery.productSelectionIds?.length === 1) {
@@ -340,7 +338,6 @@ export class ProductSearchFactory {
   private static applyQueryProductIds: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-    locale: Locale,
   ) => {
     if (productQuery.productIds?.length) {
       const productSearchExactExpressions: ProductSearchExactExpression[] = [];
@@ -364,7 +361,6 @@ export class ProductSearchFactory {
   private static applyQuerySKUs: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-    locale: Locale,
   ) => {
     if (productQuery.skus?.length) {
       const productSearchExactExpressions: ProductSearchExactExpression[] = [];
@@ -479,7 +475,6 @@ export class ProductSearchFactory {
   private static applySortAttributes: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     productQuery: ProductQuery,
-    locale: Locale,
   ) => {
     if (productQuery.sortAttributes) {
       commercetoolsProductSearchRequest.sort = Object.keys(productQuery.sortAttributes).map((key) => ({
@@ -693,8 +688,6 @@ export class ProductSearchFactory {
   ):
     | Pick<ProductSearchFacetDistinctValue, 'name' | 'field' | 'attributeType' | 'language'>
     | Pick<ProductSearchFacetRangesValue, 'name' | 'field' | 'attributeType'> => {
-    let facet: ProductSearchFacetExpression;
-
     switch (facetDefinition.attributeType) {
       case 'money':
         return {

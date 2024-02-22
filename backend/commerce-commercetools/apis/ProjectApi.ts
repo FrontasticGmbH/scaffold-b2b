@@ -3,7 +3,7 @@ import { BaseApi } from './BaseApi';
 
 export class ProjectApi extends BaseApi {
   getProjectSettings: () => Promise<ProjectSettings> = async () => {
-    const project = await this.getProject();
+    const project = await this.getCommercetoolsProject();
 
     return Promise.resolve({
       name: project.name,

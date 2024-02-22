@@ -13,6 +13,7 @@ import {
   GetBusinessUnitQuery,
   GetBusinessUnitsQuery,
   UpdateBusinessUnitQuery,
+  GetAssociateQuery,
   AddAssociateQuery,
   UpdateAssociateQuery,
   RemoveAssociateQuery,
@@ -28,6 +29,7 @@ import {
   CreateBusinessUnitAction,
   UpdateBusinessUnitAction,
   GetAssociateRolesAction,
+  GetAssociateAction,
   AddAssociateAction,
   UpdateAssociateAction,
   RemoveAssociateAction,
@@ -39,7 +41,7 @@ import {
   SetBusinessUnitAndStoreKeysAction,
 } from '../../types/actions/BusinessUnitActions';
 import { ComposableCommerceEventsB2B } from '../../types/events/ComposableCommerceEventsB2B';
-import { AssociateRole, BusinessUnit } from '@shared/types/business-unit';
+import { Associate, AssociateRole, BusinessUnit } from '@shared/types/business-unit';
 import { Order } from '@shared/types/cart';
 
 export type BusinessUnitActions = {
@@ -48,6 +50,7 @@ export type BusinessUnitActions = {
   createBusinessUnit: CreateBusinessUnitAction;
   updateBusinessUnit: UpdateBusinessUnitAction;
   getAssociateRoles: GetAssociateRolesAction;
+  getAssociate: GetAssociateAction;
   addAssociate: AddAssociateAction;
   updateAssociate: UpdateAssociateAction;
   removeAssociate: RemoveAssociateAction;
@@ -68,7 +71,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       },
     ) => {
       const response = await sdk.callAction<BusinessUnit>({
-        actionName: 'business-unit/getByKey',
+        actionName: 'business-unit/getBusinessUnit',
         query,
         serverOptions: options?.serverOptions,
       });
@@ -118,6 +121,19 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     getAssociateRoles: async (options?: { serverOptions?: ServerOptions }) => {
       const response = await sdk.callAction<AssociateRole[]>({
         actionName: 'business-unit/getAssociateRoles',
+        serverOptions: options?.serverOptions,
+      });
+      return response;
+    },
+    getAssociate: async (
+      query: GetAssociateQuery,
+      options?: {
+        serverOptions?: ServerOptions;
+      },
+    ) => {
+      const response = await sdk.callAction<Associate>({
+        actionName: 'business-unit/getAssociate',
+        query,
         serverOptions: options?.serverOptions,
       });
       return response;
