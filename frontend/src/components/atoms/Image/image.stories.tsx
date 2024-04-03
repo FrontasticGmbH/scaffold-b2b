@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { image } from '@/mocks/image';
 import Image from '.';
 
 export default {
@@ -12,21 +13,20 @@ const Template: StoryFn<typeof Image> = (args) => <Image {...args} />;
 export const Optimized = Template.bind({});
 Optimized.args = {
   media: {
-    mediaId: 'ynxtwuvnvlluue6fexog',
+    mediaId: image.mediaId,
+    name: image.name,
+    file: image.url,
     resourceType: 'image',
-    name: 'AdobeStock 510169269',
-    tags: ['__none'],
-    file: 'https://res.cloudinary.com/dlwdq84ig/image/upload/ynxtwuvnvlluue6fexog',
+    tags: [],
     size: 516362,
     width: 1378,
     height: 1378,
-    format: 'jpg',
   },
 };
 
 export const UnOptimized = Template.bind({});
 UnOptimized.args = {
-  src: 'https://res.cloudinary.com/dlwdq84ig/image/upload/ynxtwuvnvlluue6fexog',
+  src: image.url,
   width: 680,
   height: 340,
 };

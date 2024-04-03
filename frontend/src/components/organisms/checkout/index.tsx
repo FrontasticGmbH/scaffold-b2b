@@ -23,6 +23,8 @@ const Checkout = ({
   initialData = {},
   shippingMethods = [],
   paymentMethods = [],
+  translations = {},
+  buyerCanAddComment = false,
 }: CheckoutProps) => {
   const { translate } = useTranslation();
 
@@ -30,7 +32,9 @@ const Checkout = ({
     <CheckoutProvider addresses={addresses}>
       <div className="min-h-screen p-4 md:px-5 lg:bg-neutral-200 lg:px-12 lg:py-6">
         <div className="hidden border-b border-neutral-400 pb-5 pt-3 lg:block">
-          <p className="text-20 capitalize leading-normal text-gray-700">{translate('checkout.secure.checkout')}</p>
+          <p className="text-20 capitalize leading-normal text-gray-700">
+            {translations.header || translate('checkout.secure.checkout')}
+          </p>
         </div>
 
         <div className="flex flex-col gap-4 lg:flex-row-reverse lg:items-start lg:justify-between lg:gap-6 lg:pt-6">
@@ -40,6 +44,8 @@ const Checkout = ({
             discounts={discounts}
             onApplyDiscount={onApplyDiscount}
             onSubmitPurchase={onSubmitPurchase}
+            translations={translations}
+            buyerCanAddComment={buyerCanAddComment}
           />
           <Steps
             addresses={addresses}
@@ -54,7 +60,11 @@ const Checkout = ({
           />
         </div>
 
-        <CompletePurchase onSubmitPurchase={onSubmitPurchase} />
+        <CompletePurchase
+          onSubmitPurchase={onSubmitPurchase}
+          buyerCanAddComment={buyerCanAddComment}
+          translations={translations}
+        />
 
         <div className="mt-5 text-center text-12 text-gray-600 md:mt-6 md:text-14 lg:mt-[108px]">
           <p>

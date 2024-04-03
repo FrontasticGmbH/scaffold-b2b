@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Typography from '@/components/atoms/typography';
 import useFormat from '@/hooks/useFormat';
 import { useAddToCartOverlay } from '@/providers/add-to-cart-overlay';
+import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { PDPMainInfoProps } from '../types';
 import ColoredVariants from './color-variants';
 import SpecsVariants from './specs-variants';
@@ -18,12 +19,17 @@ const MainInfo = ({
   addToCart,
   getWishlists,
   addToWishlists,
+  removeFromWishlists,
   onChangeVariant,
   addToNewWishlist,
+  addToCartDisabled,
 }: PDPMainInfoProps) => {
   const [quantity, setQuantity] = useState(1);
+
   const { formatCurrency } = useFormat();
   const { showModal } = useAddToCartOverlay();
+  const { translate } = useTranslation();
+
   const handleOnAddToCart = async (count: number) => {
     await addToCart(count);
     showModal(product);
@@ -73,16 +79,25 @@ const MainInfo = ({
           <SpecsVariants
             currentSpecs={currentSpecs}
             specs={product.specs}
-            onChangeSpecs={(value) => onChangeVariant('specs', value)}
+            onChangeSpecs={(value) => onChangeVariant('model', value)}
           />
         )}
-
-        <CartCTA countChange={handleQuantityChange} addToCart={handleOnAddToCart} />
+        {(!product.inStock || !product.price) && (
+          <Typography fontSize={18} lineHeight="loose" className="text-red-500 md:text-16 lg:text-18">
+            {translate('common.out.of.stock')}
+          </Typography>
+        )}
+        <CartCTA
+          countChange={handleQuantityChange}
+          addToCart={handleOnAddToCart}
+          addToCartDisabled={addToCartDisabled}
+        />
 
         <ShoppingListCTA
           getWishlists={getWishlists}
-          addToWishlists={(wishlistIds) => addToWishlists(wishlistIds, quantity)}
+          removeFromWishlists={removeFromWishlists}
           addToNewWishlist={(list) => addToNewWishlist(list, quantity)}
+          addToWishlists={(wishlistIds) => addToWishlists(wishlistIds, quantity)}
         />
 
         <Shipping shippingMethods={shippingMethods} currency={product.currency} />

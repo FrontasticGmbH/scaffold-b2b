@@ -31,6 +31,11 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
     setResetting(false);
   };
 
+  const gotToReset = () => {
+    setResetting(true);
+    setError(undefined);
+  };
+
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (error) setError(undefined);
 
@@ -118,11 +123,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
                 label={translate('account.rememberMe')}
                 onChange={handleChange}
               />
-              <Link
-                className="text-14 text-gray-600 underline hover:text-gray-500"
-                href="#"
-                onClick={() => setResetting(true)}
-              >
+              <Link className="text-14 text-gray-600 underline hover:text-gray-500" href="#" onClick={gotToReset}>
                 {translate('account.password.forgot')}
               </Link>
             </div>

@@ -1,0 +1,42 @@
+{
+  "tasticType": "commercetools/ui/account/verify-associate",
+  "name": "Verify Associate",
+  "category": "Account",
+  "icon": "account_circle",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Image",
+          "field": "image",
+          "type": "media",
+          "required": true
+        },
+        {
+          "label": "Company",
+          "field": "company",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Logo",
+      "fields": [
+        {
+          "label": "Logo",
+          "field": "logo",
+          "type": "media",
+          "required": true
+        },
+        {
+          "label": "Link Reference",
+          "field": "logoLink",
+          "type": "reference",
+          "translatable": false
+        }
+      ]
+    }
+  ]
+}

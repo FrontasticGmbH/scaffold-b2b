@@ -5,7 +5,7 @@ import TextArea from '@/components/atoms/text-area';
 import Button from '@/components/atoms/button';
 import { ActivityLogProps } from './types';
 
-const ActivityLog = ({ activities }: ActivityLogProps) => {
+const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
   const { translate } = useTranslation();
 
   const [commentValue, setCommentValue] = useState<Record<number, string>>({});
@@ -19,6 +19,8 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
   const maximumCommentCharacters = 160;
 
   const [replyProcessing, setReplyProcessing] = useState<Record<number, boolean>>({});
+
+  const [declineProcessing, setDeclineProcessing] = useState<Record<number, boolean>>({});
 
   const [actionProcessing, setActionProcess] = useState<Record<number, boolean>>({});
 
@@ -67,6 +69,7 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                   setCommentProcessing({ ...commentProcessing, [index]: true });
                   if (commentValue[index]) await onCommentUpdate?.(commentValue[index]);
                   setCommentProcessing({ ...commentProcessing, [index]: false });
+                  setCommentFocused({ ...commentFocused, [index]: false });
                 }}
               >
                 <h5 className="text-12 font-medium uppercase text-gray-600">{commentLabel}</h5>
@@ -99,7 +102,7 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                       onClick={onCommentCancel}
                       onMouseDown={(e) => e.preventDefault()}
                     >
-                      {translate('common.cancel')}
+                      {translations.cancel || translate('common.cancel')}
                     </Button>
                     <Button
                       type="submit"
@@ -109,7 +112,7 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                       loading={commentProcessing[index]}
                       onMouseDown={(e) => e.preventDefault()}
                     >
-                      {translate('common.send')}
+                      {translations.send || translate('common.send')}
                     </Button>
                   </div>
                 )}
@@ -122,13 +125,14 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                   variant="secondary"
                   size="l"
                   className="leading-[16px]"
+                  loading={declineProcessing[index]}
                   onClick={async () => {
-                    setReplyProcessing({ ...replyProcessing, [index]: true });
+                    setDeclineProcessing({ ...declineProcessing, [index]: true });
                     await onReject?.();
-                    setReplyProcessing({ ...replyProcessing, [index]: false });
+                    setDeclineProcessing({ ...declineProcessing, [index]: false });
                   }}
                 >
-                  {translate('common.decline')}
+                  {translations.decline || translate('common.decline')}
                 </Button>
                 <Button
                   variant="primary"
@@ -141,7 +145,7 @@ const ActivityLog = ({ activities }: ActivityLogProps) => {
                     setReplyProcessing({ ...replyProcessing, [index]: false });
                   }}
                 >
-                  {translate('common.accept')}
+                  {translations.accept || translate('common.accept')}
                 </Button>
               </div>
             )}

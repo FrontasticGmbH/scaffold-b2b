@@ -18,6 +18,12 @@
       "name": "Category configuration",
       "fields": [
         {
+          "label": "Use Intermediary Category Page",
+          "field": "useIntermediaryCategoryPage",
+          "type": "boolean",
+          "default": false
+        },
+        {
           "label": "Category configuration",
           "field": "categoryConfiguration",
           "type": "group",

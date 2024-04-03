@@ -1,9 +1,10 @@
 type CreateQuotePayload = {
-	comment: string;
+  comment: string;
+  purchaseOrderNumber?: string;
 };
 
 type RenegotiateQuotePayload = {
-	comment: string;
+  comment: string;
 };
 
 export { type CreateQuotePayload, type RenegotiateQuotePayload };

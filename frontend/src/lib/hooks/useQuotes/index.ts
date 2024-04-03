@@ -1,30 +1,29 @@
 import { useCallback } from 'react';
 import { sdk } from '@/sdk';
-import useSWR, { useSWRConfig } from 'swr';
-import { Result } from '@shared/types/quote/Result';
+import useSWR from 'swr';
 import { QuoteRequest } from '@shared/types/quote/QuoteRequest';
 import { Quote, QuoteState } from '@shared/types/quote/Quote';
-import { Cart } from '@shared/types/cart';
+import { PaginatedResult } from '@shared/types/result';
 import { Options } from './types';
 
-const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, storeKey }: Options) => {
-  const { mutate: globalMutate } = useSWRConfig();
-
-  const quotesResponse = useSWR(['/action/quote/query', limit, cursor, ids, states, businessUnitKey], () =>
-    sdk.composableCommerce.quote.query({
-      businessUnitKey,
-      ...(limit ? { limit } : {}),
-      ...(cursor ? { cursor } : {}),
-      ...(ids ? { quoteIds: ids } : {}),
-      ...(states ? { quoteStates: states as QuoteState[] } : {}),
-    }),
+const useQuotes = ({ cursor, limit, states, ids, businessUnitKey }: Options) => {
+  const quotesResponse = useSWR(
+    !businessUnitKey ? null : ['/action/quote/query', limit, cursor, ids, states, businessUnitKey],
+    () =>
+      sdk.composableCommerce.quote.query({
+        businessUnitKey: businessUnitKey as string,
+        ...(limit ? { limit } : {}),
+        ...(cursor ? { cursor } : {}),
+        ...(ids ? { quoteIds: ids } : {}),
+        ...(states ? { quoteStates: states as QuoteState[] } : {}),
+      }),
   );
 
   const quoteRequestsResponse = useSWR(
-    ['/action/quote/queryQuoteRequests', limit, cursor, ids, states, businessUnitKey],
+    !businessUnitKey ? null : ['/action/quote/queryQuoteRequests', limit, cursor, ids, states, businessUnitKey],
     () =>
       sdk.composableCommerce.quote.queryRequests({
-        businessUnitKey,
+        businessUnitKey: businessUnitKey as string,
         ...(limit ? { limit } : {}),
         ...(cursor ? { cursor } : {}),
         ...(ids ? { quoteIds: ids } : {}),
@@ -33,15 +32,17 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, storeKey }: Op
   );
 
   const quotes = quotesResponse.data?.isError
-    ? ({} as Partial<Result & { items: Quote[] }>)
-    : quotesResponse.data?.data ?? ({} as Partial<Result & { items: Quote[] }>);
+    ? ({} as Partial<PaginatedResult<Quote>>)
+    : quotesResponse.data?.data ?? ({} as Partial<PaginatedResult<Quote>>);
 
   const quoteRequests = quoteRequestsResponse.data?.isError
-    ? ({} as Partial<Result & { items: QuoteRequest[] }>)
-    : quoteRequestsResponse.data?.data ?? ({} as Partial<Result & { items: QuoteRequest[] }>);
+    ? ({} as Partial<PaginatedResult<QuoteRequest>>)
+    : quoteRequestsResponse.data?.data ?? ({} as Partial<PaginatedResult<QuoteRequest>>);
 
   const cancelQuoteRequest = useCallback(
     async (id: string) => {
+      if (!businessUnitKey) return;
+
       const res = await sdk.composableCommerce.quote.cancelQuote({ id, businessUnitKey });
 
       return res.isError ? {} : res.data;
@@ -51,6 +52,8 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, storeKey }: Op
 
   const declineQuote = useCallback(
     async (id: string) => {
+      if (!businessUnitKey) return;
+
       const res = await sdk.composableCommerce.quote.declineQuote({ id, businessUnitKey });
 
       return res.isError ? {} : res.data;
@@ -60,6 +63,8 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, storeKey }: Op
 
   const renegotiateQuote = useCallback(
     async ({ id, comment }: { id: string; comment: string }) => {
+      if (!businessUnitKey) return;
+
       const res = await sdk.composableCommerce.quote.renegotiateQuote({ comment }, { id, businessUnitKey });
 
       return res.isError ? {} : res.data;
@@ -69,6 +74,8 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, storeKey }: Op
 
   const acceptQuote = useCallback(
     async (id: string) => {
+      if (!businessUnitKey) return;
+
       const res = await sdk.composableCommerce.quote.acceptQuote({ id, businessUnitKey });
 
       return res.isError ? {} : res.data;
@@ -76,20 +83,7 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, storeKey }: Op
     [businessUnitKey],
   );
 
-  const getQuotationCart = useCallback(
-    async (id: string) => {
-      const res = await sdk.callAction<Cart>({
-        actionName: 'quote/getQuotationCart',
-        query: { id, businessUnitKey, storeKey: storeKey ?? '' },
-      });
-
-      globalMutate(['/action/cart/getCart', businessUnitKey, storeKey]);
-      return res.isError ? { isSuccess: false, message: res.error } : { isSuccess: true, ...res.data };
-    },
-    [businessUnitKey, storeKey, globalMutate],
-  );
-
-  return { quotes, quoteRequests, cancelQuoteRequest, declineQuote, renegotiateQuote, acceptQuote, getQuotationCart };
+  return { quotes, quoteRequests, cancelQuoteRequest, declineQuote, renegotiateQuote, acceptQuote };
 };
 
 export default useQuotes;

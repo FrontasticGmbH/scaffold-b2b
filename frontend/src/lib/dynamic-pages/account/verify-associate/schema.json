@@ -1,0 +1,8 @@
+{
+  "name": "Verify Associate",
+  "category": "Account",
+  "icon": "group",
+  "isMultiple": true,
+  "dynamicPageType": "frontastic/verify-associate",
+  "dataSourceType": "frontastic/empty"
+}

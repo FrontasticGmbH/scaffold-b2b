@@ -47,7 +47,7 @@
               "label": "Link",
               "field": "link",
               "type": "reference",
-              "translatable": false
+              "translatable": true
             }
           ]
         }

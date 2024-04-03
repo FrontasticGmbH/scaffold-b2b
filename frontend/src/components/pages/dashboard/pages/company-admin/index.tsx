@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Select from '@/components/atoms/select';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Tabs from '@/components/organisms/tabs';
-import useMediaQuery from '@/hooks/useMediaQuery';
-import { desktop } from '@/constants/screensizes';
+import InfoBanner from '@/components/molecules/info-banner';
 import { CompanyAdminPageProps } from './types';
 import GeneralInformationTable from './components/general-information-table';
 import AddressesTable from './components/addresses-table';
@@ -26,21 +25,42 @@ const CompanyAdminPage = ({
   onSearchAddresses,
   onSearchAssociates,
   onSearchBusinessUnits,
+  addressesAreViewOnly = false,
+  businessUnitsAreViewOnly = false,
+  associatesAreViewOnly = false,
 }: CompanyAdminPageProps) => {
   const { translate } = useTranslation();
 
-  const [isLargerThanDesktop] = useMediaQuery(desktop);
-
   const params = useSearchParams();
 
-  const defaultTab = params.get('tab');
+  const [selectedTab, setSelectedTab] = useState(params.get('tab'));
 
   const router = useRouter();
 
-  if (!isLargerThanDesktop) return <></>;
-
   return (
-    <div>
+    <div className="hidden lg:block">
+      {selectedTab === '1' && addressesAreViewOnly && (
+        <InfoBanner className="mt-3">
+          <b>{translate('common.view.only')}</b> {translate('dashboard.addresses.view.only.desc')}
+        </InfoBanner>
+      )}
+
+      {selectedTab === '2' && associatesAreViewOnly && (
+        <InfoBanner className="mt-3">
+          <b>{translate('common.view.only')}</b> {translate('dashboard.associates.view.only.desc')}
+        </InfoBanner>
+      )}
+
+      {selectedTab === '3' && businessUnitsAreViewOnly && (
+        <InfoBanner className="mt-3">
+          <b>{translate('common.view.only')}</b> {translate('dashboard.business.units.view.only.desc')}
+        </InfoBanner>
+      )}
+
+      <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
+        {translate('common.company.admin')}
+      </h1>
+
       <div className="flex gap-3">
         <Select
           className="w-[280px]"
@@ -55,8 +75,11 @@ const CompanyAdminPage = ({
 
       <div className="mt-11">
         <Tabs
-          defaultActiveIndex={defaultTab ? +defaultTab : 0}
-          onActiveIndexChange={(index) => router.replace(`?tab=${index}`)}
+          defaultActiveIndex={selectedTab ? +selectedTab : 0}
+          onActiveIndexChange={(index) => {
+            setSelectedTab(index.toString());
+            router.replace(`?tab=${index}`);
+          }}
         >
           <Tabs.TabList>
             <Tabs.Tab>{translate('common.general')}</Tabs.Tab>
@@ -72,6 +95,7 @@ const CompanyAdminPage = ({
               <SearchPanel
                 translations={{ button: translate('dashboard.address.add') }}
                 buttonLink="?subPath=add-address"
+                buttonDisabled={addressesAreViewOnly}
                 onSearchChange={onSearchAddresses}
                 isEmpty={!addresses.length}
                 entity={translate('common.addresses').toLowerCase()}
@@ -83,23 +107,28 @@ const CompanyAdminPage = ({
               <SearchPanel
                 translations={{ button: translate('dashboard.associate.add') }}
                 buttonLink="?subPath=add-associate"
+                buttonDisabled={associatesAreViewOnly}
                 onSearchChange={onSearchAssociates}
                 isEmpty={!associates.length}
                 entity={translate('common.associates').toLowerCase()}
               >
-                <AssociatesTable associates={associates} onDeleteAssociate={onDeleteAssociate} />
+                <AssociatesTable
+                  associates={associates}
+                  onDeleteAssociate={onDeleteAssociate}
+                  associatesAreViewOnly={associatesAreViewOnly}
+                />
               </SearchPanel>
             </Tabs.Panel>
             <Tabs.Panel>
               <SearchPanel
                 translations={{ button: translate('dashboard.business.unit.add') }}
                 buttonLink="?subPath=add-business-unit"
-                buttonDisabled={!canAddBusinessUnit}
+                buttonDisabled={!canAddBusinessUnit || businessUnitsAreViewOnly}
                 onSearchChange={onSearchBusinessUnits}
                 isEmpty={!businessUnits.length}
                 entity={translate('common.business.units').toLowerCase()}
               >
-                <BusinessUnitsTable businessUnits={businessUnits} />
+                <BusinessUnitsTable businessUnits={businessUnits} businessUnitsAreViewOnly={businessUnitsAreViewOnly} />
               </SearchPanel>
             </Tabs.Panel>
           </Tabs.Panels>

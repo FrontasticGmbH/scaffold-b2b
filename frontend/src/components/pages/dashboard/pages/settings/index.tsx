@@ -22,7 +22,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
       name: translate('common.business.unit'),
       value: businessUnitOptions.find((unit) => unit.value === account.businessUnit)?.name,
     },
-    { name: translate('common.role'), value: account.role },
+    { name: translate('common.role'), value: account.roles.join(', ') },
   ];
 
   const { accordionExpanded, expandAccordion, collapseAccordion } = useAccordions();

@@ -1,13 +1,10 @@
-import { Account, Address } from "@shared/types/account";
+import { Address } from "@shared/types/account";
 
 type CreateBusinessUnitPayload = {
 	account: {
 		accountId: string;
 		email: string;
 		companyName: string;
-	};
-	store: {
-		storeId: string;
 	};
 };
 

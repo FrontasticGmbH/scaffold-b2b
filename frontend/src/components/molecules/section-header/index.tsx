@@ -8,7 +8,7 @@ const SectionHeader = ({ title, link }: SectionHeaderProps) => {
   return (
     <div className="pb-7 pt-8 text-center lg:pb-9 lg:pt-12">
       {title && <h3 className="text-16 font-bold text-gray-800 md:text-18 lg:text-24">{title}</h3>}
-      {link && (
+      {link?.href && (
         <Link
           href={link.href ?? '#'}
           openInNewTab={link.openInNewTab}

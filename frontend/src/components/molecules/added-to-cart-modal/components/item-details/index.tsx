@@ -18,13 +18,13 @@ const ItemDetails = ({ item }: PropsType) => {
         >
           {item.name}
         </Typography>
-        {item.model && (
+        {item.sku && (
           <Typography
             fontSize={14}
             lineHeight={'tight'}
             className="truncate text-xs leading-none text-gray-600 md:mb-4 md:text-sm md:leading-none"
           >
-            {item.model}
+            {item.sku}
           </Typography>
         )}
       </div>

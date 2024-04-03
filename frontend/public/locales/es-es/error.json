@@ -1,0 +1,15 @@
+{
+  "auth.wrong": "Correo electrónico o contraseña no válidos. Por favor revisa e intenta de nuevo.",
+  "auth.action.verify": "Acción requerida: verifique su correo electrónico utilizando el correo electrónico de verificación enviado.",
+  "wentWrong": "Perdón, algo salió mal..",
+  "wentWrong.retry": "Perdón, algo salió mal. Inténtelo de nuevo en 5 minutos.",
+  "password.noMatch": "Las contraseñas no coinciden.",
+  "password.not.valid": "La contraseña debe tener al menos 8 caracteres y al menos una letra mayúscula.",
+  "account.create.fail": "Lo siento. No pudimos crear tu cuenta...",
+  "email.enter": "Por favor, introduzca su dirección de correo electrónico",
+  "email": "El correo no es válido.",
+  "email.exists": "La dirección de correo electrónico no es válida o ya existe.",
+  "name": "El nombre debe tener al menos dos caracteres.",
+  "verify.failed": "Fallo en la verificación",
+  "verify.failed.description": "Lo sentimos, no pudimos verificar su cuenta. Se ha enviado un nuevo enlace de verificación a su dirección de correo electrónico."
+}

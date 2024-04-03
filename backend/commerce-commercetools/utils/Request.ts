@@ -63,3 +63,39 @@ export const getStoreKey = (request: Request): string | null => {
 
   return null;
 };
+
+export const getStoreId = (request: Request): string | null => {
+  if (request !== undefined) {
+    const { storeId } = parseQueryParams<{
+      storeId: string;
+    }>(request.query);
+
+    return storeId ?? request.sessionData?.storeId;
+  }
+
+  return null;
+};
+
+export const getDistributionChannelId = (request: Request): string | null => {
+  if (request !== undefined) {
+    const { distributionChannelId } = parseQueryParams<{
+      distributionChannelId: string;
+    }>(request.query);
+
+    return distributionChannelId ?? request.sessionData?.distributionChannelId;
+  }
+
+  return null;
+};
+
+export const getSupplyChannelId = (request: Request): string | null => {
+  if (request !== undefined) {
+    const { supplyChannelId } = parseQueryParams<{
+      supplyChannelId: string;
+    }>(request.query);
+
+    return supplyChannelId ?? request.sessionData?.supplyChannelId;
+  }
+
+  return null;
+};

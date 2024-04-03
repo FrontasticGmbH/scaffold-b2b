@@ -2,8 +2,6 @@ import { SVGAttributes, useMemo } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { classnames } from '@/utils/classnames/classnames';
-import useMediaQuery from '@/hooks/useMediaQuery';
-import { tablet } from '@/constants/screensizes';
 import Typography from '../../typography';
 import Select from '../../select';
 import { TablePaginationProps } from '../types';
@@ -18,8 +16,6 @@ const TablePagination = ({
   onNext,
 }: TablePaginationProps) => {
   const { translate } = useTranslation();
-
-  const [isTabletSize] = useMediaQuery(tablet);
 
   const { from, to } = useMemo(() => {
     const from = totalItems === 0 ? '0' : ((page - 1) * limit + 1).toString();
@@ -47,8 +43,11 @@ const TablePagination = ({
   return (
     <div className={paginationClassName}>
       <div className="flex items-center gap-2">
-        <Typography fontSize={14} className="text-gray-700">
-          {isTabletSize ? translate('common.rows.per.page') : translate('common.rows')}
+        <Typography fontSize={14} className="text-gray-700 md:hidden">
+          {translate('common.rows')}
+        </Typography>
+        <Typography fontSize={14} className="hidden text-gray-700 md:block">
+          {translate('common.rows.per.page')}
         </Typography>
         <Select
           onChange={onRowsPerPageChange}

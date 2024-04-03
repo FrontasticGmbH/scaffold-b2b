@@ -30,7 +30,7 @@
 
 .slick-dots li button {
   overflow: hidden;
-  text-indent: 999px;
+  opacity: 0;
 }
 
 .slick-dots li.slick-active {

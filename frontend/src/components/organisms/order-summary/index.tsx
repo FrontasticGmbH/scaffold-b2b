@@ -1,7 +1,5 @@
-import useMediaQuery from '@/hooks/useMediaQuery';
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
-import { desktop } from '@/constants/screensizes';
 import DiscountsForm from '@/components/molecules/discounts-form';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import OrderPaymentSection from '../order-payment-section';
@@ -15,12 +13,11 @@ const OrderSummary = ({
   includeSummaryAccordion,
   includeItemsList,
   transaction,
-  isQuotationCart,
+  discounts,
+  onDiscountRedeem,
   ...props
 }: OrderSummaryProps) => {
   const { translate } = useTranslation();
-
-  const [isDesktopSize] = useMediaQuery(desktop);
 
   const itemsListClassName = classnames('mb-6 border-y border-neutral-400', props.classNames?.itemsList);
 
@@ -42,18 +39,21 @@ const OrderSummary = ({
         <SummaryAccordion className="lg:hidden" order={props.order} cart={props.cart} transaction={transaction} />
       )}
 
-      {!isDesktopSize && includeSummaryAccordion && (
+      {includeSummaryAccordion && (
         <DiscountsForm
-          className={props.classNames?.applyDiscountButton}
-          discounts={[]}
-          onSubmit={isQuotationCart ? () => Promise.reject() : async () => false}
+          className={`${props.classNames?.applyDiscountButton} block lg:hidden`}
+          discounts={discounts ?? []}
+          onSubmit={onDiscountRedeem}
           customError={translate('cart.quote.cannot.apply.discount')}
         />
       )}
 
-      {(isDesktopSize || !includeSummaryAccordion) && (
+      {!includeSummaryAccordion && (
         <OrderPaymentSection
+          className={`${!includeSummaryAccordion ? '' : 'hidden lg:block'}`}
           transaction={transaction}
+          discounts={discounts ?? []}
+          onDiscountRedeem={onDiscountRedeem}
           classNames={{
             applyDiscountButton: 'py-3 text-16',
             totalAmount: 'text-18 md:pb-5',

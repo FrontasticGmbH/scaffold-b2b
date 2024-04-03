@@ -15,7 +15,7 @@ Primary.args = {
     lastName: 'Dickerson',
     email: 'Matt@commercetools.com',
     businessUnit: '2',
-    role: 'Buyer',
+    roles: ['Buyer'],
   },
   businessUnitOptions: [
     { name: 'West Coast', value: '0' },

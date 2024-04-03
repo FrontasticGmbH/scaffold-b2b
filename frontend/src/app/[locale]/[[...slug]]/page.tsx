@@ -4,13 +4,12 @@ import { sdk } from '@/sdk';
 import { PageProps } from '@/types/next';
 import { getLocalizationInfo } from '@/project.config';
 import Renderer from '@/lib/renderer';
-import tastics from '@/lib/tastics';
 import { getTranslations } from '@/utils/I18n/get-translations';
 import Toaster from '@/components/atoms/toaster';
 import { authenticate } from '@/utils/server/authenticate';
 import { Providers } from '@/providers';
-import getServerOptions from '@/utils/server/getServerOptions';
 import fetchPageData from '@/utils/server/fetch-page-data';
+import fetchBusinessUnits from '@/utils/server/fetchBusinessUnits';
 
 /* Start of Route Segments */
 
@@ -49,14 +48,9 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
 
-  const page = await fetchPageData(slug, searchParams);
+  const [page, businessUnits] = await Promise.all([fetchPageData(slug, searchParams), fetchBusinessUnits()]);
 
-  if (page.isError) return <></>;
-
-  const businessUnits = await sdk.composableCommerce.businessUnit.getBusinessUnits(
-    { expandStores: true },
-    { ...getServerOptions() },
-  );
+  if (page.isError) return redirect(`/${locale}/404`);
 
   const translations = await getTranslations(
     [locale],
@@ -88,7 +82,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         businessUnits: businessUnits.isError ? [] : businessUnits.data,
       }}
     >
-      <Renderer data={page.data} tastics={tastics} params={params} searchParams={searchParams} />
+      <Renderer data={page.data} params={params} searchParams={searchParams} />
       <Toaster />
     </Providers>
   );

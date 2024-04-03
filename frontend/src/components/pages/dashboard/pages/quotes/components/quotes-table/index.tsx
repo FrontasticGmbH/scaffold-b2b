@@ -48,7 +48,7 @@ const QuotesTable = ({
               <Table.Cell>
                 <span className="block max-w-full truncate text-12 md:text-14">{id}</span>
               </Table.Cell>
-              <Table.Cell>{creationDate}</Table.Cell>
+              <Table.Cell>{creationDate ? new Date(creationDate).toLocaleDateString() : '-'}</Table.Cell>
               <Table.Cell>{businessUnit}</Table.Cell>
               <Table.Cell className="text-right">{formatCurrency(total, currency)}</Table.Cell>
               <Table.Cell isButtonsCell>

@@ -7,7 +7,8 @@ export type ToastThemeRef = {
   [key in ToastVariant]: { backgroundColor: string; fill: string; icon: typeof CheckCircleIcon };
 };
 
-export type CommonProps = [string, ToastVariant, ToastOptions | undefined];
-export type GetToastOptions = (...args: CommonProps) => [string, ToastOptions];
+export type CommonProps = [ToastVariant, ToastOptions | undefined];
 
-export type GetToast = (...args: CommonProps) => ReturnType<typeof ReactToast>;
+export type GetToastOptions = (...args: [number, ...CommonProps]) => ToastOptions;
+
+export type GetToast = (...args: [string | JSX.Element, ...CommonProps]) => ReturnType<typeof ReactToast>;

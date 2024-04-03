@@ -18,6 +18,6 @@ export abstract class ExtensionError extends Error {
     super(message || errors[0]?.message);
 
     this.errors = errors || [{ message }];
-    this.statusCode = statusCode;
+    this.statusCode = isNaN(statusCode) ? 503 : statusCode;
   }
 }

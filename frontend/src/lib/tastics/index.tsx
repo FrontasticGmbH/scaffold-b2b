@@ -9,9 +9,9 @@ import FooterTastic from './footer';
 import HeroTileTastic from './hero-tile';
 import NotFoundTastic from './not-found';
 import HeaderTastic from './header';
-import { TasticRegistry } from './types';
 import ProductListTastic from './product-list';
 import VerifyTastic from './account/verify';
+import VerifyAssociateTastic from './account/verify-associate';
 import CartTastic from './cart';
 import QuotesTastic from './quotes';
 import OrdersTastic from './orders';
@@ -27,6 +27,9 @@ import ThankYouTastic from './thank-you';
 import ProductSliderTastic from './product-slider';
 import ProductDetailsTastic from './product-details';
 import QuoteRequestDetailsTastic from './quote-request-detail';
+import QuoteCheckoutTastic from './quote-checkout';
+import QuoteThankYouTastic from './quote-thank-you';
+import type { TasticRegistry } from './types';
 
 const tastics = {
   'commercetools/ui/content/hero-tile': HeroTileTastic,
@@ -42,6 +45,7 @@ const tastics = {
   'commercetools/ui/cart': CartTastic,
   'commercetools/ui/account/login': AccountLoginTastic,
   'commercetools/ui/account/verify': VerifyTastic,
+  'commercetools/ui/account/verify-associate': VerifyAssociateTastic,
   'commercetools/ui/account/register': AccountRegisterTastic,
   'commercetools/ui/account/reset-password': ResetPasswordTastic,
   'commercetools/ui/quotes': QuotesTastic,
@@ -55,7 +59,9 @@ const tastics = {
   'commercetools/ui/quote-detail': QuoteDetailTastic,
   'commercetools/ui/quote-request-detail': QuoteRequestDetailsTastic,
   'commercetools/ui/checkout': CheckoutTastic,
+  'commercetools/ui/quote-checkout': QuoteCheckoutTastic,
   'commercetools/ui/thank-you': ThankYouTastic,
+  'commercetools/ui/quote-thank-you': QuoteThankYouTastic,
   'commercetools/ui/products/product-slider': ProductSliderTastic,
 } as TasticRegistry;
 

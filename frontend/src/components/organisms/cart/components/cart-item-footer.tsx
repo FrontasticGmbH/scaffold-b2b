@@ -25,9 +25,7 @@ const CartItemFooter = ({ className, onRemove, item, onAddToNewWishlist, isQuota
         lists={purchaseLists?.items.map(mapPurchaseList).map((list) => ({ id: list.id, label: list.name })) ?? []}
         onAddNewList={onAddToNewWishlist}
         onSubmit={async (selected) => {
-          await Promise.all(
-            selected.map((listId) => addItem({ wishlistId: listId, sku: item.variant?.sku ?? '', count: 1 })),
-          );
+          await Promise.all(selected.map((listId) => addItem({ wishlistId: listId, sku: item.sku ?? '', count: 1 })));
         }}
       />
 

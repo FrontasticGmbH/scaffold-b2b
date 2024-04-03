@@ -20,9 +20,6 @@ const useBusinessUnits = () => {
     }) => {
       const response = await sdk.composableCommerce.businessUnit.createBusinessUnit({
         account: payload.account,
-        store: {
-          storeId: payload.storeId,
-        },
       });
 
       mutateBusinessUnits();
@@ -50,9 +47,9 @@ const useBusinessUnits = () => {
   );
 
   const addAssociate = useCallback(
-    async ({ email, role, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
+    async ({ email, roles, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
       const response = await sdk.composableCommerce.businessUnit.addAssociate(
-        { email: email as string, roleKeys: [role as string] },
+        { email: email as string, roleKeys: roles ?? [] },
         { businessUnitKey },
       );
 
@@ -64,9 +61,9 @@ const useBusinessUnits = () => {
   );
 
   const updateAssociate = useCallback(
-    async ({ id, role, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
+    async ({ id, roles, businessUnitKey }: Partial<Associate> & { businessUnitKey: string }) => {
       const response = await sdk.composableCommerce.businessUnit.updateAssociate(
-        { accountId: id as string, roleKeys: [role as string] },
+        { accountId: id as string, roleKeys: roles ?? [] },
         { businessUnitKey },
       );
 
@@ -126,7 +123,7 @@ const useBusinessUnits = () => {
 
   return {
     businessUnits: data?.isError ? [] : data?.data ?? [],
-    defaultBusinessUnit: data?.isError ? undefined : data?.data[0],
+    defaultBusinessUnit: data?.isError ? undefined : data?.data?.[0],
     addBusinessUnit,
     updateBusinessUnit,
     addAssociate,

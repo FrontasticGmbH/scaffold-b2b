@@ -2,9 +2,9 @@ import { Context, Request } from '@frontastic/extension-types';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { WishlistQuery } from '@Types/wishlist';
 import { PaginatedResult } from '@Types/result';
-import { WishlistApi } from '../apis/WishlistApi';
-import { getCurrency, getLocale, getPath } from './Request';
+import { getPath } from './Request';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
+import getWishlistApi from '@Commerce-commercetools/utils/getWishlistApi';
 
 export default class WishlistRouter {
   static identifyFrom(request: Request) {
@@ -24,7 +24,7 @@ export default class WishlistRouter {
   }
 
   static loadFor = async (request: Request, frontasticContext: Context): Promise<PaginatedResult<Wishlist>> => {
-    const wishlistApi = new WishlistApi(frontasticContext, getLocale(request), getCurrency(request));
+    const wishlistApi = getWishlistApi(request, frontasticContext);
 
     const urlMatches = getPath(request)?.match(/\/(wishlist|shopping-list)\/([^\/]+)/);
 
@@ -46,7 +46,7 @@ export default class WishlistRouter {
   };
 
   static loadPreviewFor = async (request: Request, frontasticContext: Context): Promise<PaginatedResult<Wishlist>> => {
-    const wishlistApi = new WishlistApi(frontasticContext, getLocale(request), getCurrency(request));
+    const wishlistApi = getWishlistApi(request, frontasticContext);
 
     const urlMatches = getPath(request)?.match(/\/preview\/.+\/(wishlist|shopping-list)\/([^\/]+)/);
 

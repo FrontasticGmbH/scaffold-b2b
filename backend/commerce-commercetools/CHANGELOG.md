@@ -1,4 +1,16 @@
 
+## Version 1.4.0 (2024-02-22)
+
+** New Features and Improvements **
+
+- Replaced get wishlists with query wishlists
+- Added endpoint to clear the cart from the session 
+- Replaced get wishlists with query wishlist
+
+** Bug fixes **
+
+- Return channel information as part of store in getBusinessUnit action
+
 ## Version 1.3.0 (2024-01-24)
 
 ** New Features and Improvements **

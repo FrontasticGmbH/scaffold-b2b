@@ -1,0 +1,19 @@
+{
+  "payment.methods": "Métodos de Pagamento",
+  "payment.details": "Exclua ou adicione métodos de pagamento.",
+  "add.card": "Adicionar novo cartão",
+  "edit": "Editar",
+  "edit.payment": "Editar forma de pagamento",
+  "add.payment": "Adicionar nova forma de pagamento",
+  "card.holder": "Titular do cartão *",
+  "card.number": "Número do cartão *",
+  "expiration.date": "Data de validade *",
+  "security.number": "Número de segurança *",
+  "save": "Salvar",
+  "cancel": "Cancelar",
+  "delete": "Excluir",
+  "delete.question": "Excluir forma de pagamento?",
+  "delete.warning": "Essa ação não pode ser desfeita.",
+  "card.number.error": "por favor digite um número de cartão de crédito válido",
+  "card.holder.error": "Insira o nome do titular do cartão"
+}

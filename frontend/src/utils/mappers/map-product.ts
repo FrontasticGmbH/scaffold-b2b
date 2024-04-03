@@ -1,13 +1,18 @@
 import { Product, Variant } from '@shared/types/product';
-import { Product as EntityProduct } from '@/types/entity/product';
+import { Attribute, Product as EntityProduct } from '@/types/entity/product';
 import { Currency } from '@/types/currency';
+import { mapMasterAttributes } from './map-master-attributes';
+import { mapCategory } from './map-category';
+import { mapAttribute } from './map-attribute';
 
-export const mapProduct = (product: Product): EntityProduct => {
+export const mapProduct = (product: Product, { variantIndex = -1 }: { variantIndex?: number } = {}): EntityProduct => {
   const variant =
+    product.variants[variantIndex] ??
     product.variants.find(
       (v) =>
         !!v.discountedPrice?.centAmount && !!v.price?.centAmount && v.discountedPrice.centAmount < v.price?.centAmount,
-    ) ?? product.variants[0];
+    ) ??
+    product.variants[0];
 
   const cheapeastVariant = product.variants.reduce(
     (a, b) => ((a.price?.centAmount ?? Number.MAX_VALUE) < (b.price?.centAmount ?? Number.MAX_VALUE) ? a : b),
@@ -23,6 +28,14 @@ export const mapProduct = (product: Product): EntityProduct => {
     } as Variant,
   );
 
+  const colors = product.variants.map((v) => mapAttribute(v.attributes?.color)).filter(Boolean) as Attribute[];
+  //   Temporary until correct mapping is done for the model attribute
+  const specs = product.variants
+    .map((v) => mapAttribute({ label: v.attributes?.model, key: v.attributes?.model }))
+    .filter(Boolean) as Attribute[];
+
+  const specifications = mapMasterAttributes(variant);
+
   const priceRange =
     cheapeastVariant &&
     mostExpensiveVariant &&
@@ -37,15 +50,18 @@ export const mapProduct = (product: Product): EntityProduct => {
     id: product.productId ?? '',
     sku: variant.sku,
     name: product.name ?? '',
-    description: variant.attributes?.['Product-Specifications'],
+    description: product.description,
+    specifications,
     images: variant.images,
+    colors,
+    specs,
     price: (variant.price?.centAmount ?? 0) / Math.pow(10, variant.price?.fractionDigits ?? 2),
     discountedPrice: (variant.discountedPrice?.centAmount ?? 0) / Math.pow(10, variant.price?.fractionDigits ?? 2),
     currency: (variant.price?.currencyCode ?? 'USD') as Currency,
     inStock: variant.isOnStock,
     maxQuantity: variant.isOnStock ? variant.availableQuantity : 0,
-    model: variant.sku,
     ...(priceRange ? { priceRange } : {}),
     url: product._url,
+    categories: product.categories?.map(mapCategory) ?? [],
   };
 };

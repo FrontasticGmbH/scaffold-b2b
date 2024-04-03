@@ -1,10 +1,16 @@
+import { PropsWithChildren } from 'react';
 import { Attribute, Product } from '@/types/entity/product';
 import { Wishlist as SharedWishlist } from '@shared/types/wishlist/Wishlist';
 
 export type Wishlist = {
   label: string;
   id: string;
+  lineItemId: string;
   productIsInWishlist?: boolean;
+};
+
+export type WishlistToastProps = {
+  wishlist: Wishlist;
 };
 
 export type ColoredVariantProps = {
@@ -29,6 +35,7 @@ export type SpecsVariantsProps = {
 export type ShoppingListCTAProps = {
   getWishlists: () => Promise<Array<Wishlist> | undefined>;
   addToWishlists: (wishlistIds: string[], count?: number) => Promise<Wishlist[]>;
+  removeFromWishlists: (wishlists: { wishlistId: string; lineItemId: string }[]) => Promise<Wishlist[]>;
   addToNewWishlist: (list: Pick<SharedWishlist, 'name' | 'description' | 'store'>, count?: number) => Promise<void>;
 };
 
@@ -49,6 +56,7 @@ export type ShippingProps = {
 };
 
 export type CartCTAProps = {
+  addToCartDisabled?: boolean;
   addToCart: (count: number) => Promise<void>;
   countChange: (count: number) => void;
 };
@@ -60,7 +68,7 @@ export type PDPMainInfoProps = Omit<CartCTAProps, 'countChange'> &
   Partial<Pick<SpecsVariantsProps, 'currentSpecs'>> & {
     product: Product;
     className?: string;
-    onChangeVariant: (variant: 'color' | 'specs', value: string) => void;
+    onChangeVariant: (variant: 'color' | 'model', value: string) => void;
   };
 
 export type PDPHeaderProps = {
@@ -68,18 +76,13 @@ export type PDPHeaderProps = {
   className?: string;
 };
 
-export type AdditionalInfoType = {
+export type AdditionalInfoItemProps = PropsWithChildren<{
+  className?: string;
   title: string;
-  description: string;
-};
+}>;
 
-export type AdditionalInfoItemProps = AdditionalInfoType & {
+export type AdditionalInfoProps = Pick<Product, 'description' | 'specifications'> & {
   className?: string;
-};
-
-export type AdditionalInfoProps = {
-  className?: string;
-  additionalInfo: Array<AdditionalInfoType>;
 };
 
 export type ProductDetailsProps = Omit<AdditionalInfoProps, 'className'> &

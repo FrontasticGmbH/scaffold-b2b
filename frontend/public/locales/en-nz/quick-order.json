@@ -1,0 +1,22 @@
+{
+  "quick.order": "Quick Order",
+  "search": "Search by product name or SKU",
+  "add.to.cart": "Add to cart",
+  "upload.csv": "Upload CSV file",
+  "download.csv": "Download template file",
+  "drag.csv": "Drag & drop CSV files",
+  "click.csv": " or click to browse",
+  "click.upload": "Upload",
+  "click.clear": "Clear",
+  "error.format.file": "File format is not supported (CSV)",
+  "error.format": "File format is not supported, please review template file",
+  "error.upload.fail": "An error occurred while uploading the file",
+  "error.no.file": "No file selected",
+  "error.file.exceeds": "File exceeds the maximum items 500",
+  "error.file.exists": "The file \"{file}\" has already been uploaded.",
+  "out.of.stock": "Out of stock",
+  "item.not.located": "Item not located",
+  "select.items": "Select items to add to cart",
+  "quantity": "Quantity:",
+  "quick.add.cart": "Quick add to cart"
+}

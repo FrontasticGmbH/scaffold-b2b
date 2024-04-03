@@ -1,0 +1,19 @@
+{
+  "payment.methods": "Métodos de pago",
+  "payment.details": "Eliminar o agregar métodos de pago.",
+  "add.card": "Agregar nueva tarjeta",
+  "edit": "Editar",
+  "edit.payment": "Editar método de pago",
+  "add.payment": "Agregar nuevo método de pago",
+  "card.holder": "Titular de la tarjeta *",
+  "card.number": "Número de tarjeta *",
+  "expiration.date": "Fecha de caducidad *",
+  "security.number": "Numero de seguridad *",
+  "save": "Ahorrar",
+  "cancel": "Cancelar",
+  "delete": "Borrar",
+  "delete.question": "¿Eliminar método de pago?",
+  "delete.warning": "Esta acción no se puede deshacer.",
+  "card.number.error": "Por favor, introduzca un número de tarjeta de crédito válida",
+  "card.holder.error": "Insertar nombre del titular de la tarjeta"
+}

@@ -17,4 +17,10 @@ export interface ActivityLog {
 
 export interface ActivityLogProps {
   activities: ActivityLog[];
+  translations?: {
+    accept?: string;
+    decline?: string;
+    cancel?: string;
+    send?: string;
+  };
 }

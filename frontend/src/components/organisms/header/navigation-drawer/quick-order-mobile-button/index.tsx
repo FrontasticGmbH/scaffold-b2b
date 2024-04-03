@@ -10,7 +10,7 @@ const QuickOrderMobileButton = ({ showQuickOrderMenu }: QuickOrderMobileProps) =
     <Button
       variant="ghost"
       size="fit"
-      className="block pb-8 underline-offset-8 hover:underline lg:hidden"
+      className="block underline-offset-8 hover:underline lg:hidden"
       onClick={showQuickOrderMenu}
     >
       <Typography fontSize={16} fontWeight="semibold" className="text-gray-800">

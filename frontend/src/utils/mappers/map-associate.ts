@@ -14,7 +14,7 @@ export const mapAssociate = ({
     firstName: firstName ?? '',
     lastName: lastName ?? '',
     email: email ?? '',
-    role: roles?.[0].key ?? '',
+    roles: (roles ?? []).filter((role) => !!role.key).map((role) => role.key as string),
     status: confirmed ? 'confirmed' : 'pending',
   };
 };

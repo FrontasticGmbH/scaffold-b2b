@@ -1,21 +1,13 @@
 import { useCallback, useState } from 'react';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
-import { BusinessUnit } from '@shared/types/business-unit/BusinessUnit';
-import useAccount from '@/lib/hooks/useAccount';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 
 const useBusinessUnit = () => {
   const { businessUnits: businessUnitsData } = useBusinessUnits();
 
-  const { account } = useAccount();
+  const { selectedBusinessUnit: globalBusinessUnit } = useStoreAndBusinessUnits();
 
-  const filterPriviliged = (businessUnit: BusinessUnit) => {
-    return businessUnit.associates?.some(
-      (associate) =>
-        associate.accountId === account?.accountId && associate.roles?.some((role) => role.key === 'admin'),
-    );
-  };
-
-  const [selectedBusinessUnitKey, setSelectedBusinessUnitKey] = useState<string>();
+  const [selectedBusinessUnitKey, setSelectedBusinessUnitKey] = useState<string | undefined>();
 
   const onBusinessUnitSelected = useCallback((key: string) => {
     setSelectedBusinessUnitKey(key);
@@ -23,9 +15,12 @@ const useBusinessUnit = () => {
 
   const selectedBusinessUnit = businessUnitsData?.find((businessUnit) => businessUnit.key === selectedBusinessUnitKey);
 
-  const activeBusinessUnit = selectedBusinessUnit ?? businessUnitsData?.filter(filterPriviliged)[0];
+  const activeBusinessUnit =
+    selectedBusinessUnit ??
+    businessUnitsData.find((businessUnit) => businessUnit.key === globalBusinessUnit?.key) ??
+    businessUnitsData[0];
 
-  const businessUnits = businessUnitsData?.filter(filterPriviliged) ?? [];
+  const businessUnits = businessUnitsData ?? [];
 
   return {
     businessUnits,

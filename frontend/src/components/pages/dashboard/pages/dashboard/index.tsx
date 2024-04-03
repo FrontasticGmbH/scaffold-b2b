@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Link from '@/components/atoms/link';
 import Card from '@/components/molecules/card';
 import InfoTooltip from '@/components/atoms/info-tooltip';
@@ -6,7 +6,7 @@ import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline'
 import useOnClickOutside from '@/hooks/useOnClickOutside';
 import useItems from '../../hooks/useItems';
 
-const DashboardPage = () => {
+const DashboardPage: React.FC = () => {
   const { cardItems } = useItems();
 
   const [showDisabledMessage, setShowDisabledMessage] = useState<Record<string, boolean>>({});

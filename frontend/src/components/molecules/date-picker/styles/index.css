@@ -39,8 +39,26 @@
 .rdp-day_selected,
 .rdp-day_selected:focus-visible,
 .rdp-day_selected:hover {
+  background-color: #eff0f5;
+  color: #fff;
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end {
+  position: relative;
+  z-index: 2;
+}
+
+.rdp-day_range_start::after,
+.rdp-day_range_end::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
   background-color: #173a5f;
   color: #fff;
+  border-radius: 50%;
+  z-index: -1;
 }
 
 .rdp-day_range_middle {

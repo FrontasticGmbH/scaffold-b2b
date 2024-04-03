@@ -4,7 +4,14 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import QuickOrderContent from './quick-order-content';
 import { QuickOrderContentProps } from '../types';
 
-const QuickOrderAccordion = ({ items, searchText, onSearch, addItem, closeMenu }: QuickOrderContentProps) => {
+const QuickOrderAccordion = ({
+  items,
+  searchText,
+  onSearch,
+  addItem,
+  addItemDisabled,
+  closeMenu,
+}: QuickOrderContentProps) => {
   const { translate } = useTranslation();
   return (
     <Accordion defaultIsExpanded>
@@ -18,6 +25,7 @@ const QuickOrderAccordion = ({ items, searchText, onSearch, addItem, closeMenu }
           onSearch={onSearch}
           addItem={addItem}
           closeMenu={closeMenu}
+          addItemDisabled={addItemDisabled}
         />
       </Accordion.Panel>
     </Accordion>

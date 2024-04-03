@@ -16,14 +16,14 @@ const ContentTile = ({ title, link, image }: ContentTileProps) => {
         href={link?.href ?? '#'}
         openInNewTab={link?.openInNewTab}
         underlineOnHover={false}
-        className="mt-4 text-16 font-bold leading-normal text-gray-700 lg:text-18"
+        className="mt-4 block text-16 font-bold leading-normal text-gray-700 lg:text-18"
       >
         {title}
       </Link>
       <Link
         href={link?.href ?? '#'}
         openInNewTab={link?.openInNewTab}
-        className="mt-3 items-center gap-2 text-14 leading-normal text-gray-700 lg:text-16"
+        className="mt-3 flex items-center gap-2 text-14 leading-normal text-gray-700 lg:text-16"
       >
         <span className="hidden lg:block">{link?.name}</span>
         <ArrowIcon className="text-gray-700" width={20} />

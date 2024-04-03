@@ -2,22 +2,22 @@ import { SDKResponse, ServerOptions } from '@commercetools/frontend-sdk';
 import { PaginatedResult } from '@shared/types/result';
 import { Wishlist } from '@shared/types/wishlist';
 import {
-  CreateWishlistPayload,
-  UpdateWishlistPayload,
   AddToWishlistPayload,
   AddToWishlistsPayload,
-  UpdateWishlistItemPayload,
+  CreateWishlistPayload,
   RemoveFromWishlistPayload,
+  UpdateWishlistItemPayload,
+  UpdateWishlistPayload,
 } from '../payloads/WishlistPayloads';
 import {
+  AddToWishlistQuery,
   CreateWishlistQuery,
+  DeleteWishlistQuery,
   GetWishlistQuery,
   QueryWishlistsQuery,
-  UpdateWishlistQuery,
-  DeleteWishlistQuery,
-  AddToWishlistQuery,
-  UpdateWishlistItemQuery,
   RemoveFromWishlistQuery,
+  UpdateWishlistItemQuery,
+  UpdateWishlistQuery,
 } from '../queries/WishlistQueries';
 
 type CreateWishlistAction = (

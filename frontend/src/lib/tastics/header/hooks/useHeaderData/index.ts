@@ -17,6 +17,8 @@ import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import { mapStore } from '@/utils/mappers/map-store';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { mapCsvProduct } from '@/utils/mappers/map-csv-product';
+import { BusinessUnit } from '@shared/types/business-unit';
+import { Store } from '@shared/types/store';
 
 const useHeaderData = () => {
   const router = useCustomRouter();
@@ -36,31 +38,41 @@ const useHeaderData = () => {
   const { selectedBusinessUnit, selectedStore, setSelectedBusinessUnit, setSelectedStore } = useStoreAndBusinessUnits();
 
   const onBusinessUnitSelect = useCallback(
-    (key: string) => {
-      const bu = (businessUnits ?? []).find((bu) => bu.key === key);
-      if (bu) {
-        setSelectedBusinessUnit(mapBusinessUnit(bu));
-        localStorage.setItem('business-unit', bu.key ?? '');
-      }
+    (businessUnitKey: string) => {
+      const bu = businessUnits.find((bu) => bu.key === businessUnitKey) as BusinessUnit;
+
+      setSelectedBusinessUnit(mapBusinessUnit(bu));
+      localStorage.setItem('business-unit', bu.key as string);
     },
-    [businessUnits, setSelectedBusinessUnit],
+    [setSelectedBusinessUnit, businessUnits],
   );
 
   const onStoreSelect = useCallback(
-    (key: string) => {
-      const st = (stores ?? []).find((s) => s.key === key);
-      if (st) {
-        setSelectedStore(mapStore(st));
-        localStorage.setItem('store', st.key ?? '');
-      }
+    (storeKey: string) => {
+      const st = stores.find((st) => st.key === storeKey) as Store;
+
+      setSelectedStore(mapStore(st));
+      localStorage.setItem('store', st.key ?? '');
     },
     [setSelectedStore, stores],
   );
 
   useEffect(() => {
-    onBusinessUnitSelect(localStorage.getItem('business-unit') ?? (defaultBusinessUnit?.key as string));
-    onStoreSelect(localStorage.getItem('store') ?? (defaultStore?.key as string));
-  }, [onStoreSelect, onBusinessUnitSelect, defaultBusinessUnit?.key, defaultStore?.key]);
+    const bu = businessUnits.find((bu) => bu.key === localStorage.getItem('business-unit')) ?? defaultBusinessUnit;
+    const st = stores.find((st) => st.key === localStorage.getItem('store')) ?? defaultStore;
+
+    if (!selectedBusinessUnit && bu) onBusinessUnitSelect(bu.key as string);
+    if (!selectedStore && st) onStoreSelect(st.key as string);
+  }, [
+    onStoreSelect,
+    onBusinessUnitSelect,
+    defaultBusinessUnit,
+    defaultStore,
+    businessUnits,
+    stores,
+    selectedBusinessUnit,
+    selectedStore,
+  ]);
 
   const { totalItems: totalCartItems, addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
@@ -73,7 +85,10 @@ const useHeaderData = () => {
   const { account, logout } = useAccount();
 
   const onLogoutClick = () => {
-    logout().then(() => router.push('/login'));
+    logout().then(() => {
+      router.refresh();
+      router.push('/login');
+    });
   };
 
   const mappedBusinessUnits: Option[] = businessUnits?.map(({ name, key }) => {
@@ -86,7 +101,12 @@ const useHeaderData = () => {
 
   const onQuickOrderSearch = (value: string) => setQuickOrderSearch(value);
 
-  const { products: quickOrderProducts } = useProductSearch(debouncedQuickOrderSearch);
+  const { products: quickOrderProducts } = useProductSearch(
+    debouncedQuickOrderSearch,
+    undefined,
+    undefined,
+    selectedStore?.key,
+  );
 
   const [headerSearch, setHeaderSearch] = useState(searchQuery || '');
 
@@ -94,7 +114,12 @@ const useHeaderData = () => {
 
   const onHeaderSearch = (value: string) => setHeaderSearch(value);
 
-  const { products: headerProducts } = useProductSearch(debouncedHeaderSearch);
+  const { products: headerProducts } = useProductSearch(
+    debouncedHeaderSearch,
+    undefined,
+    undefined,
+    selectedStore?.key,
+  );
 
   const headerSearchAction = () => router.push(`/search/?query=${debouncedHeaderSearch}`);
 
@@ -102,7 +127,7 @@ const useHeaderData = () => {
 
   const handleSKUsUpdate = (skus: string[]) => setSKUs(skus);
 
-  const { products: csvShowProducts } = useProductSearch('', skus, skus?.length ?? 0);
+  const { products: csvShowProducts } = useProductSearch('', skus, skus?.length ?? 0, selectedStore?.key);
 
   return {
     account,

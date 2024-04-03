@@ -81,13 +81,11 @@ export const addToCart: ActionHook = async (request: Request, actionContext: Act
 
     const body = parseRequestBody<{
       lineItems: LineItem[];
-      distributionChannelId?: string;
-      supplyChannelId?: string;
     }>(request.body);
 
     let cart = await CartFetcher.fetchCart(request, actionContext);
 
-    cart = await cartApi.addToCart(cart, body.lineItems, body.distributionChannelId, body.supplyChannelId);
+    cart = await cartApi.addToCart(cart, body.lineItems);
 
     const cartId = cart.cartId;
 

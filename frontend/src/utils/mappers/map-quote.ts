@@ -3,10 +3,13 @@ import { Quote } from '@/types/entity/quote';
 import { QuoteRequest } from '@shared/types/quote/QuoteRequest';
 import { Quote as CoCoQuote } from '@shared/types/quote/Quote';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
+import { BusinessUnit } from '@shared/types/business-unit';
 import { mapLineItem } from './map-lineitem';
 
 const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status']) => {
   const activity = [] as Quote['activity'];
+
+  const isQuote = (quote as CoCoQuote).quoteRequest;
 
   if (status === 'submitted') {
     activity.push({
@@ -30,7 +33,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
       commentBy: 'seller',
     });
 
-    if ((quote as CoCoQuote).quoteRequest) {
+    if (isQuote) {
       if (quote.expirationDate) {
         activity.push({
           title: 'dashboard.reply.needed.before',
@@ -99,25 +102,10 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
         commentBy: 'seller',
       },
     );
-
-    if (quote.expirationDate) {
-      activity.push({
-        title: 'dashboard.reply.needed.before',
-        titleValues: {
-          date: new Date(quote.expirationDate).toLocaleDateString().replace(/\//g, '-'),
-        },
-        reply: true,
-      });
-    } else {
-      activity.push({
-        title: 'dashboard.reply.needed',
-        reply: true,
-      });
-    }
   }
 
   if (status === 'accepted') {
-    if ((quote as CoCoQuote).quoteRequest) {
+    if (isQuote) {
       activity.push({
         title: 'dashboard.quote.accepted.by.seller',
         comment: '',
@@ -143,16 +131,10 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
         title: 'dashboard.quote.accepted.by.buyer',
       });
 
-      if ((quote as CoCoQuote).orderNumber) {
+      if ((quote as CoCoQuote).purchaseOrderNumber) {
         activity.push({
           title: 'dashboard.quote.order.was.created',
-          titleValues: { number: ((quote as CoCoQuote).orderNumber ?? '').replace(/-/g, ' ') },
-          viewOrder: true,
-        });
-      } else {
-        activity.push({
-          title: 'dashboard.finalize.quote.order',
-          checkout: true,
+          titleValues: { number: (quote as CoCoQuote).purchaseOrderNumber ?? '' },
         });
       }
     } else {
@@ -180,7 +162,7 @@ const getQuoteTransaction = (
   };
 };
 
-export const mapQuote = (quote: CoCoQuote): Quote => {
+export const mapQuote = (quote: CoCoQuote, { businessUnits }: { businessUnits?: BusinessUnit[] } = {}): Quote => {
   const statusMapping = {
     DeclinedForRenegotiation: 'waiting',
     RenegotiationAddressed: 'renegotiating',
@@ -198,9 +180,12 @@ export const mapQuote = (quote: CoCoQuote): Quote => {
     id: quote.quoteId ?? '',
     author: `${quote.quoteRequest?.account?.firstName} ${quote.quoteRequest?.account?.lastName}`,
     status,
-    creationDate: quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : '-',
-    lastModifiedDate: quote.lastModifiedAt ? new Date(quote.lastModifiedAt).toLocaleDateString() : '-',
-    businessUnit: quote.quoteRequest?.businessUnit?.name ?? quote.quoteRequest?.businessUnit?.key ?? '',
+    creationDate: quote.createdAt ? new Date(quote.createdAt).toISOString() : '',
+    lastModifiedDate: quote.lastModifiedAt ? new Date(quote.lastModifiedAt).toISOString() : '',
+    businessUnit:
+      businessUnits?.find((bu) => bu.key === quote.quoteRequest?.businessUnit?.key)?.name ??
+      quote.quoteRequest?.businessUnit?.key ??
+      '',
     activity: [
       {
         title: 'dashboard.quote.request.submitted',
@@ -214,7 +199,10 @@ export const mapQuote = (quote: CoCoQuote): Quote => {
   };
 };
 
-export const mapQuoteRequest = (quoteRequest: QuoteRequest): Quote => {
+export const mapQuoteRequest = (
+  quoteRequest: QuoteRequest,
+  { businessUnits }: { businessUnits?: BusinessUnit[] } = {},
+): Quote => {
   const statusMapping = {} as Record<Required<QuoteRequest>['quoteRequestState'], Quote['status']>;
 
   const status =
@@ -222,15 +210,18 @@ export const mapQuoteRequest = (quoteRequest: QuoteRequest): Quote => {
       statusMapping[quoteRequest.quoteRequestState as keyof typeof statusMapping] ??
       quoteRequest.quoteRequestState ??
       ''
-    ).toLocaleLowerCase() as Quote['status']) || 'inprogress';
+    ).toLocaleLowerCase() as Quote['status']) || 'submitted';
 
   return {
     id: quoteRequest.quoteRequestId ?? '',
     author: `${quoteRequest?.account?.firstName} ${quoteRequest?.account?.lastName}`,
     status,
-    creationDate: quoteRequest.createdAt ? new Date(quoteRequest.createdAt).toLocaleDateString() : '-',
-    lastModifiedDate: quoteRequest.lastModifiedAt ? new Date(quoteRequest.lastModifiedAt).toLocaleDateString() : '-',
-    businessUnit: quoteRequest.businessUnit?.name ?? quoteRequest.businessUnit?.key ?? '',
+    creationDate: quoteRequest.createdAt ? new Date(quoteRequest.createdAt).toISOString() : '',
+    lastModifiedDate: quoteRequest.lastModifiedAt ? new Date(quoteRequest.lastModifiedAt).toISOString() : '',
+    businessUnit:
+      businessUnits?.find((bu) => bu.key === quoteRequest?.businessUnit?.key)?.name ??
+      quoteRequest?.businessUnit?.key ??
+      '',
     activity: [
       {
         title: 'dashboard.quote.request.submitted',

@@ -9,3 +9,8 @@ export interface CartDetails {
 export interface CheckoutPayload {
   purchaseOrderNumber: string;
 }
+
+export interface QuoteRequestPayload {
+  buyerComment: string;
+  purchaseOrderNumber: string;
+}

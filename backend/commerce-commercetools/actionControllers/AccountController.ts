@@ -7,7 +7,6 @@ import { AccountApi } from '@Commerce-commercetools/apis/AccountApi';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
 import { BusinessUnitApi } from '@Commerce-commercetools/apis/BusinessUnitApi';
-import { StoreApi } from '@Commerce-commercetools/apis/StoreApi';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
 import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
@@ -49,7 +48,7 @@ type AccountChangePasswordBody = {
 async function loginAccount(request: Request, actionContext: ActionContext, account: Account): Promise<Response> {
   const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
 
-  const cart = await CartFetcher.fetchCart(request, actionContext);
+  const cart = await CartFetcher.fetchCartFromSession(request, actionContext);
 
   account = await accountApi.login(account, cart);
 
@@ -75,6 +74,7 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
   // By default, we'll select the first business unit and store for the user.
   const businessUnitKey = businessUnits?.[0]?.key;
   const storeKey = businessUnits?.[0]?.stores?.[0]?.key;
+  const storeId = businessUnits?.[0]?.stores?.[0]?.storeId;
 
   return {
     statusCode: 200,
@@ -84,6 +84,7 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
       account,
       businessUnitKey,
       storeKey,
+      storeId,
     },
   };
 }
@@ -155,17 +156,12 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
       }
     }
 
-    const cart = await CartFetcher.fetchCart(request, actionContext);
+    const cart = await CartFetcher.fetchCartFromSession(request, actionContext);
 
     const account = await accountApi.create(accountData, cart);
 
-    const storeApi = new StoreApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-
-    const defaultStoreKey = storeApi.getDefaultKey();
-    const store = await storeApi.get(defaultStoreKey);
-
     // Create the business unit for the account
-    await businessUnitApi.createForAccountAndStore(account, store);
+    await businessUnitApi.createForAccount(account);
 
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
 
@@ -174,6 +170,9 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
     if (!account.confirmed) {
       emailApi.sendAccountVerificationEmail(account);
     }
+
+    //We are unsetting the confirmationToken to avoid exposing it to the client
+    account.confirmationToken = null;
 
     const response: Response = {
       statusCode: 200,
@@ -210,7 +209,7 @@ export const deleteAccount: ActionHook = async (request: Request, actionContext:
 
     return {
       statusCode: 200,
-      body: '',
+      body: JSON.stringify(null),
       sessionData: {
         ...request.sessionData,
         account: null,
@@ -311,6 +310,11 @@ export const logout: ActionHook = async (request: Request) => {
       account: undefined,
       cartId: undefined,
       wishlistId: undefined,
+      businessUnitKey: undefined,
+      storeKey: undefined,
+      storeId: undefined,
+      distributionChannelId: undefined,
+      supplyChannelId: undefined,
     },
   } as Response;
 };
@@ -411,6 +415,7 @@ export const update: ActionHook = async (request: Request, actionContext: Action
     let account = fetchAccountFromSession(request);
 
     const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, getLocale(request));
 
     account = {
       ...account,
@@ -418,6 +423,10 @@ export const update: ActionHook = async (request: Request, actionContext: Action
     };
 
     account = await accountApi.update(account);
+
+    if (!account.confirmed) {
+      emailApi.sendAccountVerificationEmail(account);
+    }
 
     return {
       statusCode: 200,

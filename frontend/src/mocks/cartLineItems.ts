@@ -1,5 +1,4 @@
 import { LineItem } from '@shared/types/cart/LineItem';
-import productImage from 'public/sb-assets/brake-disk.png';
 
 export const cartLineItems: LineItem[] = [
   {
@@ -15,7 +14,7 @@ export const cartLineItems: LineItem[] = [
     variant: {
       id: '1',
       sku: 'GRCG-01',
-      images: [productImage.src],
+      images: ['/sb-assets/brake-disk.png'],
       attributes: {
         model: 'model a-1',
         productspec: '- Set of 5 glasses\n- Imported crystal\n- Gold polish on the rims',
@@ -40,7 +39,7 @@ export const cartLineItems: LineItem[] = [
     variant: {
       id: '1',
       sku: 'GPC-01',
-      images: [productImage.src],
+      images: ['/sb-assets/brake-disk.png'],
       attributes: {
         model: 'model a-1',
         color: 'silver',
@@ -69,7 +68,7 @@ export const cartLineItems: LineItem[] = [
     variant: {
       id: '1',
       sku: 'TTSS-01',
-      images: [productImage.src],
+      images: ['/sb-assets/brake-disk.png'],
       attributes: {
         model: 'model a-1',
         productspec: '- Three seater sofa\n- Velvet upholstery\n- Assembly on site',
@@ -104,7 +103,7 @@ export const cartLineItems: LineItem[] = [
     variant: {
       id: '1',
       sku: 'ALC-01',
-      images: [productImage.src],
+      images: ['/sb-assets/brake-disk.png'],
       attributes: {
         model: 'model a-1',
         color: 'lightpink',
@@ -134,7 +133,7 @@ export const cartLineItems: LineItem[] = [
     variant: {
       id: '1',
       sku: 'MMST-01',
-      images: [productImage.src],
+      images: ['/sb-assets/brake-disk.png'],
       attributes: {
         model: 'model a-1',
         color: 'white',

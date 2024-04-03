@@ -5,7 +5,7 @@
   "private": true,
   "main": "./index.ts",
   "engines": {
-    "node": "16.4 - 18.x"
+    "node": "16.14 - 18.x"
   },
   "scripts": {
     "extensions:watch": "tsup --env.NODE_ENV dev",
@@ -19,14 +19,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.16.5",
-    "@commercetools/platform-sdk": "7.2.0-alpha.4",
-    "@commercetools/sdk-client-v2": "^2.1.1",
+    "@commercetools/platform-sdk": "7.6.0",
+    "@commercetools/sdk-client-v2": "2.3.0",
     "@sendgrid/mail": "^7.7.0",
     "axios": "^0.24.0",
     "contentful": "^9.2.5",
     "core-js": "^3.20.0",
     "crypto-js": "^4.2.0",
-    "nodemailer": "^6.7.3",
+    "nodemailer": "^6.9.10",
     "performance-now": "^2.1.0",
     "qs": "^6.10.1",
     "regenerator-runtime": "^0.13.9"
@@ -44,7 +44,7 @@
     "@types/crypto-js": "^4.1.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^14.14.35",
-    "@types/nodemailer": "^6.4.4",
+    "@types/nodemailer": "^6.4.14",
     "@types/qs": "^6.9.7",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.1.0",

@@ -1,33 +1,33 @@
 import { SDK, ServerOptions } from '@commercetools/frontend-sdk';
 import { ComposableCommerceEventsB2B } from '../../types/events/ComposableCommerceEventsB2B';
 import {
-  CreateWishlistPayload,
-  UpdateWishlistPayload,
   AddToWishlistPayload,
   AddToWishlistsPayload,
-  UpdateWishlistItemPayload,
+  CreateWishlistPayload,
   RemoveFromWishlistPayload,
+  UpdateWishlistItemPayload,
+  UpdateWishlistPayload,
 } from '../../types/payloads/WishlistPayloads';
 import {
-  CreateWishlistQuery,
-  GetWishlistQuery,
-  UpdateWishlistQuery,
-  DeleteWishlistQuery,
   AddToWishlistQuery,
-  UpdateWishlistItemQuery,
-  RemoveFromWishlistQuery,
+  CreateWishlistQuery,
+  DeleteWishlistQuery,
+  GetWishlistQuery,
   QueryWishlistsQuery,
+  RemoveFromWishlistQuery,
+  UpdateWishlistItemQuery,
+  UpdateWishlistQuery,
 } from '../../types/queries/WishlistQueries';
 import {
-  CreateWishlistAction,
-  GetWishlistAction,
-  QueryWishlistsAction,
-  UpdateWishlistAction,
-  DeleteWishlistAction,
   AddToWishlistAction,
   AddToWishlistsAction,
-  UpdateWishlistItemAction,
+  CreateWishlistAction,
+  DeleteWishlistAction,
+  GetWishlistAction,
+  QueryWishlistsAction,
   RemoveFromWishlistAction,
+  UpdateWishlistAction,
+  UpdateWishlistItemAction,
 } from '../../types/actions/WishlistActions';
 import { Wishlist } from '@shared/types/wishlist';
 import { PaginatedResult } from '@shared/types/result';

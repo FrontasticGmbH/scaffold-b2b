@@ -25,7 +25,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
 
     router.back();
   }, [onUpdateAccount, data, router]);
-
+  const nameValidationProps = { pattern: '[A-Za-z]+', title: translate('common.name.validation') };
   return (
     <EntityForm
       translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}
@@ -48,6 +48,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
           label={translate('common.firstName')}
           required
           value={data.firstName ?? ''}
+          {...nameValidationProps}
           onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
         />
@@ -57,6 +58,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
           label={translate('common.lastName')}
           required
           value={data.lastName ?? ''}
+          {...nameValidationProps}
           onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
         />

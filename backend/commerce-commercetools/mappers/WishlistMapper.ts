@@ -8,7 +8,11 @@ import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
 
 export class WishlistMapper {
-  static commercetoolsShoppingListToWishlist = (commercetoolsShoppingList: ShoppingList, locale: Locale): Wishlist => {
+  static commercetoolsShoppingListToWishlist = (
+    commercetoolsShoppingList: ShoppingList,
+    locale: Locale,
+    supplyChannelId?: string,
+  ): Wishlist => {
     return {
       wishlistId: commercetoolsShoppingList.id,
       wishlistVersion: commercetoolsShoppingList.version.toString(),
@@ -16,13 +20,17 @@ export class WishlistMapper {
       name: commercetoolsShoppingList.name[locale.language],
       description: commercetoolsShoppingList.description?.[locale.language],
       lineItems: (commercetoolsShoppingList.lineItems || []).map((lineItem) =>
-        this.commercetoolsLineItemToLineItem(lineItem, locale),
+        this.commercetoolsLineItemToLineItem(lineItem, locale, supplyChannelId),
       ),
       store: this.commercetoolsStoreRefToStore(commercetoolsShoppingList.store),
     };
   };
 
-  static commercetoolsLineItemToLineItem(commercetoolsLineItem: ShoppingListLineItem, locale: Locale): LineItem {
+  static commercetoolsLineItemToLineItem(
+    commercetoolsLineItem: ShoppingListLineItem,
+    locale: Locale,
+    supplyChannelId?: string,
+  ): LineItem {
     const lineItem: LineItem = {
       lineItemId: commercetoolsLineItem.id,
       productId: commercetoolsLineItem.productId,
@@ -30,7 +38,11 @@ export class WishlistMapper {
       type: 'variant',
       addedAt: new Date(commercetoolsLineItem.addedAt),
       count: commercetoolsLineItem.quantity,
-      variant: ProductMapper.commercetoolsProductVariantToVariant(commercetoolsLineItem.variant, locale),
+      variant: ProductMapper.commercetoolsProductVariantToVariant(
+        commercetoolsLineItem.variant,
+        locale,
+        supplyChannelId,
+      ),
     };
 
     lineItem._url = ProductRouter.generateUrlFor(lineItem);

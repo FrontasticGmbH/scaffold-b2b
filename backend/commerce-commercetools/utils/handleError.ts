@@ -1,9 +1,9 @@
 import { Request } from '@frontastic/extension-types';
-import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
+import { ExtensionError } from '@Commerce-commercetools/errors/Errors';
 
-const handleError = (error: ExternalError | Error | unknown, request?: Request) => {
-  if (error instanceof ExternalError) {
-    const statusCode = error.statusCode ?? 400;
+const handleError = (error: ExtensionError | Error | unknown, request?: Request) => {
+  if (error instanceof ExtensionError) {
+    const statusCode = error.statusCode ?? 503;
 
     return {
       statusCode: statusCode,

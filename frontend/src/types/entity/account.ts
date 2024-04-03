@@ -3,5 +3,5 @@ export interface Account {
   lastName: string;
   email: string;
   businessUnit: string;
-  role: string;
+  roles: string[];
 }

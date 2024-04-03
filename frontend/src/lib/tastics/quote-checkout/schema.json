@@ -1,0 +1,18 @@
+{
+  "tasticType": "commercetools/ui/quote-checkout",
+  "name": "Quote Checkout",
+  "category": "Checkout",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Terms & Conditions Link",
+          "field": "termsAndConditionsLink",
+          "type": "reference",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

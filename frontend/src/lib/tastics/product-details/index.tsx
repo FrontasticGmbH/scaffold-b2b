@@ -1,11 +1,11 @@
 import { redirect } from 'next/navigation';
-import ProductDetailsMapper from './components/ProductDetailsMapper';
 import { ProductDetailsTasticProps } from './types';
+import ProductDetailsClientWrapper from './components/product-details-client-wrapper';
 
-const ProductDetailsTastic = ({ data }: ProductDetailsTasticProps) => {
-  if (!data.data?.dataSource?.product) return redirect('/404');
+const ProductDetailsTastic = (props: ProductDetailsTasticProps) => {
+  if (!props.data.data?.dataSource?.product) return redirect('/404');
 
-  return <ProductDetailsMapper product={data.data.dataSource.product} />;
+  return <ProductDetailsClientWrapper {...props} />;
 };
 
 export default ProductDetailsTastic;

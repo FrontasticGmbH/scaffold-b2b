@@ -1,0 +1,15 @@
+{
+  "my.wishlist": "Meine Wunschliste",
+  "wishlist": "Wunschzettel",
+  "items": "Wunschliste-Artikel",
+  "items.in.view": "Artikel in der Wunschliste, Wunschliste anzeigen",
+  "oops": "Hoppla...",
+  "empty": "Deine Wunschliste ist leer",
+  "add.items": "Elemente hinzufügen",
+  "add.to.cart": "In den Einkaufswagen legen",
+  "clear.list": "Löschen Sie die Liste",
+  "move": "Bewegen",
+  "move.to.list": "Zur Liste verschieben",
+  "select.list": "Einkaufsliste auswählen",
+  "item.added": "Artikel wurde hinzugefügt"
+}

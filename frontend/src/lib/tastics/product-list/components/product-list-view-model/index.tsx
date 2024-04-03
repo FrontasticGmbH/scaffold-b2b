@@ -9,6 +9,8 @@ import IntermediaryProductList from '@/components/organisms/product-list/compone
 import { resolveReference } from '@/utils/lib/resolve-reference';
 import useCurrency from '@/hooks/useCurrency';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import toast from '@/components/atoms/toaster/helpers/toast';
 import { DataSourceProps, ViewModelProps } from '../../types';
 import useMappedProducts from '../../hooks/useMappedProducts';
 import useMappedFacets from '../../hooks/useMappedFacets';
@@ -41,6 +43,8 @@ const ProductListViewModel = ({
 
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
+  const { permissions } = useAccountRoles(selectedBusinessUnit?.key);
+
   const { addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
   const { onSortValueChange, currentSortValue, limit, onLoadMore, onResetAll, onRefine } = useRefinement();
@@ -56,7 +60,7 @@ const ProductListViewModel = ({
     : [
         { name: translate('common.home'), link: '/' },
         ...slug.split('/').map((chunk, index, arr) => ({
-          name: chunk.replace(/-/g, ' '),
+          name: chunk.replace(/[-_]/g, ' '),
           link: `/${arr.slice(0, index + 1).join('/')}`,
         })),
       ];
@@ -111,6 +115,7 @@ const ProductListViewModel = ({
         // { name: translate('product.best-selling'), value: 'best-selling' },
         // { name: translate('product.newest'), value: 'newest' },
       ]}
+      addToCartDisabled={!permissions.UpdateMyCarts}
       currentSortValue={currentSortValue}
       facets={mappedFacets}
       limit={Math.min(limit, items.length)}
@@ -120,7 +125,9 @@ const ProductListViewModel = ({
       onSortValueChange={onSortValueChange}
       onLoadMore={onLoadMore}
       onAddToCart={async (sku, qty) => {
-        await addItem([{ sku, count: qty }]);
+        const res = await addItem([{ sku, count: qty }]);
+
+        if (!res.success) toast.error(res.message || translate('common.something.went.wrong'));
       }}
     />
   );

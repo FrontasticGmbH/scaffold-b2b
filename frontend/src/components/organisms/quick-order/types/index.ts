@@ -11,6 +11,7 @@ export interface QuickOrderProps {
   items: ProductSuggestion[];
   searchText?: string;
   csvProducts: Product[];
+  addItemDisabled?: boolean;
   addItem?: (
     lineItems: Array<{
       sku: string;
@@ -40,6 +41,7 @@ export interface QuickOrderCSVUploadProps {
   csvProducts: Product[];
   onClose?: () => void;
   handleSKUsUpdate?: (skus: string[]) => void;
+  addItemDisabled?: boolean;
   addItem?: (
     lineItems: Array<{
       sku: string;

@@ -17,6 +17,7 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
     categories: product?.categories?.map((category) => category.categoryId) as string[],
     limit: 8,
   });
+
   const { cart, updateItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
   const addedItem = cart?.lineItems?.find((item: LineItem) => {
     return item.variant?.sku === product?.sku;
@@ -43,7 +44,9 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
           item={{ ...product, quantity: count }}
           onClose={hideModal}
           onQuantityChange={handleOnQuantityChange}
-          sliderProducts={relatedProducts.filter((item) => item.productId !== product.id).map(mapProduct)}
+          sliderProducts={relatedProducts
+            .filter((item) => item.productId !== product.id)
+            .map((product) => mapProduct(product))}
         />
       )}
       <AddToCartOverlayContext.Provider value={{ showModal }}>{children}</AddToCartOverlayContext.Provider>

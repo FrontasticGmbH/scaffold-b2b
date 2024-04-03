@@ -32,7 +32,7 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
             {purchaseLists?.map(({ id, name, store, description, items }) => (
               <Table.Row key={id}>
                 <Table.Cell>{name}</Table.Cell>
-                <Table.Cell>{store}</Table.Cell>
+                <Table.Cell>{store?.name ?? '-'}</Table.Cell>
                 <Table.Cell>{description}</Table.Cell>
                 <Table.Cell>{items.length > 0 ? items.length : '-'}</Table.Cell>
                 <Table.Cell isButtonsCell>

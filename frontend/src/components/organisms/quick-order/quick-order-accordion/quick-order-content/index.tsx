@@ -8,7 +8,14 @@ import { ProductSuggestion } from '../../../search/types';
 import useQuickProductSearch from '../../../search/hooks/useProductSearch';
 import { QuickOrderContentProps } from '../../types';
 
-const QuickOrderContent = ({ items, searchText, onSearch, addItem, closeMenu }: QuickOrderContentProps) => {
+const QuickOrderContent = ({
+  items,
+  searchText,
+  onSearch,
+  addItem,
+  addItemDisabled,
+  closeMenu,
+}: QuickOrderContentProps) => {
   const { translate } = useTranslation();
   const [showSearch, setShowSearch] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -67,6 +74,7 @@ const QuickOrderContent = ({ items, searchText, onSearch, addItem, closeMenu }: 
           handleQuantityChange={handleQuantityChange}
         />
       ))}
+
       {(showSearch || products.length === 0) && (
         <Search
           scrollControl={false}
@@ -82,14 +90,14 @@ const QuickOrderContent = ({ items, searchText, onSearch, addItem, closeMenu }: 
       )}
       <div className="mt-5 flex items-center justify-start gap-x-2">
         {!showSearch && (
-          <Button onClick={handleShowSearch} variant="secondary" size="icon">
+          <Button onClick={handleShowSearch} variant="secondary" size="icon" disabled={addItemDisabled}>
             <AddItemIcon className="w-5" />
           </Button>
         )}
         <Button
           loading={addingToCart}
           onClick={handleAddToCart}
-          disabled={products.length <= 0}
+          disabled={products.length <= 0 || addItemDisabled}
           size="m"
           variant="primary"
           className="text-14"

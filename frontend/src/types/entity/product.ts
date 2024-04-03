@@ -1,18 +1,17 @@
 import { Currency } from '../currency';
+import { Category } from './category';
 
 export type Attribute = {
   label: string;
   value: string;
 };
 
-export type Category = { categoryId: string; name: string };
-
 export interface Product {
   id: string;
   sku?: string;
   name: string;
   description?: string;
-  model?: string;
+  specifications?: Array<Attribute>;
   images?: string[];
   price: number;
   discountedPrice?: number;
@@ -23,6 +22,7 @@ export interface Product {
   maxQuantity?: number;
   restockableInDays?: number;
   colors?: Array<Attribute>;
+  models?: Array<number>;
   specs?: Array<Attribute>;
   categories?: Array<Category>;
   url?: string;

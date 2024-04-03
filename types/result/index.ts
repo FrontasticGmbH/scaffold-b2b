@@ -2,7 +2,7 @@ import { Facet, FacetTypes } from './Facet';
 import { RangeFacet } from './RangeFacet';
 import { Term } from './Term';
 import { TermFacet } from './TermFacet';
-import { PaginatedResult, ProductPaginatedResult } from './PaginatedResult';
+import { PaginatedResult, ProductPaginatedResult, CategoryPaginatedResult } from './PaginatedResult';
 
 export {
   type Facet,
@@ -12,4 +12,5 @@ export {
   type TermFacet,
   type PaginatedResult,
   type ProductPaginatedResult,
+  type CategoryPaginatedResult,
 };

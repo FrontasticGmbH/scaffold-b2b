@@ -9,11 +9,11 @@ const FlagButton = ({ selectedShip, selectedLanguage, onOpen }: FlagButtonProps)
     <>
       {selectedShip && selectedLanguage && (
         <div
-          className="flex cursor-pointer items-center justify-center text-14 font-normal text-white underline-offset-4 hover:underline"
+          className="flex cursor-pointer items-center justify-center text-14 font-normal text-white"
           onClick={onOpen}
         >
-          <FlagIcons name={selectedShip.flagName} className="mr-1 h-fit w-5 rounded-full border border-white" />
-          <Typography fontSize={14} className="ml-1">{`/ ${
+          <FlagIcons name={selectedShip.flagName} className="mr-1 rounded-full border border-white" />
+          <Typography fontSize={14} className="ml-1 underline-offset-4 hover:underline">{`/ ${
             selectedShip.languages.length > 0
               ? selectedLanguage.name.split(' ')[0]
               : selectedShip.languages

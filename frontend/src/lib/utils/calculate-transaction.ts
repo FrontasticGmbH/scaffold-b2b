@@ -18,7 +18,10 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
 
   const totalAmount = cart.sum?.centAmount as number;
   const subTotalAmount = cart.lineItems.reduce(
-    (acc, curr) => acc + (curr.price?.centAmount || 0) * (curr.count as number),
+    (acc, curr) =>
+      acc +
+      (curr.price?.centAmount || 0) * (curr.count as number) -
+      (curr.taxIncludedInPrice ? curr.taxed?.taxAmount?.centAmount || 0 : 0),
     0,
   );
 
@@ -37,7 +40,10 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
 
   const totalShipping =
     totalAmount > 0
-      ? cart.shippingInfo?.price?.centAmount ?? cart.availableShippingMethods?.[0]?.rates?.[0]?.price?.centAmount ?? 0
+      ? (cart.shippingInfo?.price?.centAmount || 0) -
+          (cart.shippingInfo?.taxIncludedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount || 0 : 0) ||
+        cart.availableShippingMethods?.[0]?.rates?.[0]?.price?.centAmount ||
+        0
       : 0;
 
   const isEstimatedShipping = !cart.shippingInfo;

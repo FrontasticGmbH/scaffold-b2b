@@ -1,5 +1,4 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { Store } from '@Types/store/Store';
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
@@ -9,17 +8,16 @@ import { AccountApi } from '@Commerce-commercetools/apis/AccountApi';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import getCartApi from '@Commerce-commercetools/utils/getCartApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export interface BusinessUnitRequestBody {
   account: Account;
-  store?: Store;
   parentBusinessUnit?: string;
   name?: string;
   contactEmail?: string;
@@ -87,10 +85,7 @@ export const create: ActionHook = async (request: Request, actionContext: Action
 
     const businessUnitRequestBody: BusinessUnitRequestBody = JSON.parse(request.body);
 
-    const businessUnit = await businessUnitApi.createForAccountAndStore(
-      businessUnitRequestBody.account,
-      businessUnitRequestBody.store,
-    );
+    const businessUnit = await businessUnitApi.createForAccount(businessUnitRequestBody.account);
 
     const response: Response = {
       statusCode: 200,
@@ -261,12 +256,11 @@ export const addBusinessUnitAddress: ActionHook = async (request: Request, actio
       getCurrency(request),
     );
 
-    const requestData = parseRequestBody<{ address: Address }>(request.body);
+    const { address } = parseRequestBody<{ address: Address }>(request.body);
 
-    const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
     const businessUnitKey = request.query['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.addBusinessUnitAddress(businessUnitKey, account.accountId, addressData);
+    const businessUnit = await businessUnitApi.addBusinessUnitAddress(businessUnitKey, account.accountId, address);
 
     return {
       statusCode: 200,
@@ -289,17 +283,11 @@ export const updateBusinessUnitAddress: ActionHook = async (request: Request, ac
       getCurrency(request),
     );
 
-    const requestData = parseRequestBody<{ address: Address }>(request.body);
-
-    const addressData = AccountMapper.addressToCommercetoolsAddress(requestData.address);
+    const { address } = parseRequestBody<{ address: Address }>(request.body);
 
     const businessUnitKey = request.query['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.updateBusinessUnitAddress(
-      businessUnitKey,
-      account.accountId,
-      addressData,
-    );
+    const businessUnit = await businessUnitApi.updateBusinessUnitAddress(businessUnitKey, account.accountId, address);
 
     return {
       statusCode: 200,
@@ -407,7 +395,15 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
       getCurrency(request),
     );
 
-    await businessUnitApi.assertUserIsAssociate(account.accountId, businessUnitKey, storeKey);
+    const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId, true);
+
+    const store = businessUnit.stores?.find((store) => store.key === storeKey);
+
+    if (!store) {
+      throw new ResourceNotFoundError({
+        message: `Business Unit "${businessUnitKey}" is not linked to the store "${storeKey}"`,
+      });
+    }
 
     return {
       statusCode: 200,
@@ -416,6 +412,9 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
         ...request.sessionData,
         businessUnitKey,
         storeKey,
+        storeId: store.storeId,
+        distributionChannelId: store?.distributionChannels?.[0]?.channelId, // Use only the first distribution channel
+        supplyChannelId: store?.supplyChannels?.[0]?.channelId, // Use only the first supply channel
       },
     };
   } catch (error) {

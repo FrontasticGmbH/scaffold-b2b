@@ -2,11 +2,14 @@ import { Wishlist } from '@shared/types/wishlist/Wishlist';
 import { LineItem } from '@shared/types/wishlist/LineItem';
 import { PurchaseList, PurchaseListItem } from '@/types/entity/purchase-list';
 import { Currency } from '@/types/currency';
+import { Store } from '@/types/entity/business-unit';
+import { mapStore } from './map-store';
 
-export const mapPurchaseItem = ({ lineItemId, name, count, variant }: LineItem): PurchaseListItem => {
+export const mapPurchaseItem = ({ lineItemId, name, count, variant, _url }: LineItem): PurchaseListItem => {
   return {
     id: lineItemId,
     sku: variant?.sku ?? '',
+    url: _url ?? '#',
     name: name ?? '',
     quantity: count ?? 1,
     image: variant?.images?.[0],
@@ -20,7 +23,7 @@ export const mapPurchaseList = ({ wishlistId, name, description, lineItems, stor
   return {
     id: wishlistId as string,
     name: name ?? '',
-    store: store?.name ?? store?.key ?? '',
+    store: mapStore(store as Store) ?? {},
     description: description ?? '',
     items: (lineItems ?? []).map(mapPurchaseItem),
   };

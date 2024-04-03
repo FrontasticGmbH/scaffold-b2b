@@ -24,6 +24,7 @@ export interface Quote {
   account?: Account;
   buyerComment?: string;
   sellerComment?: string;
+  purchaseOrderNumber?: string;
   lineItems?: LineItem[];
   sum?: Money;
   // @deprecated use taxed instead
@@ -32,6 +33,6 @@ export interface Quote {
   expirationDate?: Date;
   quoteRequest?: QuoteRequest;
   quoteVersion?: number;
-  orderNumber?: string;
+  orderNumber?: string; // @deprecated used purchaseOrderNumber instead
   quotationCart?: Cart;
 }

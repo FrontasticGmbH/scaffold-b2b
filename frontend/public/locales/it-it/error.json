@@ -1,0 +1,15 @@
+{
+  "auth.wrong": "E-mail o password non validi. Si prega di verificare e riprovare.",
+  "auth.action.verify": "Azione richiesta: verifica la tua email utilizzando l'email di verifica inviata.",
+  "wentWrong": "Scusa, qualcosa è andato storto..",
+  "wentWrong.retry": "Scusa, qualcosa è andato storto. Riprova tra 5 minuti.",
+  "password.noMatch": "Le password non corrispondono.",
+  "password.not.valid": "La password deve contenere almeno 8 caratteri e contenere almeno una lettera maiuscola.",
+  "account.create.fail": "Scusa. Non siamo riusciti a creare il tuo account..",
+  "email.enter": "Inserisci il tuo indirizzo email",
+  "email": "L'email non è valida.",
+  "email.exists": "L'indirizzo email non è valido o esiste già.",
+  "name": "Il nome deve contenere almeno due caratteri.",
+  "verify.failed": "Verifica fallita",
+  "verify.failed.description": "Siamo spiacenti, non siamo riusciti a verificare il tuo account. Un nuovo link di verifica è stato inviato al tuo indirizzo email."
+}

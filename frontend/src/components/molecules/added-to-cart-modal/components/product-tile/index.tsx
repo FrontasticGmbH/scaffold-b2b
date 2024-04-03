@@ -18,7 +18,7 @@ const ProductTile = ({ product }: ProductTileProps) => {
         </div>
       </Link>
       <div className="p-2">
-        <span className="line-clamp-1 text-12 leading-loose text-neutral-900">{product.model}</span>
+        <span className="line-clamp-1 text-12 leading-loose text-neutral-900">{product.sku}</span>
         <Link
           href={product.url ?? '#'}
           className="line-clamp-2 h-[42px] text-14 font-semibold leading-loose text-gray-800 md:mt-1 lg:h-[48px] lg:text-16"

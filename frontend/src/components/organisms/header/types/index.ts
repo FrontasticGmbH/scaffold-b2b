@@ -32,6 +32,7 @@ export interface HeaderProps {
   quickOrderSearch: string;
   headerSearch: string;
   csvShowProducts: CsvProduct[];
+  addToCartDisabled?: boolean;
   onBusinessUnitChange?: (businessUnit: string) => void;
   onStoreChange?: (store: string) => void;
   onQuickOrderSearch?: (value: string) => void;
@@ -63,6 +64,7 @@ export interface ContextProps {
   quotes: number;
   quickOrderProducts: ProductSuggestion[];
   quickOrderSearch: string;
+  addToCartDisabled?: boolean;
   onBusinessUnitChange?: (businessUnit: string) => void;
   onStoreChange?: (store: string) => void;
   onQuickOrderSearch?: (value: string) => void;

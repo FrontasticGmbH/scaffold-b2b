@@ -1,15 +1,17 @@
 import { useCallback } from 'react';
 import { sdk } from '@/sdk';
 import useSWR, { useSWRConfig } from 'swr';
-import { Result } from '@shared/types/quote/Result';
 import { Order } from '@shared/types/cart/Order';
+import { PaginatedResult } from '@shared/types/result';
 import { Options } from './types';
 
 const useOrders = ({ cursor, limit, states, ids, businessUnitKey, createdFrom, createdTo }: Options) => {
   const { mutate: globalMutate } = useSWRConfig();
 
   const ordersResponse = useSWR(
-    ['/action/cart/queryOrders', limit, cursor, ids, states, createdFrom, createdTo, businessUnitKey],
+    !businessUnitKey
+      ? null
+      : ['/action/cart/queryOrders', limit, cursor, ids, states, createdFrom, createdTo, businessUnitKey],
     () =>
       sdk.composableCommerce.cart.queryOrders({
         ...(limit ? { limit } : {}),
@@ -28,8 +30,8 @@ const useOrders = ({ cursor, limit, states, ids, businessUnitKey, createdFrom, c
   }, [globalMutate]);
 
   const orders = ordersResponse.data?.isError
-    ? ({} as Partial<Result & { items: Order[] }>)
-    : ordersResponse.data?.data ?? ({} as Partial<Result & { items: Order[] }>);
+    ? ({} as Partial<PaginatedResult<Order>>)
+    : ordersResponse.data?.data ?? ({} as Partial<PaginatedResult<Order>>);
 
   const cancelOrder = useCallback(
     async (order: Order) => {
@@ -47,10 +49,7 @@ const useOrders = ({ cursor, limit, states, ids, businessUnitKey, createdFrom, c
 
   const replicateOrder = useCallback(
     async (orderId: string) => {
-      const response = await sdk.callAction({
-        actionName: 'cart/replicateCart',
-        payload: { orderId, businessUnitKey },
-      });
+      const response = await sdk.composableCommerce.cart.replicateOrder({ orderId }, { businessUnitKey });
 
       mutateAll();
 

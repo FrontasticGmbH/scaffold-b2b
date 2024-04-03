@@ -8,6 +8,7 @@ import DiscountsForm from '@/components/molecules/discounts-form';
 import Button from '@/components/atoms/button';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { desktop } from '@/constants/screensizes';
+import TextArea from '@/components/atoms/text-area';
 import { CheckoutProps } from '../../types';
 import { useCheckout } from '../../provider';
 
@@ -17,34 +18,56 @@ const OrderSummary = ({
   discounts,
   onApplyDiscount,
   onSubmitPurchase,
-}: Pick<CheckoutProps, 'transaction' | 'products' | 'discounts' | 'onApplyDiscount' | 'onSubmitPurchase'>) => {
+  buyerCanAddComment,
+  translations = {},
+}: Pick<
+  CheckoutProps,
+  | 'transaction'
+  | 'products'
+  | 'discounts'
+  | 'onApplyDiscount'
+  | 'onSubmitPurchase'
+  | 'translations'
+  | 'buyerCanAddComment'
+>) => {
   const { translate } = useTranslation();
 
   const [isLargerThanDesktop] = useMediaQuery(desktop);
 
   const { isLastStep } = useCheckout();
 
+  const [buyerComment, setBuyerComment] = useState('');
+
   const { formatCurrency } = useFormat();
 
   const [loading, setLoading] = useState(false);
 
-  const handleClick = useCallback(async () => {
-    setLoading(true);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    await onSubmitPurchase();
+      setLoading(true);
 
-    setLoading(false);
-  }, [onSubmitPurchase]);
+      await onSubmitPurchase({ buyerComment });
+
+      setLoading(false);
+    },
+    [onSubmitPurchase, buyerComment],
+  );
 
   return (
     <div className="shrink-0 rounded-lg bg-white lg:w-[432px] lg:p-9">
       <div className="border-b border-neutral-400 pb-4">
-        <h5 className="text-gray-700 md:text-18">{translate('checkout.order.summary')}</h5>
+        <h5 className="text-gray-700 md:text-18">
+          {translations.orderSummaryTitle || translate('checkout.order.summary')}
+        </h5>
       </div>
       <Accordion className="border-none" defaultIsExpanded={isLargerThanDesktop}>
         <Accordion.Button defaultSpacing={false} className="py-4">
           <div className="flex items-center justify-between">
-            <span className="text-gray-600">{translate('checkout.yourOrder')}</span>
+            <span className="text-gray-600">
+              {translations.orderSummarySubtitle || translate('checkout.yourOrder')}
+            </span>
             <span className="font-medium text-gray-700">{formatCurrency(transaction.total, transaction.currency)}</span>
           </div>
         </Accordion.Button>
@@ -108,16 +131,24 @@ const OrderSummary = ({
           currency={transaction.currency}
         />
       </div>
-      <Button
-        variant="primary"
-        size="l"
-        disabled={!isLastStep}
-        loading={loading}
-        className="hidden w-full lg:block"
-        onClick={handleClick}
-      >
-        {translate('checkout.complete.purchase')}
-      </Button>
+
+      <form onSubmit={handleSubmit} className="hidden lg:block">
+        {isLastStep && buyerCanAddComment && (
+          <div>
+            <TextArea
+              label={translate('common.comment').toUpperCase()}
+              className="min-h-[100px]"
+              onChange={(e) => setBuyerComment(e.target.value)}
+            />
+          </div>
+        )}
+
+        <div className="mt-5">
+          <Button variant="primary" size="full" disabled={!isLastStep} loading={loading} type="submit">
+            {translations.purchase || translate('checkout.complete.purchase')}
+          </Button>
+        </div>
+      </form>
     </div>
   );
 };

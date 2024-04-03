@@ -20,12 +20,23 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const [data, setData] = useState<Account>({});
   const [confirmed, setConfirmed] = useState(false);
   const [emailError, setEmailError] = useState<string>();
-
-  const inputArray = [
-    { label: translate('common.emailAddress'), name: 'email' },
+  const nameValidation = { pattern: '[A-Za-z]+', title: translate('common.name.validation') };
+  const inputArray: Array<InputProps> = [
+    {
+      label: translate('common.emailAddress'),
+      name: 'email',
+    },
     { label: translate('common.companyName'), name: 'companyName' },
-    { label: translate('common.firstName'), name: 'firstName' },
-    { label: translate('common.lastName'), name: 'lastName' },
+    {
+      label: translate('common.firstName'),
+      name: 'firstName',
+      ...nameValidation,
+    },
+    {
+      label: translate('common.lastName'),
+      name: 'lastName',
+      ...nameValidation,
+    },
   ];
 
   const commonProps: InputProps = {
@@ -82,12 +93,15 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
           </div>
         ) : (
           <>
-            {inputArray.map(({ label, name }) => (
+            {inputArray.map(({ label, name, pattern, title }) => (
               <Input
                 key={name}
                 name={name}
                 value={(data[name as keyof Account] as string) ?? ''}
                 required
+                pattern={pattern}
+                title={title}
+                type={name === 'email' ? 'email' : 'text'}
                 label={label}
                 error={name === 'email' ? emailError : undefined}
                 {...commonProps}

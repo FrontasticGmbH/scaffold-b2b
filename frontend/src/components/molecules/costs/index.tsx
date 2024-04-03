@@ -49,7 +49,7 @@ const Costs = ({
     {
       key: 'discount',
       label: translate('cart.discount'),
-      value: discount,
+      value: -discount,
     },
   ];
 
@@ -57,7 +57,7 @@ const Costs = ({
     <div className={classNames.container}>
       <div className={subCostsContainerClassNames}>
         {costs
-          .filter(({ value }) => value > 0)
+          .filter(({ value }) => value != 0)
           .map(({ key, label, value }) => (
             <div key={key} className={subCostsClassNames}>
               <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>

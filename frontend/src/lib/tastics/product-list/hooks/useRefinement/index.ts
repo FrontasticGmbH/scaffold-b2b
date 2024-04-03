@@ -20,7 +20,7 @@ const useRefinement = () => {
   const currentSortValue =
     Array.from(params.keys())
       .find((key) => key.startsWith('sortAttributes'))
-      ?.match(/sortAttributes\[0\]\[(.+)\]/)?.[1] ?? 'price';
+      ?.match(/sortAttributes\[0\]\[(.+)\]/)?.[1] ?? '';
 
   const onSortValueChange = useCallback(
     (key: string) => {

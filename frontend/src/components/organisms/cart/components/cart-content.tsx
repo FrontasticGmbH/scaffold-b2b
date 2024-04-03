@@ -11,7 +11,6 @@ const CartContent = ({
   onRemove,
   onAdd,
   onAddToNewWishlist,
-  isQuotationCart,
 }: CartContentProps) => {
   const { translate } = useTranslation();
 
@@ -23,7 +22,7 @@ const CartContent = ({
         <>
           <div className="flex items-center gap-1">
             <Typography fontSize={16} className="text-gray-700 md:text-18 lg:text-20">
-              {translate(isQuotationCart ? 'cart.quotation.cart' : 'cart.cart')}
+              {translate('cart.cart')}
             </Typography>
             <Typography fontSize={16} className="text-neutral-900 md:text-18 lg:text-20">{`(${
               lineItems?.length
@@ -35,7 +34,6 @@ const CartContent = ({
             onUpdateQuantity={onUpdateQuantity}
             onRemove={onRemove}
             onAddToNewWishlist={onAddToNewWishlist}
-            isQuotationCart={isQuotationCart}
           />
         </>
       ) : (

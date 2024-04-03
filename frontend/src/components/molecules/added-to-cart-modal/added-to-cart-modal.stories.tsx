@@ -6,19 +6,19 @@ import { sliderItems } from '@/mocks/productSliderItems';
 import AddedToCartModal from './index';
 
 export default {
-  title: 'Molecules/Added To Cart Modal',
+  title: 'Molecules/Added To Cart Overlay',
   component: AddedToCartModal,
   tags: ['autodocs'],
 } as Meta<typeof AddedToCartModal>;
 
 const Template: StoryFn<AddedToCartModalProps> = (args) => {
-  const [, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   return (
     <div className="mt-6 w-full">
       <Button variant="primary" onClick={() => setOpen(true)}>
         Open Modal
       </Button>
-      <AddedToCartModal {...args} onClose={() => setOpen(false)} />
+      {open && <AddedToCartModal {...args} onClose={() => setOpen(false)} />}
     </div>
   );
 };

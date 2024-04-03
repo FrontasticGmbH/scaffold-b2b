@@ -36,10 +36,17 @@ const AddressesStep = ({
   });
 
   useEffect(() => {
-    setSelectedAddresses((selectedAddresses) => ({
-      shipping: initialData.shippingAddress ?? selectedAddresses.shipping ?? addresses[0],
-      billing: initialData.billingAddress ?? selectedAddresses.billing ?? addresses[0],
-    }));
+    setSelectedAddresses((currentSelectedAddresses) => {
+      const initialAddresses = {
+        shipping: initialData.shippingAddress ?? currentSelectedAddresses.shipping,
+        billing: initialData.billingAddress ?? currentSelectedAddresses.billing,
+      };
+
+      return {
+        shipping: initialAddresses.shipping?.id ? initialAddresses.shipping : addresses[0],
+        billing: initialAddresses.billing?.id ? initialAddresses.billing : addresses[0],
+      };
+    });
   }, [initialData.shippingAddress, initialData.billingAddress, addresses]);
 
   const keyToTitle = { shipping: 'delivery', billing: 'billing' };
@@ -129,7 +136,6 @@ const AddressesStep = ({
           showDefaultCheckBoxes={false}
           unstyled
         />
-
         <Confirmation
           isOpen={isAddressUnsavedModalOpen}
           translations={{

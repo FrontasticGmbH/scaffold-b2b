@@ -2,7 +2,7 @@ import { Reference } from '@/types/lib/reference';
 import { Link } from '@/types/link';
 
 export const resolveReference = (reference?: Reference, name?: string): Link => {
-  let href = '#';
+  let href = '';
 
   if (reference?.type === 'link' && reference.link) href = reference.link;
 

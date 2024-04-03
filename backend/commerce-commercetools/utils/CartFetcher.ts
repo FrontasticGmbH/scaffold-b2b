@@ -1,55 +1,55 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
-import { Account } from '@Types/account';
-import { CartApi } from '../apis/CartApi';
-import { getCurrency, getLocale } from './Request';
-import parseQueryParams from '@Commerce-commercetools/utils/parseRequestParams';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-
-interface CartFetcherRequestQuery {
-  storeKey?: string;
-  businessUnitKey?: string;
-}
+import getCartApi from '@Commerce-commercetools/utils/getCartApi';
+import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
+import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/Request';
 
 export class CartFetcher {
-  static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
-    const requestParams = parseQueryParams<CartFetcherRequestQuery>(request.query);
+  static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> {
+    const cart = await this.fetchCartFromSession(request, actionContext);
 
-    const account: Account = request.sessionData?.account;
+    if (cart) {
+      return cart;
+    }
+
+    const account = fetchAccountFromSession(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+    const storeKey = getStoreKey(request);
+
+    if (!account || !businessUnitKey || !storeKey) {
+      throw new ValidationError({
+        message: 'Cart can not be fetch without account, business unit key, and store key',
+      });
+    }
+
+    return await getCartApi(request, actionContext.frontasticContext).getInStore(storeKey);
+  }
+
+  static async fetchCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
     const cartId = request.sessionData?.cartId;
-    const businessUnitKey = requestParams?.businessUnitKey;
-    const storeKey = requestParams.storeKey;
+    const account = fetchAccountFromSession(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+    const storeKey = getStoreKey(request);
 
-    if (businessUnitKey && account) {
-      const cartApi = new CartApi(
-        actionContext.frontasticContext,
-        getLocale(request),
-        getCurrency(request),
-        account.accountId,
-        businessUnitKey,
-      );
+    if (!cartId || !account || !businessUnitKey || !storeKey) {
+      return undefined;
+    }
 
-      if (cartId) {
-        try {
-          const cart = await cartApi.getById(cartId);
-          if (cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)) {
-            return cart;
-          }
-        } catch (error) {
-          // A ExternalError might be thrown if the cart does not exist or belongs to a different business unit,
-          // in which case we should create a new cart.
-          if (!(error instanceof ExternalError)) {
-            throw error;
-          }
-        }
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    try {
+      const cart = await cartApi.getById(cartId);
+      if (cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)) {
+        return cart;
       }
-
-      if (!storeKey) {
-        throw new ValidationError({ message: 'No store key' });
+    } catch (error) {
+      // A ExternalError might be thrown if the cart does not exist or belongs to a different business unit,
+      // in which case we should create a new cart.
+      if (!(error instanceof ExternalError)) {
+        throw error;
       }
-
-      return await cartApi.getInStore(storeKey);
     }
 
     return undefined;

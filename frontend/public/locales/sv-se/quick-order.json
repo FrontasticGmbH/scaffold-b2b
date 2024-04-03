@@ -1,0 +1,22 @@
+{
+  "quick.order": "Snabb order",
+  "search": "Sök på produktnamn eller SKU",
+  "add.to.cart": "Lägg till i kundvagn",
+  "upload.csv": "Ladda upp CSV-fil",
+  "download.csv": "Ladda ner mallfil",
+  "drag.csv": "Dra och släpp CSV-filer",
+  "click.csv": " eller klicka för att bläddra",
+  "click.upload": "Ladda upp",
+  "click.clear": "Klar",
+  "error.format.file": "Filformatet stöds inte (CSV)",
+  "error.format": "Filformat stöds inte, vänligen granska mallfilen",
+  "error.upload.fail": "Ett fel uppstod när filen laddades upp",
+  "error.no.file": "Ingen fil vald",
+  "error.file.exceeds": "Filen överskrider det maximala antalet objekt 500",
+  "error.file.exists": "Filen \"{file}\" har redan laddats upp.",
+  "out.of.stock": "Slut i lager",
+  "item.not.located": "Objektet finns inte",
+  "select.items": "Välj artiklar att lägga till i kundvagnen",
+  "quantity": "Kvantitet:",
+  "quick.add.cart": "Lägg snabbt till i kundvagnen"
+}

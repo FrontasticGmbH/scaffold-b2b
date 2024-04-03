@@ -1,7 +1,6 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Wishlist, WishlistQuery } from '@Types/wishlist';
 import { Account } from '@Types/account';
-import { getCurrency, getLocale } from '../utils/Request';
 import { WishlistApi } from '../apis/WishlistApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { WishlistFetcher } from '@Commerce-commercetools/utils/WishlistFetcher';
@@ -9,12 +8,9 @@ import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
+import getWishlistApi from '@Commerce-commercetools/utils/getWishlistApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
-
-function getWishlistApi(request: Request, actionContext: ActionContext) {
-  return new WishlistApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
-}
 
 function fetchAccountFromSession(request: Request): Account | undefined {
   return request.sessionData?.account;
@@ -47,7 +43,7 @@ async function fetchWishlist(request: Request, wishlistApi: WishlistApi): Promis
 
 export const getWishlist: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
     const wishlist = await fetchWishlist(request, wishlistApi);
     return {
@@ -65,12 +61,9 @@ export const getWishlist: ActionHook = async (request, actionContext) => {
 
 export const queryWishlists: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
-    const account = fetchAccountFromSession(request);
-    if (account === undefined) {
-      throw new AccountAuthenticationError({ message: 'Not logged in.' });
-    }
+    const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
     const wishlistQuery: WishlistQuery = {
       name: request.query?.name ?? undefined,
@@ -97,7 +90,7 @@ export const queryWishlists: ActionHook = async (request, actionContext) => {
 
 export const createWishlist: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
     const body: {
       name?: string;
@@ -131,7 +124,7 @@ export const createWishlist: ActionHook = async (request, actionContext) => {
 
 export const deleteWishlist: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
     const wishlist = await WishlistFetcher.fetchWishlist(request, actionContext);
 
     const storeKey = request.query?.['storeKey'];
@@ -145,7 +138,7 @@ export const deleteWishlist: ActionHook = async (request, actionContext) => {
 
     return {
       statusCode: 200,
-      body: '',
+      body: JSON.stringify(null),
       sessionData: request.sessionData,
     };
   } catch (error) {
@@ -160,7 +153,7 @@ export const updateWishlist: ActionHook = async (request, actionContext) => {
       description?: string;
     } = JSON.parse(request.body);
 
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
     let wishlist = await WishlistFetcher.fetchWishlist(request, actionContext);
 
@@ -180,7 +173,7 @@ export const updateWishlist: ActionHook = async (request, actionContext) => {
 
 export const addToWishlist: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
     const wishlist = await WishlistFetcher.fetchWishlist(request, actionContext);
 
     const body: {
@@ -209,7 +202,7 @@ export const addToWishlists: ActionHook = async (request, actionContext) => {
   try {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
     const wishlistBody = parseRequestBody<{
       wishlistIds: string[];
@@ -256,7 +249,7 @@ export const addToWishlists: ActionHook = async (request, actionContext) => {
 
 export const removeLineItem: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
     const wishlist = await WishlistFetcher.fetchWishlist(request, actionContext);
 
     const body: {
@@ -277,9 +270,57 @@ export const removeLineItem: ActionHook = async (request, actionContext) => {
   }
 };
 
+export const removeLineItems: ActionHook = async (request, actionContext) => {
+  try {
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
+
+    const requestBody = parseRequestBody<
+      {
+        lineItemId: string;
+        wishlistId: string;
+      }[]
+    >(request.body);
+
+    const wishlistQuery: WishlistQuery = {
+      accountId: request.sessionData.account.accountId,
+      wishlistIds: requestBody.map((item) => item.wishlistId),
+    };
+
+    const wishlists = await wishlistApi.queryWishlists(wishlistQuery);
+
+    if (wishlists.total == 0) {
+      return {
+        statusCode: 400,
+        message: 'We could not complete your request',
+        sessionData: request?.sessionData,
+      };
+    }
+
+    const removeLineItemsPromises = wishlists.items.flatMap((wishlist) => {
+      return requestBody
+        .filter((body) => body.wishlistId === wishlist.wishlistId)
+        .map(async (body) => {
+          return await wishlistApi.removeLineItem(wishlist, body.lineItemId);
+        });
+    });
+
+    const response = await Promise.all(removeLineItemsPromises);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
 export const updateLineItemCount: ActionHook = async (request, actionContext) => {
   try {
-    const wishlistApi = getWishlistApi(request, actionContext);
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
     const wishlist = await WishlistFetcher.fetchWishlist(request, actionContext);
 
     const body: {

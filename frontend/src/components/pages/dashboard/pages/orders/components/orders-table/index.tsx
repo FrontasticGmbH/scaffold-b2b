@@ -42,7 +42,7 @@ const OrdersTable = ({
               <Table.Cell>
                 <span className="block max-w-full truncate">{number}</span>
               </Table.Cell>
-              <Table.Cell>{creationDate}</Table.Cell>
+              <Table.Cell>{new Date(creationDate).toLocaleDateString()}</Table.Cell>
               <Table.Cell>{businessUnit}</Table.Cell>
               <Table.Cell className="text-right">{formatCurrency(total, currency)}</Table.Cell>
               <Table.Cell isButtonsCell>

@@ -3,9 +3,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Input from '@/components/atoms/input';
-import Select from '@/components/atoms/select';
 import { Associate } from '@/types/entity/associate';
 import useEntityToasters from '@/hooks/useEntityToasters';
+import RefinementDropdown from '@/components/atoms/refinement-dropdown';
+import Label from '@/components/atoms/label';
 import { CompanyAdminPageProps } from '../../types';
 
 const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOptions }: CompanyAdminPageProps) => {
@@ -26,6 +27,18 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setData({ ...data, [e.target.name]: e.target.value });
+    },
+    [data],
+  );
+
+  const handleRoleChange = useCallback(
+    (role: string) => {
+      let updatedRoles = [...(data.roles ?? [])];
+
+      if (updatedRoles.includes(role)) updatedRoles = updatedRoles.filter((r) => r !== role);
+      else updatedRoles = [...updatedRoles, role];
+
+      setData({ ...data, roles: updatedRoles });
     },
     [data],
   );
@@ -54,15 +67,16 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
-        <Select
-          label={translate('common.role')}
-          placeholder={translate('common.select')}
-          required
-          value={data.role ?? ''}
-          className="max-w-[400px]"
-          onChange={(role) => setData({ ...data, role })}
-          options={roleOptions}
-        />
+
+        <div className="max-w-[400px]">
+          <Label required>{translate('common.role')}</Label>
+          <RefinementDropdown
+            options={roleOptions.map((role) => ({ ...role, selected: (data.roles ?? []).includes(role.value) }))}
+            onChange={handleRoleChange}
+          >
+            {(data.roles ?? []).join(', ')}
+          </RefinementDropdown>
+        </div>
       </div>
     </EntityForm>
   );

@@ -49,6 +49,11 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
     onApplyDiscount();
   };
 
+  const onClearForm = () => {
+    setCode('');
+    setCodeIsInvalid(false);
+  };
+
   return (
     <div className={containerClassName}>
       <Accordion className="border-0">
@@ -63,7 +68,9 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
               placeholder={translate('cart.discount.enter')}
               onChange={handleChange}
               disabled={processing}
-              icon={codeIsInvalid ? <XMarkIcon className="h-[20px] w-[20px] cursor-pointer" /> : null}
+              icon={
+                codeIsInvalid ? <XMarkIcon className="h-[20px] w-[20px] cursor-pointer" onClick={onClearForm} /> : null
+              }
               error={codeIsInvalid ? customError || translate('cart.codeNotValid') : undefined}
             />
           </form>

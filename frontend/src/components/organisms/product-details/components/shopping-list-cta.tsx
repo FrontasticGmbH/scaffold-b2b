@@ -3,9 +3,16 @@ import Typography from '@/components/atoms/typography';
 import WishlistModal from '@/components/molecules/wishlist-modal';
 import useDisclosure from '@/hooks/useDisclosure';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import toast from '@/components/atoms/toaster/helpers/toast';
 import { ShoppingListCTAProps, Wishlist } from '../types';
+import WishlistToast from './wishlist-toast';
 
-const ShoppingListCTA = ({ getWishlists, addToWishlists, addToNewWishlist }: ShoppingListCTAProps) => {
+const ShoppingListCTA = ({
+  getWishlists,
+  addToWishlists,
+  removeFromWishlists,
+  addToNewWishlist,
+}: ShoppingListCTAProps) => {
   const { translate } = useTranslation();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,10 +42,41 @@ const ShoppingListCTA = ({ getWishlists, addToWishlists, addToNewWishlist }: Sho
     setCheckedBoxes(checkedBoxes ?? {});
   }, [getWishlists]);
 
-  const handleSubmit = () => {
-    addToWishlists(selectedIds).then(() => {
-      onClose();
+  const toastAddedLists = (addedWishlists: string[]) => {
+    addedWishlists.forEach((addedWishlistsId) => {
+      const wishlist = lists.find((list) => list.id === addedWishlistsId);
+
+      if (wishlist) {
+        toast.render(<WishlistToast wishlist={wishlist} />, 'success', { position: 'top-right' });
+      }
     });
+  };
+
+  const handleSubmit = async () => {
+    const addedWishlists: string[] = [];
+    const removedWishlists: { wishlistId: string; lineItemId: string }[] = [];
+
+    lists.forEach((list) => {
+      if (checkedBoxes[list.id] && !list.productIsInWishlist) {
+        addedWishlists.push(list.id);
+      } else if (!checkedBoxes[list.id] && list.productIsInWishlist) {
+        removedWishlists.push({ lineItemId: list.lineItemId ?? '', wishlistId: list.id });
+      }
+    });
+
+    if (addedWishlists.length) {
+      await addToWishlists(addedWishlists);
+    }
+
+    if (removedWishlists.length) {
+      await removeFromWishlists(removedWishlists);
+    }
+
+    if (addedWishlists.length) {
+      toastAddedLists(addedWishlists);
+    }
+
+    onClose();
   };
 
   useEffect(() => {

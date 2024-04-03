@@ -14,6 +14,9 @@ export interface CompanyAdminPageProps {
   initialBusinessUnit?: string;
   companyName?: string;
   storeName?: string;
+  addressesAreViewOnly?: boolean;
+  businessUnitsAreViewOnly?: boolean;
+  associatesAreViewOnly?: boolean;
   onBusinessUnitChange?: (businessUnit: string) => void;
   generalInformation: BusinessUnit[];
   addresses: Address[];

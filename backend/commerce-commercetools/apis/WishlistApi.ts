@@ -3,6 +3,7 @@ import { Account } from '@Types/account/Account';
 import { ShoppingListUpdateAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
 import { PaginatedResult } from '@Types/result';
 import { WishlistQuery } from '@Types/wishlist';
+import { Context } from '@frontastic/extension-types';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
 import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
@@ -17,6 +18,21 @@ interface AddToWishlistRequest {
 }
 
 export class WishlistApi extends BaseApi {
+  protected distributionChannelId: string;
+  protected supplyChannelId: string;
+
+  constructor(
+    context: Context,
+    locale: string | null,
+    currency: string | null,
+    distributionChannelId?: string,
+    supplyChannelId?: string,
+  ) {
+    super(context, locale, currency);
+    this.distributionChannelId = distributionChannelId;
+    this.supplyChannelId = supplyChannelId;
+  }
+
   getForAccount = async (account: Account) => {
     const locale = await this.getCommercetoolsLocal();
 
@@ -267,6 +283,16 @@ export class WishlistApi extends BaseApi {
 
     const searchQuery = wishlistQuery.query && wishlistQuery.query;
 
+    const request = {
+      queryArgs: {
+        where: whereClause,
+        expand: expandVariants,
+        limit: limit,
+        offset: getOffsetFromCursor(wishlistQuery.cursor),
+        [`text.${locale.language}`]: searchQuery,
+      },
+    };
+
     return this.requestBuilder()
       .shoppingLists()
       .get({
@@ -281,7 +307,7 @@ export class WishlistApi extends BaseApi {
       .execute()
       .then((response) => {
         const wishlists = response.body.results.map((commercetoolsQuote) => {
-          return WishlistMapper.commercetoolsShoppingListToWishlist(commercetoolsQuote, locale);
+          return WishlistMapper.commercetoolsShoppingListToWishlist(commercetoolsQuote, locale, this.supplyChannelId);
         });
 
         return {

@@ -27,7 +27,7 @@ const Shipping = ({ shippingMethods, currency }: ShippingProps) => {
         {shippingMethods.map((method, index) => (
           <ShippingMethod
             key={method.label}
-            className={index === 0 ? 'border-x border-t' : 'border'}
+            className={index === 0 && shippingMethods.length > 1 ? 'border-x border-t' : 'border'}
             currency={currency}
             {...method}
           />

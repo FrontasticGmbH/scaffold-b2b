@@ -4,10 +4,6 @@ import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
 export class StoreApi extends BaseApi {
-  getDefaultKey: () => string = () => {
-    return this.clientSettings.defaultStoreKey;
-  };
-
   get: (key: string) => Promise<Store> = async (key: string): Promise<Store> => {
     const locale = await this.getCommercetoolsLocal();
 

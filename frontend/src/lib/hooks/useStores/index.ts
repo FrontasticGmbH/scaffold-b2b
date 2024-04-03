@@ -1,10 +1,10 @@
 import { Store } from '@shared/types/store/Store';
-import useBusinessUnits from '../useBusinessUnits';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 
 const useStores = () => {
-  const { defaultBusinessUnit } = useBusinessUnits();
+  const { selectedBusinessUnit } = useStoreAndBusinessUnits();
 
-  const stores = defaultBusinessUnit?.stores ?? [];
+  const stores = selectedBusinessUnit?.stores ?? [];
 
   const defaultStore = stores[0] as Store | undefined;
 

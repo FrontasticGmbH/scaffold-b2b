@@ -1,0 +1,19 @@
+{
+  "payment.methods": "Betaalmethoden",
+  "payment.details": "Betaalmethoden verwijderen of toevoegen.",
+  "add.card": "Nieuwe kaart toevoegen",
+  "edit": "Bewerking",
+  "edit.payment": "Betaalmethode bewerken",
+  "add.payment": "Voeg nieuwe betaalmethode toe",
+  "card.holder": "Kaarthouder *",
+  "card.number": "Kaartnummer *",
+  "expiration.date": "Uiterste houdbaarheidsdatum *",
+  "security.number": "Veiligheidsnummer *",
+  "save": "Redden",
+  "cancel": "Annuleren",
+  "delete": "Verwijderen",
+  "delete.question": "Betaalmethode verwijderen?",
+  "delete.warning": "Deze actie kan niet ongedaan gemaakt worden.",
+  "card.number.error": "Voer een geldig creditcardnummer in",
+  "card.holder.error": "Voer de naam van de kaarthouder in"
+}

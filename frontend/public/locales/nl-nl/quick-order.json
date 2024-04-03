@@ -1,0 +1,22 @@
+{
+  "quick.order": "Snelle bestelling",
+  "search": "Zoek op productnaam of SKU",
+  "add.to.cart": "Voeg toe aan winkelkar",
+  "upload.csv": "Upload CSV-bestand",
+  "download.csv": "Sjabloonbestand downloaden",
+  "drag.csv": "CSV-bestanden slepen en neerzetten",
+  "click.csv": " of klik om te bladeren",
+  "click.upload": "Uploaden",
+  "click.clear": "Duidelijk",
+  "error.format.file": "Bestandsformaat wordt niet ondersteund (CSV)",
+  "error.format": "Bestandsindeling wordt niet ondersteund. Controleer het sjabloonbestand",
+  "error.upload.fail": "Er is een fout opgetreden tijdens het uploaden van het bestand",
+  "error.no.file": "Geen bestand geselecteerd",
+  "error.file.exceeds": "Bestand overschrijdt het maximale aantal items van 500",
+  "error.file.exists": "Het bestand \"{file}\" is al geüpload.",
+  "out.of.stock": "Geen voorraad meer",
+  "item.not.located": "Artikel niet gelokaliseerd",
+  "select.items": "Selecteer items om toe te voegen aan winkelwagen",
+  "quantity": "Hoeveelheid:",
+  "quick.add.cart": "Snel toevoegen aan winkelwagen"
+}

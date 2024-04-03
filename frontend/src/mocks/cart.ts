@@ -1,10 +1,12 @@
 import { Cart } from '@shared/types/cart/Cart';
 import { Transaction } from '@/types/transaction';
+import { mapLineItem } from '@/utils/mappers/map-lineitem';
+import { Product } from '@/types/entity/product';
 import { cartLineItems } from './cartLineItems';
 
-export const cart: Cart & { transaction: Transaction } = {
+export const cart: Cart & { lineItems: Product[]; transaction: Transaction } = {
   cartId: '1',
-  lineItems: cartLineItems,
+  lineItems: cartLineItems.map(mapLineItem),
   transaction: {
     subtotal: { centAmount: 30000, currencyCode: 'USD', fractionDigits: 2 },
     discount: { centAmount: 0, currencyCode: 'USD', fractionDigits: 2 },

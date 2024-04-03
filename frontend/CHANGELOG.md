@@ -1,4 +1,23 @@
 
+## Version 1.7 (2024-04-03)
+
+** New Features and Improvements **
+
+- Added user roles and permissions
+- Introduced manufactoring products
+- Added a bunch of languages with translations
+- Updated Mailgun credentials
+
+## Version 1.6.0 (2024-02-22)
+
+** New Features and Improvements **
+
+- Added quote.getQuotationCart action
+- Adjust formatting for quote IDs
+- Add env config to nextjs config
+- Remove seller comment from quote
+- Remove netlify plugin from b2b/b2c 
+
 ## Version 1.5.3 (2024-02-09)
 
 ** New Features and Improvements **

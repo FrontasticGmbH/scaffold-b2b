@@ -5,6 +5,7 @@ import useFormat from '@/hooks/useFormat';
 import QuantityWidget from '@/components/atoms/quantity-widget';
 import StockIndicator from '@/components/atoms/stock-indicator';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import Link from '@/components/atoms/link';
 import { PurchaseListItemProps } from './types';
 import ShowMore from '../show-more';
 import RemoveButton from './components/remove-button';
@@ -14,7 +15,8 @@ const PurchaseListItem = ({
     name,
     inStock,
     manufacturer,
-    model,
+    sku,
+    url,
     pressure,
     price,
     partNumber,
@@ -51,16 +53,20 @@ const PurchaseListItem = ({
         <RemoveButton onRemove={handleRemove} />
       </div>
 
-      <div className="relative mx-auto mt-2 h-[124px] w-[124px] shrink-0 md:mr-8 md:h-[140px] md:w-[140px]">
-        <Image fill src={image} alt={name} />
-      </div>
+      <Link href={url}>
+        <div className="relative mx-auto mt-2 h-[124px] w-[124px] shrink-0 md:mr-8 md:h-[140px] md:w-[140px]">
+          <Image fill src={image} alt={name} />
+        </div>
+      </Link>
 
       <div className="overflow-x-hidden md:grow">
         <div>
-          <p className="max-w-full truncate text-16 font-semibold leading-loose text-gray-700">{name}</p>
+          <Link href={url} className="max-w-full truncate text-16 font-semibold leading-loose text-gray-700">
+            {name}
+          </Link>
           <div className="mt-1 flex items-center gap-3">
             <p className="text-12 leading-loose text-gray-600">
-              {translate('common.model')}# {model}
+              {translate('common.model')}# {sku}
             </p>
             <div className="hidden md:block">
               <StockIndicator inStock={inStock} />
@@ -97,7 +103,9 @@ const PurchaseListItem = ({
           <div className="hidden lg:block">
             <QuantityWidget value={quantity} onChange={onQuantityChange} maxValue={maxQuantity} />
           </div>
-          <span className="text-18 font-bold text-gray-800">{formatCurrency(price, currency)}</span>
+
+          {price > 0 && <span className="text-18 font-bold text-gray-800">{formatCurrency(price, currency)}</span>}
+
           <Button
             variant="secondary"
             size="m"

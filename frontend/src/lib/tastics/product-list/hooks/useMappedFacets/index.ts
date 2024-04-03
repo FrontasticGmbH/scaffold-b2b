@@ -6,7 +6,12 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
   const { translate } = useTranslation();
 
   // Only facet keys present here will be picked up
-  const allowedFacets = new Set(['variants.scopedPrice.value', 'variants.attributes.brand']);
+  const allowedFacets = new Set([
+    'variants.scopedPrice.value',
+    'variants.prices.centAmount',
+    'variants.attributes.iso45001',
+    'variants.attributes.mobility',
+  ]);
 
   const mappedFacets = (facets ?? [])
     .filter((facet) => allowedFacets.has(facet.identifier))

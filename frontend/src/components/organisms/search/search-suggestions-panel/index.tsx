@@ -10,8 +10,12 @@ const SearchPanel = ({ className, variant, panelItems, onClick }: SearchPanelPro
         variant === 'lg' ? (
           <SearchPanelItemsLarge key={item.id} {...item} />
         ) : (
-          <div key={item.sku} className="flex h-12 items-center hover:bg-neutral-200">
-            <div onClick={() => onClick?.(item)} className="w-full cursor-pointer px-3">
+          <div
+            key={item.sku}
+            className="flex h-12 cursor-pointer items-center hover:bg-neutral-200"
+            onClick={() => onClick?.(item)}
+          >
+            <div className="w-full px-3">
               <Typography fontSize={16} className="truncate text-gray-700">
                 {item.sku ?? item.name}
               </Typography>

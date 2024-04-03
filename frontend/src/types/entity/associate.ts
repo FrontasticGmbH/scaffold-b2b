@@ -3,6 +3,6 @@ export interface Associate {
   firstName: string;
   lastName?: string;
   email: string;
-  role: string;
+  roles: string[];
   status: 'confirmed' | 'pending';
 }

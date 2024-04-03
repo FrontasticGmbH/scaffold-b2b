@@ -1,0 +1,15 @@
+{
+  "auth.wrong": "Ongeldig e-mailadres of wachtwoord. Controleer dit en probeer het opnieuw.",
+  "auth.action.verify": "Actie vereist: Verifieer uw e-mailadres met behulp van de verzonden verificatie-e-mail.",
+  "wentWrong": "Sorry, er ging iets mis..",
+  "wentWrong.retry": "Sorry, er ging iets mis. Probeer het over 5 minuten opnieuw.",
+  "password.noMatch": "Wachtwoorden komen niet overeen.",
+  "password.not.valid": "Het wachtwoord moet minimaal 8 tekens lang zijn en minimaal één hoofdletter bevatten.",
+  "account.create.fail": "Sorry. We konden uw account niet aanmaken..",
+  "email.enter": "Vul alstublieft uw e-mail adres in",
+  "email": "E-mail is niet geldig.",
+  "email.exists": "Het e-mailadres is ongeldig of bestaat al.",
+  "name": "De naam moet minimaal twee tekens bevatten.",
+  "verify.failed": "Verificatie mislukt",
+  "verify.failed.description": "Sorry, we hebben uw account niet kunnen verifiëren. Er is een nieuwe verificatielink naar uw e-mailadres verzonden."
+}

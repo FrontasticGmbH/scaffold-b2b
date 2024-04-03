@@ -1396,10 +1396,10 @@
   resolved "https://registry.npmjs.org/@colors/colors/-/colors-1.5.0.tgz"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@commercetools/frontend-sdk@^1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/frontend-sdk/-/frontend-sdk-1.9.0.tgz#82b7463afb8f9913518724bd7cbe4634ac7de5e0"
-  integrity sha512-58G9RE5p13/oUrD14q/qjSPo0h//Ddghoolq7eAbQR5AnSGrD42ZyE+D0Id8y0TZJJvRhFStI+8Lv7RxO9hhRA==
+"@commercetools/frontend-sdk@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@commercetools/frontend-sdk/-/frontend-sdk-1.9.3.tgz#09e9af4cabb1dacfe5ac62746cabe3b5754ffeaa"
+  integrity sha512-k67K7F4jHC9Ud7j9IQwj75yP6FW0JcTs0gMaU3kArPcy8c+iKL4Qjlwqw6rmrjdH79lEC5Wd8fTU8ieGpZNqEA==
   dependencies:
     "@frontastic/extension-types" "^0.0.11"
     cookie "^0.5.0"
@@ -6771,6 +6771,11 @@ find-up@^5.0.0:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
 
+flag-icons@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/flag-icons/-/flag-icons-7.2.0.tgz#e2ca34e101f182dc9dec6456a2e71e8fdef9a160"
+  integrity sha512-0ZQ5gzCoCBb6A6QQS59DUazZWxs9za8olMXnuYbvtUbBfM45+/CQm+i2lvn6aDct6SKyAe6MUFQLgYk7kn49+A==
+
 flat-cache@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmjs.org/flat-cache/-/flat-cache-3.0.4.tgz"
@@ -8790,6 +8795,11 @@ joi@^17.3.0:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
+js-cookie@^3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.5.tgz#0b7e2fd0c01552c58ba86e0841f94dc2557dcdbc"
+  integrity sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==
+
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
@@ -9463,6 +9473,13 @@ neo-async@^2.5.0, neo-async@^2.6.0, neo-async@^2.6.1, neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
+next-client-cookies@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/next-client-cookies/-/next-client-cookies-1.1.0.tgz#34c7a3345da0388ea396531bcab3167774a6357a"
+  integrity sha512-e/rqQTXHSFuvUJELMeCDgM7dWW6IUNOGr7noWyRSgE/5l033UaqseDrjShfRZYG45JnrYKoX653OdXTJ8cn+NA==
+  dependencies:
+    js-cookie "^3.0.5"
 
 next-compose-plugins@^2.2.1:
   version "2.2.1"

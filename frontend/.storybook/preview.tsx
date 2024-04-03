@@ -4,6 +4,7 @@ import { inter } from '@/fonts';
 import Toaster from '@/components/atoms/toaster';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-tooltip/dist/react-tooltip.css';
+import 'flag-icons/css/flag-icons.min.css';
 import '@/styles/global/index.css';
 import theme from './theme';
 import ShipAndLanguageProvider from '@/providers/ship-and-language';

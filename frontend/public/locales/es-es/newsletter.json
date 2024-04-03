@@ -1,0 +1,9 @@
+{
+  "headline.fallback": "¡Recibe las últimas novedades de moda!",
+  "description.fallback": "Suscríbete a nuestra newsletter para recibir notificaciones cada vez que lancemos una nueva colección.",
+  "placeholder.fallback": "Tu correo electrónico aquí",
+  "cta.fallback": "Suscribir",
+  "disclaimer.fallback": "Al hacer clic en 'Enviar', acepta que podemos utilizar su información de acuerdo con nuestra política de privacidad y procesar los datos para un propósito específico.",
+  "success.fallback.title": "¡Bienvenido a bordo!",
+  "success.fallback.message": "Estás suscrito. Te mantendremos informado sobre todo lo relacionado con la moda."
+}

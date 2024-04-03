@@ -21,13 +21,11 @@ const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
 
       {/* Product Model and availability */}
       <div className="mt-3 flex items-center gap-3 md:mt-2 md:grid md:gap-5">
-        {item.variant?.sku && (
-          <p className="truncate text-12 leading-loose text-gray-600">{`${translate('common.model')}# ${
-            item.variant?.sku
-          }`}</p>
+        {item.sku && (
+          <p className="truncate text-12 leading-loose text-gray-600">{`${translate('common.model')}# ${item.sku}`}</p>
         )}
 
-        <StockIndicator inStock={item.variant?.isOnStock} />
+        <StockIndicator inStock={item.inStock} />
       </div>
     </div>
   );

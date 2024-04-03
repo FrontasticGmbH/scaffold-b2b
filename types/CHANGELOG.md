@@ -1,4 +1,10 @@
 
+## Version 1.5.0 (2024-02-22)
+
+** New Features and Improvements **
+
+- Added types to support new b2b functionalities 
+
 ## Version 1.3.0 (2023-10-24)
 
 ** New Features and Improvements **

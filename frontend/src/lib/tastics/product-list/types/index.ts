@@ -49,6 +49,7 @@ export interface CategoryHighlightItem {
 
 export interface Props {
   categories: Array<Category>;
+  useIntermediaryCategoryPage?: boolean;
   categoryConfiguration: CategoryConfiguration[];
 }
 

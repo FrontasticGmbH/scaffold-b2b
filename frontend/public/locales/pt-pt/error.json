@@ -1,0 +1,15 @@
+{
+  "auth.wrong": "E-mail ou senha inválidos. Por favor verifique e tente novamente.",
+  "auth.action.verify": "Ação necessária: verifique seu e-mail usando o e-mail de verificação enviado.",
+  "wentWrong": "Desculpe, algo deu errado..",
+  "wentWrong.retry": "Desculpe, algo deu errado. Tente novamente em 5 minutos.",
+  "password.noMatch": "As senhas não coincidem.",
+  "password.not.valid": "A senha deve ter pelo menos 8 caracteres e pelo menos uma letra maiúscula.",
+  "account.create.fail": "Desculpe. Não foi possível criar sua conta.",
+  "email.enter": "Por favor, indique o seu endereço de e-mail",
+  "email": "E-mail não é válido.",
+  "email.exists": "O endereço de e-mail é inválido ou já existe.",
+  "name": "O nome deve ter pelo menos dois caracteres.",
+  "verify.failed": "Falha na verificação",
+  "verify.failed.description": "Desculpe, não conseguimos verificar sua conta. Um novo link de verificação foi enviado para seu endereço de e-mail."
+}

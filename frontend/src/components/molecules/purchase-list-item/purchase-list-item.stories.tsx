@@ -22,7 +22,7 @@ const Template: StoryFn<typeof PurchaseListItem> = (args) => {
 const item = {
   id: '0',
   name: 'Brake Pad Set, disc brake DELPHI LP20',
-  model: 'SHXM4AY55N',
+  sku: 'SHXM4AY55N',
   inStock: true,
   manufacturer: 'ERA',
   partNumber: '770035A',

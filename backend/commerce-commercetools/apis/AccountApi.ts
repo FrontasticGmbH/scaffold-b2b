@@ -294,36 +294,43 @@ export class AccountApi extends BaseApi {
 
     // TODO: should we also update addresses in this method?
 
-    return await this.updateAccount(account, customerUpdateActions);
+    account = await this.updateAccount(account, customerUpdateActions);
+
+    if (!account.confirmed) {
+      account.confirmationToken = await this.getConfirmationToken(account);
+    }
+
+    return account;
   };
 
   addAddress: (account: Account, address: Address) => Promise<Account> = async (account: Account, address: Address) => {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
-    let addressData = AccountMapper.addressToCommercetoolsAddress(address);
+    let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
 
-    if (addressData.id !== undefined) {
-      addressData = {
-        ...addressData,
+    // For new address, remove the id as CoCo will set it
+    if (commercetoolsAddress.id !== undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
         id: undefined,
       };
     }
 
-    if (address.isDefaultBillingAddress || address.isDefaultShippingAddress) {
-      addressData = {
-        ...addressData,
+    if (commercetoolsAddress.key === undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
         key: Guid.newGuid(),
       };
     }
 
-    customerUpdateActions.push({ action: 'addAddress', address: addressData });
+    customerUpdateActions.push({ action: 'addAddress', address: commercetoolsAddress });
 
     if (address.isDefaultBillingAddress) {
-      customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: addressData.key });
+      customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: commercetoolsAddress.key });
     }
 
     if (address.isDefaultShippingAddress) {
-      customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: addressData.key });
+      customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
     }
 
     return await this.updateAccount(account, customerUpdateActions);
@@ -335,25 +342,28 @@ export class AccountApi extends BaseApi {
   ) => {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
-    let addressData = AccountMapper.addressToCommercetoolsAddress(address);
+    let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
 
-    if (addressData.id !== undefined) {
-      addressData = {
-        ...addressData,
+    // For new address, remove the id as CoCo will set it
+    if (commercetoolsAddress.id !== undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
         id: undefined,
       };
     }
 
-    addressData = {
-      ...addressData,
-      key: Guid.newGuid(),
-    };
+    if (commercetoolsAddress.key === undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
+        key: Guid.newGuid(),
+      };
+    }
 
-    customerUpdateActions.push({ action: 'addAddress', address: addressData });
-    customerUpdateActions.push({ action: 'addShippingAddressId', addressKey: addressData.key });
+    customerUpdateActions.push({ action: 'addAddress', address: commercetoolsAddress });
+    customerUpdateActions.push({ action: 'addShippingAddressId', addressKey: commercetoolsAddress.key });
 
     if (address.isDefaultShippingAddress) {
-      customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: addressData.key });
+      customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
     }
 
     return await this.updateAccount(account, customerUpdateActions);
@@ -365,25 +375,28 @@ export class AccountApi extends BaseApi {
   ) => {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
-    let addressData = AccountMapper.addressToCommercetoolsAddress(address);
+    let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
 
-    if (addressData.id !== undefined) {
-      addressData = {
-        ...addressData,
+    // For new address, remove the id as CoCo will set it
+    if (commercetoolsAddress.id !== undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
         id: undefined,
       };
     }
 
-    addressData = {
-      ...addressData,
-      key: Guid.newGuid(),
-    };
+    if (commercetoolsAddress.key === undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
+        key: Guid.newGuid(),
+      };
+    }
 
-    customerUpdateActions.push({ action: 'addAddress', address: addressData });
-    customerUpdateActions.push({ action: 'addBillingAddressId', addressKey: addressData.key });
+    customerUpdateActions.push({ action: 'addAddress', address: commercetoolsAddress });
+    customerUpdateActions.push({ action: 'addBillingAddressId', addressKey: commercetoolsAddress.key });
 
     if (address.isDefaultBillingAddress) {
-      customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: addressData.key });
+      customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: commercetoolsAddress.key });
     }
 
     return await this.updateAccount(account, customerUpdateActions);
@@ -395,30 +408,30 @@ export class AccountApi extends BaseApi {
   ) => {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
-    let addressData = AccountMapper.addressToCommercetoolsAddress(address);
+    let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
 
-    if (addressData.id !== undefined) {
-      addressData = {
-        ...addressData,
-        id: undefined,
-      };
-    }
-
-    if (address.isDefaultBillingAddress || address.isDefaultShippingAddress) {
-      addressData = {
-        ...addressData,
+    if (
+      commercetoolsAddress.key === undefined &&
+      (address.isDefaultBillingAddress || address.isDefaultShippingAddress)
+    ) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
         key: Guid.newGuid(),
       };
     }
 
-    customerUpdateActions.push({ action: 'changeAddress', addressId: address.addressId, address: addressData });
+    customerUpdateActions.push({
+      action: 'changeAddress',
+      addressId: commercetoolsAddress.id,
+      address: commercetoolsAddress,
+    });
 
     if (address.isDefaultBillingAddress) {
-      customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: addressData.key });
+      customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: commercetoolsAddress.key });
     }
 
     if (address.isDefaultShippingAddress) {
-      customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: addressData.key });
+      customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
     }
 
     return await this.updateAccount(account, customerUpdateActions);
@@ -504,7 +517,10 @@ export class AccountApi extends BaseApi {
       .customers()
       .withId({ ID: account.accountId })
       .get()
-      .execute();
+      .execute()
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
 
     return commercetoolsAccount.body?.version;
   }

@@ -14,9 +14,9 @@ const Template: StoryFn<typeof Cart> = () => (
     onRemove={async () => {}}
     onAdd={async () => {}}
     onUpdateQuantity={async () => {}}
-    onRequestQuote={async () => ({})}
     onAddToNewWishlist={async () => {}}
     paymentMethods={[]}
+    discountCodes={[]}
   />
 );
 

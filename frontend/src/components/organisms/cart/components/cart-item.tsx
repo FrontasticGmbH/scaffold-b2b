@@ -1,26 +1,18 @@
 import React from 'react';
-import { useParams } from 'next/navigation';
 import Image from '@/components/atoms/Image';
 import Typography from '@/components/atoms/typography';
 import QuantityWidget from '@/components/atoms/quantity-widget';
-import { CurrencyHelpers } from '@/utils/currency-helpers';
 import Link from '@/components/atoms/link';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { ArrowUturnLeftIcon as UndoIcon } from '@heroicons/react/24/outline';
 import Button from '@/components/atoms/button';
+import useFormat from '@/hooks/useFormat';
 import CartItemHeader from './cart-item-header';
 import CartItemFooter from './cart-item-footer';
 import { CartItemProps } from '../types';
 
-const CartItem = ({
-  item,
-  onUpdateQuantity,
-  onRemove,
-  onUndoRemove,
-  onAddToNewWishlist,
-  isQuotationCart,
-}: CartItemProps) => {
-  const { locale } = useParams();
+const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWishlist }: CartItemProps) => {
+  const { formatCurrency } = useFormat();
 
   const { translate } = useTranslation();
 
@@ -28,7 +20,7 @@ const CartItem = ({
     return (
       <div className="flex flex-col items-center px-4 py-8">
         <p className="pb-8 text-center text-gray-600">
-          <Link href={item._url ?? '#'} className="inline text-primary underline">
+          <Link href={item.url ?? '#'} className="inline text-primary underline">
             {item.name}
           </Link>{' '}
           {translate('cart.item.was.removed')}
@@ -51,7 +43,7 @@ const CartItem = ({
       <div className="mt-10 flex max-w-full items-stretch justify-start md:mt-0 md:gap-10">
         <Image
           className="md:h-[124px] md:w-[124px] lg:h-[132px] lg:w-[132px]"
-          src={item.variant?.images?.[0]}
+          src={item.images?.[0]}
           style={{ objectFit: 'contain' }}
           width={108}
           height={108}
@@ -67,38 +59,27 @@ const CartItem = ({
               onRemove={onRemove}
               item={item}
               onAddToNewWishlist={onAddToNewWishlist}
-              isQuotationCart={isQuotationCart}
             />
           </div>
 
           <div className="flex flex-col items-center justify-center gap-2 lg:gap-3">
-            {(item.count ?? 0) > 1 && (
+            {item.quantity && item.quantity > 1 && (
               <Typography lineHeight="loose" fontSize={12} className="text-gray-600">
-                {`${CurrencyHelpers.formatForCurrency(item.discountedPrice ?? item.price ?? 0, locale)}/ea`}
+                {`${formatCurrency(item.discountedPrice ?? item.price ?? 0, item.currency)}/ea`}
               </Typography>
             )}
 
-            <QuantityWidget
-              showLabel={false}
-              defaultValue={1}
-              value={item.count}
-              onChange={onUpdateQuantity}
-              disabled={isQuotationCart}
-            />
+            <QuantityWidget showLabel={false} defaultValue={1} value={item.quantity} onChange={onUpdateQuantity} />
 
-            <div className="w-full gap-1 md:gap-2">
+            <div>
               {item.discountedPrice ? (
-                <div className="relative w-full gap-1">
+                <div className="relative">
                   <Typography
                     lineHeight="tight"
                     fontSize={14}
-                    className="absolute left-0 top-1/2 -translate-x-full -translate-y-1/2 font-normal text-gray-600 line-through"
+                    className="absolute -left-2 top-1/2 -translate-x-full -translate-y-1/2 font-normal text-gray-600 line-through"
                   >
-                    {CurrencyHelpers.formatForCurrency(
-                      (item.price?.centAmount ?? 0) * (item.count ?? 1),
-                      locale,
-                      item.price?.currencyCode,
-                    )}
+                    {formatCurrency((item.price ?? 0) * (item.quantity ?? 1), item.currency)}
                   </Typography>
                   <Typography
                     lineHeight="loose"
@@ -106,7 +87,7 @@ const CartItem = ({
                     fontWeight="semibold"
                     className="text-center text-red-500 md:text-18"
                   >
-                    {CurrencyHelpers.formatForCurrency(item.totalPrice ?? 0, locale, item.price?.currencyCode)}
+                    {formatCurrency(item.discountedPrice * (item.quantity ?? 1), item.currency)}
                   </Typography>
                 </div>
               ) : (
@@ -116,7 +97,7 @@ const CartItem = ({
                   fontWeight="semibold"
                   className="text-center text-gray-700 md:text-18"
                 >
-                  {CurrencyHelpers.formatForCurrency(item.totalPrice ?? 0, locale, item.price?.currencyCode)}
+                  {formatCurrency((item.price ?? 0) * (item.quantity ?? 1), item.currency)}
                 </Typography>
               )}
             </div>
@@ -129,7 +110,6 @@ const CartItem = ({
         className="justify-between md:hidden"
         onRemove={onRemove}
         item={item}
-        isQuotationCart={isQuotationCart}
       />
     </div>
   );

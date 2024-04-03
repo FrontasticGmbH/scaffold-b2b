@@ -1,0 +1,15 @@
+{
+  "my.wishlist": "Minha Lista de Desejos",
+  "wishlist": "Lista de Desejos",
+  "items": "Itens da lista de desejos",
+  "items.in.view": "itens na lista de desejos, ver lista de desejos",
+  "oops": "Ops...",
+  "empty": "Sua Lista de Desejos está vazia",
+  "add.items": "Adicionar itens",
+  "add.to.cart": "Mover para o carrinho",
+  "clear.list": "Limpe a lista",
+  "move": "Mover",
+  "move.to.list": "Mover para lista",
+  "select.list": "Selecione lista de compras",
+  "item.added": "O item foi adicionado a"
+}

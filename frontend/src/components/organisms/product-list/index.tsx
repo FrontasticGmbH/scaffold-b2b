@@ -1,6 +1,8 @@
 'use client';
 
 import React from 'react';
+import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import InfoBanner from '@/components/molecules/info-banner';
 import { ProductListProps } from './types';
 import ProductListProvider from './context';
 import Header from './components/header';
@@ -14,8 +16,18 @@ import CurrentRefinements from './components/current-refinements';
 import CategoriesBreadcrumb from './components/breadcrumb';
 
 const ProductList = (props: ProductListProps) => {
+  const { translate } = useTranslation();
+
   return (
     <ProductListProvider {...props}>
+      <div className="mt-5 px-4 md:px-6 lg:px-12">
+        {props.addToCartDisabled && (
+          <InfoBanner className="mt-3">
+            <b>{translate('common.view.only')}</b> {translate('cart.view.only.desc')}
+          </InfoBanner>
+        )}
+      </div>
+
       <div className="mt-5 hidden px-4 md:px-6 lg:block lg:px-12">
         <CategoriesBreadcrumb {...props} />
       </div>

@@ -13,4 +13,6 @@ export interface BusinessUnit {
   email: string;
   stores?: Store[];
   addresses: Address[];
+  topLevelUnit?: BusinessUnit;
+  parentUnit?: BusinessUnit;
 }

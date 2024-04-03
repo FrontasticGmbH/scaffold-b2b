@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import Button from '@/components/atoms/button';
 import Checkbox from '@/components/atoms/checkbox';
 import Typography from '@/components/atoms/typography';
@@ -39,12 +38,12 @@ const ListWishlist = ({ lists, selectedIds, onClose, onSubmit, handleChange, loa
           </div>
         </div>
       </div>
-      <div className="border-t border-neutral-400 p-6">
+      <div className="mt-auto border-t border-neutral-400 p-6">
         <div className="flex justify-end gap-3 lg:mx-auto lg:max-w-[400px]">
           <Button size="m" variant="secondary" onClick={onClose}>
             {translate('common.cancel')}
           </Button>
-          <Button loading={loading} size="m" onClick={() => onSubmit(lists)} disabled={selectedIds.length === 0}>
+          <Button loading={loading} size="m" onClick={() => onSubmit(lists)}>
             {translate('wishlist.move')}
           </Button>
         </div>

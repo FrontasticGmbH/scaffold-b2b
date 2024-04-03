@@ -14,8 +14,13 @@ const WishlistModal = ({
   handleChange,
 }: WishlistModalProps) => {
   return (
-    <ResponsiveModal onRequestClose={onClose} isOpen={isOpen} closeButton className="md:w-[400px] lg:w-[600px]">
-      {lists.length > 0 ? (
+    <ResponsiveModal
+      onRequestClose={onClose}
+      isOpen={isOpen}
+      closeButton
+      className="flex min-h-[400px] flex-col md:w-[400px] lg:w-[600px]"
+    >
+      {lists?.length > 0 ? (
         <ListWishlist
           lists={lists}
           handleChange={handleChange}

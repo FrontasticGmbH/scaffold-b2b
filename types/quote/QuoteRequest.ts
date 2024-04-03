@@ -22,6 +22,7 @@ export interface QuoteRequest {
   lastModifiedAt?: Date;
   account?: Account;
   buyerComment?: string;
+  purchaseOrderNumber?: string;
   store?: Store;
   businessUnit?: BusinessUnit;
   lineItems?: LineItem[];

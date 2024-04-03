@@ -13,7 +13,7 @@ const Dashboard = ({ title, href, children, userName }: React.PropsWithChildren<
 
   return (
     <div className="relative flex items-start gap-6 2xl:min-h-[calc(100vh-123px)]">
-      <div className="sticky top-[123px] hidden h-[calc(100vh-123px)] w-max shrink-0 2xl:block">
+      <div className="sticky top-[112px] hidden h-[calc(100vh-112px)] w-max shrink-0 2xl:block">
         <Sidebar
           title={translate('common.say.hi', { values: { name: userName ?? '' } })}
           links={sidebarItems.map((link) => ({ ...link, isActive: href === link.href }))}

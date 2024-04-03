@@ -6,7 +6,15 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useFormat from '@/hooks/useFormat';
 import Link from '@/components/atoms/link';
 
-const ProductTile = ({ product, onAddToCart }: { product: Product; onAddToCart?: () => Promise<void> }) => {
+const ProductTile = ({
+  product,
+  addToCartDisabled = false,
+  onAddToCart,
+}: {
+  product: Product;
+  addToCartDisabled?: boolean;
+  onAddToCart?: () => Promise<void>;
+}) => {
   const { translate } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +71,7 @@ const ProductTile = ({ product, onAddToCart }: { product: Product; onAddToCart?:
         </div>
       </Link>
       <div className="p-2">
-        <span className="text-12 leading-loose text-neutral-900">{product.model}</span>
+        <span className="text-12 leading-loose text-neutral-900">{product.sku}</span>
         <Link
           href={product.url ?? '#'}
           className="line-clamp-2 h-[42px] text-14 font-semibold leading-loose text-gray-800 md:mt-1 lg:h-[48px] lg:text-16"
@@ -72,17 +80,19 @@ const ProductTile = ({ product, onAddToCart }: { product: Product; onAddToCart?:
         </Link>
         <div className="mt-2 md:mt-3 lg:mt-8">{displayPrice()}</div>
       </div>
-      <div className="pt-1">
-        <Button
-          loading={isLoading}
-          variant="secondary"
-          size="s"
-          className="w-full px-1 text-12 md:text-14 lg:py-3"
-          onClick={handleAddToCart}
-        >
-          {translate('cart.add')}
-        </Button>
-      </div>
+      {!addToCartDisabled && (
+        <div className="pt-1">
+          <Button
+            loading={isLoading}
+            variant="secondary"
+            size="s"
+            className="w-full px-1 text-12 md:text-14 lg:py-3"
+            onClick={handleAddToCart}
+          >
+            {translate('cart.add')}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -6,8 +6,8 @@ import Button from '@/components/atoms/button';
 import toast from 'react-hot-toast';
 import Accordion from '@/components/molecules/accordion';
 import Image from '@/components/atoms/Image';
-import PurchaseOrderForm from '@/lib/tastics/checkout/components/purchase-order-form';
-import PurchaseOrderPreview from '@/lib/tastics/checkout/components/purchase-order-preview';
+import PurchaseOrderForm from '@/components/organisms/checkout/components/purchase-order-form';
+import PurchaseOrderPreview from '@/components/organisms/checkout/components/purchase-order-preview';
 import { useCheckout } from '../../provider';
 import { CheckoutProps } from '../../types';
 

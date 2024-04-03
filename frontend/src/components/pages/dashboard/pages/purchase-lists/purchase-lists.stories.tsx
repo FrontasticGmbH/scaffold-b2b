@@ -14,14 +14,14 @@ Primary.args = {
     {
       id: '0',
       name: 'Brake Pedals',
-      store: 'Greenville',
+      store: { id: '1', key: 'greenville', name: 'Greenville' },
       description: 'Model X brakes',
       items: [
         {
           id: '0',
           sku: '54af877',
+          url: '#',
           name: 'Brake Pad Set, disc brake DELPHI LP20',
-          model: 'SHXM4AY55N',
           inStock: true,
           manufacturer: 'ERA',
           partNumber: '770035A',
@@ -36,14 +36,14 @@ Primary.args = {
     {
       id: '1',
       name: 'Heaters',
-      store: 'Berlin',
+      store: { id: '2', key: 'berlin', name: 'Berlin' },
       description: 'Heater system parts',
       items: [],
     },
     {
       id: '2',
       name: 'Winter Equipment',
-      store: 'Manhattan',
+      store: { id: '3', key: 'manhattan', name: 'Manhattan' },
       description: 'Audi & Volvo winter for winter equipment',
       items: [],
     },

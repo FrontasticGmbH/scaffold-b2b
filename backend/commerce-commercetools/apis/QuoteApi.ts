@@ -11,6 +11,8 @@ import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNo
 import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
+import { Guid } from '@Commerce-commercetools/utils/Guid';
+import { CartMapper } from '@Commerce-commercetools/mappers/CartMapper';
 
 export class QuoteApi extends BaseApi {
   protected accountId: string;
@@ -28,24 +30,25 @@ export class QuoteApi extends BaseApi {
     this.businessUnitKey = businessUnitKey;
   }
 
-  async createQuoteRequest(quoteDraft: QuoteRequest, cart: Cart): Promise<QuoteRequest> {
+  async createQuoteRequest(quoteRequest: QuoteRequest, cart: Cart): Promise<QuoteRequest> {
     const cartVersion = parseInt(cart.cartVersion, 10);
     const locale = await this.getCommercetoolsLocal();
 
-    const quoteRequest: QuoteRequestDraft = {
+    const quoteRequestDraft: QuoteRequestDraft = {
       cart: {
         typeId: 'cart',
         id: cart.cartId,
       },
       cartVersion,
-      comment: quoteDraft.buyerComment,
+      comment: quoteRequest.buyerComment,
+      purchaseOrderNumber: quoteRequest.purchaseOrderNumber,
     };
 
     return this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quoteRequests()
       .post({
         body: {
-          ...quoteRequest,
+          ...quoteRequestDraft,
         },
       })
       .execute()
@@ -83,7 +86,8 @@ export class QuoteApi extends BaseApi {
 
   async getQuote(quoteId: string): Promise<Quote> {
     const locale = await this.getCommercetoolsLocal();
-    return this.requestBuilder()
+
+    return this.associateEndpoints(this.accountId, this.businessUnitKey)
       .quotes()
       .withId({ ID: quoteId })
       .get({
@@ -124,6 +128,9 @@ export class QuoteApi extends BaseApi {
     }
     if (quoteQuery.quoteStates !== undefined && quoteQuery.quoteStates.length > 0) {
       whereClause.push(`quoteState in ("${quoteQuery.quoteStates.join('","')}")`);
+    }
+    if (quoteQuery.storeKey !== undefined) {
+      whereClause.push(`store(key="${quoteQuery.storeKey}")`);
     }
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
@@ -182,6 +189,10 @@ export class QuoteApi extends BaseApi {
       quoteRequestWhereClause.push(`quoteRequestState in ("${quoteQuery.quoteStates.join('","')}")`);
     }
 
+    if (quoteQuery.storeKey !== undefined) {
+      quoteRequestWhereClause.push(`store(key="${quoteQuery.storeKey}")`);
+    }
+
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
@@ -215,37 +226,6 @@ export class QuoteApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  }
-
-  async acceptQuote(quoteId: string): Promise<Quote> {
-    const locale = await this.getCommercetoolsLocal();
-
-    return this.getQuote(quoteId).then(async (quote) => {
-      return this.associateEndpoints(this.accountId, this.businessUnitKey)
-        .quotes()
-        .withId({ ID: quoteId })
-        .post({
-          queryArgs: {
-            expand: ['quoteRequest', 'quoteRequest.customer', 'stagedQuote.quotationCart'],
-          },
-          body: {
-            actions: [
-              {
-                action: 'changeQuoteState',
-                quoteState: QuoteState.Accepted,
-              },
-            ],
-            version: quote.quoteVersion,
-          },
-        })
-        .execute()
-        .then((response) => {
-          return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
-        })
-        .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-        });
-    });
   }
 
   async declineQuote(quoteId: string): Promise<Quote> {
@@ -331,6 +311,40 @@ export class QuoteApi extends BaseApi {
         .execute()
         .then((response) => {
           return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale);
+        })
+        .catch((error) => {
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        });
+    });
+  }
+
+  async acceptQuote(quoteId: string) {
+    // We are creating an order from the quote as it is the CoCo's intended behavior to accept a quote
+    await this.createOrderFromQuote(quoteId);
+
+    return await this.getQuote(quoteId);
+  }
+
+  async createOrderFromQuote(quoteId: string) {
+    const locale = await this.getCommercetoolsLocal();
+    return this.getQuote(quoteId).then(async (quote) => {
+      return this.associateEndpoints(this.accountId, this.businessUnitKey)
+        .orders()
+        .orderQuote()
+        .post({
+          body: {
+            version: quote.quoteVersion,
+            quote: {
+              typeId: 'quote',
+              id: quote.quoteId,
+            },
+            quoteStateToAccepted: true,
+            orderNumber: Guid.newGuid(),
+          },
+        })
+        .execute()
+        .then((response) => {
+          return CartMapper.commercetoolsOrderToOrder(response.body, locale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });

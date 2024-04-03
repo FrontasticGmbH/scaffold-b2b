@@ -10,7 +10,6 @@ const Renderer = ({
   data: pageData,
   params,
   searchParams,
-  tastics,
   currentHighlight,
   gridClassName = '',
   wrapperClassName = '',
@@ -51,7 +50,6 @@ const Renderer = ({
                   params={params}
                   searchParams={searchParams}
                   dataSources={data.dataSources}
-                  tastics={tastics}
                   isHighlighted={currentHighlight === tastic.tasticId}
                 />
               ))}

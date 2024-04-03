@@ -1,8 +1,5 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
-
-const Sweden = dynamic(() => import('./sweden'));
-const UnitedStates = dynamic(() => import('./united-states'));
+import { classnames } from '@/utils/classnames/classnames';
 
 type Props = {
   name: string;
@@ -10,12 +7,13 @@ type Props = {
 };
 
 const FlagIcon: React.FC<Props> = ({ className, name }: Props) => {
-  const iconClassName = className;
-  const flags = {
-    sweden: <Sweden />,
-    US: <UnitedStates />,
-  };
-  return <div className={iconClassName}>{flags[name as keyof typeof flags]}</div>;
+  return (
+    <span
+      //eslint-disable-next-line tailwindcss/no-custom-classname
+      className={classnames(className, 'fi', `fi-${name}`, 'block')}
+      style={{ width: 20, height: 20, backgroundSize: 'cover' }}
+    />
+  );
 };
 
 export default FlagIcon;

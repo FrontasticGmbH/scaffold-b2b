@@ -5,24 +5,25 @@ import { ProductQuery } from '@Types/query/ProductQuery';
 import { RangeFilter } from '@Types/query/RangeFilter';
 import { TermFilter } from '@Types/query/TermFilter';
 import {
-  ProductSearchAnyValue,
-  ProductSearchExactExpression,
+  SearchAnyValue,
+  SearchExactExpression,
   ProductSearchFacetDistinctValue,
   ProductSearchFacetExpression,
   ProductSearchFacetRangesValue,
-  ProductSearchNumberRangeExpression,
-  ProductSearchNumberRangeValue,
-  ProductSearchOrExpression,
-  ProductSearchQuery,
-  ProductSearchQueryExpression,
+  SearchNumberRangeExpression,
+  SearchNumberRangeValue,
+  SearchOrExpression,
+  SearchQuery,
+  SearchQueryExpression,
   ProductSearchRequest,
-  ProductSearchWildCardExpression,
+  SearchWildCardExpression,
   _ProductSearchFacetExpression,
 } from '@commercetools/platform-sdk';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 const EXPANDS = [
-  'categories[*]',
+  'categories[*].ancestors[*]',
+  'categories[*].parent',
   'masterVariant.price.discounted.discount',
   'masterVariant.prices[*].discounted.discount',
   'variants[*].price.discounted.discount',
@@ -60,6 +61,7 @@ export class ProductSearchFactory {
       productQuery,
       locale,
     );
+    commercetoolsProductSearchRequest = this.applyStore(commercetoolsProductSearchRequest, productQuery, locale);
     commercetoolsProductSearchRequest = this.applyQuerySKUs(commercetoolsProductSearchRequest, productQuery, locale);
     commercetoolsProductSearchRequest = this.applyProductSelections(
       commercetoolsProductSearchRequest,
@@ -98,7 +100,7 @@ export class ProductSearchFactory {
   ): ProductSearchRequest {
     const commercetoolsProductSearchRequest: Writeable<ProductSearchRequest> = {
       query: {},
-      projection: {
+      productProjectionParameters: {
         priceCountry: locale.country,
         priceCurrency: locale.currency,
         expand: EXPANDS,
@@ -109,11 +111,11 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest.offset = this.getOffsetFromCursor(productQuery.cursor);
 
     if (productQuery.storeKey) {
-      commercetoolsProductSearchRequest.projection.storeProjection = productQuery.storeKey;
+      commercetoolsProductSearchRequest.productProjectionParameters.storeProjection = productQuery.storeKey;
     }
 
     if (productQuery.distributionChannelId) {
-      commercetoolsProductSearchRequest.projection.priceChannel = productQuery.distributionChannelId;
+      commercetoolsProductSearchRequest.productProjectionParameters.priceChannel = productQuery.distributionChannelId;
     }
     return commercetoolsProductSearchRequest;
   }
@@ -130,7 +132,7 @@ export class ProductSearchFactory {
     const { query } = commercetoolsProductSearchRequest;
 
     // Extract the "or" and "and" fields from the query object for easier access
-    const intermediateValues: Record<string, number | ProductSearchQuery[]> = {
+    const intermediateValues: Record<string, number | SearchQuery[]> = {
       orLength: 0,
       andLength: 0,
       orList: [],
@@ -154,7 +156,7 @@ export class ProductSearchFactory {
 
     // If only one "or" and one "and" field, and they have the same field name, the function returns the "or" field.
     if (intermediateValues.orLength === 1 && intermediateValues.andLength === 1) {
-      const orField = (intermediateValues.orList[0] as ProductSearchExactExpression).exact?.field;
+      const orField = (intermediateValues.orList[0] as SearchExactExpression).exact?.field;
       const andField = intermediateValues.andList[0].exact?.field || intermediateValues.andList[0].range?.field;
 
       if (orField === andField) {
@@ -199,10 +201,10 @@ export class ProductSearchFactory {
 
   private static pushToProductSearchAndExpression: (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
-    expression: ProductSearchQuery | ProductSearchQuery[],
+    expression: SearchQuery | SearchQuery[],
   ) => ProductSearchRequest = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
-    expression: ProductSearchQuery | ProductSearchQuery[],
+    expression: SearchQuery | SearchQuery[],
   ) => {
     if ('and' in commercetoolsProductSearchRequest.query) {
       if (Array.isArray(expression)) {
@@ -212,12 +214,43 @@ export class ProductSearchFactory {
       }
     } else {
       if (Array.isArray(expression)) {
-        (commercetoolsProductSearchRequest.query as Writeable<ProductSearchQuery>) = {
+        (commercetoolsProductSearchRequest.query as Writeable<SearchQuery>) = {
+          ...commercetoolsProductSearchRequest.query,
           and: [...expression],
         };
       } else {
-        (commercetoolsProductSearchRequest.query as Writeable<ProductSearchQuery>) = {
+        (commercetoolsProductSearchRequest.query as Writeable<SearchQuery>) = {
+          ...commercetoolsProductSearchRequest.query,
           and: [expression],
+        };
+      }
+    }
+    return commercetoolsProductSearchRequest;
+  };
+
+  private static pushToProductSearchOrExpression: (
+    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    expression: SearchQuery | SearchQuery[],
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
+    if ('or' in commercetoolsProductSearchRequest.query) {
+      if (Array.isArray(expression)) {
+        commercetoolsProductSearchRequest.query.or.push(...expression);
+      } else {
+        commercetoolsProductSearchRequest.query.or.push(expression);
+      }
+    } else {
+      if (Array.isArray(expression)) {
+        (commercetoolsProductSearchRequest.query as Writeable<SearchQuery>) = {
+          ...commercetoolsProductSearchRequest.query,
+          or: [...expression],
+        };
+      } else {
+        (commercetoolsProductSearchRequest.query as Writeable<SearchQuery>) = {
+          ...commercetoolsProductSearchRequest.query,
+          or: [expression],
         };
       }
     }
@@ -230,11 +263,11 @@ export class ProductSearchFactory {
     locale: Locale,
   ) => {
     if (productQuery.query) {
-      const productSearchOrExpression: ProductSearchOrExpression = {
+      const productSearchOrExpression: SearchOrExpression = {
         or: [],
       };
       LOCALIZED_FULLTEXT_QUERY_FIELDS.forEach((field) => {
-        const fullTextQuery: ProductSearchWildCardExpression = {
+        const fullTextQuery: SearchWildCardExpression = {
           wildcard: {
             field,
             language: locale.language,
@@ -246,7 +279,7 @@ export class ProductSearchFactory {
       });
 
       KEYWORD_EXACT_QUERY_FIELDS.forEach((field) => {
-        const exactFieldQuery: ProductSearchExactExpression = {
+        const exactFieldQuery: SearchExactExpression = {
           exact: {
             field,
             value: productQuery.query,
@@ -272,7 +305,7 @@ export class ProductSearchFactory {
       !commercetoolsProductSearchRequest.query || Object.keys(commercetoolsProductSearchRequest.query).length === 0;
 
     if (!productQuery.query && isProductSearchQueryEmpty) {
-      const productSearchWildCardExpression: ProductSearchWildCardExpression = {
+      const productSearchWildCardExpression: SearchWildCardExpression = {
         wildcard: {
           field: 'name',
           language: locale.language,
@@ -292,7 +325,7 @@ export class ProductSearchFactory {
     productQuery: ProductQuery,
   ) => {
     if (productQuery.categories?.length) {
-      const productSearchExactExpressions: ProductSearchExactExpression[] = [];
+      const productSearchExactExpressions: SearchExactExpression[] = [];
       productQuery.categories.forEach((categoryId) => {
         productSearchExactExpressions.push({
           exact: {
@@ -322,14 +355,17 @@ export class ProductSearchFactory {
           },
         });
       } else {
-        commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(commercetoolsProductSearchRequest, {
-          or: productQuery.productSelectionIds.map((id) => ({
-            exact: {
-              field: 'productSelections',
-              value: id,
-            },
-          })),
-        });
+        const productSearchExactExpressions: SearchExactExpression[] = productQuery.productSelectionIds.map((id) => ({
+          exact: {
+            field: 'productSelections',
+            value: id,
+          },
+        }));
+
+        commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
+          commercetoolsProductSearchRequest,
+          productSearchExactExpressions,
+        );
       }
     }
     return commercetoolsProductSearchRequest;
@@ -340,7 +376,7 @@ export class ProductSearchFactory {
     productQuery: ProductQuery,
   ) => {
     if (productQuery.productIds?.length) {
-      const productSearchExactExpressions: ProductSearchExactExpression[] = [];
+      const productSearchExactExpressions: SearchExactExpression[] = [];
 
       productQuery.productIds.forEach((productId) => {
         productSearchExactExpressions.push({
@@ -350,10 +386,25 @@ export class ProductSearchFactory {
           },
         });
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
         commercetoolsProductSearchRequest,
         productSearchExactExpressions,
       );
+    }
+    return commercetoolsProductSearchRequest;
+  };
+
+  private static applyStore: ProductSearchFactoryUtilMethod = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    productQuery: ProductQuery,
+  ) => {
+    if (productQuery.storeId) {
+      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(commercetoolsProductSearchRequest, {
+        exact: {
+          field: 'stores',
+          value: productQuery.storeId,
+        },
+      });
     }
     return commercetoolsProductSearchRequest;
   };
@@ -363,7 +414,7 @@ export class ProductSearchFactory {
     productQuery: ProductQuery,
   ) => {
     if (productQuery.skus?.length) {
-      const productSearchExactExpressions: ProductSearchExactExpression[] = [];
+      const productSearchExactExpressions: SearchExactExpression[] = [];
       productQuery.skus.forEach((sku) => {
         productSearchExactExpressions.push({
           exact: {
@@ -372,7 +423,7 @@ export class ProductSearchFactory {
           },
         });
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
         commercetoolsProductSearchRequest,
         productSearchExactExpressions,
       );
@@ -392,12 +443,12 @@ export class ProductSearchFactory {
     locale: Locale,
   ) => {
     if (productQuery.filters?.length) {
-      const productSearchExpressions: (ProductSearchExactExpression | ProductSearchNumberRangeExpression)[] = [];
+      const productSearchExpressions: (SearchExactExpression | SearchNumberRangeExpression)[] = [];
       productQuery.filters.forEach((filter) => {
         switch (filter.type) {
           case FilterTypes.TERM:
             (filter as TermFilter).terms.forEach((term) => {
-              const productSearchExactSearchExpression: ProductSearchExactExpression = {
+              const productSearchExactSearchExpression: SearchExactExpression = {
                 exact: this.hydrateProductSearchExpressionValue(
                   {
                     field: filter.identifier,
@@ -405,14 +456,14 @@ export class ProductSearchFactory {
                   },
                   facetDefinitions,
                   locale,
-                ) as ProductSearchAnyValue,
+                ) as SearchAnyValue,
               };
               productSearchExpressions.push(productSearchExactSearchExpression);
             });
 
             break;
           case FilterTypes.BOOLEAN:
-            const productSearchExactSearchExpression: ProductSearchExactExpression = {
+            const productSearchExactSearchExpression: SearchExactExpression = {
               exact: this.hydrateProductSearchExpressionValue(
                 {
                   field: filter.identifier,
@@ -420,19 +471,19 @@ export class ProductSearchFactory {
                 },
                 facetDefinitions,
                 locale,
-              ) as ProductSearchAnyValue,
+              ) as SearchAnyValue,
             };
             productSearchExpressions.push(productSearchExactSearchExpression);
             break;
           case FilterTypes.RANGE:
-            const rangeQuery: Writeable<ProductSearchNumberRangeExpression> = {
+            const rangeQuery: Writeable<SearchNumberRangeExpression> = {
               range: this.hydrateProductSearchExpressionValue(
                 {
                   field: filter.identifier,
                 },
                 facetDefinitions,
                 locale,
-              ) as ProductSearchNumberRangeValue,
+              ) as SearchNumberRangeValue,
             };
             if ((filter as RangeFilter).min) {
               rangeQuery.range.gt = (filter as RangeFilter).min;
@@ -506,7 +557,7 @@ export class ProductSearchFactory {
       if (productQuery.facets?.length) {
         commercetoolsProductSearchRequest.facets.forEach((searchFacetExpression: _ProductSearchFacetExpression) => {
           const identifier = this.getProductSearchFacetIdentifier(searchFacetExpression);
-          const productSearchQueryFilters: ProductSearchQuery[] = [];
+          const productSearchQueryFilters: SearchQuery[] = [];
 
           if (identifier) {
             const queryFacet = productQuery.facets.find((f) => f.identifier === identifier);
@@ -552,38 +603,38 @@ export class ProductSearchFactory {
 
   private static hydrateQueryExpressionWithAttributeType = (
     facet: _ProductSearchFacetExpression,
-    query: Writeable<ProductSearchQueryExpression>,
+    query: Writeable<SearchQueryExpression>,
     locale: Locale,
-  ): ProductSearchQueryExpression => {
+  ): SearchQueryExpression => {
     if ('distinct' in facet) {
-      const attributeType = facet.distinct.attributeType;
-      if (attributeType) {
+      const fieldType = facet.distinct.fieldType;
+      if (fieldType) {
         query = {
           ...query,
-          attributeType,
+          fieldType,
         };
-        query = this.hydrateQueryExpressionWithLanguage(query, attributeType, locale);
+        query = this.hydrateQueryExpressionWithLanguage(query, fieldType, locale);
       }
     }
     if ('ranges' in facet) {
-      const attributeType = facet.ranges.attributeType;
-      if (attributeType) {
+      const fieldType = facet.ranges.fieldType;
+      if (fieldType) {
         query = {
           ...query,
-          attributeType,
+          fieldType,
         };
-        query = this.hydrateQueryExpressionWithLanguage(query, attributeType, locale);
+        query = this.hydrateQueryExpressionWithLanguage(query, fieldType, locale);
       }
     }
     return query;
   };
 
   private static hydrateQueryExpressionWithLanguage = (
-    query: Writeable<ProductSearchQueryExpression>,
-    attributeType: string,
+    query: Writeable<SearchQueryExpression>,
+    fieldType: string,
     locale: Locale,
-  ): ProductSearchQueryExpression => {
-    if (['ltext', 'lenum'].includes(attributeType)) {
+  ): SearchQueryExpression => {
+    if (['ltext', 'lenum'].includes(fieldType)) {
       query = {
         ...query,
         language: locale.language,
@@ -593,10 +644,10 @@ export class ProductSearchFactory {
   };
 
   private static hydrateProductSearchExpressionValue = (
-    productSearchExpressionsValue: ProductSearchAnyValue | ProductSearchNumberRangeValue,
+    productSearchExpressionsValue: SearchAnyValue | SearchNumberRangeValue,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ): ProductSearchAnyValue | ProductSearchNumberRangeValue => {
+  ): SearchAnyValue | SearchNumberRangeValue => {
     // Only hydrate if the field is an attribute
     if (productSearchExpressionsValue.field.includes('attributes')) {
       const facetDefinition = facetDefinitions.find(
@@ -645,7 +696,7 @@ export class ProductSearchFactory {
           facet = {
             distinct: {
               ...facetValue,
-              count: 'products',
+              level: 'products',
             },
           };
           break;
@@ -654,7 +705,7 @@ export class ProductSearchFactory {
           facet = {
             ranges: {
               ...facetValue,
-              count: 'products',
+              level: 'products',
               ranges: [
                 {
                   from: 0,
@@ -686,8 +737,8 @@ export class ProductSearchFactory {
     facetDefinition: FacetDefinition,
     locale: Locale,
   ):
-    | Pick<ProductSearchFacetDistinctValue, 'name' | 'field' | 'attributeType' | 'language'>
-    | Pick<ProductSearchFacetRangesValue, 'name' | 'field' | 'attributeType'> => {
+    | Pick<ProductSearchFacetDistinctValue, 'name' | 'field' | 'fieldType' | 'language'>
+    | Pick<ProductSearchFacetRangesValue, 'name' | 'field' | 'fieldType'> => {
     switch (facetDefinition.attributeType) {
       case 'money':
         return {
@@ -699,14 +750,14 @@ export class ProductSearchFactory {
         return {
           name: `${facetDefinition.attributeId}`,
           field: `${facetDefinition.attributeId}.label`,
-          attributeType: 'enum',
+          fieldType: 'enum',
         };
 
       case 'lenum':
         return {
           name: `${facetDefinition.attributeId}`,
           field: `${facetDefinition.attributeId}.label`,
-          attributeType: 'lenum',
+          fieldType: 'lenum',
           language: locale.language,
         };
 
@@ -714,7 +765,7 @@ export class ProductSearchFactory {
         return {
           name: `${facetDefinition.attributeId}`,
           field: `${facetDefinition.attributeId}`,
-          attributeType: 'ltext',
+          fieldType: 'ltext',
           language: locale.language,
         };
 
@@ -722,13 +773,13 @@ export class ProductSearchFactory {
         return {
           name: `${facetDefinition.attributeId}`,
           field: `${facetDefinition.attributeId}`,
-          attributeType: 'text',
+          fieldType: 'text',
         };
       case 'boolean':
         return {
           name: `${facetDefinition.attributeId}`,
           field: `${facetDefinition.attributeId}`,
-          attributeType: 'boolean',
+          fieldType: 'boolean',
         };
       case 'range':
       case 'reference':
@@ -742,9 +793,9 @@ export class ProductSearchFactory {
 
   private static pushFiltersIntoProductFacetExpression = (
     facet: Writeable<_ProductSearchFacetExpression>,
-    productSearchQueryFilters: ProductSearchQuery[],
+    productSearchQueryFilters: SearchQuery[],
   ): ProductSearchFacetExpression => {
-    let filterExpression: ProductSearchQuery = {};
+    let filterExpression: SearchQuery = {};
     if (!productSearchQueryFilters.length) {
       return facet;
     } else if (productSearchQueryFilters.length === 1) {
@@ -780,15 +831,15 @@ export class ProductSearchFactory {
     searchFacetExpression: _ProductSearchFacetExpression,
     queryFacet: Facet,
     locale: Locale,
-  ): ProductSearchNumberRangeExpression {
-    const priceQuery: Writeable<ProductSearchNumberRangeExpression> = {
+  ): SearchNumberRangeExpression {
+    const priceQuery: Writeable<SearchNumberRangeExpression> = {
       range: this.hydrateQueryExpressionWithAttributeType(
         searchFacetExpression,
         {
           field: this.getFacetSearchExpressionFieldIdentifier(searchFacetExpression),
         },
         locale,
-      ) as ProductSearchNumberRangeValue,
+      ) as SearchNumberRangeValue,
     };
     if ((queryFacet as RangeFilter).min) {
       priceQuery.range.gt = (queryFacet as RangeFilter).min;
@@ -803,7 +854,7 @@ export class ProductSearchFactory {
     searchFacetExpression: _ProductSearchFacetExpression,
     queryFacet: Facet,
     locale: Locale,
-  ): ProductSearchQueryExpression {
+  ): SearchQueryExpression {
     return {
       exact: this.hydrateQueryExpressionWithAttributeType(
         searchFacetExpression,
@@ -820,7 +871,7 @@ export class ProductSearchFactory {
     searchFacetExpression: _ProductSearchFacetExpression,
     term: string,
     locale: Locale,
-  ): ProductSearchQueryExpression {
+  ): SearchQueryExpression {
     return {
       exact: this.hydrateQueryExpressionWithAttributeType(
         searchFacetExpression,

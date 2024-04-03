@@ -15,9 +15,25 @@ Primary.args = {
   products: Array.from({ length: 20 }, (_, index) => ({
     id: index.toString(),
     name: 'Brake Pad Set, disc brake DELPHI LP20',
-    description:
-      'Print Technology: Inkjet\nMax Print Resolution: 4800 x 1200 dpi\nPrint Speed: 13 pages/minute\nColor Depth: 48-bit internal / 24-bit external (Scanner)\nDuplex Printing: Yes (Automatic)\nPaper Sizes: A4, Letter, Legal, 4"x6"',
-    model: 'SHXM4AY55N',
+    specifications: [
+      {
+        label: 'capacity',
+        value: '600',
+      },
+      {
+        label: 'model',
+        value: '2015',
+      },
+      {
+        label: 'iso45001',
+        value: 'true',
+      },
+      {
+        label: 'mobility',
+        value: 'tracked',
+      },
+    ],
+    sku: 'SHXM4AY55N',
     inStock: true,
     maxQuantity: 10,
     price: 734.64,

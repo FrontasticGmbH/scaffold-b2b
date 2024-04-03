@@ -1,13 +1,12 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { WishlistQuery } from '@Types/wishlist';
-import { WishlistApi } from '../apis/WishlistApi';
-import { getCurrency, getLocale } from './Request';
 import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
+import getWishlistApi from '@Commerce-commercetools/utils/getWishlistApi';
 
 export class WishlistFetcher {
   static async fetchWishlist(request: Request, actionContext: ActionContext): Promise<Wishlist> {
-    const wishlistApi = new WishlistApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
 

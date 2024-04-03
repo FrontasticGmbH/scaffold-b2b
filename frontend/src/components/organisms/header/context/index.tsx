@@ -25,6 +25,7 @@ const HeaderProvider = ({
   onBusinessUnitChange,
   onStoreChange,
   addToCart,
+  addToCartDisabled,
 }: React.PropsWithChildren<ContextProps>) => {
   const [navigationLevel, setNavigationLevel] = useState<NavigationCategory[]>([]);
   const [showMenu, setShowMenu] = useState(false);
@@ -87,6 +88,7 @@ const HeaderProvider = ({
         showHeaderMenu,
         hideHeaderMenu,
         addToCart,
+        addToCartDisabled,
       }}
     >
       {children}

@@ -1,5 +1,8 @@
 import { DataSourceConfiguration, DataSourceContext } from '@frontastic/extension-types';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
+import { ProductPaginatedResult } from '@Types/result';
+import { Product } from '@Types/product';
+import { DataSourcePreviewPayloadElement } from '@frontastic/extension-types/src/ts';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { ProductApi } from './apis/ProductApi';
 import { getCurrency, getLocale } from './utils/Request';
@@ -49,6 +52,15 @@ function quoteQueryFromContext(context: DataSourceContext, config: DataSourceCon
   return { quoteApi, quoteQuery };
 }
 
+function getPreviewPayload(queryResult: ProductPaginatedResult) {
+  return (queryResult.items as Product[]).map((product): DataSourcePreviewPayloadElement => {
+    return {
+      title: product.name,
+      image: product?.variants[0]?.images[0],
+    };
+  });
+}
+
 export default {
   'frontastic/categories': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     const productApi = new ProductApi(
@@ -68,6 +80,7 @@ export default {
     return await productApi.query(productQuery).then((queryResult) => {
       return {
         dataSourcePayload: queryResult,
+        previewPayload: getPreviewPayload(queryResult),
       };
     });
   },
@@ -78,6 +91,7 @@ export default {
     return await productApi.query(productQuery).then((queryResult) => {
       return {
         dataSourcePayload: queryResult,
+        previewPayload: getPreviewPayload(queryResult),
       };
     });
   },

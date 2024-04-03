@@ -5,12 +5,12 @@ import AnnouncementBar from '@/components/organisms/announcement-bar';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { desktop } from '@/constants/screensizes';
-import useResizeObserver from '@/hooks/useResizeObserver';
 import { resolveReference } from '@/utils/lib/resolve-reference';
 import { mapProductSuggestion } from '@/utils/mappers/map-product-suggestion';
 import { Link } from '@/types/link';
 import { NavigationCategory } from '@/components/organisms/header/types';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import { classnames } from '@/utils/classnames/classnames';
 import { TasticProps } from '../types';
 import { HeaderTasticProps } from './types';
 import useHeaderData from './hooks/useHeaderData';
@@ -44,6 +44,8 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     handleSKUsUpdate,
   } = useHeaderData();
 
+  const { permissions } = useAccountRoles(selectedBusinessUnit);
+
   const pageLinks: Link[] = data.pageLinks.map((pl) => {
     return { name: pl.name, href: resolveReference(pl.href).href };
   });
@@ -73,68 +75,60 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     subCategories: myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin'),
   };
 
-  const { ref } = useResizeObserver(
-    (el: HTMLDivElement) => {
-      const bodySection = document.querySelector('.body-section') as HTMLDivElement | undefined;
-      if (bodySection) bodySection.style.paddingTop = `${el.clientHeight}px`;
-    },
-    () => {
-      const bodySection = document.querySelector('.body-section') as HTMLDivElement | undefined;
-      if (bodySection) bodySection.style.paddingTop = '0';
-    },
-  );
-
   return (
-    <div id="header-container" className="fixed top-0 z-50 w-full" ref={ref}>
-      <div className="relative">
-        {data.variant === 'navigation' && (
-          <AnnouncementBar
-            textBar={data.textBar}
-            accountLinks={accountLinks}
+    <div className={classnames(data.variant === 'navigation' ? 'h-[179px] lg:h-[112px]' : 'h-[72px]')}>
+      <div id="header-container" className=" fixed top-0 z-50  w-full">
+        <div className="relative">
+          {data.variant === 'navigation' && (
+            <AnnouncementBar
+              textBar={data.textBar}
+              accountLinks={accountLinks}
+              selectedBusinessUnit={selectedBusinessUnit}
+              businessUnits={businessUnits}
+              stores={stores}
+              selectedStore={selectedStore}
+              name={account?.firstName ?? ''}
+              quotes={quotes?.length ?? 0}
+              onLogoutClick={onLogoutClick}
+              onBusinessUnitChange={onBusinessUnitSelect}
+              onStoreChange={onStoreSelect}
+            />
+          )}
+          <Header
+            variant={data.variant ?? 'navigation'}
+            isAdmin={isAdmin}
+            csvDownloadLink="/template.csv"
+            quickOrderProducts={quickOrderProducts.map((product) => mapProductSuggestion(product))}
+            addToCartDisabled={!permissions.UpdateMyCarts}
             selectedBusinessUnit={selectedBusinessUnit}
             businessUnits={businessUnits}
             stores={stores}
             selectedStore={selectedStore}
-            name={account?.firstName ?? ''}
+            categoryLinks={navigationCategories}
+            myAccountMenu={accountMenuMobile}
+            accountLink={resolveReference(data.accountLink)}
+            cartItems={totalCartItems}
+            cartLink={resolveReference(data.cartLink)}
+            pageLinks={pageLinks}
+            logo={data.logo}
+            logoLink={resolveReference(data.logoLink)}
+            searchPlaceholder={
+              isDesktopSize ? translate('common.search.placeholder') : translate('common.search.placeholder.mobile')
+            }
+            searchSuggestions={headerProducts.map((product) => mapProductSuggestion(product))}
             quotes={quotes?.length ?? 0}
-            onLogoutClick={onLogoutClick}
             onBusinessUnitChange={onBusinessUnitSelect}
             onStoreChange={onStoreSelect}
+            quickOrderSearch={quickOrderSearch}
+            onQuickOrderSearch={onQuickOrderSearch}
+            headerSearch={headerSearch}
+            onHeaderSearch={onHeaderSearch}
+            onHeaderSearchAction={headerSearchAction}
+            addToCart={addToCart}
+            csvShowProducts={csvShowProducts}
+            handleSKUsUpdate={handleSKUsUpdate}
           />
-        )}
-        <Header
-          variant={data.variant ?? 'navigation'}
-          isAdmin={isAdmin}
-          csvDownloadLink="/template.csv"
-          quickOrderProducts={quickOrderProducts.map((product) => mapProductSuggestion(product))}
-          selectedBusinessUnit={selectedBusinessUnit}
-          businessUnits={businessUnits}
-          stores={stores}
-          selectedStore={selectedStore}
-          categoryLinks={navigationCategories}
-          myAccountMenu={accountMenuMobile}
-          accountLink={resolveReference(data.accountLink)}
-          cartItems={totalCartItems}
-          cartLink={resolveReference(data.cartLink)}
-          pageLinks={pageLinks}
-          logo={data.logo}
-          logoLink={resolveReference(data.logoLink)}
-          searchPlaceholder={
-            isDesktopSize ? translate('common.search.placeholder') : translate('common.search.placeholder.mobile')
-          }
-          searchSuggestions={headerProducts.map((product) => mapProductSuggestion(product))}
-          quotes={quotes?.length ?? 0}
-          onBusinessUnitChange={onBusinessUnitSelect}
-          onStoreChange={onStoreSelect}
-          quickOrderSearch={quickOrderSearch}
-          onQuickOrderSearch={onQuickOrderSearch}
-          headerSearch={headerSearch}
-          onHeaderSearch={onHeaderSearch}
-          onHeaderSearchAction={headerSearchAction}
-          addToCart={addToCart}
-          csvShowProducts={csvShowProducts}
-          handleSKUsUpdate={handleSKUsUpdate}
-        />
+        </div>
       </div>
     </div>
   );

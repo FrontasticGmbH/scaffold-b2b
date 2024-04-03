@@ -82,6 +82,29 @@ const usePurchaseLists = (storeKey?: string) => {
     [mutate],
   );
 
+  const removeFromWishlists = useCallback(
+    async (
+      wishlists: {
+        lineItemId: string;
+        wishlistId: string;
+      }[],
+    ) => {
+      const result = await sdk.callAction<Wishlist[]>({
+        actionName: 'wishlist/removeLineItems',
+        payload: wishlists,
+      });
+
+      mutate();
+
+      if (!result.isError) {
+        return { data: result?.data };
+      }
+
+      return {};
+    },
+    [mutate],
+  );
+
   return {
     purchaseLists: response.data?.isError ? null : response.data?.data ?? null,
     mutateAll,
@@ -89,6 +112,7 @@ const usePurchaseLists = (storeKey?: string) => {
     updatePurchaseList,
     deletePurchaseList,
     addToWishlists,
+    removeFromWishlists,
   };
 };
 

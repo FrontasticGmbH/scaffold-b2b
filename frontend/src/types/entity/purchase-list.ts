@@ -1,8 +1,10 @@
 import { Currency } from '../currency';
+import { Store } from './business-unit';
 
 export interface PurchaseListItem {
   id: string;
   sku: string;
+  url: string;
   name: string;
   model?: string;
   manufacturer?: string;
@@ -20,7 +22,7 @@ export interface PurchaseListItem {
 export interface PurchaseList {
   id: string;
   name: string;
-  store: string;
+  store?: Store;
   description: string;
   items: PurchaseListItem[];
 }

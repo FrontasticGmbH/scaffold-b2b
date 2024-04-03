@@ -1,0 +1,56 @@
+import { Order } from '@/types/entity/order';
+
+export const orders = [
+  {
+    id: '2353-2245-6631',
+    number: '2353-2245-6631',
+    creationDate: '11/03/2023',
+    businessUnit: 'Greenville',
+    total: 5225.66,
+    subtotal: 5225.66,
+    currency: 'USD',
+    status: 'Delivered',
+    items: [
+      {
+        name: 'Brake Pad Set, disc brake DELPHI LP20',
+        sku: 'Bd10T789',
+        price: 522.56,
+        quantity: 10,
+        images: ['/sb-assets/engine.png'],
+      },
+    ],
+  },
+  {
+    id: '2353-2245-6632',
+    number: '2353-2245-6632',
+    creationDate: '11/03/2023',
+    businessUnit: 'Greenville',
+    total: 5225.66,
+    subtotal: 5225.66,
+    currency: 'USD',
+    status: 'Pending',
+    items: [],
+  },
+  {
+    id: '2353-2245-6633',
+    number: '2353-2245-6633',
+    creationDate: '11/03/2023',
+    businessUnit: 'Greenville',
+    total: 5225.66,
+    subtotal: 5225.66,
+    currency: 'USD',
+    status: 'Cancelled',
+    items: [],
+  },
+  {
+    id: '2353-2245-6634',
+    number: '2353-2245-6634',
+    creationDate: '11/03/2023',
+    businessUnit: 'Greenville',
+    total: 5225.66,
+    subtotal: 5225.66,
+    currency: 'USD',
+    status: 'Confirmed',
+    items: [],
+  },
+] as Order[];

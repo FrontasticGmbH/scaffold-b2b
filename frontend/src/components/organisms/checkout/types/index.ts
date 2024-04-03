@@ -35,7 +35,12 @@ export interface PaymentMethod {
   };
 }
 
+export interface SubmitPurchasePayload {
+  buyerComment: string;
+}
+
 export interface CheckoutProps {
+  buyerCanAddComment?: boolean;
   addresses: Address[];
   onAddAddress?: (address: Address) => Promise<boolean>;
   products: Array<Pick<Product, 'id' | 'name' | 'currency' | 'price' | 'quantity' | 'images'>>;
@@ -50,5 +55,6 @@ export interface CheckoutProps {
   onCompleteShipping?: (shippingMethodId: string) => Promise<boolean>;
   paymentMethods: PaymentMethod[];
   onCompletePayment?: (paymentMethodId: string, data: unknown) => Promise<boolean>;
-  onSubmitPurchase: () => Promise<boolean>;
+  onSubmitPurchase: (paylaod: SubmitPurchasePayload) => Promise<boolean>;
+  translations?: { header?: string; orderSummaryTitle?: string; orderSummarySubtitle?: string; purchase?: string };
 }

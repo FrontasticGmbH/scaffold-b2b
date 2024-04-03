@@ -4,7 +4,7 @@ import QuantityWidget from '@/components/atoms/quantity-widget';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { CartCTAProps } from '../types';
 
-const CartCTA = ({ addToCart, countChange }: CartCTAProps) => {
+const CartCTA = ({ addToCart, countChange, addToCartDisabled }: CartCTAProps) => {
   const { translate } = useTranslation();
 
   const [count, setCount] = useState(1);
@@ -16,8 +16,8 @@ const CartCTA = ({ addToCart, countChange }: CartCTAProps) => {
 
   return (
     <div className="flex w-full gap-3">
-      <QuantityWidget showLabel={false} defaultValue={1} onChange={handleCountChange} />
-      <Button onClick={() => addToCart(count)} className="grow" size="m">
+      <QuantityWidget showLabel={false} defaultValue={1} onChange={handleCountChange} disabled={addToCartDisabled} />
+      <Button onClick={() => addToCart(count)} className="grow" size="m" disabled={addToCartDisabled}>
         {translate('cart.add')}
       </Button>
     </div>

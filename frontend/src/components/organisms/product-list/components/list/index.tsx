@@ -6,7 +6,7 @@ import { Product } from '@/types/entity/product';
 import { useProductList } from '../../context';
 import { ProductListProps } from '../../types';
 
-const List = ({ onAddToCart }: ProductListProps) => {
+const List = ({ onAddToCart, addToCartDisabled }: ProductListProps) => {
   const { products, view } = useProductList();
   const { showModal } = useAddToCartOverlay();
   const handleOnAddToCart = async (product: Product, qty: number) => {
@@ -22,6 +22,7 @@ const List = ({ onAddToCart }: ProductListProps) => {
             variant={view === 'grid' ? 'grid-item' : 'list-item'}
             className="border-none"
             onAddToCart={(qty) => handleOnAddToCart(product, qty)}
+            addToCartDisabled={addToCartDisabled}
           />
         </div>
       ))}

@@ -48,21 +48,21 @@ export class ProductApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        const items = response.body.hits.map((product) =>
+        const items = response.body.results.map((product) =>
           ProductMapper.commercetoolsProductProjectionToProduct(
             product.productProjection,
             this.categoryIdField,
             locale,
+            productQuery.supplyChannelId,
           ),
         );
-
-        const count = response.body.hits.length;
+        const count = response.body.results.length;
         const result: ProductPaginatedResult = {
           total: response.body.total,
           items,
           count,
-          facets: ProductMapper.productSearchFacetResultsToFacets(
-            response.body.facets.results,
+          facets: ProductMapper.commercetoolsFacetResultsToFacets(
+            response.body.facets,
             commercetoolsProductSearchRequest,
             facetDefinitions,
           ),
@@ -70,6 +70,7 @@ export class ProductApi extends BaseApi {
           nextCursor: ProductMapper.calculateNextCursor(response.body.offset, count, response.body.total),
           query: productQuery,
         };
+
         return result;
       })
       .catch((error) => {
@@ -102,7 +103,7 @@ export class ProductApi extends BaseApi {
 
     // Category filter. Not included as commercetools product type.
     filterFields.push({
-      field: 'categoriesSubTree',
+      field: 'categoryIds',
       type: FilterFieldTypes.ENUM,
       label: 'Category',
       values: await this.queryCategories({ limit: 250 }).then((result) => {

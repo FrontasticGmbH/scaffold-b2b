@@ -28,7 +28,7 @@ export default {
   ): Promise<DynamicPageSuccessResult | DynamicPageRedirectResult | null> => {
     // Identify static page
     const staticPageMatch = getPath(request)?.match(
-      /^\/(cart|checkout|wishlists|shopping-lists|account|login|register|verify|reset-password|quote-thank-you|quotes)/,
+      /^\/(cart|checkout|wishlists|shopping-lists|account|login|register|verify-associate|verify|reset-password|quote-thank-you|quotes)/,
     );
 
     if (staticPageMatch) {

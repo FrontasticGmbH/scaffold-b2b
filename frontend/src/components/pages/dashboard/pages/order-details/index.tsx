@@ -3,11 +3,12 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
 import Button from '@/components/atoms/button';
+import InfoBanner from '@/components/molecules/info-banner';
 import { OrderDetailsPageProps } from './types';
 import OrderStatusBar from './components/order-status-bar';
 import PreviousPageLink from '../../components/previous-page-link';
 
-const OrderDetailsPage = ({ order, onReturn, onReorder }: OrderDetailsPageProps) => {
+const OrderDetailsPage = ({ order, viewOnly, onReturn, onReorder }: OrderDetailsPageProps) => {
   const { translate } = useTranslation();
 
   const { formatCurrency, formatLocalDate } = useFormat();
@@ -34,6 +35,11 @@ const OrderDetailsPage = ({ order, onReturn, onReorder }: OrderDetailsPageProps)
 
   return (
     <div>
+      {viewOnly && (
+        <InfoBanner className="mt-3">
+          <b>{translate('common.view.only')}</b> {translate('dashboard.orders.view.only.desc')}
+        </InfoBanner>
+      )}
       <div className="flex items-center justify-between">
         <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
           {translate('dashboard.order.details')}
@@ -41,15 +47,19 @@ const OrderDetailsPage = ({ order, onReturn, onReorder }: OrderDetailsPageProps)
         <div className="hidden items-center justify-normal gap-x-3 md:flex">
           <PreviousPageLink />
 
-          <Button size="s" variant="secondary" onClick={handleReturn} loading={loading.return}>
-            {translate('orders.return')}
-          </Button>
-          <Button size="s" variant="secondary" disabled>
+          {!viewOnly && (
+            <Button size="s" variant="secondary" onClick={handleReturn} loading={loading.return}>
+              {translate('orders.return')}
+            </Button>
+          )}
+          {/* <Button size="s" variant="secondary" disabled>
             {translate('orders.download.invoice')}
-          </Button>
-          <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
-            {translate('orders.reorder')}
-          </Button>
+          </Button> */}
+          {!viewOnly && (
+            <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
+              {translate('orders.reorder')}
+            </Button>
+          )}
         </div>
       </div>
 
@@ -126,17 +136,24 @@ const OrderDetailsPage = ({ order, onReturn, onReorder }: OrderDetailsPageProps)
             <span>{formatCurrency(order.subtotal, order.currency)}</span>
           </div>
 
-          {order.shippingCosts && (
+          {!!order.shippingCosts && (
             <div className="flex items-center justify-between text-14 text-gray-600">
               <span>{translate('common.shipping')}</span>
               <span>{formatCurrency(order.shippingCosts, order.currency)}</span>
             </div>
           )}
 
-          {order.taxCosts && (
+          {!!order.taxCosts && (
             <div className="flex items-center justify-between text-14 text-gray-600">
               <span>{translate('common.tax')}</span>
               <span>{formatCurrency(order.taxCosts, order.currency)}</span>
+            </div>
+          )}
+
+          {!!order.discount && (
+            <div className="flex items-center justify-between text-14 text-gray-600">
+              <span>{translate('common.discount')}</span>
+              <span>-{formatCurrency(order.discount, order.currency)}</span>
             </div>
           )}
 

@@ -21,5 +21,6 @@ export interface ProductListProps {
   limit: number;
   total: number;
   onLoadMore: () => void;
+  addToCartDisabled?: boolean;
   onAddToCart: (sku: string, qty: number) => Promise<void>;
 }

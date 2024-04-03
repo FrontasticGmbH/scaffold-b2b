@@ -1,41 +1,47 @@
 import { BusinessUnit, BusinessUnitStatus, BusinessUnitType, StoreMode } from '@Types/business-unit/BusinessUnit';
-import { BaseAddress, BusinessUnitDraft, BusinessUnitUpdateAction } from '@commercetools/platform-sdk';
+import { AssociateRoleAssignmentDraft, BusinessUnitDraft, BusinessUnitUpdateAction } from '@commercetools/platform-sdk';
 import { Store } from '@Types/store/Store';
 import { Account } from '@Types/account/Account';
 import { AssociateRole } from '@Types/business-unit/Associate';
+import { Address } from '@Types/account';
 import { BusinessUnitMapper } from '../mappers/BusinessUnitMapper';
 import { StoreApi } from './StoreApi';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
 import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
+import { Guid } from '@Commerce-commercetools/utils/Guid';
 
 const MAX_LIMIT = 50;
 
 export class BusinessUnitApi extends BaseApi {
-  async createForAccountAndStore(account: Account, store: Store): Promise<BusinessUnit> {
+  async createForAccount(account: Account): Promise<BusinessUnit> {
     const businessUnitKey = businessUnitKeyFormatter(account.companyName);
 
-    const stores = store?.storeId ? { id: store.storeId } : { key: store.key };
+    const associateRoleAssignments = this.defaultAssociateRoleKeys.map((associateRoleKey) => {
+      const associateRoleAssignment: AssociateRoleAssignmentDraft = {
+        associateRole: {
+          typeId: 'associate-role',
+          key: associateRoleKey,
+        },
+        inheritance: `Enabled`,
+      };
+
+      return associateRoleAssignment;
+    });
 
     const businessUnitDraft: BusinessUnitDraft = {
       key: businessUnitKey,
       name: account.companyName,
       status: BusinessUnitStatus.Active,
-      stores: [{ ...stores, typeId: 'store' }],
+      stores: [{ key: this.clientSettings.defaultStoreKey, typeId: 'store' }],
       storeMode: StoreMode.Explicit,
       unitType: BusinessUnitType.Company,
       contactEmail: account.email,
       associates: [
         {
-          associateRoleAssignments: [
-            {
-              associateRole: {
-                key: this.defaultAssociateRoleKey,
-                typeId: 'associate-role',
-              },
-            },
-          ],
+          associateRoleAssignments,
           customer: {
             id: account.accountId,
             typeId: 'customer',
@@ -118,9 +124,15 @@ export class BusinessUnitApi extends BaseApi {
       });
 
     if (expandStores) {
+      // The SDK doesn't return inherited stores, so we need to fetch them manually
+      if (businessUnit.storeMode === StoreMode.FromParent) {
+        businessUnit.stores = await this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
+      }
+
       const storeApi = new StoreApi(this.frontasticContext, this.locale, this.currency);
       const storeKeys = businessUnit?.stores?.map((store) => `"${store.key}"`).join(' ,');
-      const allStores = await storeApi.query(`key in (${storeKeys})`);
+
+      const allStores = storeKeys ? await storeApi.query(`key in (${storeKeys})`) : [];
 
       businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);
     }
@@ -150,6 +162,13 @@ export class BusinessUnitApi extends BaseApi {
       });
 
     if (expandStores) {
+      // The SDK doesn't return inherited stores, so we need to fetch them manually
+      for (const businessUnit of businessUnits) {
+        if (businessUnit.storeMode === StoreMode.FromParent) {
+          businessUnit.stores = await this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
+        }
+      }
+
       const storeApi = new StoreApi(this.frontasticContext, this.locale, this.currency);
 
       const storeKeys = businessUnits
@@ -173,9 +192,9 @@ export class BusinessUnitApi extends BaseApi {
   async getAssociateRoles(): Promise<AssociateRole[]> {
     return this.getCommercetoolsAssociatesRoles()
       .then((associateRoles) => {
-        return associateRoles.map((associateRole) =>
-          BusinessUnitMapper.commercetoolsAssociateRoleToAssociateRole(associateRole),
-        );
+        return associateRoles
+          .filter((associateRole) => associateRole.buyerAssignable)
+          .map((associateRole) => BusinessUnitMapper.commercetoolsAssociateRoleToAssociateRole(associateRole));
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -205,23 +224,73 @@ export class BusinessUnitApi extends BaseApi {
     return businessUnit;
   }
 
-  async updateBusinessUnitAddress(businessUnitKey: string, accountId: string, address: BaseAddress) {
-    return await this.update(businessUnitKey, accountId, [
-      {
-        action: 'changeAddress',
-        addressId: address.id,
-        address: address,
-      },
-    ]);
+  async updateBusinessUnitAddress(businessUnitKey: string, accountId: string, address: Address) {
+    let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
+
+    const businessUnitUpdateAction: BusinessUnitUpdateAction[] = [];
+
+    if (
+      commercetoolsAddress.key === undefined &&
+      (address.isDefaultBillingAddress || address.isDefaultShippingAddress)
+    ) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
+        key: Guid.newGuid(),
+      };
+    }
+
+    businessUnitUpdateAction.push({
+      action: 'changeAddress',
+      addressId: commercetoolsAddress.id,
+      address: commercetoolsAddress,
+    });
+
+    const addressIdentifiers = commercetoolsAddress.key
+      ? { addressKey: commercetoolsAddress.key }
+      : { addressId: commercetoolsAddress.id };
+
+    address.isDefaultBillingAddress
+      ? businessUnitUpdateAction.push({ action: 'setDefaultBillingAddress', ...addressIdentifiers })
+      : businessUnitUpdateAction.push({ action: 'removeBillingAddressId', ...addressIdentifiers });
+
+    address.isDefaultShippingAddress
+      ? businessUnitUpdateAction.push({ action: 'setDefaultShippingAddress', ...addressIdentifiers })
+      : businessUnitUpdateAction.push({ action: 'removeShippingAddressId', ...addressIdentifiers });
+
+    return await this.update(businessUnitKey, accountId, businessUnitUpdateAction);
   }
 
-  async addBusinessUnitAddress(businessUnitKey: string, accountId: string, address: BaseAddress) {
-    return await this.update(businessUnitKey, accountId, [
-      {
-        action: 'addAddress',
-        address: address,
-      },
-    ]);
+  async addBusinessUnitAddress(businessUnitKey: string, accountId: string, address: Address) {
+    let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
+
+    const businessUnitUpdateAction: BusinessUnitUpdateAction[] = [];
+
+    // For new address, remove the id as CoCo will set it
+    if (commercetoolsAddress.id !== undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
+        id: undefined,
+      };
+    }
+
+    if (commercetoolsAddress.key === undefined) {
+      commercetoolsAddress = {
+        ...commercetoolsAddress,
+        key: Guid.newGuid(),
+      };
+    }
+
+    businessUnitUpdateAction.push({ action: 'addAddress', address: commercetoolsAddress });
+
+    if (address.isDefaultBillingAddress) {
+      businessUnitUpdateAction.push({ action: 'setDefaultBillingAddress', addressKey: commercetoolsAddress.key });
+    }
+
+    if (address.isDefaultShippingAddress) {
+      businessUnitUpdateAction.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
+    }
+
+    return await this.update(businessUnitKey, accountId, businessUnitUpdateAction);
   }
 
   async removeBusinessUnitAddress(businessUnitKey: string, accountId: string, addressId: string) {
@@ -239,14 +308,16 @@ export class BusinessUnitApi extends BaseApi {
     // Get associate from business unit
     const associate = businessUnit.associates?.find((associate) => associate.accountId === accountId);
 
-    const associateRoles = await this.getAssociateRoles();
+    const commercetoolsAssociateRoles = await this.getCommercetoolsAssociatesRoles();
 
     // Include permissions in the associate roles
-    associate.roles = associate.roles?.map((role) => {
-      const associateRole = associateRoles.find((associateRole) => associateRole.key === role.key);
+    associate.roles = associate.roles?.map((associateRole) => {
+      const commercetoolsAssociateRole = commercetoolsAssociateRoles.find(
+        (commercetoolsAssociateRole) => commercetoolsAssociateRole.key === associateRole.key,
+      );
       return {
-        ...role,
-        permissions: associateRole?.permissions,
+        ...associateRole,
+        permissions: BusinessUnitMapper.commercetoolsPermissionsToPermissions(commercetoolsAssociateRole.permissions),
       };
     });
 
@@ -305,11 +376,13 @@ export class BusinessUnitApi extends BaseApi {
     ]);
   }
 
-  async assertUserIsAssociate(accountId: string, businessUnitKey: string, storeKey: string) {
-    const businessUnit = await this.getByKeyForAccount(businessUnitKey, accountId);
+  protected async getBusinessUnitStoresFromParentUnitKey(parentUnitKey: string): Promise<Store[]> {
+    const businessUnit = await this.getByKey(parentUnitKey);
 
-    if (!businessUnit.stores?.find((store) => store.key === storeKey)) {
-      throw new ResourceNotFoundError({ message: `User is not an associate of the store "${storeKey}"` });
+    if (businessUnit.storeMode === StoreMode.Explicit) {
+      return businessUnit.stores;
     }
+
+    return this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
   }
 }

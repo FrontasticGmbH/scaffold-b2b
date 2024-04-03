@@ -8,7 +8,7 @@ const config: StorybookConfig = {
     name: '@storybook/nextjs',
     options: {},
   },
-  staticDirs: ['../public/sb-assets'],
+  staticDirs: process.env.NODE_ENV === 'development' ? ['../public/'] : [],
   docs: {
     autodocs: 'tag',
   },

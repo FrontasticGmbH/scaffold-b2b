@@ -6,13 +6,7 @@ import { Account } from '@/types/entity/account';
 import Select from '@/components/atoms/select';
 import { SettingsPageProps } from '../../types';
 
-const RestrictedPersonalInfoForm = ({
-  onUpdateAccount,
-  account,
-  businessUnitOptions,
-  roleOptions,
-  isAdmin,
-}: SettingsPageProps) => {
+const RestrictedPersonalInfoForm = ({ onUpdateAccount, account, businessUnitOptions, isAdmin }: SettingsPageProps) => {
   const { translate } = useTranslation();
 
   const router = useRouter();
@@ -39,16 +33,6 @@ const RestrictedPersonalInfoForm = ({
           onChange={(businessUnit) => setData({ ...data, businessUnit })}
           className="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
           options={businessUnitOptions}
-          disabled={!isAdmin}
-        />
-
-        <Select
-          label={translate('common.role')}
-          required={isAdmin}
-          value={data.role}
-          onChange={(role) => setData({ ...data, role })}
-          className="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
-          options={roleOptions}
           disabled={!isAdmin}
         />
       </div>

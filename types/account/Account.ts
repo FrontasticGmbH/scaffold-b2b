@@ -1,4 +1,3 @@
-import { Group } from './Group';
 import { Address } from './Address';
 import { AccountToken } from './AccountToken';
 
@@ -11,7 +10,6 @@ export interface Account {
   companyName?: string;
   birthday?: Date;
   password?: string;
-  groups?: Group[];
   confirmationToken?: AccountToken;
   confirmed?: boolean;
   addresses?: Address[];

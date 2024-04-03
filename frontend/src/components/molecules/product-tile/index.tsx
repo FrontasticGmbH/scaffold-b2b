@@ -15,9 +15,9 @@ import DiscountTag from './components/discount-tag';
 const ProductTile = ({
   item: {
     name,
-    description,
+    specifications,
     inStock,
-    model,
+    sku,
     price,
     discountedPrice,
     currency,
@@ -27,6 +27,7 @@ const ProductTile = ({
     url,
   },
   onAddToCart,
+  addToCartDisabled = false,
   variant = 'list-item',
   className = '',
 }: ProductTileProps) => {
@@ -47,10 +48,7 @@ const ProductTile = ({
 
   const { isDiscounted, discountPercentage } = useDiscount(price, discountedPrice);
 
-  const descriptionItems = (description ?? '')
-    .split('\n')
-    .map((item) => ({ label: item.split(':')[0], value: item.split(':')[1] ?? '' }))
-    .filter((item) => !!item.value);
+  const descriptionItems = (specifications ?? []).filter((item) => !!item.value);
 
   return (
     <div
@@ -93,9 +91,9 @@ const ProductTile = ({
           <Link href={url ?? '#'} className="max-w-full truncate text-16 font-semibold leading-loose text-gray-700">
             {name}
           </Link>
-          {model && (
+          {sku && (
             <p className="mt-1 text-12 uppercase leading-loose text-gray-600">
-              {translate('common.model')}# {model}
+              {translate('common.model')}# {sku}
             </p>
           )}
         </div>
@@ -125,12 +123,12 @@ const ProductTile = ({
           'mt-4 flex flex-col justify-start',
           isDiscounted ? 'gap-[52px] lg:gap-6' : 'gap-[72px] lg:gap-8',
           {
-            'ml-4 md:ml-6 md:mt-0 md:shrink-0 md:self-stretch md:text-end lg:ml-12': variant === 'list-item',
+            'md:mt-0 md:shrink-0 md:self-stretch md:text-end': variant === 'list-item',
           },
         )}
       >
         <div className={classnames('hidden justify-end', { 'md:flex': variant === 'list-item' })}>
-          <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
+          <StockIndicator inStock={inStock && Boolean(price)} restockableInDays={restockableInDays} />
         </div>
 
         <div
@@ -140,10 +138,15 @@ const ProductTile = ({
           })}
         >
           <div className={classnames('hidden', { 'lg:block': variant === 'list-item' })}>
-            <QuantityWidget value={quantity} onChange={setQuantity} maxValue={maxQuantity} disabled={!inStock} />
+            <QuantityWidget
+              value={quantity}
+              onChange={setQuantity}
+              maxValue={maxQuantity}
+              disabled={!inStock || addToCartDisabled}
+            />
           </div>
 
-          <div>
+          <div className={!price ? 'invisible' : ''}>
             {isDiscounted ? (
               <div
                 className={classnames('flex items-center gap-3', {
@@ -176,15 +179,22 @@ const ProductTile = ({
 
           <div className="flex items-center gap-3">
             <div className={classnames('hidden', { 'lg:block': variant === 'grid-item' })}>
-              <QuantityWidget value={quantity} onChange={setQuantity} maxValue={maxQuantity} showLabel={false} />
+              <QuantityWidget
+                value={quantity}
+                onChange={setQuantity}
+                maxValue={maxQuantity}
+                showLabel={false}
+                disabled={!inStock || addToCartDisabled}
+              />
             </div>
+
             <Button
               variant="secondary"
               size="m"
               className="grow truncate"
               onClick={handleAddToCart}
               loading={addingToCart}
-              disabled={!inStock}
+              disabled={!inStock || addToCartDisabled}
             >
               {translate('cart.add')}
             </Button>

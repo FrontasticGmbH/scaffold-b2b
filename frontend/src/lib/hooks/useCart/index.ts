@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import { Address } from '@shared/types/account/Address';
 import { Order } from '@shared/types/cart';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
-import { CheckoutPayload } from './types';
+import { CheckoutPayload, QuoteRequestPayload } from './types';
 
 const useCart = (businessUnitKey?: string, storeKey?: string) => {
   const getCart = useCallback(async () => {
@@ -17,7 +17,10 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     return result.isError ? ({} as Cart) : result.data;
   }, [businessUnitKey, storeKey]);
 
-  const { data, mutate } = useSWR(['/action/cart/getCart', businessUnitKey, storeKey], getCart);
+  const { data, mutate } = useSWR(
+    !(businessUnitKey && storeKey) ? null : ['/action/cart/getCart', businessUnitKey, storeKey],
+    getCart,
+  );
 
   const isQuotationCart = data?.origin === 'Quote';
 
@@ -32,7 +35,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
 
       if (!result.isError) mutate(result.data, { revalidate: false });
 
-      return result.isError ? {} : result.data;
+      return result.isError ? { success: false, message: result.error.message } : { ...result.data, success: true };
     },
     [mutate, businessUnitKey, storeKey],
   );
@@ -70,9 +73,9 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
   );
 
   const requestQuote = useCallback(
-    async (payload: { buyerComment: string }) => {
+    async (payload: QuoteRequestPayload) => {
       const result = await sdk.composableCommerce.quote.createQuote(
-        { comment: payload.buyerComment },
+        { comment: payload.buyerComment, purchaseOrderNumber: payload.purchaseOrderNumber },
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 

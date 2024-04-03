@@ -10,22 +10,22 @@ const toastThemeRef: ToastThemeRef = {
   error: { backgroundColor: '#FAEEEE', fill: 'fill-red-500', icon: ExclamationCircleIcon },
 };
 
-const getToastDuration = (message: string) => (message.length >= 120 ? 5000 : 3000);
+const getToastDuration = (length: number) => (length >= 120 ? 5000 : 3000);
 
-const getToastOptions: GetToastOptions = (message, variant, options) => {
+export const getToastOptions: GetToastOptions = (letters, variant, options) => {
   const Icon = toastThemeRef[variant].icon;
 
-  return [
-    message,
-    {
-      style: {
-        backgroundColor: toastThemeRef[variant].backgroundColor,
-      },
-      icon: <Icon className={classnames('h-6 w-6 stroke-white stroke-[0.5px]', toastThemeRef[variant].fill)} />,
-      duration: getToastDuration(message),
-      ...options,
+  return {
+    style: {
+      backgroundColor: toastThemeRef[variant].backgroundColor,
     },
-  ];
+    icon: <Icon className={classnames('h-6 w-6 stroke-white stroke-[0.5px]', toastThemeRef[variant].fill)} />,
+    duration: getToastDuration(letters),
+    ...options,
+  };
 };
 
-export const getToast: GetToast = (...props) => ReactToast(...getToastOptions(...props));
+export const getToast: GetToast = (message, ...props) => {
+  if (typeof message === 'string') return ReactToast(message, getToastOptions(message.length, ...props));
+  else return ReactToast(message, getToastOptions(130, ...props));
+};

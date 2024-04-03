@@ -5,11 +5,11 @@ import Checkbox from '@/components/atoms/checkbox';
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
-import { Product } from '../../types';
+import { Product, QuickOrderCSVUploadProps } from '../../types';
 import UploadPanel from './upload-panel';
 import { QuickOrderDesktopContext } from '../quick-order-csv-upload/context';
 
-const QuickOrderCSVUpload = () => {
+const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadProps>) => {
   const { translate } = useTranslation();
 
   const { checked, products, files, addToCartLoading, handleProductClear, handleAddToCart, onCheckboxChange } =
@@ -28,6 +28,8 @@ const QuickOrderCSVUpload = () => {
       </div>
     </div>
   );
+
+  const hasInvalidProducts = products.some((product) => !product.exists || !product.inStock);
 
   return (
     <Accordion defaultIsExpanded={false}>
@@ -79,6 +81,7 @@ const QuickOrderCSVUpload = () => {
                 className="text-14"
                 loading={addToCartLoading}
                 onClick={handleAddToCart}
+                disabled={addItemDisabled || hasInvalidProducts}
               >
                 {translate('quick-order.add.to.cart')}
               </Button>

@@ -19,7 +19,7 @@ const Header = ({ className, product }: PDPHeaderProps) => {
           </Link>
 
           {product.categories.map((category) => (
-            <Link key={category.categoryId} href={`/${category.categoryId}`} className="capitalize">
+            <Link key={category.categoryId} href={`/${category.path}`} className="capitalize">
               {category.name}
             </Link>
           ))}
@@ -30,7 +30,7 @@ const Header = ({ className, product }: PDPHeaderProps) => {
         {product.name}
       </Typography>
       <Typography className="text-gray-600" fontSize={14} lineHeight="loose">
-        {product.model}
+        {product.sku}
       </Typography>
     </div>
   );

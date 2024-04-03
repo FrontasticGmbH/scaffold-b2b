@@ -1,4 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
+import { image } from '@/mocks/image';
 import HeroTile from '.';
 
 export default {
@@ -13,15 +14,14 @@ export const Primary = Template.bind({});
 Primary.args = {
   image: {
     media: {
-      mediaId: 'ynxtwuvnvlluue6fexog',
+      mediaId: image.mediaId,
       resourceType: 'image',
-      name: 'AdobeStock 510169269',
-      tags: ['__none'],
-      file: 'https://res.cloudinary.com/dlwdq84ig/image/upload/ynxtwuvnvlluue6fexog',
+      name: image.name,
+      tags: [],
+      file: image.url,
       size: 516362,
       width: 1378,
       height: 1378,
-      format: 'jpg',
     },
     ratio: '16:9',
   },

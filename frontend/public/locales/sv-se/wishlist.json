@@ -1,0 +1,15 @@
+{
+  "my.wishlist": "min önskelista",
+  "wishlist": "önskelista",
+  "items": "önskelista objekt",
+  "items.in.view": "objekt i önskelistan, visa önskelista",
+  "oops": "Hoppsan...",
+  "empty": "Din önskelista är tom",
+  "add.items": "Lägg till objekt",
+  "add.to.cart": "Flytta till kundvagn",
+  "clear.list": "Rensa listan",
+  "move": "Flytta",
+  "move.to.list": "Flytta till listan",
+  "select.list": "Välj inköpslista",
+  "item.added": "Objekt lades till"
+}

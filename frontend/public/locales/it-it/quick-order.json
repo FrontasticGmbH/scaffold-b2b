@@ -1,0 +1,22 @@
+{
+  "quick.order": "Ordine rapido",
+  "search": "Cerca per nome prodotto o SKU",
+  "add.to.cart": "Aggiungi al carrello",
+  "upload.csv": "Carica il file CSV",
+  "download.csv": "Scarica il file modello",
+  "drag.csv": "Trascina e rilascia i file CSV",
+  "click.csv": " oppure clicca per sfogliare",
+  "click.upload": "Caricamento",
+  "click.clear": "Chiaro",
+  "error.format.file": "Il formato file non è supportato (CSV)",
+  "error.format": "Il formato file non è supportato, esamina il file modello",
+  "error.upload.fail": "Si è verificato un errore durante il caricamento del file",
+  "error.no.file": "Nessun file selezionato",
+  "error.file.exceeds": "Il file supera il numero massimo di 500 elementi",
+  "error.file.exists": "Il file \"{file}\" è già stato caricato.",
+  "out.of.stock": "Esaurito",
+  "item.not.located": "Articolo non localizzato",
+  "select.items": "Seleziona gli articoli da aggiungere al carrello",
+  "quantity": "Quantità:",
+  "quick.add.cart": "Aggiungi rapidamente al carrello"
+}

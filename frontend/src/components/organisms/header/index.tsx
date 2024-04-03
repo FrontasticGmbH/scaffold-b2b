@@ -23,7 +23,7 @@ const Header = ({
         <div className="flex h-[72px] items-center justify-between border-b border-neutral-400 bg-white p-4 md:px-5 lg:px-12 lg:py-1">
           <div className="flex items-center gap-x-1 md:gap-x-2 lg:gap-x-4">
             {variant === 'navigation' && <NavigationDrawer />}
-            <div className="w-[180px] lg:w-[205px]">
+            <div className="w-[170px] lg:w-[218px]">
               <Logo {...props} />
             </div>
           </div>
@@ -52,6 +52,7 @@ const Header = ({
                   addItem={props.addToCart}
                   csvProducts={props.csvShowProducts}
                   handleSKUsUpdate={props.handleSKUsUpdate}
+                  addItemDisabled={props.addToCartDisabled}
                 />
               </div>
             )}

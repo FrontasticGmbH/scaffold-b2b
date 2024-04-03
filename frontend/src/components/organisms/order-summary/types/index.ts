@@ -4,15 +4,18 @@ import { Cart } from '@shared/types/cart/Cart';
 import { Money } from '@shared/types/product/Money';
 import { PaymentMethod } from '@/components/organisms/cart/types';
 import { Transaction } from '@/types/transaction';
+import { Discount } from '@/types/entity/discount';
 
 export type CheckoutCTAProps = {
   className?: string;
   link: string;
+  quoteCheckoutLink: string;
   disabled?: boolean;
   text: string;
-  isQuotationCart?: boolean;
+  quoteRequestDisabled?: boolean;
+  checkoutDisabled?: boolean;
   onCheckout?: () => void;
-  onRequestQuote: (args: { buyerComment?: string }) => Promise<void>;
+  onRequestQuote?: () => void;
   onClear?: () => Promise<void>;
 };
 
@@ -38,7 +41,8 @@ export type OrderSummaryProps = {
   dataReference?: 'order' | 'cart';
   button?: ReactElement;
   transaction?: Transaction;
-  isQuotationCart?: boolean;
+  discounts?: Array<Discount & { onRemove?: () => Promise<boolean> }>;
+  onDiscountRedeem?: (code: string) => Promise<boolean>;
 };
 
 export type SummaryAccordionProps = {

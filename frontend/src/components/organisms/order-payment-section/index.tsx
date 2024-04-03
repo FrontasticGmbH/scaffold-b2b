@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import Costs from '@/components/molecules/costs';
 import DiscountsForm from '@/components/molecules/discounts-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PaymentMethods from './components/payment-methods';
 import { OrderSummaryProps } from '../order-summary/types';
 
@@ -13,11 +12,10 @@ const OrderPaymentSection: FC<OrderSummaryProps> = ({
   classNames,
   order,
   transaction,
-  isQuotationCart,
+  discounts,
+  onDiscountRedeem,
   ...props
 }) => {
-  const { translate } = useTranslation();
-
   const infoContainerClassName = classnames('border-t border-neutral-400 bg-white', classNames?.infoContainer);
 
   return (
@@ -25,15 +23,14 @@ const OrderPaymentSection: FC<OrderSummaryProps> = ({
       {!order && (
         <DiscountsForm
           className={classNames?.applyDiscountButton}
-          discounts={[]}
-          onSubmit={isQuotationCart ? () => Promise.reject() : async () => false}
-          customError={translate('cart.quote.cannot.apply.discount')}
+          discounts={discounts ?? []}
+          onSubmit={onDiscountRedeem}
         />
       )}
 
       <div className={infoContainerClassName}>
         <Costs
-          classNames={{ container: 'py-4 md:py-6 lg:pb-11' }}
+          classNames={{ container: 'pt-4 md:pt-6 lg:pt-11' }}
           subtotal={transaction?.subtotal.centAmount ?? 0}
           shipping={transaction?.shipping.centAmount ?? 0}
           isShippingEstimated={transaction?.shipping.isEstimated}

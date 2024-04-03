@@ -3,6 +3,6 @@ export interface Options {
   limit?: number;
   ids?: string[];
   states?: string[];
-  businessUnitKey: string;
+  businessUnitKey?: string;
   storeKey?: string;
 }

@@ -1,21 +1,27 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useCookies } from 'next-client-cookies';
 import { useMediaQueryReturn } from './types';
 
 //custom hook that returns if current screen width is larger than
 //the width breakpoint argument or not
 const useMediaQuery = <T>(breakpoint?: T) => {
   //current width
-  const [width, setWidth] = useState(window.innerWidth);
+  const cookies = useCookies();
+  const [width, setWidth] = useState(parseInt(cookies.get('width') ?? '0'));
 
   //function to update state with window's screen width
-  const updateWidth = useCallback(() => setWidth(window.innerWidth), []);
+  const updateWidth = useCallback(() => {
+    cookies.set('width', window.innerWidth.toString());
+    setWidth(window.innerWidth);
+  }, [cookies]);
 
   useEffect(() => {
+    updateWidth();
     window.addEventListener('resize', updateWidth);
-
     //cleanup after unmounting
+
     return () => window.removeEventListener('resize', updateWidth);
   }, [updateWidth]);
 

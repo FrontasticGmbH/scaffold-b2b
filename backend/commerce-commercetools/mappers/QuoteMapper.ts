@@ -34,10 +34,11 @@ export class QuoteMapper {
       taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuote.taxedPrice),
       buyerComment: commercetoolsQuote.buyerComment,
       sellerComment: commercetoolsQuote.sellerComment,
+      purchaseOrderNumber: commercetoolsQuote.purchaseOrderNumber,
+      orderNumber: commercetoolsQuote.purchaseOrderNumber,
       expirationDate: new Date(commercetoolsQuote.validTo),
       quoteRequest: quoteRequest,
       quoteVersion: commercetoolsQuote.version,
-      orderNumber: commercetoolsQuote.purchaseOrderNumber,
       quotationCart: commercetoolsQuote.stagedQuote?.obj?.quotationCart?.obj
         ? CartMapper.commercetoolsCartToCart(commercetoolsQuote.stagedQuote?.obj.quotationCart.obj, locale)
         : undefined,
@@ -59,6 +60,7 @@ export class QuoteMapper {
         lastName: commercetoolsQuoteRequest.customer.obj?.lastName,
       },
       buyerComment: commercetoolsQuoteRequest.comment,
+      purchaseOrderNumber: commercetoolsQuoteRequest.purchaseOrderNumber,
       store: { key: commercetoolsQuoteRequest.store.key },
       businessUnit: { key: commercetoolsQuoteRequest.businessUnit.key },
       lineItems: CartMapper.commercetoolsLineItemsToLineItems(commercetoolsQuoteRequest.lineItems, locale),

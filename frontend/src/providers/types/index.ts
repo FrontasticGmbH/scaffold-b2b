@@ -5,7 +5,7 @@ import { I18nProviderProps } from '../I18n/types';
 
 export interface ProvidersProps extends I18nProviderProps, Pick<Params, 'locale'> {
   initialData: {
-    account: AccountResult;
-    businessUnits: BusinessUnit[];
+    account?: AccountResult;
+    businessUnits?: BusinessUnit[];
   };
 }

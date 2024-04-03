@@ -4,7 +4,7 @@ import { ProductQuery } from '@Types/query/ProductQuery';
 import { LineItem } from '@Types/cart/LineItem';
 import { LineItem as WishlistItem } from '@Types/wishlist/LineItem';
 import { ProductApi } from '../apis/ProductApi';
-import { getCurrency, getLocale, getPath } from './Request';
+import { getCurrency, getDistributionChannelId, getLocale, getPath, getStoreKey, getSupplyChannelId } from './Request';
 
 export class ProductRouter {
   private static isProduct(product: Product | LineItem | WishlistItem): product is Product {
@@ -42,6 +42,9 @@ export class ProductRouter {
     if (urlMatches) {
       const productQuery: ProductQuery = {
         skus: [urlMatches[1]],
+        storeKey: getStoreKey(request),
+        distributionChannelId: getDistributionChannelId(request),
+        supplyChannelId: getSupplyChannelId(request),
       };
 
       return productApi.getProduct(productQuery);
@@ -58,6 +61,9 @@ export class ProductRouter {
     if (urlMatches) {
       const productQuery: ProductQuery = {
         skus: [urlMatches[1]],
+        storeKey: getStoreKey(request),
+        distributionChannelId: getDistributionChannelId(request),
+        supplyChannelId: getSupplyChannelId(request),
       };
 
       return productApi.getProduct(productQuery);

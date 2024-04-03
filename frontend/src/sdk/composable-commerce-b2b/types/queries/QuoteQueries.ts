@@ -1,12 +1,5 @@
 import { QuoteRequestState, QuoteState } from '@shared/types/quote';
 
-type GetQuotationCartQuery = {
-  // Quote ID
-  id: string;
-  businessUnitKey: string;
-  storeKey: string;
-};
-
 type CreateQuoteQuery = {
   businessUnitKey: string;
   storeKey: string;
@@ -20,6 +13,7 @@ type QuoteQueryQuery = {
   quoteStates?: QuoteState[] | QuoteRequestState[];
   // sortAttributes?: any; // TODO find accurate type and add
   query?: string;
+  storeKey?: string;
 };
 
 type QuoteRequestsQueryQuery = {
@@ -30,6 +24,7 @@ type QuoteRequestsQueryQuery = {
   quoteStates?: QuoteState[] | QuoteRequestState[];
   // sortAttributes?: any; // TODO find accurate type and add
   query?: string;
+  storeKey?: string;
 };
 
 type AcceptQuoteQuery = {
@@ -53,7 +48,6 @@ type CancelQuoteQuery = {
 };
 
 export {
-  type GetQuotationCartQuery,
   type CreateQuoteQuery,
   type AcceptQuoteQuery,
   type QuoteQueryQuery,

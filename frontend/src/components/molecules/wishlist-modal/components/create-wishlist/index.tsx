@@ -25,7 +25,7 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
 
   const handleSubmit = useCallback(async () => {
     try {
-      await onAddToNewList?.({ ...data, store: selectedStore });
+      await onAddToNewList?.({ ...(data as PurchaseList), store: selectedStore });
       onClose();
     } catch {
       showFailedMessage();

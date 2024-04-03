@@ -47,6 +47,9 @@ import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotComp
 export class CartApi extends BaseApi {
   protected accountId: string;
   protected businessUnitKey: string;
+  protected storeKey: string;
+  protected distributionChannelId: string;
+  protected supplyChannelId: string;
 
   constructor(
     context: Context,
@@ -54,10 +57,14 @@ export class CartApi extends BaseApi {
     currency: string | null,
     accountId?: string,
     businessUnitKey?: string,
+    distributionChannelId?: string,
+    supplyChannelId?: string,
   ) {
     super(context, locale, currency);
     this.accountId = accountId;
     this.businessUnitKey = businessUnitKey;
+    this.distributionChannelId = distributionChannelId;
+    this.supplyChannelId = supplyChannelId;
   }
 
   async getById(cartId: string): Promise<Cart> {
@@ -90,7 +97,7 @@ export class CartApi extends BaseApi {
   async getInStore(storeKey: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
-    const allCarts = await this.getAllCarts(storeKey);
+    const allCarts = await this.getAllCartsInStore(storeKey);
     if (allCarts.length >= 1) {
       const cart = await this.buildCartWithAvailableShippingMethods(allCarts[0], locale);
       if (this.assertCartForBusinessUnitAndStore(cart, this.businessUnitKey, storeKey)) {
@@ -98,15 +105,11 @@ export class CartApi extends BaseApi {
       }
     }
 
-    return await this.createCart(storeKey);
+    return await this.createCartInStore(storeKey);
   }
 
-  async getAllCarts(storeKey?: string): Promise<CommercetoolsCart[]> {
-    const where = [`cartState="Active"`, `origin!="Quote"`];
-
-    if (storeKey) {
-      where.push(`store(key="${storeKey}")`);
-    }
+  async getAllCartsInStore(storeKey: string): Promise<CommercetoolsCart[]> {
+    const where = [`cartState="Active"`, `store(key="${storeKey}")`, `customerId="${this.accountId}"`];
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
@@ -134,7 +137,7 @@ export class CartApi extends BaseApi {
       });
   }
 
-  async createCart(storeKey: string): Promise<Cart> {
+  async createCartInStore(storeKey: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
     const cartDraft: CartDraft = {
@@ -168,12 +171,7 @@ export class CartApi extends BaseApi {
       });
   }
 
-  async addToCart(
-    cart: Cart,
-    lineItems: LineItem[],
-    distributionChannelId?: string,
-    supplyChannelId?: string,
-  ): Promise<Cart> {
+  async addToCart(cart: Cart, lineItems: LineItem[]): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
     const cartUpdate: CartUpdate = {
@@ -184,11 +182,11 @@ export class CartApi extends BaseApi {
     lineItems.map((lineItem) => {
       cartUpdate.actions.push({
         action: 'addLineItem',
-        ...(distributionChannelId && {
-          distributionChannel: { typeId: 'channel', id: distributionChannelId },
+        ...(this.distributionChannelId && {
+          distributionChannel: { typeId: 'channel', id: this.distributionChannelId },
         }),
-        ...(supplyChannelId && {
-          supplyChannel: { typeId: 'channel', id: supplyChannelId },
+        ...(this.supplyChannelId && {
+          supplyChannel: { typeId: 'channel', id: this.supplyChannelId },
         }),
         sku: lineItem.variant.sku,
         quantity: +lineItem.count,
@@ -960,10 +958,10 @@ export class CartApi extends BaseApi {
 
       commercetoolsCart = await this.updateCart(commercetoolsCart.id, cartUpdate);
 
-      return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale) as Cart;
+      return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, this.supplyChannelId) as Cart;
     }
 
-    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale) as Cart;
+    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, this.supplyChannelId) as Cart;
   }
 
   protected async recreate(primaryCommercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {

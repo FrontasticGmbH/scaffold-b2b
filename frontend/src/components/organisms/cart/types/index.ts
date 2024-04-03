@@ -1,9 +1,8 @@
 import { Account } from '@/types/entity/account';
-import { Quote } from '@/types/entity/quote';
+import { Discount } from '@/types/entity/discount';
+import { Product } from '@/types/entity/product';
+import { PurchaseList } from '@/types/entity/purchase-list';
 import { Transaction } from '@/types/transaction';
-import { Cart } from '@shared/types/cart/Cart';
-import { LineItem } from '@shared/types/cart/LineItem';
-import { Wishlist as SharedWishlist } from '@shared/types/wishlist';
 
 export type PaymentMethodType =
   | 'scheme'
@@ -26,29 +25,36 @@ export interface PaymentMethod {
 }
 
 export type CartProps = {
+  lineItems: Product[];
   account: Pick<Account, 'email'>;
   paymentMethods: Array<PaymentMethod>;
-  isQuotationCart?: boolean;
+  viewCartDisabled?: boolean;
+  quoteRequestDisabled?: boolean;
+  checkoutDisabled?: boolean;
+  invalidAddressesRequirements?: boolean;
+  discountCodes: Array<Discount & { onRemove?: () => Promise<boolean> }>;
   onAdd: (sku: string, qty: number) => Promise<void>;
   onRemove: (id: string) => Promise<void>;
   onUpdateQuantity: (id: string, qty: number) => Promise<void>;
-  onRequestQuote: (args: { buyerComment?: string }) => Promise<Partial<Quote>>;
+  onDiscountRedeem?: (code: string) => Promise<boolean>;
   onClear?: () => Promise<void>;
-} & Partial<Cart> & { transaction?: Transaction } & Pick<CartItemProps, 'onAddToNewWishlist'>;
+} & { transaction?: Transaction } & Pick<CartItemProps, 'onAddToNewWishlist'>;
 
-export type CartContentProps = Pick<Cart, 'lineItems'> &
-  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'isQuotationCart'> & {
-    className?: string;
-  };
+export type CartContentProps = Pick<
+  CartProps,
+  'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'lineItems'
+> & {
+  className?: string;
+};
 
 export type CartItemFooterProps = Pick<CartItemProps, 'onRemove' | 'onAddToNewWishlist'> & {
-  item: LineItem;
+  item: Product;
   className?: string;
   isQuotationCart?: boolean;
 };
 
 export type CartItemHeaderProps = {
-  item: LineItem;
+  item: Product;
   className?: string;
 };
 
@@ -57,18 +63,17 @@ interface ClassNames {
 }
 
 export interface CartItemProps {
-  item: LineItem & { deleted?: boolean };
+  item: Product & { deleted?: boolean };
   classNames?: ClassNames;
-  isQuotationCart?: boolean;
   onUpdateQuantity: (qty: number) => Promise<void>;
   onUndoRemove?: () => Promise<void>;
   onRemove?: () => Promise<void>;
   onAddToNewWishlist: (
-    list: Pick<SharedWishlist, 'name' | 'description' | 'store'>,
+    list: Pick<PurchaseList, 'name' | 'description' | 'store'>,
     sku?: string,
     qty?: number,
   ) => Promise<void>;
 }
 
 export type CartItemsListProps = Pick<CartContentProps, 'lineItems'> &
-  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'isQuotationCart'>;
+  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist'>;

@@ -1,0 +1,15 @@
+{
+  "auth.wrong": "Email ou mot de passe invalide. S'il vous plaît, vérifiez et essayez à nouveau.",
+  "auth.action.verify": "Action requise : vérifiez votre adresse e-mail à l'aide de l'e-mail de vérification envoyé.",
+  "wentWrong": "Désolé, quelque chose s'est mal passé..",
+  "wentWrong.retry": "Désolé, quelque chose s'est mal passé. Veuillez réessayer dans 5 minutes.",
+  "password.noMatch": "Les mots de passe ne correspondent pas.",
+  "password.not.valid": "Le mot de passe doit comporter au moins 8 caractères et au moins une lettre majuscule.",
+  "account.create.fail": "Désolé. Nous n'avons pas pu créer votre compte.",
+  "email.enter": "Veuillez entrer votre adresse e-mail",
+  "email": "L'email n'est pas valide.",
+  "email.exists": "L'adresse e-mail n'est pas valide ou existe déjà.",
+  "name": "Le nom doit comporter au moins deux caractères.",
+  "verify.failed": "Échec de la vérification",
+  "verify.failed.description": "Désolé, nous n'avons pas réussi à vérifier votre compte. Un nouveau lien de vérification a été envoyé à votre adresse e-mail."
+}

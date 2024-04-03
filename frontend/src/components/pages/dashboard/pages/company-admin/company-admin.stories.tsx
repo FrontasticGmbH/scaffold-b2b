@@ -53,7 +53,7 @@ Primary.args = {
       firstName: 'Matt',
       lastName: 'Dickerson',
       email: '123@commercetools.com',
-      role: 'Buyer',
+      roles: ['Buyer'],
       status: 'confirmed',
     },
     {
@@ -61,7 +61,7 @@ Primary.args = {
       firstName: 'Trixie',
       lastName: 'Byrd',
       email: '123@commercetools.com',
-      role: 'Super-user',
+      roles: ['Super-user'],
       status: 'confirmed',
     },
     {
@@ -69,7 +69,7 @@ Primary.args = {
       firstName: 'Viktor',
       lastName: 'Byrd',
       email: '123@commercetools.com',
-      role: 'Admin',
+      roles: ['Admin'],
       status: 'pending',
     },
   ],

@@ -2,7 +2,6 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
-import { CartState } from '@Types/cart/Cart';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
@@ -12,13 +11,12 @@ import getQuoteApi from '@Commerce-commercetools/utils/getQuoteApi';
 import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseQueryParams from '@Commerce-commercetools/utils/parseRequestParams';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/Request';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export interface QuoteRequestBody {
   comment: string;
+  purchaseOrderNumber?: string;
 }
 
 function queryParamsToSortAttributes(queryParams: any) {
@@ -44,6 +42,7 @@ export const createQuoteRequest: ActionHook = async (request: Request, actionCon
     const quoteBody = parseRequestBody<QuoteRequestBody>(request.body);
     let quoteRequest: QuoteRequest = {
       buyerComment: quoteBody.comment,
+      purchaseOrderNumber: quoteBody.purchaseOrderNumber,
     };
 
     const cart = await CartFetcher.fetchCart(request, actionContext);
@@ -78,6 +77,7 @@ export const query: ActionHook = async (request: Request, actionContext: ActionC
       quoteStates: queryParamsToStates('quoteStates', request.query),
       sortAttributes: queryParamsToSortAttributes(request.query),
       query: request.query?.query ?? undefined,
+      storeKey: request.query?.storeKey ?? undefined,
     };
 
     const queryResult = await quoteApi.query(quoteQuery);
@@ -105,6 +105,7 @@ export const queryQuoteRequests: ActionHook = async (request: Request, actionCon
       quoteStates: queryParamsToStates('quoteStates', request.query),
       sortAttributes: queryParamsToSortAttributes(request.query),
       query: request.query?.query ?? undefined,
+      storeKey: request.query?.storeKey ?? undefined,
     };
 
     const queryResult = await quoteApi.queryQuoteRequests(quoteQuery);
@@ -138,55 +139,6 @@ export const acceptQuote: ActionHook = async (request: Request, actionContext: A
       body: JSON.stringify(quote),
       sessionData: {
         ...request.sessionData,
-      },
-    };
-
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const getQuotationCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const quoteApi = getQuoteApi(request, actionContext.frontasticContext);
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-    const account = fetchAccountFromSession(request);
-    const businessUnitKey = getBusinessUnitKey(request);
-    const storeKey = getStoreKey(request);
-
-    const { id: quoteId } = parseQueryParams<{ id: string }>(request.query);
-
-    if (!quoteId) {
-      throw new ValidationError({ message: 'Quote id is missing.' });
-    }
-
-    const quote = await quoteApi.getQuote(quoteId);
-
-    let cart = quote.quotationCart;
-
-    if (!cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)) {
-      throw new ValidationError({ message: 'Cart does not belong to the current business unit or store.' });
-    }
-
-    if (cart.cartState === CartState.Ordered) {
-      throw new ValidationError({ message: 'Cart has already been ordered.' });
-    }
-
-    if (cart.email !== account.email) {
-      cart = await cartApi.setEmail(cart, account.email);
-    }
-
-    if (cart.accountId !== account.accountId) {
-      cart = await cartApi.setCustomerId(cart, account.accountId);
-    }
-
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(cart),
-      sessionData: {
-        ...request.sessionData,
-        cartId: cart.cartId,
       },
     };
 

@@ -1,15 +1,14 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { Cart } from '@shared/types/cart/Cart';
 import { classnames } from '@/utils/classnames/classnames';
 import Image from '@/components/atoms/Image';
-import mapCosts from '@/utils/mappers/map-costs';
 import Typography from '@/components/atoms/typography';
 import { CurrencyHelpers } from '@/utils/currency-helpers';
 import Accordion from '@/components/molecules/accordion';
-import { Money } from '@shared/types/product/Money';
 import useDisclosure from '@/hooks/useDisclosure';
 import Costs from '@/components/molecules/costs';
+import { calculateTransaction } from '@/lib/utils/calculate-transaction';
 import AccordionButton from './accordion-button';
 import { SummaryAccordionProps } from '../types';
 
@@ -17,7 +16,6 @@ const SummaryAccordion = ({ className, order, cart, transaction }: SummaryAccord
   const data = { ...(order ?? cart) } as Cart;
 
   const { locale } = useRouter();
-  const currency = 'USD';
 
   const { isOpen, onToggle } = useDisclosure();
 
@@ -29,10 +27,7 @@ const SummaryAccordion = ({ className, order, cart, transaction }: SummaryAccord
       ${data?.lineItems && index === data.lineItems.length - 1 ? '' : 'border-b'}`;
   };
 
-  const total = useMemo(
-    () => (order ? mapCosts({ order, currency }).total : mapCosts({ reference: 'cart', cart, currency }).total),
-    [cart, currency, order],
-  ) as Required<Money>;
+  const { total } = calculateTransaction(data);
 
   return (
     <Accordion className={accordionClassNames} isExpanded={isOpen}>

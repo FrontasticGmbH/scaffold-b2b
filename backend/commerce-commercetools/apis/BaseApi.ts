@@ -416,14 +416,13 @@ export abstract class BaseApi {
   protected projectKey: string;
   protected productIdField: string;
   protected categoryIdField: string;
-  protected defaultAssociateRoleKey: string;
+  protected defaultAssociateRoleKeys: string[];
   protected locale: string;
   protected defaultLocale: string;
   protected defaultCurrency: string;
   protected clientHashKey: string;
   protected token: Token;
   protected currency: string;
-  protected defaultStoreKey: string;
   protected frontasticContext: Context;
 
   constructor(frontasticContext: Context, locale: string | null, currency: string | null) {
@@ -440,8 +439,7 @@ export abstract class BaseApi {
     this.projectKey = this.clientSettings.projectKey;
     this.productIdField = this.clientSettings?.productIdField || 'key';
     this.categoryIdField = this.clientSettings?.categoryIdField || 'key';
-    this.defaultAssociateRoleKey = this.clientSettings?.defaultAssociateRoleKey || 'buyer';
-    this.defaultStoreKey = this.clientSettings.defaultStoreKey;
+    this.defaultAssociateRoleKeys = this.clientSettings?.defaultAssociateRoleKeys || ['admin'];
     this.token = clientTokensStored.get(this.getClientHashKey());
 
     this.frontasticContext = frontasticContext;
@@ -556,7 +554,7 @@ export abstract class BaseApi {
       .get()
       .execute()
       .then((response) => {
-        const associateRoles = response.body.results.filter((associateRole) => associateRole.buyerAssignable);
+        const associateRoles = response.body.results;
 
         associateRolesCache[this.projectKey] = {
           associateRoles,

@@ -4,7 +4,7 @@ import { ProductSliderProps } from './types';
 import Slider from '../slider';
 import ProductTile from './components/product-tile';
 
-const ProductSlider = ({ headline, onAddToCart, products = [] }: ProductSliderProps) => {
+const ProductSlider = ({ headline, onAddToCart, addToCartDisabled, products = [] }: ProductSliderProps) => {
   const responsiveArrowStyles = useResponsiveValue({
     base: { top: '22%', padding: 0 },
     sm: { top: '25%', padding: 0 },
@@ -15,7 +15,7 @@ const ProductSlider = ({ headline, onAddToCart, products = [] }: ProductSliderPr
   });
 
   return (
-    <div className="overflow-hidden bg-neutral-200 p-4 px-[10px] md:px-4 md:py-5 lg:px-9">
+    <div className="bg-neutral-200 p-4 px-[10px] md:px-4 md:py-5 lg:px-9">
       {headline && (
         <h3 className="px-[6px] pb-4 pt-1 leading-normal text-gray-700 md:px-2 md:pb-5 md:text-18 lg:px-3">
           {headline}
@@ -34,6 +34,7 @@ const ProductSlider = ({ headline, onAddToCart, products = [] }: ProductSliderPr
           <ProductTile
             key={product.id}
             product={product}
+            addToCartDisabled={addToCartDisabled}
             onAddToCart={async () => {
               await onAddToCart?.(product.sku ?? '');
             }}

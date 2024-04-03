@@ -12,6 +12,7 @@ export interface Order {
   items: Partial<Product>[];
   total: number;
   subtotal: number;
+  discount?: number;
   shippingCosts?: number;
   taxCosts?: number;
   currency: Currency;

@@ -1,0 +1,15 @@
+{
+  "my.wishlist": "My Wishlist",
+  "wishlist": "Wishlist",
+  "items": "Wishlist Items",
+  "items.in.view": "items in wishlist, view wishlist",
+  "oops": "Oops...",
+  "empty": "Your wishlist is empty",
+  "add.items": "Add items",
+  "add.to.cart": "Move to Cart",
+  "clear.list": "Clear the list",
+  "move": "Move",
+  "move.to.list": "Move to list",
+  "select.list": "Select shopping list",
+  "item.added": "Item was added to"
+}

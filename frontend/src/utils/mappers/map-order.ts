@@ -1,6 +1,8 @@
 import { Currency } from '@/types/currency';
 import { Order as MappedOrder, OrderStatus } from '@/types/entity/order';
 import { Order } from '@shared/types/cart/Order';
+import { calculateTransaction } from '@/lib/utils/calculate-transaction';
+import { BusinessUnit } from '@shared/types/business-unit';
 import { mapLineItem } from './map-lineitem';
 
 const orderStatus = (order: Order): OrderStatus => {
@@ -10,23 +12,24 @@ const orderStatus = (order: Order): OrderStatus => {
   else return 'Returned';
 };
 
-export const mapOrder = (order: Order): MappedOrder => {
+export const mapOrder = (order: Order, { businessUnits }: { businessUnits?: BusinessUnit[] } = {}): MappedOrder => {
   const currencyCode = (order.sum?.currencyCode ?? 'USD') as Currency;
-  const fractionDigits = order.sum?.fractionDigits ?? 2;
   const mappedStatus = orderStatus(order);
+
+  const { total, subtotal, tax, discount, shipping } = calculateTransaction(order);
 
   return {
     id: order.orderId ?? '',
     number: order.orderNumber ?? '',
-    businessUnit: order.businessUnitKey ?? '',
-    creationDate: new Date(order.createdAt ?? Date.now()).toLocaleDateString(),
+    businessUnit: businessUnits?.find((bu) => bu.key === order.businessUnitKey)?.name ?? order.businessUnitKey ?? '',
+    creationDate: new Date(order.createdAt ?? Date.now()).toISOString(),
     status: mappedStatus,
     items: (order.lineItems ?? []).map(mapLineItem),
     currency: currencyCode,
-    subtotal:
-      (order.lineItems ?? []).reduce((acc, curr) => acc + (curr.totalPrice?.centAmount ?? 0), 0) /
-      Math.pow(10, fractionDigits),
-    shippingCosts: (order.shippingInfo?.price?.centAmount ?? 0) / Math.pow(10, fractionDigits),
-    total: (order.sum?.centAmount ?? 0) / Math.pow(10, fractionDigits),
+    taxCosts: tax.centAmount,
+    subtotal: subtotal.centAmount,
+    discount: discount.centAmount,
+    shippingCosts: shipping.centAmount,
+    total: total.centAmount,
   };
 };
