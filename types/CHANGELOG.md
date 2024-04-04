@@ -1,4 +1,16 @@
 
+## Version 1.6.1 (2024-04-04)
+
+** Bug fixes **
+
+- Fixed category types
+
+## Version 1.6 (2024-04-04)
+
+** New Features and Improvements **
+
+- Added support for store key
+
 ## Version 1.5.0 (2024-02-22)
 
 ** New Features and Improvements **

@@ -1,4 +1,9 @@
 
+## Version 1.7.1 (2024-04-04)
+
+** Bug fixes **
+- Fixed category types
+
 ## Version 1.7 (2024-04-03)
 
 ** New Features and Improvements **

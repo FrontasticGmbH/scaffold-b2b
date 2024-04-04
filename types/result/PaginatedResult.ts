@@ -1,4 +1,4 @@
-import { Product, Category } from '../product';
+import { Product } from '../product';
 
 export interface PaginatedResult<T> {
   total?: number;
@@ -11,7 +11,4 @@ export interface PaginatedResult<T> {
 
 export interface ProductPaginatedResult extends PaginatedResult<Product> {
   facets?: any[];
-}
-
-export interface CategoryPaginatedResult extends PaginatedResult<Category> {  
 }
