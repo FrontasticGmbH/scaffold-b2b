@@ -387,6 +387,7 @@ export class ProductMapper {
           commercetoolsProductSearchRequest.facets,
           commercetoolsFacetResult.name,
         );
+
         if (commercetoolsFacetExpression) {
           if ('ranges' in commercetoolsFacetExpression) {
             return this.commercetoolsFacetResultBucketToRangeFacet(
@@ -395,7 +396,7 @@ export class ProductMapper {
             );
           }
           if ('count' in commercetoolsFacetExpression) {
-            return this.commercetoolsFacetResultCountToCountTermFacet(
+            return this.commercetoolsFacetResultCountToFacet(
               commercetoolsFacetExpression as ProductSearchFacetCountExpression,
               commercetoolsFacetResult as ProductSearchFacetResultCount,
               facetDefinitions,
@@ -446,7 +447,7 @@ export class ProductMapper {
     };
   };
 
-  static commercetoolsFacetResultCountToCountTermFacet = (
+  static commercetoolsFacetResultCountToFacet = (
     commercetoolsFacetCountExpression: ProductSearchFacetCountExpression,
     commercetoolsFacetResultCount: ProductSearchFacetResultCount,
     facetDefinitions: FacetDefinition[],
@@ -464,9 +465,8 @@ export class ProductMapper {
       identifier: commercetoolsFacetResultCount.name,
       label: commercetoolsFacetResultCount.name,
       key: commercetoolsFacetResultCount.name,
-      selected: !!selected,
-      // @ts-ignore
       count: commercetoolsFacetResultCount.value,
+      selected: !!selected,
     };
   };
 
