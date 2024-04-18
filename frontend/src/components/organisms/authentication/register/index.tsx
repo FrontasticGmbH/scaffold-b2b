@@ -18,9 +18,10 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const router = useCustomRouter();
 
   const [data, setData] = useState<Account>({});
+  const [errors, setErrors] = useState<Account>({});
   const [confirmed, setConfirmed] = useState(false);
-  const [emailError, setEmailError] = useState<string>();
   const nameValidation = { pattern: '[A-Za-z]+', title: translate('common.name.validation') };
+
   const inputArray: Array<InputProps> = [
     {
       label: translate('common.emailAddress'),
@@ -53,7 +54,11 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
         })
         .catch((err) => {
           if (err.message.includes('409')) {
-            setEmailError(translate('error.email.exists'));
+            if (err.message.includes('account')) {
+              setErrors({ email: translate('error.email.exists') });
+            } else if (err.message.includes('company')) {
+              setErrors({ companyName: translate('error.company.exists') });
+            }
           } else toast.error(translate('account.account.create.fail'));
         });
     }
@@ -72,8 +77,7 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = target;
     setData({ ...data, [name]: value });
-
-    if (name === 'email') setEmailError(undefined);
+    setErrors({ ...errors, [name]: undefined });
   };
 
   return (
@@ -98,12 +102,12 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
                 key={name}
                 name={name}
                 value={(data[name as keyof Account] as string) ?? ''}
+                error={(errors[name as keyof Account] as string) ?? ''}
                 required
                 pattern={pattern}
                 title={title}
                 type={name === 'email' ? 'email' : 'text'}
                 label={label}
-                error={name === 'email' ? emailError : undefined}
                 {...commonProps}
               />
             ))}

@@ -4,9 +4,9 @@ import { NavigationCategory } from '../../header/types';
 export interface AnnouncementBarProps {
   accountLinks: NavigationCategory[];
   textBar: string;
-  selectedBusinessUnit: string;
+  selectedBusinessUnit?: string;
   businessUnits: Option[];
-  selectedStore: string;
+  selectedStore?: string;
   stores: Option[];
   name: string;
   quotes: number;
@@ -18,9 +18,9 @@ export interface AnnouncementBarProps {
 export interface AccountButtonProps {
   quotes: number;
   name: string;
-  selectedBusinessUnit: string;
+  selectedBusinessUnit?: string;
   businessUnits: Option[];
-  selectedStore: string;
+  selectedStore?: string;
   stores: Option[];
   accountLinks: NavigationCategory[];
   onLogoutClick: () => void;

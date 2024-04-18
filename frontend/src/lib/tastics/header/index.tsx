@@ -18,7 +18,6 @@ import useHeaderData from './hooks/useHeaderData';
 const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
   const { translate } = useTranslation();
   const [isDesktopSize] = useMediaQuery(desktop);
-  const { isAdmin } = useAccountRoles();
 
   const {
     account,
@@ -43,6 +42,8 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     headerSearchAction,
     handleSKUsUpdate,
   } = useHeaderData();
+
+  const { isAdmin } = useAccountRoles(selectedBusinessUnit);
 
   const { permissions } = useAccountRoles(selectedBusinessUnit);
 

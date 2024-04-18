@@ -57,7 +57,7 @@ const AccountButton = ({
               enableSearch
               className="z-[100] pt-2"
               size="lg"
-              value={selectedBusinessUnit}
+              value={selectedBusinessUnit ?? translate('common.select')}
               options={businessUnits}
               onChange={onBusinessUnitChange}
             />
@@ -71,7 +71,7 @@ const AccountButton = ({
               className="pt-2"
               size="lg"
               placeholder="Select"
-              defaultValue={selectedStore}
+              defaultValue={selectedStore ?? translate('common.select')}
               options={stores}
               onChange={onStoreChange}
             />

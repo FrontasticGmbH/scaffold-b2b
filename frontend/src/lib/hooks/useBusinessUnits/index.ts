@@ -3,10 +3,14 @@ import { sdk } from '@/sdk';
 import useSWR from 'swr';
 import { Associate } from '@/types/entity/associate';
 import { Address } from '@shared/types/account';
+import useAccount from '../useAccount';
 
 const useBusinessUnits = () => {
-  const { data, mutate: mutateBusinessUnits } = useSWR('/action/business-unit/getBusinessUnits', () =>
-    sdk.composableCommerce.businessUnit.getBusinessUnits({ expandStores: true }),
+  const { loggedIn } = useAccount();
+
+  const { data, mutate: mutateBusinessUnits } = useSWR(
+    !loggedIn ? null : '/action/business-unit/getBusinessUnits',
+    () => sdk.composableCommerce.businessUnit.getBusinessUnits({ expandStores: true }),
   );
 
   const addBusinessUnit = useCallback(

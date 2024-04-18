@@ -1,4 +1,11 @@
 
+## Version 1.7.2 (2024-04-18)
+
+
+** New Features and Improvements **
+
+- Rebranded B2B storybook
+
 ## Version 1.7.1 (2024-04-04)
 
 ** Bug fixes **

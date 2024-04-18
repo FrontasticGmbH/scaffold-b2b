@@ -65,7 +65,7 @@ const useAccount = () => {
     const res = await sdk.composableCommerce.account.register(account as RegisterAccountPayload);
 
     if (res.isError) {
-      if (res.error.message.includes('already exist')) throw new Error('409');
+      if (res.error.message.includes('already exist')) throw new Error(`409 - ${res.error.message}`);
       throw new Error(res.error.message);
     }
 

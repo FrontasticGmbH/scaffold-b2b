@@ -48,7 +48,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
 
-  const [page, businessUnits] = await Promise.all([fetchPageData(slug, searchParams), fetchBusinessUnits()]);
+  const [page, businessUnits] = await Promise.all([fetchPageData(slug, searchParams), fetchBusinessUnits(loggedIn)]);
 
   if (page.isError) return redirect(`/${locale}/404`);
 

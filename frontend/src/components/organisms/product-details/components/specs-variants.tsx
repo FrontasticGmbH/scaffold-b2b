@@ -16,7 +16,7 @@ const SpecsVariants = ({ specs, currentSpecs, onChangeSpecs }: SpecsVariantsProp
   return (
     <div className="grid gap-3">
       <div className="flex gap-1">
-        <Typography {...commonTypographyProps}>{`${translate('product.specifications')}:`}</Typography>
+        <Typography {...commonTypographyProps}>{`${translate('common.model')}:`}</Typography>
         <Typography {...commonTypographyProps} fontWeight="medium">
           {currentSpecs.label}
         </Typography>

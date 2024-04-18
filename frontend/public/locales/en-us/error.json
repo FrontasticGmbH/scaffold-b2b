@@ -9,6 +9,7 @@
   "email.enter": "Please enter your email address",
   "email": "Email is not valid.",
   "email.exists": "The email address is invalid or already exists.",
+  "company.exists": "The company name is invalid or already exists.",
   "name": "Name has to be at least two characters.",
   "verify.failed": "Verification failed",
   "verify.failed.description": "Sorry, we failed to verify your account. A new verification link has been sent to your email address. "

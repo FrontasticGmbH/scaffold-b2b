@@ -1,5 +1,5 @@
 import { Translations } from '@/types/I18n';
-import { constructOrigin } from '@/utils/server/construct-origin';
+import { fetchFromHost } from '@/utils/server/fetch-from-host';
 
 export const getTranslations = async (locales: string[], namespaces: string[]) => {
   const translations = {} as Translations;
@@ -10,9 +10,7 @@ export const getTranslations = async (locales: string[], namespaces: string[]) =
 
       return await Promise.all(
         namespaces.map(async (namespace) => {
-          const data = await fetch(`${constructOrigin()}/locales/${locale}/${namespace}.json`).then((res) =>
-            res.json(),
-          );
+          const data = await fetchFromHost(`/locales/${locale}/${namespace}.json`).then((res) => res.json());
 
           translations[locale][namespace] = data;
         }),

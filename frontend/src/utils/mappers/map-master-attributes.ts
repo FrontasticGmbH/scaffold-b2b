@@ -14,6 +14,11 @@ export const mapMasterAttributes = (variant: Variant): OutputArray => {
       // Assuming the object has a 'key' property, adjust if necessary
       return { label: key, value: value.key };
     }
+
+    if (key === 'iso45001') {
+      return { label: key.toUpperCase(), value: value === 'true' ? 'Certified' : 'Not Certified' };
+    }
+
     // Convert other types of values to strings directly
     return { label: key, value: value.toString() };
   });

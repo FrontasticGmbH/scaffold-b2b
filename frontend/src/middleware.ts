@@ -37,6 +37,11 @@ export function middleware(request: NextRequest) {
 
   response.cookies.set('locale', locale, { maxAge: 60 * 60 * 24 * 7 * 4 * 12 * 100 }); // 100 years expiry
 
+  //Netlify firewall bypass header
+  if (headers['x-nf-waf-bypass-token']) {
+    response.cookies.set('netlify-waf-token', headers['x-nf-waf-bypass-token']);
+  }
+
   return response;
 }
 

@@ -15,14 +15,12 @@ import { useDebounce } from '@/hooks/useDebounce';
 import useProductSearch from '@/lib/hooks/useProductSearch';
 import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import { mapStore } from '@/utils/mappers/map-store';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { mapCsvProduct } from '@/utils/mappers/map-csv-product';
 import { BusinessUnit } from '@shared/types/business-unit';
 import { Store } from '@shared/types/store';
 
 const useHeaderData = () => {
   const router = useCustomRouter();
-  const { translate } = useTranslation();
 
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('query');
@@ -133,9 +131,9 @@ const useHeaderData = () => {
     account,
     navigationCategories,
     defaultBusinessUnit,
-    selectedStore: selectedStore?.key ?? translate('select'),
+    selectedStore: selectedStore?.key,
     stores: mappedStores,
-    selectedBusinessUnit: selectedBusinessUnit?.key ?? translate('select'),
+    selectedBusinessUnit: selectedBusinessUnit?.key,
     businessUnits: mappedBusinessUnits,
     totalCartItems,
     quotes: quotesMapped,

@@ -11,6 +11,7 @@ import Link from '@/components/atoms/link';
 import { ProductTileProps } from './types';
 import ShowMore from '../show-more';
 import DiscountTag from './components/discount-tag';
+import ProductAttributes from '../product-attributes';
 
 const ProductTile = ({
   item: {
@@ -99,22 +100,14 @@ const ProductTile = ({
         </div>
 
         {variant === 'list-item' && (
-          <div className="mt-3 text-14 leading-[200%] text-gray-700">
-            {descriptionItems.slice(0, 3).map((item, index) => (
-              <p key={index}>
-                <span>{item.label}: </span> <span className="font-semibold">{item.value}</span>
-              </p>
-            ))}
+          <>
+            <ProductAttributes className="mt-3 grid gap-1" attributes={descriptionItems.slice(0, 3)} />
             {descriptionItems.length > 3 && (
               <ShowMore>
-                {descriptionItems.slice(3).map((item, index) => (
-                  <p key={index}>
-                    <span>{item.label}: </span> <span className="font-semibold">{item.value}</span>
-                  </p>
-                ))}
+                <ProductAttributes className="mt-1 grid gap-1" attributes={descriptionItems.slice(3)} />
               </ShowMore>
             )}
-          </div>
+          </>
         )}
       </div>
 

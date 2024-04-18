@@ -4,7 +4,7 @@ import { Params } from '@/types/next';
 import { login } from '../login';
 
 export const authenticate = async (slug: Params['slug']) => {
-  const authWhiteList = ['verify', 'verify-associate', 'login', 'register', 'reset-password'];
+  const authWhiteList = ['verify', 'verify-associate', 'login', 'register', 'reset-password', '404'];
 
   const response = await login();
 

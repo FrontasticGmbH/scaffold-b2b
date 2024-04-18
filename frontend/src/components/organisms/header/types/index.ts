@@ -20,9 +20,9 @@ export interface HeaderProps {
   categoryLinks: NavigationCategory[];
   logo: LogoImage;
   logoLink: Link;
-  selectedBusinessUnit: string;
+  selectedBusinessUnit?: string;
   businessUnits: Option[];
-  selectedStore: string;
+  selectedStore?: string;
   stores: Option[];
   searchSuggestions: ProductSuggestion[];
   quickOrderProducts: ProductSuggestion[];
@@ -57,9 +57,9 @@ export interface ContextProps {
   categoryLinks: NavigationCategory[];
   logo: LogoImage;
   logoLink: Link;
-  selectedBusinessUnit: string;
+  selectedBusinessUnit?: string;
   businessUnits: Option[];
-  selectedStore: string;
+  selectedStore?: string;
   stores: Option[];
   quotes: number;
   quickOrderProducts: ProductSuggestion[];

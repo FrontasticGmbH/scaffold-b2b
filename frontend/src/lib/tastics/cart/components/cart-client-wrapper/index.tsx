@@ -40,9 +40,8 @@ const CartClientWrapper = ({}: TasticProps<Props>) => {
         sku: sku ?? '',
         count: qty ?? 1,
       });
-      removeItem(cart?.lineItems?.find((item) => item.variant?.sku === sku)?.lineItemId ?? '');
     },
-    [addToWishlists, cart?.lineItems, createPurchaseList, removeItem],
+    [addToWishlists, createPurchaseList],
   );
 
   return (

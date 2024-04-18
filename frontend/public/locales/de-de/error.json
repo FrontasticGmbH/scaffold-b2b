@@ -9,6 +9,7 @@
   "email.enter": "Geben Sie bitte Ihre Email-Adresse ein",
   "email": "Email ist ungültig.",
   "email.exists": "Die E-Mail-Adresse ist ungültig oder existiert bereits.",
+  "company.exists": "Das Unternehmen existiert bereits.",
   "name": "Der Name muss mindestens zwei Zeichen lang sein.",
   "verify.failed": "Verifizierung fehlgeschlagen",
   "verify.failed.description": "Leider konnten wir Ihr Konto nicht verifizieren. Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet."

@@ -1,5 +1,5 @@
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
-import Typography from '@/components/atoms/typography';
+import ProductAttributes from '@/components/molecules/product-attributes';
 import { AdditionalInfoProps } from '../types';
 import AdditionalInfoItem from './additional-info-item';
 
@@ -12,18 +12,11 @@ const AdditionalInfo = ({ className, description, specifications }: AdditionalIn
         {description}
       </AdditionalInfoItem>
 
-      <AdditionalInfoItem title={translate('product.specifications')}>
-        <div className="grid gap-3">
-          {specifications?.map((spec, index) => (
-            <div key={index} className="flex gap-2">
-              <Typography as="span" fontWeight="medium" className="capitalize">
-                {`${spec.label}:`}
-              </Typography>
-              <Typography as="span">{spec.value}</Typography>
-            </div>
-          ))}
-        </div>
-      </AdditionalInfoItem>
+      {specifications && (
+        <AdditionalInfoItem title={translate('product.specifications')}>
+          <ProductAttributes className="grid gap-3" attributes={specifications} />
+        </AdditionalInfoItem>
+      )}
     </div>
   );
 };
