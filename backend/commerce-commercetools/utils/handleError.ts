@@ -11,7 +11,9 @@ const handleError = (error: ExtensionError | Error | unknown, request?: Request)
         statusCode: statusCode,
         message: error.message,
       }),
+      message: error.message,
       sessionData: request?.sessionData,
+      ok: false,
     };
   }
 
@@ -23,7 +25,9 @@ const handleError = (error: ExtensionError | Error | unknown, request?: Request)
       statusCode: 500,
       message: errorResponse?.message,
     }),
+    message: errorResponse?.message,
     sessionData: request?.sessionData,
+    ok: false,
   };
 };
 

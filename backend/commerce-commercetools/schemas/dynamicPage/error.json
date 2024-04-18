@@ -1,0 +1,9 @@
+{
+    "dynamicPageType": "frontastic/error",
+    "name": "Error",
+    "category": "Errors",
+    "icon": "error",
+    "dataSourceType": "frontastic/empty",
+    "isMultiple": true
+  }
+  

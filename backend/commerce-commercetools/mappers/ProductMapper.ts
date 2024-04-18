@@ -120,13 +120,13 @@ export class ProductMapper {
       discountedPrice: discountedPrice,
       discounts: discounts,
       isOnStock: supplyChannelId
-        ? commercetoolsVariant.availability?.channels[supplyChannelId]?.isOnStock
+        ? commercetoolsVariant.availability?.channels?.[supplyChannelId]?.isOnStock
         : commercetoolsVariant.availability?.isOnStock || undefined,
       restockableInDays: supplyChannelId
-        ? commercetoolsVariant.availability?.channels[supplyChannelId]?.restockableInDays
+        ? commercetoolsVariant.availability?.channels?.[supplyChannelId]?.restockableInDays
         : commercetoolsVariant.availability?.restockableInDays || undefined,
       availableQuantity: supplyChannelId
-        ? commercetoolsVariant.availability?.channels[supplyChannelId]?.availableQuantity
+        ? commercetoolsVariant.availability?.channels?.[supplyChannelId]?.availableQuantity
         : commercetoolsVariant.availability?.availableQuantity || undefined,
     } as Variant;
   }

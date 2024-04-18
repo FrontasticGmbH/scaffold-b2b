@@ -53,18 +53,18 @@
           "required": false
         },
         {
-          "label": "Associate Role Admin Key",
-          "field": "EXTENSION_COMMERCETOOLS_ASSOCIATE_ROLE_ADMIN_KEY",
+          "label": "Default Associate Role Keys (comma separated)",
+          "field": "EXTENSION_COMMERCETOOLS_DEFAULT_ASSOCIATE_ROLE_KEYS",
           "type": "string",
           "translatable": false,
-          "required": false
+          "required": true
         },
         {
-          "label": "Associate Role Buyer Key",
-          "field": "EXTENSION_COMMERCETOOLS_ASSOCIATE_ROLE_BUYER_KEY",
+          "label": "Store Key",
+          "field": "EXTENSION_COMMERCETOOLS_DEFAULT_STORE_KEY",
           "type": "string",
           "translatable": false,
-          "required": false
+          "required": true
         }
       ]
     },
@@ -116,53 +116,6 @@
         {
           "label": "Client host",
           "field": "EXTENSION_SMTP_CLIENT_HOST",
-          "type": "string",
-          "translatable": false,
-          "required": true
-        }
-      ]
-    },
-    {
-      "name": "Adyen Payment extension",
-      "fields": [
-        {
-          "label": "Api Key",
-          "field": "EXTENSION_ADYEN_API_KEY",
-          "type": "encrypted",
-          "translatable": false,
-          "required": true
-        },
-        {
-          "label": "Merchant Account",
-          "field": "EXTENSION_ADYEN_MERCHANT_ACCOUNT",
-          "type": "string",
-          "translatable": false,
-          "required": true
-        },
-        {
-          "label": "Base Url",
-          "field": "EXTENSION_ADYEN_BASE_URL",
-          "type": "string",
-          "translatable": false,
-          "required": true
-        },
-        {
-          "label": "Client Key",
-          "field": "EXTENSION_ADYEN_CLIENT_KEY",
-          "type": "encrypted",
-          "translatable": false,
-          "required": true
-        },
-        {
-          "label": "Hmac Key",
-          "field": "EXTENSION_ADYEN_HMAC_KEY",
-          "type": "encrypted",
-          "translatable": false,
-          "required": true
-        },
-        {
-          "label": "Store Key",
-          "field": "EXTENSION_COMMERCETOOLS_DEFAULT_STORE_KEY",
           "type": "string",
           "translatable": false,
           "required": true
