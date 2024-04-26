@@ -26,7 +26,7 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
   if (response.isError) return {};
 
-  const { seoTitle, seoDescription, seoKeywords } = response.data.pageFolder.configuration;
+  const { seoTitle, seoDescription, seoKeywords } = response.data.pageFolder?.configuration;
 
   const { locale } = getLocalizationInfo(nextLocale);
 
@@ -44,13 +44,16 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const { loggedIn, attemptingToAuth, auth } = await authenticate(slug);
 
-  if (!loggedIn && !attemptingToAuth) return redirect(`/${locale}/login/`);
+  //If target page is not found skip authentication logic
+  if (slug?.[0] !== '404') {
+    if (!loggedIn && !attemptingToAuth) return redirect(`/${locale}/login/`);
 
-  if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
+    if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
+  }
 
   const [page, businessUnits] = await Promise.all([fetchPageData(slug, searchParams), fetchBusinessUnits(loggedIn)]);
 
-  if (page.isError) return redirect(`/${locale}/404`);
+  if (page.isError || !page.data.page) return redirect(`/${locale}/404`);
 
   const translations = await getTranslations(
     [locale],
@@ -81,6 +84,7 @@ export default async function Page({ params, searchParams }: PageProps) {
         account: auth.isError ? {} : auth.data,
         businessUnits: businessUnits.isError ? [] : businessUnits.data,
       }}
+      tracing={page.tracing}
     >
       <Renderer data={page.data} params={params} searchParams={searchParams} />
       <Toaster />

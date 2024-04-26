@@ -12,7 +12,7 @@ import {
   getStoreId,
   getStoreKey,
   getSupplyChannelId,
-} from '@Commerce-commercetools/utils/Request';
+} from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 export class ProductQueryFactory {
   static queryFromParams: (request: Request, config?: DataSourceConfiguration) => ProductQuery = (

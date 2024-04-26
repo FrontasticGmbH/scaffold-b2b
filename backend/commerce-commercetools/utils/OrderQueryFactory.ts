@@ -2,8 +2,8 @@ import { Request } from '@frontastic/extension-types';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
 import { Account } from '@Types/account/Account';
-import queryParamsToIds from './queryParamsToIds';
-import queryParamsToStates from './queryParamsToState';
+import queryParamsToIds from './requestHandlers/queryParamsToIds';
+import queryParamsToStates from './requestHandlers/queryParamsToState';
 
 export class OrderQueryFactory {
   static queryFromParams: (request: Request, account?: Account) => OrderQuery = (

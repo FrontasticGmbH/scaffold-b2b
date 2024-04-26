@@ -36,7 +36,7 @@ export const myAccountMenu = {
     },
     {
       categoryId: 'shopping-lists',
-      name: 'Shopping Lists',
+      name: 'Purchase Lists',
       path: '/shopping-lists',
       subCategories: [],
     },

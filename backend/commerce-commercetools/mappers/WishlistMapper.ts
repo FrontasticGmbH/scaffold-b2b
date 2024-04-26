@@ -4,8 +4,8 @@ import { ShoppingListDraft } from '@commercetools/platform-sdk/dist/declarations
 import { Store } from '@Types/store/Store';
 import { LineItem } from '@Types/wishlist';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
-import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
+import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
+import ProductRouter from '@Commerce-commercetools/utils/routers/ProductRouter';
 
 export class WishlistMapper {
   static commercetoolsShoppingListToWishlist = (

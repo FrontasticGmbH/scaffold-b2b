@@ -56,7 +56,7 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
       label: 'Germany (EUR)',
       value: 'de',
       defaultLanguage: 'de-de',
-      languages: [{ name: 'Deutch - DE', value: 'de-de' }],
+      languages: [{ name: 'German - DE', value: 'de-de' }],
     },
     {
       flagName: 'fr',
@@ -97,14 +97,6 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
       value: 'it',
       defaultLanguage: 'it-it',
       languages: [{ name: 'Italian - IT', value: 'it-it' }],
-    },
-    {
-      flagName: 'se',
-      name: 'Sweden',
-      label: 'Sweden (SEK)',
-      value: 'se',
-      defaultLanguage: 'sv-se',
-      languages: [{ name: 'Svenska - SV', value: 'sv-se' }],
     },
   ] as Location[];
 

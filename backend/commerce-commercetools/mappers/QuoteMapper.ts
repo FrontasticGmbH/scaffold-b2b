@@ -6,12 +6,12 @@ import {
 } from '@commercetools/platform-sdk';
 import { QuoteRequest, QuoteRequestState } from '@Types/quote/QuoteRequest';
 import { Quote, QuoteState } from '@Types/quote/Quote';
-import { CartMapper } from './CartMapper';
+import CartMapper from './CartMapper';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
+import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
+import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 
-export class QuoteMapper {
+export default class QuoteMapper {
   static commercetoolsQuoteToQuote(commercetoolsQuote: CommercetoolsQuote, locale: Locale): Quote {
     const quoteRequest = commercetoolsQuote.quoteRequest?.obj
       ? this.commercetoolsQuoteRequestToQuoteRequest(commercetoolsQuote.quoteRequest.obj, locale)
@@ -35,7 +35,6 @@ export class QuoteMapper {
       buyerComment: commercetoolsQuote.buyerComment,
       sellerComment: commercetoolsQuote.sellerComment,
       purchaseOrderNumber: commercetoolsQuote.purchaseOrderNumber,
-      orderNumber: commercetoolsQuote.purchaseOrderNumber,
       expirationDate: new Date(commercetoolsQuote.validTo),
       quoteRequest: quoteRequest,
       quoteVersion: commercetoolsQuote.version,

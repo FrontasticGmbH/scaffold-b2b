@@ -53,6 +53,13 @@
           "required": false
         },
         {
+          "label": "ProductSelections ID Field",
+          "field": "EXTENSION_COMMERCETOOLS_PRODUCT_SELECTIONS_ID_FIELD",
+          "type": "string",
+          "translatable": false,
+          "required": false
+        },
+        {
           "label": "Default Associate Role Keys (comma separated)",
           "field": "EXTENSION_COMMERCETOOLS_DEFAULT_ASSOCIATE_ROLE_KEYS",
           "type": "string",

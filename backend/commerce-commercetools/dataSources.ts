@@ -4,22 +4,17 @@ import { ProductPaginatedResult } from '@Types/result';
 import { Product } from '@Types/product';
 import { DataSourcePreviewPayloadElement } from '@frontastic/extension-types/src/ts';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
-import { ProductApi } from './apis/ProductApi';
-import { getCurrency, getLocale } from './utils/Request';
 import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
-import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
+import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
+import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
-import getCartApi from '@Commerce-commercetools/utils/getCartApi';
-import getQuoteApi from '@Commerce-commercetools/utils/getQuoteApi';
+import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
 
 function productQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
-  const productApi = new ProductApi(
-    context.frontasticContext,
-    context.request ? getLocale(context.request) : null,
-    context.request ? getCurrency(context.request) : null,
-  );
+  const productApi = getProductApi(context.request, context.frontasticContext);
 
   const productQuery = ProductQueryFactory.queryFromParams(context?.request, config);
   return { productApi, productQuery };
@@ -64,6 +59,12 @@ function getPreviewPayload(queryResult: ProductPaginatedResult) {
 
 export default {
   'frontastic/categories': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+    const productApi = getProductApi(context.request, context.frontasticContext);
+
+    const queryResult = await productApi.queryCategories({});
+    return {
+      dataSourcePayload: queryResult,
+    };
     try {
       const { productApi } = productQueryFromContext(context, config);
 

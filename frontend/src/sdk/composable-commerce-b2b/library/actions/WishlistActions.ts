@@ -5,6 +5,7 @@ import {
   AddToWishlistsPayload,
   CreateWishlistPayload,
   RemoveFromWishlistPayload,
+  RemoveFromWishlistsPayload,
   UpdateWishlistItemPayload,
   UpdateWishlistPayload,
 } from '../../types/payloads/WishlistPayloads';
@@ -26,6 +27,7 @@ import {
   GetWishlistAction,
   QueryWishlistsAction,
   RemoveFromWishlistAction,
+  RemoveFromWishlistsAction,
   UpdateWishlistAction,
   UpdateWishlistItemAction,
 } from '../../types/actions/WishlistActions';
@@ -42,6 +44,7 @@ export type WishlistActions = {
   addToWishlists: AddToWishlistsAction;
   updateItem: UpdateWishlistItemAction;
   removeItem: RemoveFromWishlistAction;
+  removeItems: RemoveFromWishlistsAction;
 };
 
 export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): WishlistActions => {
@@ -139,6 +142,15 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
         actionName: 'wishlist/removeLineItem',
         payload,
         query,
+        serverOptions: options.serverOptions,
+      });
+      return response;
+    },
+
+    removeItems: async (payload: RemoveFromWishlistsPayload, options: { serverOptions?: ServerOptions } = {}) => {
+      const response = await sdk.callAction<Wishlist[]>({
+        actionName: 'wishlist/removeLineItems',
+        payload,
         serverOptions: options.serverOptions,
       });
       return response;

@@ -1,4 +1,11 @@
 
+## Version 1.7.3 (2024-04-26)
+
+** New Features and Improvements **
+
+- Shipping list renamed to purchase list
+- Algolia search in header, product listing page and search page changed to commercetools search
+
 ## Version 1.7.2 (2024-04-18)
 
 

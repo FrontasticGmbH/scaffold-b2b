@@ -68,12 +68,6 @@ const localizationMapper = {
     currencyCode: '€',
     countryCode: 'IT',
   },
-  'sv-se': {
-    locale: 'sv_SE',
-    currency: 'SEK',
-    currencyCode: 'kr',
-    countryCode: 'SE',
-  },
 } as Record<string, LocalizationMapping>;
 
 const locales = Object.keys(localizationMapper);

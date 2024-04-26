@@ -38,9 +38,9 @@ import {
 import { FilterField, FilterFieldTypes, FilterFieldValue } from '@Types/product/FilterField';
 import { RangeFacet, Term, TermFacet } from '@Types/result';
 import { Facet, FacetTypes } from '@Types/result/Facet';
-import { ProductRouter } from '@Commerce-commercetools/utils/ProductRouter';
+import ProductRouter from '@Commerce-commercetools/utils/routers/ProductRouter';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { ProductSearchFacetResult } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-search';
+import { ProductSearchFacetResult } from '@commercetools/platform-sdk';
 
 const TypeMap = new Map<string, string>([
   ['boolean', FilterFieldTypes.BOOLEAN],
@@ -51,15 +51,16 @@ const TypeMap = new Map<string, string>([
   ['ltext', FilterFieldTypes.TEXT],
 ]);
 
-export class ProductMapper {
+export default class ProductMapper {
   static commercetoolsProductProjectionToProduct(
     commercetoolsProduct: CommercetoolsProductProjection,
+    productIdField: string,
     categoryIdField: string,
     locale: Locale,
     supplyChannelId?: string,
   ): Product {
     const product: Product = {
-      productId: commercetoolsProduct.id,
+      productId: commercetoolsProduct?.[productIdField],
       version: commercetoolsProduct?.version?.toString(),
       name: commercetoolsProduct?.name?.[locale.language],
       slug: commercetoolsProduct?.slug?.[locale.language],

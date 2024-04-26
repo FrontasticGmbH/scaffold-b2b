@@ -113,7 +113,7 @@ const PaymentStep = ({
         loading={loading}
         onClick={handleStepCompletion}
       >
-        {translate('checkout.review.order')}
+        {translate('checkout.review.quote')}
       </Button>
     </div>
   );

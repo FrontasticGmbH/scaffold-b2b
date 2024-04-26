@@ -2,20 +2,20 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account';
 import { ValidationError } from '../errors/ValidationError';
-import { getCurrency, getLocale } from '@Commerce-commercetools/utils/Request';
-import { AccountApi } from '@Commerce-commercetools/apis/AccountApi';
+import { getLocale } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
-import { BusinessUnitApi } from '@Commerce-commercetools/apis/BusinessUnitApi';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
+import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
-import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
+import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import { BusinessUnitDuplicatedError } from '@Commerce-commercetools/errors/BusinessUnitDuplicatedError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
+import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -46,7 +46,7 @@ type AccountChangePasswordBody = {
 };
 
 async function loginAccount(request: Request, actionContext: ActionContext, account: Account): Promise<Response> {
-  const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+  const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
   const cart = await CartFetcher.fetchCartFromSession(request, actionContext);
 
@@ -63,11 +63,7 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
     });
   }
 
-  const businessUnitApi = new BusinessUnitApi(
-    actionContext.frontasticContext,
-    getLocale(request),
-    getCurrency(request),
-  );
+  const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
   const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId);
 
@@ -126,18 +122,14 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
     const accountData = AccountMapper.requestToAccount(request);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, locale, getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     if (accountData.companyName === undefined) {
       throw new ValidationError({ message: `The account passed doesn't contain a company.` });
     }
 
     // Validate if the business unit name exists using accountData.company
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     let businessUnit = undefined;
 
@@ -196,7 +188,7 @@ export const deleteAccount: ActionHook = async (request: Request, actionContext:
 
     const accountDeleteBody = parseRequestBody<{ password: string }>(request.body);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = {
       email: account.email,
@@ -224,7 +216,7 @@ export const requestConfirmationEmail: ActionHook = async (request: Request, act
   try {
     const locale = getLocale(request);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, locale, getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     const accountLoginBody: AccountLoginBody = JSON.parse(request.body);
 
@@ -261,7 +253,7 @@ export const requestConfirmationEmail: ActionHook = async (request: Request, act
 
 export const confirm: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     type AccountConfirmBody = {
       token?: string;
@@ -328,7 +320,7 @@ export const password: ActionHook = async (request: Request, actionContext: Acti
 
     let account = fetchAccountFromSession(request);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     const accountChangePasswordBody: AccountChangePasswordBody = JSON.parse(request.body);
 
@@ -362,7 +354,7 @@ export const requestReset: ActionHook = async (request: Request, actionContext: 
       email?: string;
     };
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, locale, getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     const accountRequestResetBody: AccountRequestResetBody = JSON.parse(request.body);
 
@@ -397,7 +389,7 @@ export const reset: ActionHook = async (request: Request, actionContext: ActionC
 
     const accountResetBody: AccountResetBody = JSON.parse(request.body);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     const account = await accountApi.resetPassword(accountResetBody.token, accountResetBody.newPassword);
     account.password = accountResetBody.newPassword;
@@ -414,7 +406,7 @@ export const update: ActionHook = async (request: Request, actionContext: Action
 
     let account = fetchAccountFromSession(request);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, getLocale(request));
 
     account = {
@@ -449,7 +441,7 @@ export const addAddress: ActionHook = async (request: Request, actionContext: Ac
 
     const address: Address = JSON.parse(request.body).address;
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.addAddress(account, address);
 
@@ -474,7 +466,7 @@ export const addShippingAddress: ActionHook = async (request: Request, actionCon
 
     const address: Address = JSON.parse(request.body).address;
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.addShippingAddress(account, address);
 
@@ -499,7 +491,7 @@ export const addBillingAddress: ActionHook = async (request: Request, actionCont
 
     const address: Address = JSON.parse(request.body).address;
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.addBillingAddress(account, address);
 
@@ -524,7 +516,7 @@ export const updateAddress: ActionHook = async (request: Request, actionContext:
 
     const address: Address = JSON.parse(request.body).address;
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.updateAddress(account, address);
 
@@ -555,7 +547,7 @@ export const removeAddress: ActionHook = async (request: Request, actionContext:
       addressId: body.address?.id,
     };
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.removeAddress(account, address);
 
@@ -580,7 +572,7 @@ export const setDefaultBillingAddress: ActionHook = async (request: Request, act
 
     const address: Address = JSON.parse(request.body);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.setDefaultBillingAddress(account, address);
 
@@ -605,7 +597,7 @@ export const setDefaultShippingAddress: ActionHook = async (request: Request, ac
 
     const address: Address = JSON.parse(request.body);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     account = await accountApi.setDefaultShippingAddress(account, address);
 

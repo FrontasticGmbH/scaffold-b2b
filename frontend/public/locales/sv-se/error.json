@@ -9,7 +9,7 @@
   "email.enter": "Var god skriv in din e-postadress",
   "email": "E-post är inte giltig.",
   "email.exists": "E-postadressen är ogiltig eller finns redan.",
-  "company.exists": "Företaget finns redan.",
+  "company.exists": "Företagsnamnet är redan registrerat. Använd ett annat företagsnamn eller be en administratör att bli inbjuden till ett befintligt företag.",
   "name": "Namnet måste bestå av minst två tecken.",
   "verify.failed": "Verifieringen misslyckades",
   "verify.failed.description": "Tyvärr, vi misslyckades med att verifiera ditt konto. En ny verifieringslänk har skickats till din e-postadress."

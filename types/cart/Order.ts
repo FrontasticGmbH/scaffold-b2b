@@ -40,5 +40,6 @@ export interface Order extends Cart {
   businessUnitKey?: string;
   returnInfo?: ReturnInfo[];
   purchaseOrderNumber?: string;
+  quoteId?: string;
   shipmentState?: ShipmentState;
 }

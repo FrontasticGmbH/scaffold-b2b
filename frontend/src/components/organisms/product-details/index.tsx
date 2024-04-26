@@ -22,7 +22,7 @@ const ProductDetails = ({
   const { translate } = useTranslation();
 
   return (
-    <div className="px-4 md:px-6 lg:px-12">
+    <div className="mb-16 px-4 md:px-6 lg:px-12">
       {addToCartDisabled && (
         <InfoBanner className="mt-3">
           <b>{translate('common.view.only')}</b> {translate('cart.view.only.desc')}

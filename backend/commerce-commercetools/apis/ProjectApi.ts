@@ -1,7 +1,7 @@
 import { ProjectSettings } from '@Types/ProjectSettings';
-import { BaseApi } from './BaseApi';
+import BaseApi from './BaseApi';
 
-export class ProjectApi extends BaseApi {
+export default class ProjectApi extends BaseApi {
   getProjectSettings: () => Promise<ProjectSettings> = async () => {
     const project = await this.getCommercetoolsProject();
 

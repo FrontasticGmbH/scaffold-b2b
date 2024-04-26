@@ -6,6 +6,7 @@ import {
   AddToWishlistsPayload,
   CreateWishlistPayload,
   RemoveFromWishlistPayload,
+  RemoveFromWishlistsPayload,
   UpdateWishlistItemPayload,
   UpdateWishlistPayload,
 } from '../payloads/WishlistPayloads';
@@ -88,6 +89,13 @@ type RemoveFromWishlistAction = (
   },
 ) => Promise<SDKResponse<Wishlist>>;
 
+type RemoveFromWishlistsAction = (
+  payload: RemoveFromWishlistsPayload,
+  options?: {
+    serverOptions?: ServerOptions;
+  },
+) => Promise<SDKResponse<Wishlist[]>>;
+
 export {
   type CreateWishlistAction,
   type GetWishlistAction,
@@ -98,4 +106,5 @@ export {
   type AddToWishlistsAction,
   type UpdateWishlistItemAction,
   type RemoveFromWishlistAction,
+  type RemoveFromWishlistsAction,
 };

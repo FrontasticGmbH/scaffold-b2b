@@ -9,7 +9,7 @@
   "email.enter": "Vul alstublieft uw e-mail adres in",
   "email": "E-mail is niet geldig.",
   "email.exists": "Het e-mailadres is ongeldig of bestaat al.",
-  "company.exists": "Het bedrijf bestaat al.",
+  "company.exists": "Bedrijfsnaam is al geregistreerd. Gebruik een andere bedrijfsnaam of vraag een beheerder om uitgenodigd te worden voor een bestaand bedrijf.",
   "name": "De naam moet minimaal twee tekens bevatten.",
   "verify.failed": "Verificatie mislukt",
   "verify.failed.description": "Sorry, we hebben uw account niet kunnen verifiëren. Er is een nieuwe verificatielink naar uw e-mailadres verzonden."

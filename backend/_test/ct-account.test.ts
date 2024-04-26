@@ -15,7 +15,7 @@ describe.skip('commerce-commercetools:: Account Functionalities', () => {
       }),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_GB',
+        'commercetools-frontend-locale': 'en_GB',
       },
       path: '',
       method: 'POST',
@@ -62,7 +62,7 @@ describe.skip('commerce-commercetools:: Account Functionalities', () => {
       }),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_GB',
+        'commercetools-frontend-locale': 'en_GB',
       },
       path: '',
       method: 'POST',
@@ -86,7 +86,7 @@ describe.skip('commerce-commercetools:: Account Functionalities', () => {
       }),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_GB',
+        'commercetools-frontend-locale': 'en_GB',
       },
       path: '',
       method: 'POST',
@@ -114,8 +114,8 @@ describe.skip('commerce-commercetools:: Account Functionalities', () => {
         }),
         sessionData: '',
         headers: {
-          'frontastic-locale': 'en_GB',
-          'frontastic-currency': 'EUR',
+          'commercetools-frontend-locale': 'en_GB',
+          'commercetools-frontend-currency': 'EUR',
         },
         path: '',
         method: 'POST',
@@ -145,7 +145,7 @@ describe.skip('commerce-commercetools:: Account Functionalities', () => {
       }),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
+        'commercetools-frontend-locale': 'en_US',
       },
       path: '',
       method: 'POST',

@@ -15,8 +15,9 @@ export interface ProductListProps {
   onRefine: (facet: Facet[]) => void;
   onResetAll: () => void;
   currentSortValue: string;
-  sortValues: Option[];
-  onSortValueChange: (sortValue: string) => void;
+  currentSortVector: string;
+  sortValues: (Option & { vector: 'asc' | 'desc' })[];
+  onSortValueChange: (sortValue: string, vector: 'asc' | 'desc') => void;
   title: string;
   limit: number;
   total: number;

@@ -20,17 +20,19 @@ const useRefinement = () => {
   const currentSortValue =
     Array.from(params.keys())
       .find((key) => key.startsWith('sortAttributes'))
-      ?.match(/sortAttributes\[0\]\[(.+)\]/)?.[1] ?? '';
+      ?.match(/sortAttributes\[0\]\[(.+)\]/)?.[1] ?? 'price';
+
+  const currentSortVector = params.get(`sortAttributes[0][${currentSortValue}]`) ?? 'asc';
 
   const onSortValueChange = useCallback(
-    (key: string) => {
+    (key: string, vector: 'asc' | 'desc') => {
       const newParams = new URLSearchParams(searchParams);
 
       for (const key of Array.from(newParams.keys())) {
         if (key.startsWith('sortAttributes')) newParams.delete(key);
       }
 
-      newParams.set(`sortAttributes[0][${key}]`, 'asc');
+      newParams.set(`sortAttributes[0][${key}]`, vector);
 
       router.push(`${pathWithoutQuery}?${newParams.toString()}`);
     },
@@ -82,7 +84,7 @@ const useRefinement = () => {
     router.push(`${pathWithoutQuery}?limit=${limit}`);
   }, [router, limit, pathWithoutQuery]);
 
-  return { onSortValueChange, currentSortValue, limit, onLoadMore, onResetAll, onRefine };
+  return { onSortValueChange, currentSortValue, currentSortVector, limit, onLoadMore, onResetAll, onRefine };
 };
 
 export default useRefinement;

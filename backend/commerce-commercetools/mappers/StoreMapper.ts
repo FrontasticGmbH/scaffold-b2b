@@ -2,7 +2,7 @@ import { Store as CommercetoolsStore } from '@commercetools/platform-sdk';
 import { Store } from '@Types/store/Store';
 import { Channel } from '@Types/store/Channel';
 
-export class StoreMapper {
+export default class StoreMapper {
   static mapCommercetoolsStoreToStore(store: CommercetoolsStore, locale: string): Store {
     return {
       name: store.name?.[locale],

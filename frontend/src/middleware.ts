@@ -46,5 +46,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/((?!api|_next|favicon|manifest|locales|storybook|images|sb-assets).*)',
+  matcher: '/((?!api|_next|favicon|manifest|locales|storybook|images|sb-assets|template\\.csv).*)',
 };

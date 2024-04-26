@@ -7,13 +7,13 @@ import { Discount, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
 import { EmailApiFactory } from '../utils/EmailApiFactory';
 import { CartFetcher } from '../utils/CartFetcher';
-import { getLocale } from '../utils/Request';
+import { getLocale } from '../utils/requestHandlers/Request';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
-import getCartApi from '@Commerce-commercetools/utils/getCartApi';
+import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 

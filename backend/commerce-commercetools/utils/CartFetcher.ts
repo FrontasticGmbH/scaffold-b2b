@@ -2,9 +2,9 @@ import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import getCartApi from '@Commerce-commercetools/utils/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/Request';
+import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 export class CartFetcher {
   static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> {

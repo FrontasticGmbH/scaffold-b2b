@@ -9,7 +9,7 @@
   "email.enter": "Veuillez entrer votre adresse e-mail",
   "email": "L'email n'est pas valide.",
   "email.exists": "L'adresse e-mail n'est pas valide ou existe déjà.",
-  "company.exists": "Le nom de l'entreprise n'est pas valide ou existe déjà.",
+  "company.exists": "Le nom de l'entreprise est déjà enregistré. Veuillez utiliser un autre nom de société ou demander à un administrateur d'être invité dans une société existante.",
   "name": "Le nom doit comporter au moins deux caractères.",
   "verify.failed": "Échec de la vérification",
   "verify.failed.description": "Désolé, nous n'avons pas réussi à vérifier votre compte. Un nouveau lien de vérification a été envoyé à votre adresse e-mail."

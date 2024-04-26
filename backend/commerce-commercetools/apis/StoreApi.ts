@@ -1,9 +1,9 @@
 import { Store } from '@Types/store/Store';
-import { StoreMapper } from '../mappers/StoreMapper';
-import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import StoreMapper from '../mappers/StoreMapper';
+import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
-export class StoreApi extends BaseApi {
+export default class StoreApi extends BaseApi {
   get: (key: string) => Promise<Store> = async (key: string): Promise<Store> => {
     const locale = await this.getCommercetoolsLocal();
 

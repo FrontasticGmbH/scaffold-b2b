@@ -55,7 +55,7 @@ const OrderDetailsPage = ({ order, viewOnly, onReturn, onReorder }: OrderDetails
           {/* <Button size="s" variant="secondary" disabled>
             {translate('orders.download.invoice')}
           </Button> */}
-          {!viewOnly && (
+          {!viewOnly && !order.isFromAQuote && (
             <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
               {translate('orders.reorder')}
             </Button>

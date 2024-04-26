@@ -11,10 +11,10 @@ import {
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Store } from '@Types/store/Store';
 import { Associate, AssociateRole, Permission } from '@Types/business-unit/Associate';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
+import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 
-export class BusinessUnitMapper {
+export default class BusinessUnitMapper {
   static commercetoolsBusinessUnitToBusinessUnit(commercetoolsBusinessUnit: CommercetoolsBusinessUnit): BusinessUnit {
     return {
       businessUnitId: commercetoolsBusinessUnit.id,

@@ -1,14 +1,15 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Wishlist, WishlistQuery } from '@Types/wishlist';
 import { Account } from '@Types/account';
-import { WishlistApi } from '../apis/WishlistApi';
+
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { WishlistFetcher } from '@Commerce-commercetools/utils/WishlistFetcher';
-import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
+import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
-import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
+import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import getWishlistApi from '@Commerce-commercetools/utils/getWishlistApi';
+import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
+import WishlistApi from '@Commerce-commercetools/apis/WishlistApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 

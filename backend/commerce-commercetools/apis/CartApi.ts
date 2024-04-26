@@ -32,19 +32,19 @@ import {
   PaymentUpdateAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { Context } from '@frontastic/extension-types';
-import { CartMapper } from '../mappers/CartMapper';
+import CartMapper from '../mappers/CartMapper';
 import { isReadyForCheckout } from '../utils/Cart';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
+import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
+import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPaymentNotFoundError';
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
 
-export class CartApi extends BaseApi {
+export default class CartApi extends BaseApi {
   protected accountId: string;
   protected businessUnitKey: string;
   protected storeKey: string;

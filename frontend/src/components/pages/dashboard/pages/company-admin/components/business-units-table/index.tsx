@@ -25,7 +25,6 @@ const BusinessUnitsTable = ({ businessUnitsAreViewOnly, businessUnits = [] }: Pa
               <Table.Cell>{key}</Table.Cell>
               <Table.Cell>{topLevelUnit?.name || topLevelUnit?.key || '-'}</Table.Cell>
               <Table.Cell>{parentUnit?.name || parentUnit?.key || '-'}</Table.Cell>
-              <Table.Cell>{key}</Table.Cell>
               <Table.Cell>{email}</Table.Cell>
               <Table.Cell>
                 {!businessUnitsAreViewOnly && (

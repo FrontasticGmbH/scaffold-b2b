@@ -45,6 +45,7 @@ export class ProductSearchFactory {
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
+    productIdField: string,
   ): ProductSearchRequest {
     let commercetoolsProductSearchRequest = ProductSearchFactory.initializeProductSearchRequestObject(
       productQuery,
@@ -59,7 +60,7 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest = this.applyQueryProductIds(
       commercetoolsProductSearchRequest,
       productQuery,
-      locale,
+      productIdField,
     );
     commercetoolsProductSearchRequest = this.applyStore(commercetoolsProductSearchRequest, productQuery, locale);
     commercetoolsProductSearchRequest = this.applyQuerySKUs(commercetoolsProductSearchRequest, productQuery, locale);
@@ -371,17 +372,18 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   };
 
-  private static applyQueryProductIds: ProductSearchFactoryUtilMethod = (
+  private static applyQueryProductIds(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-  ) => {
+    productIdField: string,
+  ): ProductSearchRequest {
     if (productQuery.productIds?.length) {
       const productSearchExactExpressions: SearchExactExpression[] = [];
 
       productQuery.productIds.forEach((productId) => {
         productSearchExactExpressions.push({
           exact: {
-            field: 'id',
+            field: productIdField,
             value: productId,
           },
         });
@@ -392,7 +394,7 @@ export class ProductSearchFactory {
       );
     }
     return commercetoolsProductSearchRequest;
-  };
+  }
 
   private static applyStore: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,

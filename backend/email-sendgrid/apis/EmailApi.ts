@@ -15,16 +15,16 @@ export class EmailApi {
     templateIds: Record<string, string>;
   };
 
-  constructor(frontasticContext: Context, locale?: string) {
+  constructor(commercetoolsFrontendContext: Context, locale?: string) {
     this.client = SendgridClient;
-    this.client.setApiKey(frontasticContext.project.configuration.sendgrid.apiKey);
+    this.client.setApiKey(commercetoolsFrontendContext.project.configuration.sendgrid.apiKey);
 
     this.locale = locale;
 
     this.configuration = {
-      sender: frontasticContext.project.configuration.sendgrid.sender,
-      clientHost: frontasticContext.project.configuration.sendgrid.client_host,
-      templateIds: frontasticContext.project.configuration.sendgrid.templateIds,
+      sender: commercetoolsFrontendContext.project.configuration.sendgrid.sender,
+      clientHost: commercetoolsFrontendContext.project.configuration.sendgrid.client_host,
+      templateIds: commercetoolsFrontendContext.project.configuration.sendgrid.templateIds,
     };
   }
 

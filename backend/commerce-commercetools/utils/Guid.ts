@@ -1,5 +1,5 @@
 import now from 'performance-now';
-export class Guid {
+export default class Guid {
   static newGuid = (noHyphens?: boolean) => {
     let d = new Date().getTime();
     if (typeof now === 'function') {

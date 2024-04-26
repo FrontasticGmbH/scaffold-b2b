@@ -2,17 +2,17 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
-import { BusinessUnitApi } from '../apis/BusinessUnitApi';
-import { getBusinessUnitKey, getCurrency, getLocale, getStoreKey } from '../utils/Request';
-import { AccountApi } from '@Commerce-commercetools/apis/AccountApi';
+import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHandlers/Request';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
-import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
-import getCartApi from '@Commerce-commercetools/utils/getCartApi';
+import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -29,11 +29,7 @@ export const getBusinessUnits: ActionHook = async (request: Request, actionConte
 
     const account = fetchAccountFromSession(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const expandStores = request.query?.['expandStores'] === 'true';
 
@@ -77,11 +73,7 @@ export const create: ActionHook = async (request: Request, actionContext: Action
   try {
     assertIsAuthenticated(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const businessUnitRequestBody: BusinessUnitRequestBody = JSON.parse(request.body);
 
@@ -108,13 +100,9 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
     const locale = getLocale(request);
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
-    const accountApi = new AccountApi(actionContext.frontasticContext, getLocale(request), getCurrency(request));
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
     const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
 
     let accountAssociate = await accountApi.getAccountByEmail(addUserBody.email);
@@ -159,11 +147,7 @@ export const removeAssociate: ActionHook = async (request: Request, actionContex
 
     const account = fetchAccountFromSession(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { accountId: associateAccountId } = JSON.parse(request.body);
     const businessUnitKey = request.query['businessUnitKey'];
@@ -185,11 +169,7 @@ export const updateAssociate: ActionHook = async (request: Request, actionContex
 
     const account = fetchAccountFromSession(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { accountId: associateId, roleKeys }: { accountId: string; roleKeys: string[] } = JSON.parse(request.body);
     const businessUnitKey = request.query['businessUnitKey'];
@@ -217,11 +197,7 @@ export const updateBusinessUnit: ActionHook = async (request: Request, actionCon
 
     const account = fetchAccountFromSession(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const requestData = parseRequestBody<BusinessUnitRequestBody>(request.body);
 
@@ -250,11 +226,7 @@ export const addBusinessUnitAddress: ActionHook = async (request: Request, actio
 
     const account = fetchAccountFromSession(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { address } = parseRequestBody<{ address: Address }>(request.body);
 
@@ -277,11 +249,7 @@ export const updateBusinessUnitAddress: ActionHook = async (request: Request, ac
     assertIsAuthenticated(request);
 
     const account = fetchAccountFromSession(request);
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { address } = parseRequestBody<{ address: Address }>(request.body);
 
@@ -304,11 +272,7 @@ export const removeBusinessUnitAddress: ActionHook = async (request: Request, ac
     assertIsAuthenticated(request);
 
     const account = fetchAccountFromSession(request);
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const requestData = parseRequestBody<{ addressId: string }>(request.body);
     const addressId = requestData.addressId;
@@ -333,11 +297,7 @@ export const getBusinessUnit: ActionHook = async (request: Request, actionContex
 
     const account = fetchAccountFromSession(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const businessUnitKey = request.query?.['businessUnitKey'];
 
@@ -357,12 +317,7 @@ export const getAssociateRoles: ActionHook = async (request: Request, actionCont
   try {
     assertIsAuthenticated(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
-
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
     const associateRoles = await businessUnitApi.getAssociateRoles();
 
     const response: Response = {
@@ -389,11 +344,7 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
       throw new ValidationError({ message: 'Business unit or store key is missing.' });
     }
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId, true);
 
@@ -429,11 +380,7 @@ export const getAssociate: ActionHook = async (request: Request, actionContext: 
     const account = fetchAccountFromSession(request);
     const businessUnitKey = getBusinessUnitKey(request);
 
-    const businessUnitApi = new BusinessUnitApi(
-      actionContext.frontasticContext,
-      getLocale(request),
-      getCurrency(request),
-    );
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const associate = await businessUnitApi.getAssociate(businessUnitKey, account.accountId);
 

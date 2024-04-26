@@ -47,7 +47,8 @@ const ProductListViewModel = ({
 
   const { addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
-  const { onSortValueChange, currentSortValue, limit, onLoadMore, onResetAll, onRefine } = useRefinement();
+  const { onSortValueChange, currentSortValue, currentSortVector, limit, onLoadMore, onResetAll, onRefine } =
+    useRefinement();
 
   const categoriesBreadcrumb = isSearchPage
     ? [
@@ -111,12 +112,14 @@ const ProductListViewModel = ({
       breadcrumb={categoriesBreadcrumb}
       sortValues={[
         // { name: translate('product.featured'), value: 'featured' },
-        { name: translate('product.price'), value: 'price' },
+        { name: `${translate('product.price')} (Asc)`, value: 'price', vector: 'asc' },
+        { name: `${translate('product.price')} (Desc)`, value: 'price', vector: 'desc' },
         // { name: translate('product.best-selling'), value: 'best-selling' },
         // { name: translate('product.newest'), value: 'newest' },
       ]}
       addToCartDisabled={!permissions.UpdateMyCarts}
       currentSortValue={currentSortValue}
+      currentSortVector={currentSortVector}
       facets={mappedFacets}
       limit={Math.min(limit, items.length)}
       total={totalItems}

@@ -1,11 +1,11 @@
 import { Context, Request } from '@frontastic/extension-types';
 import { Order } from '@Types/cart/Order';
 import { PaginatedResult } from '@Types/result';
-import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
-import { getPath } from './Request';
+import { fetchAccountFromSessionEnsureLoggedIn } from '../fetchAccountFromSession';
+import { getPath } from '../requestHandlers/Request';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import getCartApi from '@Commerce-commercetools/utils/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 
 const orderRegex = /\/order\/([^\/]+)/;
 const ordersRegex = /\/orders/;
@@ -34,37 +34,40 @@ export default class CartRouter {
     return false;
   }
 
-  static loadOrderFor = async (request: Request, frontasticContext: Context): Promise<Order> => {
+  static loadOrderFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Order> => {
     let urlMatches = getPath(request)?.match(orderRegex);
 
     if (urlMatches) {
-      return await this.getOrder(request, frontasticContext, urlMatches[1]);
+      return await this.getOrder(request, commercetoolsFrontendContext, urlMatches[1]);
     }
 
     urlMatches = getPath(request)?.match(orderPreviewRegex);
 
     if (urlMatches) {
-      return await this.getOrder(request, frontasticContext, urlMatches[1]);
+      return await this.getOrder(request, commercetoolsFrontendContext, urlMatches[1]);
     }
 
     urlMatches = getPath(request)?.match(thankYouRegex);
     if (urlMatches && request.query?.orderId) {
-      return await this.getOrder(request, frontasticContext, request.query.orderId);
+      return await this.getOrder(request, commercetoolsFrontendContext, request.query.orderId);
     }
 
     return null;
   };
 
-  static loadOrdersFor = async (request: Request, frontasticContext: Context): Promise<PaginatedResult<Order>> => {
+  static loadOrdersFor = async (
+    request: Request,
+    commercetoolsFrontendContext: Context,
+  ): Promise<PaginatedResult<Order>> => {
     let urlMatches = getPath(request)?.match(ordersRegex);
 
     if (urlMatches) {
-      return await this.getOrders(request, frontasticContext);
+      return await this.getOrders(request, commercetoolsFrontendContext);
     }
 
     urlMatches = getPath(request)?.match(ordersPreviewRegex);
     if (urlMatches) {
-      return await this.getOrders(request, frontasticContext);
+      return await this.getOrders(request, commercetoolsFrontendContext);
     }
 
     return null;
@@ -86,9 +89,9 @@ export default class CartRouter {
     throw new ResourceNotFoundError({ message: 'Page type not found' });
   }
 
-  private static async getOrder(request: Request, frontasticContext: Context, orderId: string) {
+  private static async getOrder(request: Request, commercetoolsFrontendContext: Context, orderId: string) {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
-    const cartApi = getCartApi(request, frontasticContext);
+    const cartApi = getCartApi(request, commercetoolsFrontendContext);
     const orderQuery = OrderQueryFactory.queryFromParams(request, account);
     let result;
 
@@ -118,10 +121,10 @@ export default class CartRouter {
     return null;
   }
 
-  private static async getOrders(request: Request, frontasticContext: Context) {
+  private static async getOrders(request: Request, commercetoolsFrontendContext: Context) {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
-    const cartApi = getCartApi(request, frontasticContext);
+    const cartApi = getCartApi(request, commercetoolsFrontendContext);
 
     const orderQuery = OrderQueryFactory.queryFromParams(request, account);
 

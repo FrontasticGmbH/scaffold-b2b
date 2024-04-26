@@ -48,10 +48,10 @@ Primary.args = {
   limit: 30,
   total: 145,
   sortValues: [
-    { name: 'Featured', value: 'featured' },
-    { name: 'Price', value: 'price' },
-    { name: 'Best-Selling', value: 'best-selling' },
-    { name: 'Newest', value: 'newest' },
+    { name: 'Featured', value: 'featured', vector: 'asc' },
+    { name: 'Price', value: 'price', vector: 'asc' },
+    { name: 'Best-Selling', value: 'best-selling', vector: 'asc' },
+    { name: 'Newest', value: 'newest', vector: 'asc' },
   ],
   currentSortValue: 'featured',
   facets: [

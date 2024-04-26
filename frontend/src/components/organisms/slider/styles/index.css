@@ -36,3 +36,7 @@
 .slick-dots li.slick-active {
   @apply bg-gray-600;
 }
+
+.slick-list {
+  max-height: 95vh;;
+}

@@ -28,6 +28,10 @@ type RemoveFromWishlistPayload = {
   lineItem: { id: string };
 };
 
+type RemoveFromWishlistsPayload = {
+  items: { lineItemId: string; wishlistId: string }[];
+};
+
 export {
   type CreateWishlistPayload,
   type UpdateWishlistPayload,
@@ -35,4 +39,5 @@ export {
   type AddToWishlistsPayload,
   type UpdateWishlistItemPayload,
   type RemoveFromWishlistPayload,
+  type RemoveFromWishlistsPayload,
 };

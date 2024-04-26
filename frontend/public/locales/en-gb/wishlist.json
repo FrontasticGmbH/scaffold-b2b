@@ -1,15 +1,15 @@
 {
-  "my.wishlist": "My Wishlist",
-  "wishlist": "Wishlist",
-  "items": "Wishlist Items",
-  "items.in.view": "items in wishlist, view wishlist",
+  "my.wishlist": "My Purchase List",
+  "wishlist": "Purchase List",
+  "items": "Purchase list Items",
+  "items.in.view": "items in Purchase list, view Purchase list",
   "oops": "Oops...",
-  "empty": "Your wishlist is empty",
+  "empty": "Your Purchase list is empty",
   "add.items": "Add items",
   "add.to.cart": "Move to Cart",
   "clear.list": "Clear the list",
   "move": "Move",
   "move.to.list": "Move to list",
-  "select.list": "Select shopping list",
+  "select.list": "Select Purchase List",
   "item.added": "Item was added to"
 }

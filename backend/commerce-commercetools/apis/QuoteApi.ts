@@ -5,16 +5,15 @@ import { Quote, QuoteState } from '@Types/quote/Quote';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { PaginatedResult } from '@Types/result';
 import { Context } from '@frontastic/extension-types';
-import { QuoteMapper } from '../mappers/QuoteMapper';
-import { BaseApi } from './BaseApi';
+import QuoteMapper from '../mappers/QuoteMapper';
+import BaseApi from './BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
+import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import { Guid } from '@Commerce-commercetools/utils/Guid';
-import { CartMapper } from '@Commerce-commercetools/mappers/CartMapper';
+import CartMapper from '@Commerce-commercetools/mappers/CartMapper';
 
-export class QuoteApi extends BaseApi {
+export default class QuoteApi extends BaseApi {
   protected accountId: string;
   protected businessUnitKey: string;
 
@@ -327,6 +326,8 @@ export class QuoteApi extends BaseApi {
 
   async createOrderFromQuote(quoteId: string) {
     const locale = await this.getCommercetoolsLocal();
+    const date = new Date();
+
     return this.getQuote(quoteId).then(async (quote) => {
       return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .orders()
@@ -339,7 +340,7 @@ export class QuoteApi extends BaseApi {
               id: quote.quoteId,
             },
             quoteStateToAccepted: true,
-            orderNumber: Guid.newGuid(),
+            orderNumber: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${String(Date.now()).slice(-6, -1)}`,
           },
         })
         .execute()

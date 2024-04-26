@@ -1,10 +1,10 @@
 import * as crypto from 'crypto';
 import {
   ApiRoot,
+  AssociateRole as CommercetoolsAssociateRole,
   createApiBuilderFromCtpClient,
   ProductType as CommercetoolsProductType,
   Project as CommercetoolsProject,
-  AssociateRole as CommercetoolsAssociateRole,
 } from '@commercetools/platform-sdk';
 import { Context } from '@frontastic/extension-types';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
@@ -409,13 +409,14 @@ const pickCommercetoolsCurrency = (parsedLocale: ParsedLocale, availableCurrenci
 
 const clientTokensStored = new Map<string, Token>();
 
-export abstract class BaseApi {
+export default abstract class BaseApi {
   protected apiRoot: ApiRoot;
   protected clientSettings: ClientConfig;
   protected environment: string;
   protected projectKey: string;
   protected productIdField: string;
   protected categoryIdField: string;
+  protected productSelectionIdField: string;
   protected defaultAssociateRoleKeys: string[];
   protected locale: string;
   protected defaultLocale: string;
@@ -423,26 +424,27 @@ export abstract class BaseApi {
   protected clientHashKey: string;
   protected token: Token;
   protected currency: string;
-  protected frontasticContext: Context;
+  protected commercetoolsFrontendContext: Context;
 
-  constructor(frontasticContext: Context, locale: string | null, currency: string | null) {
-    this.defaultLocale = frontasticContext.project.defaultLocale;
+  constructor(commercetoolsFrontendContext: Context, locale: string | null, currency: string | null) {
+    this.defaultLocale = commercetoolsFrontendContext.project.defaultLocale;
     this.defaultCurrency = defaultCurrency;
 
     this.locale = locale !== null ? locale : this.defaultLocale;
     this.currency = currency;
 
     const engine = 'commercetools';
-    this.clientSettings = getConfig(frontasticContext, engine);
+    this.clientSettings = getConfig(commercetoolsFrontendContext, engine);
 
-    this.environment = frontasticContext.environment;
+    this.environment = commercetoolsFrontendContext.environment;
     this.projectKey = this.clientSettings.projectKey;
     this.productIdField = this.clientSettings?.productIdField || 'key';
     this.categoryIdField = this.clientSettings?.categoryIdField || 'key';
+    this.productSelectionIdField = this.clientSettings?.productSelectionIdField || 'key';
     this.defaultAssociateRoleKeys = this.clientSettings?.defaultAssociateRoleKeys || ['admin'];
     this.token = clientTokensStored.get(this.getClientHashKey());
 
-    this.frontasticContext = frontasticContext;
+    this.commercetoolsFrontendContext = commercetoolsFrontendContext;
   }
 
   protected requestBuilder(): ByProjectKeyRequestBuilder {

@@ -4,12 +4,12 @@ import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { PaginatedResult } from '@Types/result';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { Account } from '@Types/account';
-import { QuoteApi } from '../apis/QuoteApi';
-import { getCurrency, getLocale, getPath } from './Request';
-import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
-import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
+
+import { getPath } from '../requestHandlers/Request';
+import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
+import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
-import getQuoteApi from '@Commerce-commercetools/utils/getQuoteApi';
+import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
 
 const quoteRegex = /\/quote\/([^\/]+)/;
 const quotePreviewRegex = /\/preview\/.+\/quote\/([^\/]+)/;
@@ -53,8 +53,8 @@ export default class QuoteRouter {
     return false;
   }
 
-  static loadQuoteFor = async (request: Request, frontasticContext: Context): Promise<Quote> => {
-    const quoteApi = getQuoteApi(request, frontasticContext);
+  static loadQuoteFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Quote> => {
+    const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
 
     let urlMatches = getPath(request)?.match(quoteRegex);
 
@@ -71,8 +71,11 @@ export default class QuoteRouter {
     return null;
   };
 
-  static loadQuoteRequestFor = async (request: Request, frontasticContext: Context): Promise<QuoteRequest> => {
-    const quoteApi = getQuoteApi(request, frontasticContext);
+  static loadQuoteRequestFor = async (
+    request: Request,
+    commercetoolsFrontendContext: Context,
+  ): Promise<QuoteRequest> => {
+    const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
 
     let urlMatches = getPath(request)?.match(quoteRequestRegex);
 
@@ -91,9 +94,9 @@ export default class QuoteRouter {
 
   static loadQuotesFor = async (
     request: Request,
-    frontasticContext: Context,
+    commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<QuoteRequest>> => {
-    const quoteApi = getQuoteApi(request, frontasticContext);
+    const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
     const urlMatches = getPath(request)?.match(quotesRegex) ?? getPath(request)?.match(quotesPreviewRegex) ?? null;
 
     if (urlMatches) {
@@ -109,10 +112,9 @@ export default class QuoteRouter {
 
   static loadQuoteRequestsFor = async (
     request: Request,
-    frontasticContext: Context,
+    commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<QuoteRequest>> => {
-    const quoteApi = new QuoteApi(frontasticContext, getLocale(request), getCurrency(request));
-
+    const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
     const urlMatches =
       getPath(request)?.match(quoteRequestRegex) ?? getPath(request)?.match(quoteRequestPreviewRegex) ?? null;
 

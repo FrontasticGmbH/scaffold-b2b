@@ -8,7 +8,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
+        'commercetools-locale': 'en_US',
       },
       path: '',
       method: 'POST',
@@ -18,7 +18,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
     const res: Response = {
       statusCode: 200,
       body: JSON.stringify({
-        name: 'Frontastic Demo',
+        name: 'Commercetools Frontend Demo',
         countries: ['DE', 'US', 'CA', 'AU'],
         currencies: ['EUR', 'USD'],
         languages: ['en', 'de'],
@@ -32,7 +32,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
+        'commercetools-frontend-locale': 'en_US',
       },
       path: '',
       method: 'POST',

@@ -3,14 +3,14 @@ import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
-import queryParamsToIds from '@Commerce-commercetools/utils/queryParamsToIds';
-import queryParamsToStates from '@Commerce-commercetools/utils/queryParamsToState';
+import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
+import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import handleError from '@Commerce-commercetools/utils/handleError';
-import getCartApi from '@Commerce-commercetools/utils/getCartApi';
-import getQuoteApi from '@Commerce-commercetools/utils/getQuoteApi';
-import parseRequestBody from '@Commerce-commercetools/utils/parseRequestBody';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
+import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import parseQueryParams from '@Commerce-commercetools/utils/parseRequestParams';
+import parseQueryParams from '@Commerce-commercetools/utils/requestHandlers/parseRequestParams';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 

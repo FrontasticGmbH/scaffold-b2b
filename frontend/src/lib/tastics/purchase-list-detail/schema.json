@@ -1,6 +1,6 @@
 {
   "tasticType": "commercetools/ui/purchase-list-detail",
-  "name": "Shopping List Detail",
+  "name": "Purchase List Detail",
   "Category": "Dashboard",
   "schema": [
     {

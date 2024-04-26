@@ -9,8 +9,8 @@ describe.skip('commerce-commercetools:: Wishlist Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_GB',
-        'frontastic-currency': 'EUR',
+        'commercetools-frontend-locale': 'en_GB',
+        'commercetools-frontend-currency': 'EUR',
       },
       path: '',
       method: 'GET',

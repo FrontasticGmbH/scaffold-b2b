@@ -4,33 +4,33 @@ import { GetProductQuery, ProductQueryQuery, QueryProductCategoriesQuery } from 
 import { PaginatedResult, ProductPaginatedResult } from '@shared/types/result';
 
 type GetProductAction = (
-	query: GetProductQuery,
-	options?: {
-		serverOptions?: ServerOptions;
-	}
+  query: GetProductQuery,
+  options?: {
+    serverOptions?: ServerOptions;
+  },
 ) => Promise<SDKResponse<Product>>;
 
 type ProductQueryAction = (
-	query?: ProductQueryQuery,
-	options?: {
-		serverOptions?: ServerOptions;
-	}
+  query?: ProductQueryQuery,
+  options?: {
+    serverOptions?: ServerOptions;
+  },
 ) => Promise<SDKResponse<ProductPaginatedResult>>;
 
 type QueryProductCategoriesAction = (
-	query?: QueryProductCategoriesQuery,
-	options?: {
-		serverOptions?: ServerOptions;
-	}
+  query?: QueryProductCategoriesQuery,
+  options?: {
+    serverOptions?: ServerOptions;
+  },
 ) => Promise<SDKResponse<PaginatedResult<Category>>>;
 
 type GetSearchableProductAttributesAction = (options?: {
-	serverOptions?: ServerOptions;
+  serverOptions?: ServerOptions;
 }) => Promise<SDKResponse<FilterField[]>>;
 
 export {
-	type GetProductAction,
-	type ProductQueryAction,
-	type QueryProductCategoriesAction,
-	type GetSearchableProductAttributesAction,
+  type GetProductAction,
+  type ProductQueryAction,
+  type QueryProductCategoriesAction,
+  type GetSearchableProductAttributesAction,
 };

@@ -130,9 +130,9 @@ Primary.args = {
         subCategories: [],
       },
       {
-        categoryId: 'shopping-lists',
-        name: 'Shopping Lists',
-        path: '/shopping-lists',
+        categoryId: 'purchase-lists',
+        name: 'Purchase Lists',
+        path: '/purchase-lists',
         subCategories: [],
       },
       {

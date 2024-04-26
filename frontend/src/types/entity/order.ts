@@ -20,4 +20,5 @@ export interface Order {
   billingAddress?: string;
   shippingMethod?: string;
   paymentMethod?: string;
+  isFromAQuote?: boolean;
 }

@@ -2,7 +2,7 @@ import { Request } from '@frontastic/extension-types';
 import { getProduct, queryCategories } from '../commerce-commercetools/actionControllers/ProductController';
 import { Product } from '../../types/product';
 import { ProductPaginatedResult } from '../../types/result';
-import { dummyAccount, dummyActionContext, frontasticSession } from './data-provider';
+import { dummyAccount, dummyActionContext, commercetoolsFrontendSession } from './data-provider';
 
 jest.setTimeout(10000);
 
@@ -12,7 +12,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
+        'commercetools-frontend-locale': 'en_US',
       },
       path: '',
       method: 'GET',
@@ -32,8 +32,8 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
-        'frontastic-session': frontasticSession,
+        'commercetools-frontend-locale': 'en_US',
+        'commercetools-frontend-session': commercetoolsFrontendSession,
       },
       path: '',
       method: 'GET',
@@ -55,7 +55,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
+        'commercetools-frontend-locale': 'en_US',
       },
       path: '',
       method: 'GET',
@@ -69,8 +69,8 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
-        'frontastic-session': frontasticSession,
+        'commercetools-frontend-locale': 'en_US',
+        'commercetools-frontend-session': commercetoolsFrontendSession,
       },
       path: '',
       method: 'GET',
@@ -93,8 +93,8 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
-        'frontastic-session': frontasticSession,
+        'commercetools-frontend-locale': 'en_US',
+        'commercetools-frontend-session': commercetoolsFrontendSession,
       },
       path: '',
       method: 'GET',
@@ -118,8 +118,8 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
       headers: {
-        'frontastic-locale': 'en_US',
-        'frontastic-session': frontasticSession,
+        'commercetools-frontend-locale': 'en_US',
+        'commercetools-frontend-session': commercetoolsFrontendSession,
       },
       path: '',
       method: 'GET',

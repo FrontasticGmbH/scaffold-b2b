@@ -1,5 +1,5 @@
 {
-  "shipping": "Envío",
+  "shipping": "Entrega",
   "billing": "Facturación",
   "payment": "Pago",
   "overview": "Descripción general",
@@ -70,7 +70,7 @@
   "purchase.order": "Orden de compra",
   "purchase.order.desc": "Ingrese un único número de orden de compra autorizada generado por su organización. El número de orden de compra y las instrucciones de pago aparecerán en la factura.",
   "credit.or.debit": "Tarjeta de crédito o débito",
-  "review.order": "Revisar orden",
+  "review.quote": "Revisar citação",
   "po.number": "numero postal",
   "invoice.memo": "nota de factura",
   "unsaved.changes": "Cambios no guardados",

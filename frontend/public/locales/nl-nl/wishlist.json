@@ -1,8 +1,8 @@
 {
-  "my.wishlist": "mijn wenslijst",
-  "wishlist": "Verlanglijst",
-  "items": "Verlanglijstartikelen",
-  "items.in.view": "items in verlanglijst, verlanglijst bekijken",
+  "my.wishlist": "mijn aankooplijst",
+  "wishlist": "aankooplijst",
+  "items": "aankooplijstartikelen",
+  "items.in.view": "items in aankooplijst, aankooplijst bekijken",
   "oops": "Oeps...",
   "empty": "Jouw wens lijst is leeg",
   "add.items": "Items toevoegen",

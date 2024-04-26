@@ -1,6 +1,6 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
-import { getCurrency, getLocale } from '../utils/Request';
-import { ProjectApi } from '../apis/ProjectApi';
+import { getCurrency, getLocale } from '../utils/requestHandlers/Request';
+import ProjectApi from '../apis/ProjectApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;

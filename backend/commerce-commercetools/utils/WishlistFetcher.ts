@@ -2,7 +2,7 @@ import { ActionContext, Request } from '@frontastic/extension-types';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { WishlistQuery } from '@Types/wishlist';
 import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
-import getWishlistApi from '@Commerce-commercetools/utils/getWishlistApi';
+import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
 
 export class WishlistFetcher {
   static async fetchWishlist(request: Request, actionContext: ActionContext): Promise<Wishlist> {

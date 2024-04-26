@@ -4,18 +4,18 @@ import { Store } from '@Types/store/Store';
 import { Account } from '@Types/account/Account';
 import { AssociateRole } from '@Types/business-unit/Associate';
 import { Address } from '@Types/account';
-import { BusinessUnitMapper } from '../mappers/BusinessUnitMapper';
-import { StoreApi } from './StoreApi';
+import BusinessUnitMapper from '../mappers/BusinessUnitMapper';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
-import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import { AccountMapper } from '@Commerce-commercetools/mappers/AccountMapper';
-import { Guid } from '@Commerce-commercetools/utils/Guid';
+import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
+import Guid from '@Commerce-commercetools/utils/Guid';
+import getStoreApi from '@Commerce-commercetools/utils/apiConstructors/getStoreApi';
 
 const MAX_LIMIT = 50;
 
-export class BusinessUnitApi extends BaseApi {
+export default class BusinessUnitApi extends BaseApi {
   async createForAccount(account: Account): Promise<BusinessUnit> {
     const businessUnitKey = businessUnitKeyFormatter(account.companyName);
 
@@ -129,7 +129,7 @@ export class BusinessUnitApi extends BaseApi {
         businessUnit.stores = await this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
       }
 
-      const storeApi = new StoreApi(this.frontasticContext, this.locale, this.currency);
+      const storeApi = getStoreApi(this.commercetoolsFrontendContext, this.locale, this.currency);
       const storeKeys = businessUnit?.stores?.map((store) => `"${store.key}"`).join(' ,');
 
       const allStores = storeKeys ? await storeApi.query(`key in (${storeKeys})`) : [];
@@ -169,7 +169,7 @@ export class BusinessUnitApi extends BaseApi {
         }
       }
 
-      const storeApi = new StoreApi(this.frontasticContext, this.locale, this.currency);
+      const storeApi = getStoreApi(this.commercetoolsFrontendContext, this.locale, this.currency);
 
       const storeKeys = businessUnits
         .reduce((prev: Store[], curr) => {

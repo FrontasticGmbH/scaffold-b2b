@@ -56,30 +56,23 @@
     ]
   },
   {
-    "name": "Sweden",
-    "code": "SE",
-    "states": [
-      { "name": "Blekinge", "code": "K" },
-      { "name": "Dalarna", "code": "W" },
-      { "name": "Gotland", "code": "I" },
-      { "name": "Gävleborg", "code": "X" },
-      { "name": "Halland", "code": "N" },
-      { "name": "Jämtland", "code": "Z" },
-      { "name": "Jönköping", "code": "F" },
-      { "name": "Kalmar", "code": "H" },
-      { "name": "Kronoberg", "code": "G" },
-      { "name": "Norrbotten", "code": "BD" },
-      { "name": "Örebro", "code": "T" },
-      { "name": "Östergötland", "code": "E" },
-      { "name": "Skåne", "code": "M" },
-      { "name": "Södermanland", "code": "D" },
-      { "name": "Stockholm", "code": "AB" },
-      { "name": "Uppsala", "code": "C" },
-      { "name": "Värmland", "code": "S" },
-      { "name": "Västerbotten", "code": "AC" },
-      { "name": "Västernorrland", "code": "Y" },
-      { "name": "Västmanland", "code": "U" },
-      { "name": "Västra Götaland", "code": "O" }
-    ]
+    "name": "United Kingdom",
+    "code": "GB",
+    "states": []
+  },
+  {
+    "name": "Spain",
+    "code": "ES",
+    "states": []
+  },
+  {
+    "name": "France",
+    "code": "FR",
+    "states": []
+  },
+  {
+    "name": "Germany",
+    "code": "DE",
+    "states": []
   }
 ]

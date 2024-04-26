@@ -3,14 +3,10 @@ import { Context, Request } from '@frontastic/extension-types';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { LineItem } from '@Types/cart/LineItem';
 import { LineItem as WishlistItem } from '@Types/wishlist/LineItem';
-import { ProductApi } from '../apis/ProductApi';
-import { getCurrency, getDistributionChannelId, getLocale, getPath, getStoreKey, getSupplyChannelId } from './Request';
+import { getDistributionChannelId, getPath, getStoreKey, getSupplyChannelId } from '../requestHandlers/Request';
+import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 
-export class ProductRouter {
-  private static isProduct(product: Product | LineItem | WishlistItem): product is Product {
-    return (product as Product).variants !== undefined;
-  }
-
+export default class ProductRouter {
   static generateUrlFor(item: Product | LineItem | WishlistItem) {
     if (ProductRouter.isProduct(item)) {
       return `/${item.slug}/p/${item.variants?.[0]?.sku}`;
@@ -34,9 +30,8 @@ export class ProductRouter {
     return false;
   }
 
-  static loadFor = async (request: Request, frontasticContext: Context): Promise<Product> => {
-    const productApi = new ProductApi(frontasticContext, getLocale(request), getCurrency(request));
-
+  static loadFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Product> => {
+    const productApi = getProductApi(request, commercetoolsFrontendContext);
     const urlMatches = getPath(request)?.match(/\/p\/([^\/]+)/);
 
     if (urlMatches) {
@@ -53,9 +48,8 @@ export class ProductRouter {
     return null;
   };
 
-  static loadPreviewFor = async (request: Request, frontasticContext: Context): Promise<Product> => {
-    const productApi = new ProductApi(frontasticContext, getLocale(request), getCurrency(request));
-
+  static loadPreviewFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Product> => {
+    const productApi = getProductApi(request, commercetoolsFrontendContext);
     const urlMatches = getPath(request)?.match(/\/preview\/.+\/p\/([^\/]+)/);
 
     if (urlMatches) {
@@ -71,4 +65,8 @@ export class ProductRouter {
 
     return null;
   };
+
+  private static isProduct(product: Product | LineItem | WishlistItem): product is Product {
+    return (product as Product).variants !== undefined;
+  }
 }

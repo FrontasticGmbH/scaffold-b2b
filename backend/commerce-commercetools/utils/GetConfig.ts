@@ -13,6 +13,7 @@ export const getConfig = (context: Context, engine: string): ClientConfig => {
     projectKey: getFromProjectConfig(`${prefix}_PROJECT_KEY`, context),
     productIdField: getFromProjectConfig(`${prefix}_PRODUCT_ID_FIELD`, context),
     categoryIdField: getFromProjectConfig(`${prefix}_CATEGORY_ID_FIELD`, context),
+    productSelectionIdField: getFromProjectConfig(`${prefix}_PRODUCT_SELECTIONS_ID_FIELD`, context),
     defaultAssociateRoleKeys: getFromProjectConfig(`${prefix}_DEFAULT_ASSOCIATE_ROLE_KEYS`, context)
       .split(',')
       .map((associateRoleKey: string) => associateRoleKey.trim()),
@@ -45,6 +46,10 @@ export const getConfig = (context: Context, engine: string): ClientConfig => {
 
   if (!clientConfig.defaultAssociateRoleKeys) {
     clientConfig.defaultAssociateRoleKeys = context.project.configuration?.[engine]?.defaultAssociateRoleKeys;
+  }
+
+  if (!clientConfig.productSelectionIdField) {
+    clientConfig.productSelectionIdField = context.project.configuration?.[engine]?.productSelectionIdField;
   }
 
   if (!clientConfig.defaultStoreKey) {

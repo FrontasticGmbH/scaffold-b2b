@@ -9,7 +9,7 @@ import {
 import { AccountRegisterBody } from '@Commerce-commercetools/actionControllers/AccountController';
 import { parseBirthday } from '@Commerce-commercetools/utils/parseBirthday';
 
-export class AccountMapper {
+export default class AccountMapper {
   static commercetoolsCustomerToAccount(commercetoolsCustomer: commercetoolsCustomer): Account {
     return {
       accountId: commercetoolsCustomer.id,

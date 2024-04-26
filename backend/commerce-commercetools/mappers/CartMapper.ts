@@ -45,11 +45,11 @@ import {
   ZoneRate as CommercetoolsZoneRate,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shipping-method';
 import { Payment as CommercetoolsPayment } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
-import { ProductRouter } from '../utils/ProductRouter';
-import { ProductMapper } from './ProductMapper';
+import ProductRouter from '../utils/routers/ProductRouter';
+import ProductMapper from './ProductMapper';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
-export class CartMapper {
+export default class CartMapper {
   static commercetoolsCartToCart(commercetoolsCart: CommercetoolsCart, locale: Locale, supplyChannelId?: string): Cart {
     return {
       cartId: commercetoolsCart.id,
@@ -208,6 +208,7 @@ export class CartMapper {
       orderId: commercetoolsOrder.id,
       orderNumber: commercetoolsOrder.orderNumber,
       purchaseOrderNumber: commercetoolsOrder.purchaseOrderNumber,
+      quoteId: commercetoolsOrder.quote?.id,
       orderVersion: commercetoolsOrder.version.toString(),
       lineItems: this.commercetoolsLineItemsToLineItems(commercetoolsOrder.lineItems, locale),
       email: commercetoolsOrder?.customerEmail,

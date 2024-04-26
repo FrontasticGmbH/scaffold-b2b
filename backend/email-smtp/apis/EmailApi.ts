@@ -20,8 +20,8 @@ export class EmailApi {
 
   client_host: string;
 
-  constructor(frontasticContext: Context, locale: string) {
-    const smtpConfig = this.getSmtpConfig(frontasticContext);
+  constructor(commercetoolsFrontendContext: Context, locale: string) {
+    const smtpConfig = this.getSmtpConfig(commercetoolsFrontendContext);
 
     this.client_host = smtpConfig.client_host;
     this.sender = smtpConfig.sender;

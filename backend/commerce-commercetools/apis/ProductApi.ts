@@ -6,25 +6,18 @@ import { Filter, TermFilter } from '@Types/query';
 import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
-import { ProductMapper } from '../mappers/ProductMapper';
+import ProductMapper from '../mappers/ProductMapper';
 import { ProductSearchFactory } from '@Commerce-commercetools/utils/ProductSearchQueryFactory';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 
-export class ProductApi extends BaseApi {
-  protected getOffsetFromCursor = (cursor: string) => {
-    if (cursor === undefined) {
-      return undefined;
-    }
-
-    const offsetMach = cursor.match(/(?<=offset:).+/);
-    return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
-  };
-
+export default class ProductApi extends BaseApi {
   query: (productQuery: ProductQuery) => Promise<ProductPaginatedResult> = async (productQuery: ProductQuery) => {
     const locale = await this.getCommercetoolsLocal();
     productQuery.categories = await this.hydrateCategories(productQuery);
     productQuery.filters = await this.hydrateFilters(productQuery);
+    productQuery.productSelectionIds = await this.hydrateProductSelectionIds(productQuery);
+
     const facetDefinitions: FacetDefinition[] = [
       ...ProductMapper.commercetoolsProductTypesToFacetDefinitions(await this.getCommercetoolsProductTypes(), locale),
       // Include Price facet
@@ -33,11 +26,13 @@ export class ProductApi extends BaseApi {
         attributeType: 'money',
       },
     ];
+
     const commercetoolsProductSearchRequest =
       ProductSearchFactory.createCommercetoolsProductSearchRequestFromProductQuery(
         productQuery,
         facetDefinitions,
         locale,
+        this.productIdField,
       );
 
     return this.requestBuilder()
@@ -51,6 +46,7 @@ export class ProductApi extends BaseApi {
         const items = response.body.results.map((product) =>
           ProductMapper.commercetoolsProductProjectionToProduct(
             product.productProjection,
+            this.productIdField,
             this.categoryIdField,
             locale,
             productQuery.supplyChannelId,
@@ -177,6 +173,15 @@ export class ProductApi extends BaseApi {
       });
   };
 
+  protected getOffsetFromCursor = (cursor: string): number | undefined => {
+    if (cursor === undefined) {
+      return undefined;
+    }
+
+    const offsetMach = cursor.match(/(?<=offset:).+/);
+    return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
+  };
+
   protected async hydrateCategories(productQuery: ProductQuery): Promise<string[]> {
     if (productQuery.categories !== undefined && productQuery.categories.length !== 0) {
       let categoryIds = productQuery.categories.filter(function uniqueCategories(value, index, self) {
@@ -200,6 +205,35 @@ export class ProductApi extends BaseApi {
       }
 
       return categoryIds;
+    }
+    return [];
+  }
+
+  protected async hydrateProductSelectionIds(productQuery: ProductQuery): Promise<string[]> {
+    if (productQuery.productSelectionIds !== undefined && productQuery.productSelectionIds.length !== 0) {
+      let productSelectionIds = productQuery.productSelectionIds.filter(function uniqueCategories(value, index, self) {
+        return self.indexOf(value) === index;
+      });
+
+      // commercetools only allows filter productSelection by id. If we are using something different as productSelectionField,
+      // we need first to fetch the productSelectionIds to get the correspondent productSelectionField id.
+      if (this.productSelectionIdField !== 'id') {
+        const categoriesMethodArgs = {
+          queryArgs: {
+            where: [`key in ("${productSelectionIds.join('","')}")`],
+          },
+        };
+
+        productSelectionIds = await this.getCommercetoolsProductSelectionPagedQueryResponse(categoriesMethodArgs).then(
+          (response) => {
+            return response.body.results.map((category) => {
+              return category.id;
+            });
+          },
+        );
+      }
+
+      return productSelectionIds;
     }
     return [];
   }
@@ -249,6 +283,16 @@ export class ProductApi extends BaseApi {
   protected async getCommercetoolsCategoryPagedQueryResponse(methodArgs: object) {
     return await this.requestBuilder()
       .categories()
+      .get(methodArgs)
+      .execute()
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
+  }
+
+  protected async getCommercetoolsProductSelectionPagedQueryResponse(methodArgs: object) {
+    return await this.requestBuilder()
+      .productSelections()
       .get(methodArgs)
       .execute()
       .catch((error) => {

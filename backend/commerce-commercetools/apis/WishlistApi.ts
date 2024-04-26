@@ -5,8 +5,8 @@ import { PaginatedResult } from '@Types/result';
 import { WishlistQuery } from '@Types/wishlist';
 import { Context } from '@frontastic/extension-types';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import { ProductMapper } from '@Commerce-commercetools/mappers/ProductMapper';
-import { BaseApi } from '@Commerce-commercetools/apis/BaseApi';
+import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
+import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { WishlistMapper } from '@Commerce-commercetools/mappers/WishlistMapper';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
@@ -17,7 +17,7 @@ interface AddToWishlistRequest {
   count: number;
 }
 
-export class WishlistApi extends BaseApi {
+export default class WishlistApi extends BaseApi {
   protected distributionChannelId: string;
   protected supplyChannelId: string;
 

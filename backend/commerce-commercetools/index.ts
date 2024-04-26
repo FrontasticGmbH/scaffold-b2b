@@ -13,13 +13,13 @@ import { Order } from '@Types/cart/Order';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 import { actions } from './actionControllers';
 import dataSources from './dataSources';
-import { CategoryRouter } from './utils/CategoryRouter';
-import { SearchRouter } from './utils/SearchRouter';
-import { ProductRouter } from './utils/ProductRouter';
-import { getPath } from './utils/Request';
-import CartRouter from '@Commerce-commercetools/utils/CartRouter';
-import QuoteRouter from '@Commerce-commercetools/utils/QuoteRouter';
-import WishlistRouter from '@Commerce-commercetools/utils/WishlistRouter';
+import CategoryRouter from './utils/routers/CategoryRouter';
+import SearchRouter from './utils/routers/SearchRouter';
+import ProductRouter from './utils/routers/ProductRouter';
+import { getPath } from './utils/requestHandlers/Request';
+import CartRouter from '@Commerce-commercetools/utils/routers/CartRouter';
+import QuoteRouter from '@Commerce-commercetools/utils/routers/QuoteRouter';
+import WishlistRouter from '@Commerce-commercetools/utils/routers/WishlistRouter';
 import handleError from '@Commerce-commercetools/utils/handleError';
 
 export default {
@@ -30,7 +30,7 @@ export default {
     try {
       // Identify static page
       const staticPageMatch = getPath(request)?.match(
-        /^\/(cart|checkout|wishlists|shopping-lists|account|login|register|verify-associate|verify|reset-password|quote-thank-you|quotes)/,
+        /^\/(cart|checkout|wishlists|purchase-lists|account|login|register|verify-associate|verify|reset-password|quote-thank-you|quotes)/,
       );
 
       if (staticPageMatch) {
@@ -83,7 +83,7 @@ export default {
 
         if (wishlist) {
           return {
-            dynamicPageType: 'frontastic/shopping-list-page',
+            dynamicPageType: 'frontastic/purchase-list-page',
             dataSourcePayload: {
               wishlist: wishlist,
             },
@@ -104,7 +104,7 @@ export default {
 
         if (wishlist) {
           return {
-            dynamicPageType: 'frontastic/shopping-list-page',
+            dynamicPageType: 'frontastic/purchase-list-page',
             dataSourcePayload: {
               wishlist: wishlist,
             },
