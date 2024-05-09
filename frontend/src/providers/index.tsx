@@ -13,19 +13,20 @@ export const Providers = ({
   locale,
   translations,
   initialData,
-  tracing,
+  page,
   children,
 }: React.PropsWithChildren<ProvidersProps>) => {
   sdk.defaultConfigure(locale);
 
   return (
-    <TracingProvider tracing={tracing}>
+    <TracingProvider page={page}>
       <I18nProvider translations={translations}>
         <SWRProvider
           value={{
             fallback: {
               '/action/account/getAccount': { data: initialData.account },
               '/action/business-unit/getBusinessUnits': { data: initialData.businessUnits },
+              '/action/business-unit/getAssociate': { data: initialData.associate },
             },
           }}
         >

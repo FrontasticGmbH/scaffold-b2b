@@ -1,6 +1,6 @@
 import StockIndicator from '@/components/atoms/stock-indicator';
-import Typography from '@/components/atoms/typography';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import Link from '@/components/atoms/link';
 import { CartItemHeaderProps } from '../types';
 
 const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
@@ -9,15 +9,12 @@ const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
   return (
     <div className={className}>
       {/* Product Name */}
-      <Typography
-        fontSize={14}
-        lineHeight="loose"
-        fontWeight="semibold"
-        className="text-gray-800 md:text-16"
-        title={item.name}
+      <Link
+        href={item.url ?? '#'}
+        className="max-w-full truncate text-14 font-semibold leading-loose text-gray-800 md:text-16"
       >
         {item.name}
-      </Typography>
+      </Link>
 
       {/* Product Model and availability */}
       <div className="mt-3 flex items-center gap-3 md:mt-2 md:grid md:gap-5">

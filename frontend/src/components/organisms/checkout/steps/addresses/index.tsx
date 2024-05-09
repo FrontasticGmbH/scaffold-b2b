@@ -37,14 +37,9 @@ const AddressesStep = ({
 
   useEffect(() => {
     setSelectedAddresses((currentSelectedAddresses) => {
-      const initialAddresses = {
-        shipping: initialData.shippingAddress ?? currentSelectedAddresses.shipping,
-        billing: initialData.billingAddress ?? currentSelectedAddresses.billing,
-      };
-
       return {
-        shipping: initialAddresses.shipping?.id ? initialAddresses.shipping : addresses[0],
-        billing: initialAddresses.billing?.id ? initialAddresses.billing : addresses[0],
+        shipping: initialData.shippingAddress ?? currentSelectedAddresses.shipping ?? addresses[0],
+        billing: initialData.billingAddress ?? currentSelectedAddresses.billing ?? addresses[0],
       };
     });
   }, [initialData.shippingAddress, initialData.billingAddress, addresses]);
@@ -123,6 +118,11 @@ const AddressesStep = ({
             const success = await onAddAddress?.(address);
 
             if (success) {
+              setSelectedAddresses({
+                shipping: addingNewAddress === 'shipping' ? address : selectedAddresses.shipping,
+                billing: addingNewAddress === 'billing' ? address : selectedAddresses.billing,
+              });
+
               await onCompleteAddresses?.(
                 addingNewAddress === 'shipping' ? address : selectedAddresses.shipping,
                 addingNewAddress === 'billing' ? address : selectedAddresses.billing,

@@ -13,7 +13,7 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   const page = await sdk.page.getPreview({ previewId: previewId as string });
 
-  if (page.isError || !page.data.data) return <></>;
+  if (page.isError) return <></>;
 
   const translations = await getTranslations(
     [locale],
@@ -37,7 +37,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 
   return (
-    <Providers translations={translations} locale={locale} initialData={{}} tracing={page.tracing}>
+    <Providers translations={translations} locale={locale} initialData={{}} page={page}>
       <PreviewRenderer data={page.data} params={params} searchParams={searchParams} />
     </Providers>
   );

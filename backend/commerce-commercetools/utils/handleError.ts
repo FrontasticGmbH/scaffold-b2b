@@ -1,7 +1,7 @@
-import { Request } from '@frontastic/extension-types';
+import { Request, Response } from '@frontastic/extension-types';
 import { ExtensionError } from '@Commerce-commercetools/errors/Errors';
 
-const handleError = (error: ExtensionError | Error | unknown, request?: Request) => {
+const handleError = (error: ExtensionError | Error | unknown, request?: Request): Response => {
   if (error instanceof ExtensionError) {
     const statusCode = error.statusCode ?? 503;
 
@@ -11,9 +11,7 @@ const handleError = (error: ExtensionError | Error | unknown, request?: Request)
         statusCode: statusCode,
         message: error.message,
       }),
-      message: error.message,
       sessionData: request?.sessionData,
-      ok: false,
     };
   }
 
@@ -25,9 +23,7 @@ const handleError = (error: ExtensionError | Error | unknown, request?: Request)
       statusCode: 500,
       message: errorResponse?.message,
     }),
-    message: errorResponse?.message,
     sessionData: request?.sessionData,
-    ok: false,
   };
 };
 

@@ -13,6 +13,7 @@ export const mapLineItem = (lineItem: LineItem): Product => {
 
   return {
     id: lineItem.lineItemId,
+    url: lineItem._url,
     sku: variant?.sku,
     name: lineItem.name,
     description: variant?.attributes?.['Product-Specifications'],

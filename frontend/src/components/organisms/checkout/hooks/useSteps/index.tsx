@@ -14,6 +14,7 @@ const useSteps = ({
   countryOptions = [],
   shippingMethods = [],
   paymentMethods = [],
+  translations,
 }: Omit<CheckoutProps, 'transaction' | 'products' | 'discounts' | 'onSubmitPurchase'>) => {
   const steps = useMemo(() => {
     return [
@@ -30,7 +31,7 @@ const useSteps = ({
         ),
       },
       {
-        title: 'common.shipping',
+        title: 'checkout.shipping',
         Component: (
           <ShippingStep
             shippingMethods={shippingMethods}
@@ -46,6 +47,7 @@ const useSteps = ({
             paymentMethods={paymentMethods}
             onCompletePayment={onCompletePayment}
             initialData={initialData}
+            translations={translations}
           />
         ),
       },

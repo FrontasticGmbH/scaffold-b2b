@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { OrdersPageProps } from './types';
 import RefinementsDrawer from './components/refinements-drawer';
@@ -38,7 +38,15 @@ const OrdersPage = ({
 
   const currentRefinementsProps = { onClearRefinements, filters, onSearch, onStatusRefine, onCreationDateRefine };
 
-  const tableProps = { orders, totalItems, page, limit, onPageChange, onRowsPerPageChange };
+  const onNext = useCallback(() => {
+    onPageChange?.(page + 1);
+  }, [page, onPageChange]);
+
+  const onPrevious = useCallback(() => {
+    onPageChange?.(page - 1);
+  }, [page, onPageChange]);
+
+  const tablePaginationProps = { totalItems, page, limit, onNext, onPrevious, onRowsPerPageChange };
 
   return (
     <div className="pb-12">
@@ -50,7 +58,7 @@ const OrdersPage = ({
         <RefinementsDrawer {...refinementProps} />
         <Refinements {...refinementProps} />
         <CurrentRefinements {...currentRefinementsProps} />
-        <OrdersTable {...tableProps} />
+        <OrdersTable orders={orders} pagination={tablePaginationProps} />
       </div>
     </div>
   );

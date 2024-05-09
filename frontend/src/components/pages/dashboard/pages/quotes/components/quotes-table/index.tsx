@@ -1,21 +1,19 @@
 import React from 'react';
-import Table from '@/components/atoms/table';
+import Table from '@/components/organisms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import useFormat from '@/hooks/useFormat';
-
+import { Quote } from '@/types/entity/quote';
 import QuoteStatusTag from '@/components/pages/dashboard/components/quote-status-tag';
-import { QuotesPageProps } from '../../types';
+import { TablePaginationProps } from '@/components/organisms/table/types';
 
-const QuotesTable = ({
-  quotes,
-  totalItems = 0,
-  page = 1,
-  onPageChange,
-  onRowsPerPageChange,
-  limit = 25,
-}: Partial<QuotesPageProps>) => {
+interface QuotesTableProps {
+  quotes: Quote[];
+  pagination: TablePaginationProps;
+}
+
+const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
   const { translate } = useTranslation();
 
   const { formatCurrency } = useFormat();
@@ -53,9 +51,11 @@ const QuotesTable = ({
               <Table.Cell className="text-right">{formatCurrency(total, currency)}</Table.Cell>
               <Table.Cell isButtonsCell>
                 <div className="flex justify-end">
-                  <Link href={url} underlineOnHover={false}>
-                    <Button variant="secondary">{translate('common.view')}</Button>
-                  </Link>
+                  {url && (
+                    <Link href={url} underlineOnHover={false}>
+                      <Button variant="secondary">{translate('common.view')}</Button>
+                    </Link>
+                  )}
                 </div>
               </Table.Cell>
             </Table.Row>
@@ -63,14 +63,16 @@ const QuotesTable = ({
         </Table.Body>
       </Table.Container>
 
-      <Table.Pagination
-        page={page}
-        limit={limit}
-        totalItems={totalItems}
-        onNext={() => onPageChange?.(page + 1)}
-        onPrevious={() => onPageChange?.(page - 1)}
-        onRowsPerPageChange={onRowsPerPageChange}
-      />
+      {pagination && (
+        <Table.Pagination
+          page={pagination.page}
+          limit={pagination.limit}
+          totalItems={pagination.totalItems}
+          onNext={pagination.onNext}
+          onPrevious={pagination.onPrevious}
+          onRowsPerPageChange={pagination.onRowsPerPageChange}
+        />
+      )}
     </Table>
   );
 };

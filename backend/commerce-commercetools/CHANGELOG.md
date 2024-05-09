@@ -1,4 +1,17 @@
 
+## Version 1.6.1 (2024-05-09)
+
+** New Features and Improements **
+
+- Set either customersId or anonymousId when cart is recreated
+- Setting default channels on login
+
+## Version 1.6.0 (2024-04-26)
+
+** New Features and Improvements **
+
+- Restructured, reorganized folders
+
 ## Version 1.5.0 (2024-04-04)
 
 ** New Features and Improvements **

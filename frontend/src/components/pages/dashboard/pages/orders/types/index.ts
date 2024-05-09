@@ -1,10 +1,9 @@
 import { Option } from '@/components/atoms/select/types';
-import { TablePaginationProps } from '@/components/atoms/table/types';
+import { TablePaginationProps } from '@/components/organisms/table/types';
 import { Order } from '@/types/entity/order';
 
-export interface OrdersPageProps {
+interface OrdersPage {
   orders: Order[];
-  totalItems: number;
   filters: {
     sort?: string;
     search?: string;
@@ -19,8 +18,7 @@ export interface OrdersPageProps {
   onCreationDateRefine?: (args: { from?: Date; to?: Date }) => void;
   onSearch?: (search: string) => void;
   onSortBy?: (sort: string) => void;
-  page: number;
   onPageChange?: (page: number) => void;
-  limit: number;
-  onRowsPerPageChange?: TablePaginationProps['onRowsPerPageChange'];
 }
+
+export type OrdersPageProps = OrdersPage & TablePaginationProps;

@@ -3,10 +3,14 @@ import { sdk } from '@/sdk';
 import useSWR from 'swr';
 import { Associate } from '@/types/entity/associate';
 import { Address } from '@shared/types/account';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import useAccount from '../useAccount';
 
 const useBusinessUnits = () => {
   const { loggedIn } = useAccount();
+
+  const { setSelectedBusinessUnit } = useStoreAndBusinessUnits();
 
   const { data, mutate: mutateBusinessUnits } = useSWR(
     !loggedIn ? null : '/action/business-unit/getBusinessUnits',
@@ -98,9 +102,11 @@ const useBusinessUnits = () => {
 
       mutateBusinessUnits();
 
+      if (!response.isError) setSelectedBusinessUnit(mapBusinessUnit(response.data));
+
       return response.isError ? {} : response.data;
     },
-    [mutateBusinessUnits],
+    [mutateBusinessUnits, setSelectedBusinessUnit],
   );
 
   const updateAddress = useCallback(

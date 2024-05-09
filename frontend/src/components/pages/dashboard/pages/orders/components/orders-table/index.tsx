@@ -1,21 +1,20 @@
 import React from 'react';
-import Table from '@/components/atoms/table';
+import Table from '@/components/organisms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import useFormat from '@/hooks/useFormat';
 import OrderStatusTag from '@/components/pages/dashboard/components/order-status-tag';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
-import { OrdersPageProps } from '../../types';
+import { TablePaginationProps } from '@/components/organisms/table/types';
+import { Order } from '@/types/entity/order';
 
-const OrdersTable = ({
-  orders,
-  totalItems = 0,
-  page = 1,
-  onPageChange,
-  onRowsPerPageChange,
-  limit = 25,
-}: Partial<OrdersPageProps>) => {
+interface OrdersTableProps {
+  orders: Order[];
+  pagination: TablePaginationProps;
+}
+
+const OrdersTable: React.FC<OrdersTableProps> = ({ orders, pagination }) => {
   const { translate } = useTranslation();
 
   const { formatCurrency } = useFormat();
@@ -57,14 +56,16 @@ const OrdersTable = ({
         </Table.Body>
       </Table.Container>
 
-      <Table.Pagination
-        page={page}
-        limit={limit}
-        totalItems={totalItems}
-        onNext={() => onPageChange?.(page + 1)}
-        onPrevious={() => onPageChange?.(page - 1)}
-        onRowsPerPageChange={onRowsPerPageChange}
-      />
+      {pagination && (
+        <Table.Pagination
+          page={pagination.page}
+          limit={pagination.limit}
+          totalItems={pagination.totalItems}
+          onNext={pagination.onNext}
+          onPrevious={pagination.onPrevious}
+          onRowsPerPageChange={pagination.onRowsPerPageChange}
+        />
+      )}
     </Table>
   );
 };

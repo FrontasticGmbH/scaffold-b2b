@@ -57,6 +57,7 @@ const Checkout = ({
             onCompleteShipping={onCompleteShipping}
             paymentMethods={paymentMethods}
             onCompletePayment={onCompletePayment}
+            translations={translations}
           />
         </div>
 

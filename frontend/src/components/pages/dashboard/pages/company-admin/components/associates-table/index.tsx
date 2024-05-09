@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import Table from '@/components/atoms/table';
+import Table from '@/components/organisms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
 import Confirmation from '@/components/organisms/confirmation';

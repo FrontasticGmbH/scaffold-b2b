@@ -24,23 +24,16 @@ export function middleware(request: NextRequest) {
     response = NextResponse.redirect(new URL(`/${locale}${path}`, request.url));
   } else {
     locale = path.split('/')[1];
-
-    const containsMultipleLocaleOccurrences = new RegExp(`(/${locale}){2,2}`, 'g').exec(path);
+    const containsMultipleLocaleOccurrences = new RegExp(`^/${locale}/.*(/${locale}/)`, 'g').test(path);
     if (containsMultipleLocaleOccurrences) {
-      response = NextResponse.redirect(
-        new URL(path.replace(new RegExp(`(/${locale}){2,2}`, 'g'), `/${locale}/`), request.url),
-      );
+      const correctedPath = path.replace(new RegExp(`^/${locale}/.*(/${locale}/)`), `/${locale}/`);
+      response = NextResponse.redirect(new URL(correctedPath, request.url));
     } else {
       response = NextResponse.next();
     }
   }
 
   response.cookies.set('locale', locale, { maxAge: 60 * 60 * 24 * 7 * 4 * 12 * 100 }); // 100 years expiry
-
-  //Netlify firewall bypass header
-  if (headers['x-nf-waf-bypass-token']) {
-    response.cookies.set('netlify-waf-token', headers['x-nf-waf-bypass-token']);
-  }
 
   return response;
 }

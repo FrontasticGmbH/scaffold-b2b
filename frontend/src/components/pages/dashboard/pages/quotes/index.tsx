@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Tabs from '@/components/organisms/tabs';
@@ -24,9 +24,9 @@ const QuotesPage = ({
   statusOptions,
   totalItems,
   page,
+  limit,
   onPageChange,
   onRowsPerPageChange,
-  limit,
   onSelectedChange,
 }: QuotesPageProps) => {
   const { translate } = useTranslation();
@@ -64,7 +64,15 @@ const QuotesPage = ({
 
   const currentRefinementsProps = { onClearRefinements, filters, onSearch, onStatusRefine };
 
-  const tableProps = { quotes, totalItems, page, limit, onPageChange, onRowsPerPageChange };
+  const onNext = useCallback(() => {
+    onPageChange?.(page + 1);
+  }, [page, onPageChange]);
+
+  const onPrevious = useCallback(() => {
+    onPageChange?.(page - 1);
+  }, [page, onPageChange]);
+
+  const tablePaginationProps = { page, limit, totalItems, onNext, onPrevious, onRowsPerPageChange };
 
   return (
     <div className="pb-12">
@@ -104,13 +112,13 @@ const QuotesPage = ({
               <RefinementsDrawer {...refinementProps} />
               <Refinements {...refinementProps} />
               <CurrentRefinements {...currentRefinementsProps} />
-              <QuotesTable {...tableProps} />
+              <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
             </Tabs.Panel>
             <Tabs.Panel>
               <RefinementsDrawer {...refinementProps} />
               <Refinements {...refinementProps} />
               <CurrentRefinements {...currentRefinementsProps} />
-              <QuotesTable {...tableProps} />
+              <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
             </Tabs.Panel>
           </Tabs.Panels>
         </Tabs>

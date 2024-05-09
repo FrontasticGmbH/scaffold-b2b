@@ -1,20 +1,20 @@
 import useSWR from 'swr';
 import { sdk } from '@/sdk';
 import { Permission } from '@shared/types/business-unit/Associate';
-import useAssociateRoles from '../useAssociateRoles';
 
 const useAccountRoles = (businessUnitKey?: string) => {
+  const defaultResponse = useSWR('/action/business-unit/getAssociate', () =>
+    sdk.composableCommerce.businessUnit.getAssociate({ businessUnitKey: businessUnitKey as string }),
+  );
+
   const response = useSWR(businessUnitKey ? ['/action/business-unit/getAssociate', businessUnitKey] : undefined, () =>
     sdk.composableCommerce.businessUnit.getAssociate({ businessUnitKey: businessUnitKey as string }),
   );
 
-  const allRoles = useAssociateRoles();
+  const defaultData = defaultResponse.data?.isError ? null : defaultResponse.data?.data ?? null;
+  const dataCorrespondingToBu = response.data?.isError ? null : response.data?.data ?? null;
 
-  const allPermissions = Array.from(
-    new Set(allRoles.reduce((acc, curr) => [...acc, ...(curr.permissions ?? [])], [] as Permission[])),
-  );
-
-  const data = response.data?.isError ? {} : response.data?.data ?? {};
+  const data = defaultData ?? dataCorrespondingToBu ?? {};
 
   const roles = data.roles ?? [];
 
@@ -22,10 +22,10 @@ const useAccountRoles = (businessUnitKey?: string) => {
 
   const rolePermissions = roles.reduce((acc, curr) => [...acc, ...(curr.permissions ?? [])], [] as Permission[]);
 
-  const permissions = allPermissions.reduce(
-    (acc, curr) => ({
+  const permissions = rolePermissions.reduce(
+    (acc, permission) => ({
       ...acc,
-      [curr]: rolePermissions.includes(curr as Permission),
+      [permission]: true,
     }),
     {} as Record<Permission, boolean>,
   );

@@ -14,6 +14,7 @@ const Steps = ({
   countryOptions = [],
   shippingMethods = [],
   paymentMethods = [],
+  translations = {},
 }: Omit<CheckoutProps, 'transaction' | 'products' | 'discounts' | 'onSubmitPurchase'>) => {
   const { steps } = useSteps({
     addresses,
@@ -25,6 +26,7 @@ const Steps = ({
     onCompleteShipping,
     paymentMethods,
     onCompletePayment,
+    translations,
   });
 
   const { activeStep, resetStepTo } = useCheckout();

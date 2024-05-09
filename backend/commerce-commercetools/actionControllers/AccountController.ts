@@ -65,12 +65,14 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
 
   const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
-  const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId);
+  const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId, true);
 
   // By default, we'll select the first business unit and store for the user.
   const businessUnitKey = businessUnits?.[0]?.key;
   const storeKey = businessUnits?.[0]?.stores?.[0]?.key;
   const storeId = businessUnits?.[0]?.stores?.[0]?.storeId;
+  const distributionChannelId = businessUnits?.[0]?.stores?.[0]?.distributionChannels?.[0]?.channelId;
+  const supplyChannelId = businessUnits?.[0]?.stores?.[0]?.supplyChannels?.[0]?.channelId;
 
   return {
     statusCode: 200,
@@ -81,6 +83,8 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
       businessUnitKey,
       storeKey,
       storeId,
+      distributionChannelId,
+      supplyChannelId,
     },
   };
 }
@@ -163,7 +167,7 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
       emailApi.sendAccountVerificationEmail(account);
     }
 
-    //We are unsetting the confirmationToken to avoid exposing it to the client
+    // We are unsetting the confirmationToken to avoid exposing it to the client
     account.confirmationToken = null;
 
     const response: Response = {

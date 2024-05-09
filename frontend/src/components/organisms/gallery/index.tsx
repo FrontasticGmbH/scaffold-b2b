@@ -36,7 +36,9 @@ const Gallery = ({ className, images }: GalleryProps) => {
 
   const galleryClassName = classnames('w-full', className);
 
-  const verticalSliderClassName = classnames('w-[110px]', { 'h-[400px]': isDesktop && images.length <= 4 });
+  const verticalSliderClassName = classnames('w-[110px]', {
+    'h-[450px] overflow-hidden': isDesktop && images.length <= 4,
+  });
 
   return (
     <div className={galleryClassName}>

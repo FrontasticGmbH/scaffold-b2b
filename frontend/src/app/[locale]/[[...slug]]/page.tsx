@@ -10,6 +10,7 @@ import { authenticate } from '@/utils/server/authenticate';
 import { Providers } from '@/providers';
 import fetchPageData from '@/utils/server/fetch-page-data';
 import fetchBusinessUnits from '@/utils/server/fetchBusinessUnits';
+import fetchAssociate from '@/utils/server/fetch-associate';
 
 /* Start of Route Segments */
 
@@ -51,9 +52,13 @@ export default async function Page({ params, searchParams }: PageProps) {
     if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
   }
 
-  const [page, businessUnits] = await Promise.all([fetchPageData(slug, searchParams), fetchBusinessUnits(loggedIn)]);
+  const [page, businessUnits, associate] = await Promise.all([
+    fetchPageData(slug, searchParams),
+    fetchBusinessUnits(loggedIn),
+    fetchAssociate(loggedIn),
+  ]);
 
-  if (page.isError || !page.data.page) return redirect(`/${locale}/404`);
+  if (page.isError) return redirect(`/${locale}/404`);
 
   const translations = await getTranslations(
     [locale],
@@ -82,9 +87,10 @@ export default async function Page({ params, searchParams }: PageProps) {
       locale={locale}
       initialData={{
         account: auth.isError ? {} : auth.data,
+        associate: associate.isError ? {} : associate.data,
         businessUnits: businessUnits.isError ? [] : businessUnits.data,
       }}
-      tracing={page.tracing}
+      page={page}
     >
       <Renderer data={page.data} params={params} searchParams={searchParams} />
       <Toaster />

@@ -95,7 +95,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
 
       if (!result.isError) mutate(result.data, { revalidate: false });
 
-      return result.isError ? ({} as Partial<Cart>) : result.data;
+      return result.isError ? { success: false, error: result.error } : { ...result.data, success: true };
     },
     [mutate, businessUnitKey, storeKey],
   );
@@ -159,7 +159,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
   }, [businessUnitKey, storeKey]);
 
   const { data: shippingMethods } = useSWR(
-    ['/action/cart/getShippingMethods', businessUnitKey, storeKey],
+    businessUnitKey && storeKey ? ['/action/cart/getShippingMethods', businessUnitKey, storeKey] : null,
     getShippingMethods,
   );
 

@@ -56,5 +56,11 @@ export interface CheckoutProps {
   paymentMethods: PaymentMethod[];
   onCompletePayment?: (paymentMethodId: string, data: unknown) => Promise<boolean>;
   onSubmitPurchase: (paylaod: SubmitPurchasePayload) => Promise<boolean>;
-  translations?: { header?: string; orderSummaryTitle?: string; orderSummarySubtitle?: string; purchase?: string };
+  translations?: {
+    header?: string;
+    orderSummaryTitle?: string;
+    orderSummarySubtitle?: string;
+    purchase?: string;
+    review?: string;
+  };
 }

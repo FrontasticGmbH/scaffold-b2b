@@ -18,9 +18,12 @@ import { mapStore } from '@/utils/mappers/map-store';
 import { mapCsvProduct } from '@/utils/mappers/map-csv-product';
 import { BusinessUnit } from '@shared/types/business-unit';
 import { Store } from '@shared/types/store';
+import useSwrClearCache from '@/hooks/useSwrClearCache';
 
 const useHeaderData = () => {
   const router = useCustomRouter();
+
+  const clearCache = useSwrClearCache();
 
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get('query');
@@ -84,6 +87,7 @@ const useHeaderData = () => {
 
   const onLogoutClick = () => {
     logout().then(() => {
+      clearCache();
       router.refresh();
       router.push('/login');
     });

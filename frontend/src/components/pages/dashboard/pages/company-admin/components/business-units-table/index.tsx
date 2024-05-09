@@ -1,5 +1,5 @@
 import React from 'react';
-import Table from '@/components/atoms/table';
+import Table from '@/components/organisms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';

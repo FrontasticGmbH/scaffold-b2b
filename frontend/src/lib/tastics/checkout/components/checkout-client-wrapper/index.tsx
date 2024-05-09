@@ -15,6 +15,8 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useAccount from '@/lib/hooks/useAccount';
 import { TasticProps } from '@/lib/tastics/types';
+import { isEmptyObject } from '@/utils/object/is-empty-object';
+import { Address } from '@/types/entity/address';
 import { Props } from '../../types';
 import usePaymentMethods from '../../hooks/usePaymentMethods';
 
@@ -42,8 +44,14 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   return (
     <Checkout
       initialData={{
-        shippingAddress: cart?.shippingAddress && mapAddress(cart?.shippingAddress),
-        billingAddress: cart?.billingAddress && mapAddress(cart?.billingAddress),
+        shippingAddress:
+          cart?.shippingAddress && !isEmptyObject(cart.shippingAddress)
+            ? mapAddress(cart?.shippingAddress as Address)
+            : undefined,
+        billingAddress:
+          cart?.billingAddress && !isEmptyObject(cart.billingAddress)
+            ? mapAddress(cart?.billingAddress as Address)
+            : undefined,
         shippingMethodId: cart?.shippingInfo?.shippingMethodId,
       }}
       paymentMethods={paymentMethods}
@@ -65,6 +73,9 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
         taxes: cart?.transaction.tax.centAmount ?? 0,
         total: cart?.transaction.total.centAmount ?? 0,
         currency: cart?.transaction.total.currencyCode ?? 'USD',
+      }}
+      translations={{
+        review: translate('checkout.review.order'),
       }}
       products={(cart?.lineItems ?? []).map(mapLineItem)}
       addresses={selectedBusinessUnit?.addresses ?? []}
@@ -94,7 +105,11 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
           billing: mapCoCoAddress(billingAddress),
         });
 
-        return !!response.cartId;
+        if (!response.success) {
+          toast.error(response.error?.message || translate('common.something.went.wrong'), { position: 'top-right' });
+        }
+
+        return response.success;
       }}
       onCompleteShipping={async (shippingMethodId) => {
         const response = await setShippingMethod(shippingMethodId);

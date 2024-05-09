@@ -15,7 +15,8 @@ const PaymentStep = ({
   paymentMethods,
   onCompletePayment,
   initialData = {},
-}: Pick<CheckoutProps, 'paymentMethods' | 'onCompletePayment' | 'initialData'>) => {
+  translations,
+}: Pick<CheckoutProps, 'paymentMethods' | 'onCompletePayment' | 'initialData' | 'translations'>) => {
   const { translate } = useTranslation();
 
   const { activeStep, nextStep, tempData, setTempData } = useCheckout();
@@ -113,7 +114,7 @@ const PaymentStep = ({
         loading={loading}
         onClick={handleStepCompletion}
       >
-        {translate('checkout.review.quote')}
+        {translations?.review ?? translate('checkout.review.quote')}
       </Button>
     </div>
   );

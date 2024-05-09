@@ -41,15 +41,19 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
       <CartItemHeader className="md:hidden" item={item} />
 
       <div className="mt-10 flex max-w-full items-stretch justify-start md:mt-0 md:gap-10">
-        <Image
-          className="md:h-[124px] md:w-[124px] lg:h-[132px] lg:w-[132px]"
-          src={item.images?.[0]}
-          style={{ objectFit: 'contain' }}
-          width={108}
-          height={108}
-          suffix="small"
-          alt="product image"
-        />
+        <Link href={item.url ?? '#'}>
+          <div className="md:h-[124px] md:w-[124px] lg:h-[132px] lg:w-[132px]">
+            <Image
+              className="h-full w-full"
+              src={item.images?.[0]}
+              style={{ objectFit: 'contain' }}
+              width={108}
+              height={108}
+              suffix="small"
+              alt="product image"
+            />
+          </div>
+        </Link>
         <div className="flex w-full justify-center md:items-end md:justify-between md:gap-6 lg:gap-12">
           <div>
             <CartItemHeader className="hidden md:block" item={item} />

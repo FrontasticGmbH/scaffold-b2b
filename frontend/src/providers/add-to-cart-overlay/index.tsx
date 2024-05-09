@@ -17,7 +17,6 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
     categories: product?.categories?.map((category) => category.categoryId) as string[],
     limit: 8,
   });
-
   const { cart, updateItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
   const addedItem = cart?.lineItems?.find((item: LineItem) => {
     return item.variant?.sku === product?.sku;

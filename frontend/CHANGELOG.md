@@ -1,4 +1,23 @@
 
+## Version 1.7.4 (2024-05-09).
+
+** New Features and Improvements **
+
+- Update path correction in middleware
+- Clear client cache upon logging out to fix stall data bugs
+- Add more info logs for datasources and studio page data in development mode
+- Add missing tastic warning banner in development mode
+- Add hyper link for cart items
+- Fix selecting addresses in checkout bugs
+- Move translation files to `src` folder and load them on server instead over network
+- Updated @commercetools/frontend-sdk dependency to version 1.11.2
+- Error handling for missing taxes during checkout
+- Fixed container overflow for PDP
+- Update template.csv for quick order
+- Buf fix when adding new address during checkout
+- Fix review order button typography on quote checkout
+- Log Frontastic ID for each page to browser console
+
 ## Version 1.7.3 (2024-04-26)
 
 ** New Features and Improvements **

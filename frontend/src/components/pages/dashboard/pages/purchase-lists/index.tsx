@@ -1,6 +1,6 @@
 import React from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
-import Table from '@/components/atoms/table';
+import Table from '@/components/organisms/table';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import { PurchaseListsPageProps } from './types';
@@ -14,8 +14,9 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
     <SearchPanel
       translations={{ button: translate('dashboard.purchase.list.add') }}
       buttonLink={`?subPath=add-purchase-list`}
-      isEmpty={!purchaseLists?.length}
+      isEmpty={purchaseLists?.length === 0}
       entity={translate('common.purchase.lists')}
+      isLoading={!purchaseLists?.length}
     >
       <Table>
         <Table.Container>
