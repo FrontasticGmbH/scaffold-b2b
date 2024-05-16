@@ -4,16 +4,19 @@ import useSWR, { useSWRConfig } from 'swr';
 import { Wishlist } from '@shared/types/wishlist/Wishlist';
 import useAccount from '../useAccount';
 
-const usePurchaseLists = (storeKey?: string) => {
+const usePurchaseLists = (storeKey?: string, skipQueue?: boolean) => {
   const { mutate: globalMutate } = useSWRConfig();
 
   const account = useAccount();
 
   const response = useSWR(storeKey && account.account?.accountId ? ['/action/wishlist/', storeKey] : null, () =>
-    sdk.composableCommerce.wishlist.queryWishlists({
-      accountId: account.account?.accountId ?? '',
-      storeKey: storeKey ?? '',
-    }),
+    sdk.composableCommerce.wishlist.queryWishlists(
+      {
+        accountId: account.account?.accountId ?? '',
+        storeKey: storeKey ?? '',
+      },
+      { skipQueue },
+    ),
   );
 
   const { mutate } = response;

@@ -14,9 +14,8 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
     <SearchPanel
       translations={{ button: translate('dashboard.purchase.list.add') }}
       buttonLink={`?subPath=add-purchase-list`}
-      isEmpty={purchaseLists?.length === 0}
+      isEmpty={!purchaseLists?.length}
       entity={translate('common.purchase.lists')}
-      isLoading={!purchaseLists?.length}
     >
       <Table>
         <Table.Container>

@@ -80,5 +80,6 @@
   "quote.checkout": "Pago de cotización",
   "quote.summary": "Resumen de cotización",
   "quote.items": "Artículos cotizados",
-  "submit.quote.request": "Enviar solicitud de cotización"
+  "submit.quote.request": "Enviar solicitud de cotización",
+  "tax.rates.undefined": "No hay tasas de impuestos definidas para esta región"
 }

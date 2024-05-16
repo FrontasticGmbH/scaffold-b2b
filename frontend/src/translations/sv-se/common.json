@@ -96,6 +96,7 @@
   "settings": "Inställningar och säkerhet",
   "addresses": "Adresser",
   "orders": "Order",
+  "orders.latest": "Senaste Beställningarna",
   "business.unit": "Affärsenhet",
   "business.units": "Affärsenheter",
   "general": "Allmän",

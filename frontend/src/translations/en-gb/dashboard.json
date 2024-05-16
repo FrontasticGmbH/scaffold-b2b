@@ -43,7 +43,6 @@
   "purchase.list.delete": "Delete Purchase List",
   "purchase.list.delete.confirm": "Are you sure you want to permanently delete this Purchase List?",
   "no.entity.added": "No {entity} have been added yet",
-  "entity.loading": "Loading...",
   "no.search.results": "Sorry, no matching results",
   "try.different.search.term": "Please try a different search term",
   "message.too.long": "Message is too long (maximum {maxCharacters} characters)",

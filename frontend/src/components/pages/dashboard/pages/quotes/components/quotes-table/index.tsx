@@ -10,7 +10,7 @@ import { TablePaginationProps } from '@/components/organisms/table/types';
 
 interface QuotesTableProps {
   quotes: Quote[];
-  pagination: TablePaginationProps;
+  pagination?: TablePaginationProps;
 }
 
 const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {

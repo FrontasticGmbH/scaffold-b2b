@@ -80,5 +80,6 @@
   "quote.checkout": "Offerte afrekenen",
   "quote.summary": "Offerte samenvatting",
   "quote.items": "Geciteerde artikelen",
-  "submit.quote.request": "Offerteaanvraag indienen"
+  "submit.quote.request": "Offerteaanvraag indienen",
+  "tax.rates.undefined": "Er zijn geen belastingtarieven gedefinieerd voor deze regio"
 }

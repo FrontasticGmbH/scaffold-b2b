@@ -80,5 +80,6 @@
   "quote.checkout": "Verifica preventivo",
   "quote.summary": "Riepilogo preventivo",
   "quote.items": "Articoli citati",
-  "submit.quote.request": "Invia richiesta di preventivo"
+  "submit.quote.request": "Invia richiesta di preventivo",
+  "tax.rates.undefined": "Non sono definite aliquote fiscali per questa regione"
 }

@@ -1,17 +1,13 @@
 import { Request } from '@frontastic/extension-types';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
-import { Account } from '@Types/account/Account';
 import queryParamsToIds from './requestHandlers/queryParamsToIds';
 import queryParamsToStates from './requestHandlers/queryParamsToState';
 
 export class OrderQueryFactory {
-  static queryFromParams: (request: Request, account?: Account) => OrderQuery = (
-    request: Request,
-    account?: Account,
-  ) => {
+  static queryFromParams: (request: Request) => OrderQuery = (request: Request) => {
     const orderQuery: OrderQuery = {
-      accountId: account?.accountId,
+      accountId: request.query?.accountId ?? undefined,
       limit: request.query?.limit ?? undefined,
       cursor: request.query?.cursor ?? undefined,
       orderIds: queryParamsToIds('orderIds', request.query),
@@ -30,13 +26,18 @@ export class OrderQueryFactory {
     return orderQuery;
   };
 
-  private static queryParamsToSortAttributes(queryParams: any) {
-    const sortAttributes: SortAttributes = {};
+  private static queryParamsToSortAttributes(queryParams: { sortAttributes?: string }): SortAttributes {
+    if (!queryParams.sortAttributes) {
+      return {};
+    }
 
-    if (queryParams.sortAttributes) {
+    const sortAttributes: SortAttributes = {};
+    const querySortAttributes = JSON.parse(queryParams.sortAttributes);
+
+    if (querySortAttributes) {
       let sortAttribute;
 
-      for (sortAttribute of Object.values(queryParams.sortAttributes)) {
+      for (sortAttribute of Object.values(querySortAttributes)) {
         const key = Object.keys(sortAttribute)[0];
         sortAttributes[key] = sortAttribute[key] ? sortAttribute[key] : SortOrder.ASCENDING;
       }

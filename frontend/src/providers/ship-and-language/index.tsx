@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import { Option } from '@/components/atoms/select/types';
 import usePath from '@/hooks/usePath';
 import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
+import { useSWRConfig } from 'swr';
 
 const initialMarketState = {
   selectedLanguage: {} as Option,
@@ -14,6 +15,7 @@ const initialMarketState = {
 export const ShipAndLanguageContext = createContext(initialMarketState);
 
 const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
+  const { mutate } = useSWRConfig();
   const router = useCustomRouter();
   const { path } = usePath();
 
@@ -102,6 +104,10 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
 
   const { locale } = useParams();
 
+  useEffect(() => {
+    mutate((key: string[]) => key?.[0].startsWith('/action/cart/getCart'), undefined, { revalidate: true });
+  }, [locale, mutate]);
+
   const [selectedLocationValue, setSelectedLocationValue] = useState(locale.split('-')[1]);
 
   const selectedLocation = locations.find((location) => location.value === selectedLocationValue);
@@ -115,6 +121,7 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
     const locationObject = locations.find((l) => l.value === location);
 
     setSelectedLocationValue(location);
+
     if (!locationObject?.languages.find((language) => language.value === locale))
       onLanguageSelect(locationObject?.defaultLanguage ?? '');
   };

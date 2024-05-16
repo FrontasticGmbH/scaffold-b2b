@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Select from '@/components/atoms/select';
 import useFormat from '@/hooks/useFormat';
 import { classnames } from '@/utils/classnames/classnames';
 import Button from '@/components/atoms/button';
 import AddressForm from '@/components/molecules/address-form';
-import toast from 'react-hot-toast';
 import Checkbox from '@/components/atoms/checkbox';
 import { Address } from '@/types/entity/address';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -24,6 +23,8 @@ const AddressesStep = ({
 
   const [loading, setLoading] = useState(false);
 
+  const [error, setError] = useState(false);
+
   const isCompleted = activeStep > 0;
 
   const { translate } = useTranslation();
@@ -35,14 +36,22 @@ const AddressesStep = ({
     billing: initialData.billingAddress ?? addresses[0],
   });
 
+  const addressSetRef = useRef({ shipping: false, billing: false });
+
   useEffect(() => {
-    setSelectedAddresses((currentSelectedAddresses) => {
-      return {
-        shipping: initialData.shippingAddress ?? currentSelectedAddresses.shipping ?? addresses[0],
-        billing: initialData.billingAddress ?? currentSelectedAddresses.billing ?? addresses[0],
-      };
-    });
-  }, [initialData.shippingAddress, initialData.billingAddress, addresses]);
+    const data = {} as typeof selectedAddresses;
+
+    if (!addressSetRef.current.shipping && initialData.shippingAddress) {
+      data.shipping = initialData.shippingAddress;
+      addressSetRef.current.shipping = true;
+    }
+    if (!addressSetRef.current.billing && initialData.billingAddress) {
+      data.billing = initialData.billingAddress;
+      addressSetRef.current.billing = true;
+    }
+
+    setSelectedAddresses((currentSelectedAddresses) => ({ ...currentSelectedAddresses, ...data }));
+  }, [initialData.shippingAddress, initialData.billingAddress]);
 
   const keyToTitle = { shipping: 'delivery', billing: 'billing' };
 
@@ -63,11 +72,11 @@ const AddressesStep = ({
       const success = await onCompleteAddresses?.(shippingAddress, billingAddress);
 
       if (success) (visitedAllSteps ? goToLastStep : nextStep)();
-      else toast.error(translate('common.something.went.wrong'), { position: 'top-right' });
 
       setLoading(false);
+      setError(!success);
     },
-    [onCompleteAddresses, translate, nextStep, visitedAllSteps, goToLastStep],
+    [onCompleteAddresses, nextStep, visitedAllSteps, goToLastStep],
   );
 
   // Step is done
@@ -122,11 +131,6 @@ const AddressesStep = ({
                 shipping: addingNewAddress === 'shipping' ? address : selectedAddresses.shipping,
                 billing: addingNewAddress === 'billing' ? address : selectedAddresses.billing,
               });
-
-              await onCompleteAddresses?.(
-                addingNewAddress === 'shipping' ? address : selectedAddresses.shipping,
-                addingNewAddress === 'billing' ? address : selectedAddresses.billing,
-              );
             }
 
             return !!success;
@@ -252,9 +256,15 @@ const AddressesStep = ({
   return (
     <div>
       {[
-        { key: 'shipping', className: '' },
+        {
+          key: 'shipping',
+          className: '',
+          extra: () => (
+            <>{error && <p className="pt-5 text-12 text-red-500">{translate('checkout.tax.rates.undefined')}</p>}</>
+          ),
+        },
         { key: 'billing', className: 'mt-9 lg:mt-11' },
-      ].map(({ key, className }) => (
+      ].map(({ key, className, extra }) => (
         <div className={classnames('flex flex-col gap-6', className)} key={key}>
           <div>
             <div className="flex items-center justify-between">
@@ -287,6 +297,7 @@ const AddressesStep = ({
                 })
               }
             />
+            {extra?.()}
           </div>
           <p
             className="cursor-pointer text-14 text-gray-600 underline underline-offset-2 lg:hidden"

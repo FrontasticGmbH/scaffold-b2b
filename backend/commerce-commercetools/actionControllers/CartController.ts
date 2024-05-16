@@ -9,11 +9,11 @@ import { EmailApiFactory } from '../utils/EmailApiFactory';
 import { CartFetcher } from '../utils/CartFetcher';
 import { getLocale } from '../utils/requestHandlers/Request';
 import handleError from '@Commerce-commercetools/utils/handleError';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -335,9 +335,7 @@ export const queryOrders: ActionHook = async (request, actionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
 
-    const account = fetchAccountFromSession(request);
-
-    const orderQuery = OrderQueryFactory.queryFromParams(request, account);
+    const orderQuery = OrderQueryFactory.queryFromParams(request);
 
     const queryResult = await cartApi.queryOrders(orderQuery);
 

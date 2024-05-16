@@ -80,5 +80,6 @@
   "quote.checkout": "Angebotskauf",
   "quote.summary": "Zusammenfassung des Angebots",
   "quote.items": "Zitierte Artikel",
-  "submit.quote.request": "Angebotsanfrage senden"
+  "submit.quote.request": "Angebotsanfrage senden",
+  "tax.rates.undefined": "Es sind keine Steuersätze für diese Region definiert"
 }

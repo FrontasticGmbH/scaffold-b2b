@@ -43,7 +43,6 @@
   "purchase.list.delete": "Einkaufsliste löschen",
   "purchase.list.delete.confirm": "Sind Sie sicher, dass Sie diese Einkaufsliste dauerhaft löschen möchten?",
   "no.entity.added": "Es wurden noch keine {entity} hinzugefügt",
-  "entity.loading": "Wird geladen...",
   "no.search.results": "Leider keine passenden Ergebnisse",
   "try.different.search.term": "Bitte versuchen Sie es mit einem anderen Suchbegriff",
   "message.too.long": "Die Nachricht ist zu lang (maximal {maxCharacters} Zeichen)",

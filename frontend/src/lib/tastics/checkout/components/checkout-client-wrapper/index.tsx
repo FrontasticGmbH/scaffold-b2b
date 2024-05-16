@@ -105,10 +105,6 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
           billing: mapCoCoAddress(billingAddress),
         });
 
-        if (!response.success) {
-          toast.error(response.error?.message || translate('common.something.went.wrong'), { position: 'top-right' });
-        }
-
         return response.success;
       }}
       onCompleteShipping={async (shippingMethodId) => {

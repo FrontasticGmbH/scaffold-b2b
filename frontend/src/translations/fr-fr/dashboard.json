@@ -43,7 +43,6 @@
   "purchase.list.delete": "Supprimer la liste de courses",
   "purchase.list.delete.confirm": "Etes-vous sûr de vouloir supprimer définitivement cette liste de courses ?",
   "no.entity.added": "Aucune {entity} n'a encore été ajoutée",
-  "entity.loading": "Chargement...",
   "no.search.results": "Désolé, aucun résultat correspondant",
   "try.different.search.term": "Veuillez essayer un autre terme de recherche",
   "message.too.long": "Le message est trop long ({maxCharacters} caractères maximum)",

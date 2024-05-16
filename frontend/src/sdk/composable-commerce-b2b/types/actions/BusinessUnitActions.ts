@@ -125,6 +125,7 @@ type SetBusinessUnitAndStoreKeysAction = (
   query: SetBusinessUnitAndStoreKeysQuery,
   options?: {
     serverOptions?: ServerOptions;
+    skipQueue?: boolean;
   },
 ) => Promise<SDKResponse<void>>;
 

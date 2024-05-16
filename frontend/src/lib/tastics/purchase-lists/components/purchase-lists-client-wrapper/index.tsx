@@ -16,7 +16,7 @@ const PurchaseListsClientWrapper = () => {
 
   const { selectedStore } = useStoreAndBusinessUnits();
 
-  const { purchaseLists, createPurchaseList } = usePurchaseLists(selectedStore?.key);
+  const { purchaseLists, createPurchaseList } = usePurchaseLists(selectedStore?.key, true);
 
   const purchaseListProps = {
     purchaseLists: purchaseLists?.items.map(mapPurchaseList),

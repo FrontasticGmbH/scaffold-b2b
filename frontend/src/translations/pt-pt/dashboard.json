@@ -43,7 +43,6 @@
   "purchase.list.delete": "Excluir lista de compras",
   "purchase.list.delete.confirm": "Tem certeza de que deseja excluir permanentemente esta lista de compras?",
   "no.entity.added": "Nenhuma {entity} foi adicionada ainda",
-  "entity.loading": "Carregando...",
   "no.search.results": "Desculpe, não há resultados correspondentes",
   "try.different.search.term": "Por favor, tente um termo de pesquisa diferente",
   "message.too.long": "A mensagem é muito longa (máximo de {maxCharacters} caracteres)",

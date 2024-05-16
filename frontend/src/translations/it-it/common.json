@@ -96,6 +96,7 @@
   "settings": "Impostazioni e sicurezza",
   "addresses": "Indirizzi",
   "orders": "Ordini",
+  "orders.latest": "Ultimi Ordini",
   "business.unit": "Unità Affari",
   "business.units": "Unità di business",
   "general": "Generale",

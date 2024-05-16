@@ -3,12 +3,9 @@ import { Quote } from '@Types/quote/Quote';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { PaginatedResult } from '@Types/result';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
-import { Account } from '@Types/account';
-
 import { getPath } from '../requestHandlers/Request';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
-import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
 
 const quoteRegex = /\/quote\/([^\/]+)/;
@@ -100,9 +97,7 @@ export default class QuoteRouter {
     const urlMatches = getPath(request)?.match(quotesRegex) ?? getPath(request)?.match(quotesPreviewRegex) ?? null;
 
     if (urlMatches) {
-      const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
-      const quoteQuery = this.buildQuoteQuery(request, account);
+      const quoteQuery = this.buildQuoteQuery(request);
 
       return await quoteApi.query(quoteQuery);
     }
@@ -119,9 +114,7 @@ export default class QuoteRouter {
       getPath(request)?.match(quoteRequestRegex) ?? getPath(request)?.match(quoteRequestPreviewRegex) ?? null;
 
     if (urlMatches) {
-      const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
-      const quoteQuery = this.buildQuoteQuery(request, account);
+      const quoteQuery = this.buildQuoteQuery(request);
 
       return await quoteApi.queryQuoteRequests(quoteQuery);
     }
@@ -129,9 +122,9 @@ export default class QuoteRouter {
     return null;
   };
 
-  private static buildQuoteQuery(request: Request, account: Account): QuoteQuery {
+  private static buildQuoteQuery(request: Request): QuoteQuery {
     return {
-      accountId: account.accountId,
+      accountId: request.query?.accountId ?? undefined,
       limit: request.query?.limit ?? undefined,
       cursor: request.query?.cursor ?? undefined,
       quoteIds: queryParamsToIds('quoteIds', request.query),

@@ -252,12 +252,14 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       query: SetBusinessUnitAndStoreKeysQuery,
       options?: {
         serverOptions?: ServerOptions;
+        skipQueue?: boolean;
       },
     ) => {
       const response = await sdk.callAction<void>({
         actionName: 'business-unit/setBusinessUnitAndStoreKeys',
         query,
         serverOptions: options?.serverOptions,
+        skipQueue: options?.skipQueue,
       });
       return response;
     },

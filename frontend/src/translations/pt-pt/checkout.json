@@ -80,5 +80,6 @@
   "quote.checkout": "Finalização da cotação",
   "quote.summary": "Resumo da cotação",
   "quote.items": "Itens cotados",
-  "submit.quote.request": "Enviar solicitação de orçamento"
+  "submit.quote.request": "Enviar solicitação de orçamento",
+  "tax.rates.undefined": "Não existem taxas de imposto definidas para esta região"
 }

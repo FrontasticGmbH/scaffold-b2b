@@ -6,8 +6,8 @@ import { assertIsAuthenticated } from '../assertIsAuthenticated';
 
 const getQuoteApi = (request: Request, actionContext: Context): QuoteApi => {
   assertIsAuthenticated(request);
-  const account = fetchAccountFromSession(request);
 
+  const account = fetchAccountFromSession(request);
   const businessUnitKey = getBusinessUnitKey(request);
 
   return new QuoteApi(actionContext, getLocale(request), getCurrency(request), account.accountId, businessUnitKey);

@@ -70,11 +70,15 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       });
       return response;
     },
-    queryWishlists: async (query: QueryWishlistsQuery, options: { serverOptions?: ServerOptions } = {}) => {
+    queryWishlists: async (
+      query: QueryWishlistsQuery,
+      options: { serverOptions?: ServerOptions; skipQueue?: boolean } = {},
+    ) => {
       const response = await sdk.callAction<PaginatedResult<Wishlist>>({
         actionName: 'wishlist/queryWishlists',
         query,
         serverOptions: options.serverOptions,
+        skipQueue: options.skipQueue,
       });
       return response;
     },

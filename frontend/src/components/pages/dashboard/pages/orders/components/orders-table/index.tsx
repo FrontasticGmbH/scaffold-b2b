@@ -11,7 +11,7 @@ import { Order } from '@/types/entity/order';
 
 interface OrdersTableProps {
   orders: Order[];
-  pagination: TablePaginationProps;
+  pagination?: TablePaginationProps;
 }
 
 const OrdersTable: React.FC<OrdersTableProps> = ({ orders, pagination }) => {
@@ -20,7 +20,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders, pagination }) => {
   const { formatCurrency } = useFormat();
 
   return (
-    <Table className="mt-8">
+    <Table>
       <Table.Container className="table-fixed rounded-md">
         <Table.Head className="border-b text-12 font-bold">
           <Table.Cell>{translate('common.status')}</Table.Cell>

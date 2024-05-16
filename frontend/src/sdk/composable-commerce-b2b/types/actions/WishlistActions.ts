@@ -40,6 +40,7 @@ type QueryWishlistsAction = (
   query: QueryWishlistsQuery,
   options?: {
     serverOptions?: ServerOptions;
+    skipQueue?: boolean;
   },
 ) => Promise<SDKResponse<PaginatedResult<Wishlist>>>;
 

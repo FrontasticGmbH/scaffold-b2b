@@ -5,7 +5,6 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import SearchInput from '@/components/atoms/search-input';
 import { Props } from './types';
 import EntitiesNotFound from '../entities-not-found';
-import EntitiesLoading from '@/components/pages/dashboard/components/entities-loading';
 
 const SearchPanel = ({
   children,
@@ -15,7 +14,6 @@ const SearchPanel = ({
   buttonDisabled,
   isEmpty,
   entity,
-  isLoading,
 }: React.PropsWithChildren<Props>) => {
   const { translate } = useTranslation();
 
@@ -47,7 +45,6 @@ const SearchPanel = ({
       <div>
         {children}
         {isEmpty && <EntitiesNotFound search={!!search} entity={entity} />}
-        {isLoading && <EntitiesLoading />}
       </div>
     </div>
   );

@@ -122,15 +122,22 @@ export default class QuoteApi extends BaseApi {
     }
 
     const whereClause = [];
+    if (quoteQuery.accountId !== undefined) {
+      whereClause.push(`customerId="${quoteQuery.accountId}"`);
+    }
+
     if (quoteQuery.quoteIds !== undefined && quoteQuery.quoteIds.length !== 0) {
       whereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
     }
+
     if (quoteQuery.quoteStates !== undefined && quoteQuery.quoteStates.length > 0) {
       whereClause.push(`quoteState in ("${quoteQuery.quoteStates.join('","')}")`);
     }
+
     if (quoteQuery.storeKey !== undefined) {
       whereClause.push(`store(key="${quoteQuery.storeKey}")`);
     }
+
     const searchQuery = quoteQuery.query && quoteQuery.query;
 
     return this.associateEndpoints(this.accountId, this.businessUnitKey)
@@ -179,17 +186,22 @@ export default class QuoteApi extends BaseApi {
       sortAttributes.push(`lastModifiedAt desc`);
     }
 
-    const quoteRequestWhereClause = [];
+    const whereClause = [];
+
+    if (quoteQuery.accountId !== undefined) {
+      whereClause.push(`customerId="${quoteQuery.accountId}"`);
+    }
+
     if (quoteQuery.quoteIds !== undefined && quoteQuery.quoteIds.length !== 0) {
-      quoteRequestWhereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
+      whereClause.push(`id in ("${quoteQuery.quoteIds.join('","')}")`);
     }
 
     if (quoteQuery.quoteStates !== undefined && quoteQuery.quoteStates.length > 0) {
-      quoteRequestWhereClause.push(`quoteRequestState in ("${quoteQuery.quoteStates.join('","')}")`);
+      whereClause.push(`quoteRequestState in ("${quoteQuery.quoteStates.join('","')}")`);
     }
 
     if (quoteQuery.storeKey !== undefined) {
-      quoteRequestWhereClause.push(`store(key="${quoteQuery.storeKey}")`);
+      whereClause.push(`store(key="${quoteQuery.storeKey}")`);
     }
 
     const searchQuery = quoteQuery.query && quoteQuery.query;
@@ -198,7 +210,7 @@ export default class QuoteApi extends BaseApi {
       .quoteRequests()
       .get({
         queryArgs: {
-          where: quoteRequestWhereClause,
+          where: whereClause,
           sort: sortAttributes,
           limit: limit,
           offset: getOffsetFromCursor(quoteQuery.cursor),

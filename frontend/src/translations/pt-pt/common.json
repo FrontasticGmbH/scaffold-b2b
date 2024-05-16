@@ -96,6 +96,7 @@
   "settings": "Configurações e segurança",
   "addresses": "Endereços",
   "orders": "Pedidos",
+  "orders.latest": "Últimos Pedidos",
   "business.unit": "Unidade de negócio",
   "business.units": "Unidades de negócios",
   "general": "Em geral",

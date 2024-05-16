@@ -12,6 +12,7 @@ import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProd
 import handleError from '@Commerce-commercetools/utils/handleError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
+import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 
 function productQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
   const productApi = getProductApi(context.request, context.frontasticContext);
@@ -25,18 +26,16 @@ function orderQueryFromContext(context: DataSourceContext, config: DataSourceCon
 
   const cartApi = getCartApi(context.request, context.frontasticContext);
 
-  const orderQuery = OrderQueryFactory.queryFromParams(context.request, account);
+  const orderQuery = OrderQueryFactory.queryFromParams(context.request);
 
   return { cartApi, orderQuery };
 }
 
-function quoteQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
-  const account = fetchAccountFromSessionEnsureLoggedIn(context.request);
-
+function quoteQueryFromContext(context: DataSourceContext) {
   const quoteApi = getQuoteApi(context.request, context.frontasticContext);
 
   const quoteQuery: QuoteQuery = {
-    accountId: account.accountId,
+    accountId: context.request.query?.accountId ?? undefined,
     limit: context.request.query?.limit ?? undefined,
     cursor: context.request.query?.cursor ?? undefined,
     quoteIds: queryParamsToIds('quoteIds', context.request.query),
@@ -134,6 +133,8 @@ export default {
 
   'frontastic/order': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
+      assertIsAuthenticated(context.request);
+
       const { cartApi, orderQuery } = orderQueryFromContext(context, config);
 
       const queryResult = await cartApi.queryOrders(orderQuery);
@@ -152,6 +153,8 @@ export default {
 
   'frontastic/orders': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
+      assertIsAuthenticated(context.request);
+
       const { cartApi, orderQuery } = orderQueryFromContext(context, config);
 
       const queryResult = await cartApi.queryOrders(orderQuery);
@@ -168,7 +171,7 @@ export default {
 
   'frontastic/quote': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const { quoteApi, quoteQuery } = quoteQueryFromContext(context, config);
+      const { quoteApi, quoteQuery } = quoteQueryFromContext(context);
 
       const queryResult = await quoteApi.query(quoteQuery);
 
@@ -186,7 +189,7 @@ export default {
 
   'frontastic/quotes': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const { quoteApi, quoteQuery } = quoteQueryFromContext(context, config);
+      const { quoteApi, quoteQuery } = quoteQueryFromContext(context);
 
       const queryResult = await quoteApi.query(quoteQuery);
 
@@ -202,7 +205,7 @@ export default {
 
   'frontastic/quote-request': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const { quoteApi, quoteQuery } = quoteQueryFromContext(context, config);
+      const { quoteApi, quoteQuery } = quoteQueryFromContext(context);
 
       const queryResult = await quoteApi.queryQuoteRequests(quoteQuery);
 
@@ -220,7 +223,7 @@ export default {
 
   'frontastic/quote-requests': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const { quoteApi, quoteQuery } = quoteQueryFromContext(context, config);
+      const { quoteApi, quoteQuery } = quoteQueryFromContext(context);
 
       const queryResult = await quoteApi.queryQuoteRequests(quoteQuery);
 

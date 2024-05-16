@@ -38,15 +38,21 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
 
   const totalTax = totalAmount > 0 ? cart.taxed?.taxAmount?.centAmount ?? 0 : 0;
 
-  const totalShipping =
-    totalAmount > 0
-      ? (cart.shippingInfo?.price?.centAmount || 0) -
-          (cart.shippingInfo?.taxIncludedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount || 0 : 0) ||
-        cart.availableShippingMethods?.[0]?.rates?.[0]?.price?.centAmount ||
-        0
-      : 0;
-
   const isEstimatedShipping = !cart.shippingInfo;
+
+  const totalShipping = (() => {
+    let shipping;
+
+    if (isEstimatedShipping) {
+      shipping = cart.availableShippingMethods?.[0]?.rates?.[0]?.price?.centAmount || 0;
+    } else {
+      shipping =
+        (cart.shippingInfo?.price?.centAmount || 0) -
+        (cart.shippingInfo?.taxIncludedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount || 0 : 0);
+    }
+
+    return shipping;
+  })();
 
   return {
     subtotal: {

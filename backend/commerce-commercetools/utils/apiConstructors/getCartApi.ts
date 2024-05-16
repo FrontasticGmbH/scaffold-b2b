@@ -12,6 +12,7 @@ import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAut
 
 const getCartApi = (request: Request, actionContext: Context): CartApi => {
   assertIsAuthenticated(request);
+
   const account = fetchAccountFromSession(request);
   const businessUnitKey = getBusinessUnitKey(request);
   const distributionChannelId = getDistributionChannelId(request);

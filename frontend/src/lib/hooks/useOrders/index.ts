@@ -5,13 +5,32 @@ import { Order } from '@shared/types/cart/Order';
 import { PaginatedResult } from '@shared/types/result';
 import { Options } from './types';
 
-const useOrders = ({ cursor, limit, states, ids, businessUnitKey, createdFrom, createdTo }: Options) => {
+const useOrders = ({
+  cursor,
+  limit,
+  states,
+  ids,
+  businessUnitKey,
+  createdFrom,
+  createdTo,
+  sortAttributes,
+}: Options) => {
   const { mutate: globalMutate } = useSWRConfig();
 
   const ordersResponse = useSWR(
     !businessUnitKey
       ? null
-      : ['/action/cart/queryOrders', limit, cursor, ids, states, createdFrom, createdTo, businessUnitKey],
+      : [
+          '/action/cart/queryOrders',
+          limit,
+          cursor,
+          ids,
+          states,
+          createdFrom,
+          createdTo,
+          businessUnitKey,
+          sortAttributes,
+        ],
     () =>
       sdk.composableCommerce.cart.queryOrders({
         ...(limit ? { limit } : {}),
@@ -21,6 +40,7 @@ const useOrders = ({ cursor, limit, states, ids, businessUnitKey, createdFrom, c
         ...(createdFrom ? { createdFrom } : {}),
         ...(createdTo ? { createdTo } : {}),
         ...(businessUnitKey ? { businessUnitKey } : {}),
+        ...(sortAttributes ? { sortAttributes } : ''),
       }),
     { revalidateIfStale: true },
   );

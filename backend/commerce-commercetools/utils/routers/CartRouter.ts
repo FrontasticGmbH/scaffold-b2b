@@ -1,11 +1,11 @@
 import { Context, Request } from '@frontastic/extension-types';
 import { Order } from '@Types/cart/Order';
 import { PaginatedResult } from '@Types/result';
-import { fetchAccountFromSessionEnsureLoggedIn } from '../fetchAccountFromSession';
 import { getPath } from '../requestHandlers/Request';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 
 const orderRegex = /\/order\/([^\/]+)/;
 const ordersRegex = /\/orders/;
@@ -90,9 +90,8 @@ export default class CartRouter {
   }
 
   private static async getOrder(request: Request, commercetoolsFrontendContext: Context, orderId: string) {
-    const account = fetchAccountFromSessionEnsureLoggedIn(request);
     const cartApi = getCartApi(request, commercetoolsFrontendContext);
-    const orderQuery = OrderQueryFactory.queryFromParams(request, account);
+    const orderQuery = OrderQueryFactory.queryFromParams(request);
     let result;
 
     try {
@@ -122,11 +121,9 @@ export default class CartRouter {
   }
 
   private static async getOrders(request: Request, commercetoolsFrontendContext: Context) {
-    const account = fetchAccountFromSessionEnsureLoggedIn(request);
-
     const cartApi = getCartApi(request, commercetoolsFrontendContext);
 
-    const orderQuery = OrderQueryFactory.queryFromParams(request, account);
+    const orderQuery = OrderQueryFactory.queryFromParams(request);
 
     return await cartApi.queryOrders(orderQuery);
   }

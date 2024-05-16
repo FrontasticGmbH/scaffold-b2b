@@ -1,4 +1,19 @@
 
+## Version 1.7.5 (2024-05-16)
+
+** New Features & Improvements **
+
+- Add more descriptive error messages during registration
+
+** Big Fixes **
+
+- Fix fixtures issue for `quote-checkout` and `quote-thankyou`
+- Fix latest order are not visible on dashboard
+- Fix SDK server calls were not cached on a request basis
+- Fix issue with locale is a prefix of page path
+- Adjust .editconfig style to match prettier styles
+- Fix checkout session is stalled after applicationKey is changed
+
 ## Version 1.7.4 (2024-05-09).
 
 ** New Features and Improvements **

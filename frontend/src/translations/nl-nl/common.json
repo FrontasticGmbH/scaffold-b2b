@@ -96,6 +96,7 @@
   "settings": "Instellingen en beveiliging",
   "addresses": "Adressen",
   "orders": "Bestellingen",
+  "orders.latest": "Laatste Bestellingen",
   "business.unit": "Bedrijfseenheid",
   "business.units": "Bedrijfseenheden",
   "general": "Algemeen",

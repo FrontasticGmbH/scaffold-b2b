@@ -43,7 +43,6 @@
   "purchase.list.delete": "Ta bort inköpslista",
   "purchase.list.delete.confirm": "Är du säker på att du vill ta bort den här inköpslistan permanent?",
   "no.entity.added": "Inga {entity} har lagts till ännu",
-  "entity.loading": "Läser in...",
   "no.search.results": "Tyvärr, inga matchande resultat",
   "try.different.search.term": "Försök med en annan sökterm",
   "message.too.long": "Meddelandet är för långt (max {maxCharacters} tecken)",

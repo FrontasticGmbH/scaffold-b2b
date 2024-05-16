@@ -7,5 +7,4 @@ export interface Props {
   onSearchChange?: (val: string) => void;
   isEmpty?: boolean;
   entity: string;
-  isLoading?: boolean;
 }

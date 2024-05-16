@@ -43,7 +43,6 @@
   "purchase.list.delete": "Boodschappenlijstje verwijderen",
   "purchase.list.delete.confirm": "Weet je zeker dat je dit boodschappenlijstje definitief wilt verwijderen?",
   "no.entity.added": "Er zijn nog geen {entity} toegevoegd",
-  "entity.loading": "Bezig met laden...",
   "no.search.results": "Sorry, geen overeenkomende resultaten",
   "try.different.search.term": "Probeer een andere zoekterm",
   "message.too.long": "Bericht is te lang (maximaal {maxCharacters} tekens)",

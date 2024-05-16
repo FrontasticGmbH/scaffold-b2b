@@ -19,11 +19,11 @@ export const dynamic = 'force-dynamic';
 /* End of Route Segments */
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
-  const { locale: nextLocale, slug } = params;
+  const { locale: nextLocale } = params;
 
   sdk.defaultConfigure(nextLocale);
 
-  const response = await fetchPageData(slug, searchParams);
+  const response = await fetchPageData(params, searchParams);
 
   if (response.isError) return {};
 
@@ -53,7 +53,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   }
 
   const [page, businessUnits, associate] = await Promise.all([
-    fetchPageData(slug, searchParams),
+    fetchPageData(params, searchParams),
     fetchBusinessUnits(loggedIn),
     fetchAssociate(loggedIn),
   ]);

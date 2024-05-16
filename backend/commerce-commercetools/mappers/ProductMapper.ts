@@ -17,6 +17,7 @@ import {
   _SearchQuery,
   SearchAndExpression,
   ProductSearchFacetResultCount,
+  ProductSearchFacetResult,
 } from '@commercetools/platform-sdk';
 import {
   Attribute as CommercetoolsAttribute,
@@ -40,7 +41,6 @@ import { RangeFacet, Term, TermFacet } from '@Types/result';
 import { Facet, FacetTypes } from '@Types/result/Facet';
 import ProductRouter from '@Commerce-commercetools/utils/routers/ProductRouter';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
-import { ProductSearchFacetResult } from '@commercetools/platform-sdk';
 
 const TypeMap = new Map<string, string>([
   ['boolean', FilterFieldTypes.BOOLEAN],
