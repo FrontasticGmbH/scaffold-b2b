@@ -13,7 +13,6 @@ import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFacto
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 

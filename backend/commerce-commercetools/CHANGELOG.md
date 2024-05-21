@@ -1,4 +1,16 @@
 
+## Version 1.7.0 (2024-05-16)
+
+** New Features and Improvements **
+
+- Adds deserialization to queryParams sortAttributes helper
+
+** Bug fixes **
+
+- Modified quote filter to use the accountId only when requested
+
+- Modified order filter to use the accountId only when requested
+
 ## Version 1.6.1 (2024-05-09)
 
 ** New Features and Improements **
