@@ -16,7 +16,7 @@ export const mapAddress = ({
 }: Partial<Address>): EntityAddress => {
   return {
     id: addressId as string,
-    name: firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName,
+    name: firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName || '',
     line1: streetName ?? '',
     line2: additionalStreetInfo ?? '',
     city,

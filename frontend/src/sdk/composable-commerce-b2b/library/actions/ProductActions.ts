@@ -21,47 +21,67 @@ export const getProductActions = (sdk: SDK<ComposableCommerceEventsB2B>): Produc
   return {
     getProduct: async (
       query: GetProductQuery,
-      options?: {
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
         serverOptions?: ServerOptions;
-      },
+      } = {},
     ) => {
       const response = await sdk.callAction<Product>({
         actionName: 'product/getProduct',
         query,
-        serverOptions: options?.serverOptions,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
+        serverOptions: options.serverOptions,
       });
       return response;
     },
     query: async (
       query?: ProductQueryQuery,
-      options?: {
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
         serverOptions?: ServerOptions;
-      },
+      } = {},
     ) => {
       const response = await sdk.callAction<ProductPaginatedResult>({
         actionName: 'product/query',
         query,
-        serverOptions: options?.serverOptions,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
+        serverOptions: options.serverOptions,
       });
       return response;
     },
     queryCategories: async (
       query?: QueryProductCategoriesQuery,
-      options?: {
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
         serverOptions?: ServerOptions;
-      },
+      } = {},
     ) => {
       const response = await sdk.callAction<PaginatedResult<Category>>({
         actionName: 'product/queryCategories',
         query,
-        serverOptions: options?.serverOptions,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
+        serverOptions: options.serverOptions,
       });
       return response;
     },
-    getSearchableAttributes: async (options?: { serverOptions?: ServerOptions }) => {
+    getSearchableAttributes: async (
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
+    ) => {
       const response = await sdk.callAction<FilterField[]>({
         actionName: 'product/searchableAttributes',
-        serverOptions: options?.serverOptions,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
+        serverOptions: options.serverOptions,
       });
       return response;
     },

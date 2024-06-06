@@ -79,7 +79,7 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
     {
       flagName: 'pt',
       name: 'Portugal',
-      label: 'Portugal (USD)',
+      label: 'Portugal (EUR)',
       value: 'pt',
       defaultLanguage: 'pt-pt',
       languages: [{ name: 'Portuguese - PT', value: 'pt-pt' }],

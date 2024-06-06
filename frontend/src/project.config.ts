@@ -52,8 +52,8 @@ const localizationMapper = {
   },
   'pt-pt': {
     locale: 'pt_PT',
-    currency: 'USD',
-    currencyCode: '$',
+    currency: 'EUR',
+    currencyCode: '€',
     countryCode: 'PT',
   },
   'nl-nl': {

@@ -8,4 +8,6 @@ export function assertIsAuthenticated(request: Request) {
   if (account === undefined) {
     throw new AccountAuthenticationError({ message: 'Not logged in.' });
   }
+
+  return account;
 }

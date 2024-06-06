@@ -52,53 +52,88 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     createWishlist: async (
       payload: CreateWishlistPayload,
       query?: CreateWishlistQuery,
-      options: { serverOptions?: ServerOptions } = {},
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
     ) => {
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/createWishlist',
         payload,
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
     },
-    getWishlist: async (query?: GetWishlistQuery, options: { serverOptions?: ServerOptions } = {}) => {
+    getWishlist: async (
+      query?: GetWishlistQuery,
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
+    ) => {
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/getWishlist',
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
     },
     queryWishlists: async (
       query: QueryWishlistsQuery,
-      options: { serverOptions?: ServerOptions; skipQueue?: boolean } = {},
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
     ) => {
       const response = await sdk.callAction<PaginatedResult<Wishlist>>({
         actionName: 'wishlist/queryWishlists',
         query,
-        serverOptions: options.serverOptions,
         skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
+        serverOptions: options.serverOptions,
       });
       return response;
     },
     updateWishlist: async (
       payload: UpdateWishlistPayload,
       query?: UpdateWishlistQuery,
-      options: { serverOptions?: ServerOptions } = {},
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
     ) => {
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/updateWishlist',
         payload,
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
     },
-    deleteWishlist: async (query?: DeleteWishlistQuery, options: { serverOptions?: ServerOptions } = {}) => {
+    deleteWishlist: async (
+      query?: DeleteWishlistQuery,
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
+    ) => {
       const response = await sdk.callAction<void>({
         actionName: 'wishlist/deleteWishlist',
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
@@ -106,20 +141,35 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     addToWishlist: async (
       payload: AddToWishlistPayload,
       query?: AddToWishlistQuery,
-      options: { serverOptions?: ServerOptions } = {},
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
     ) => {
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/addToWishlist',
         payload,
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
     },
-    addToWishlists: async (payload: AddToWishlistsPayload, options: { serverOptions?: ServerOptions } = {}) => {
+    addToWishlists: async (
+      payload: AddToWishlistsPayload,
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
+    ) => {
       const response = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/addToWishlists',
         payload,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
@@ -127,12 +177,18 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     updateItem: async (
       payload: UpdateWishlistItemPayload,
       query?: UpdateWishlistItemQuery,
-      options: { serverOptions?: ServerOptions } = {},
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
     ) => {
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/updateLineItemCount',
         payload,
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
@@ -140,21 +196,36 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     removeItem: async (
       payload: RemoveFromWishlistPayload,
       query?: RemoveFromWishlistQuery,
-      options: { serverOptions?: ServerOptions } = {},
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
     ) => {
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/removeLineItem',
         payload,
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;
     },
 
-    removeItems: async (payload: RemoveFromWishlistsPayload, options: { serverOptions?: ServerOptions } = {}) => {
+    removeItems: async (
+      payload: RemoveFromWishlistsPayload,
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
+    ) => {
       const response = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/removeLineItems',
         payload,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
       return response;

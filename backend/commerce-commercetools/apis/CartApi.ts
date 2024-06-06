@@ -1043,7 +1043,7 @@ export default class CartApi extends BaseApi {
     // Delete previous cart
     await this.deleteCart(primaryCart);
 
-    return CartMapper.commercetoolsCartToCart(replicatedCommercetoolsCart, locale);
+    return CartMapper.commercetoolsCartToCart(replicatedCommercetoolsCart, locale, this.supplyChannelId);
   }
 
   protected async updateCart(cartId: string, cartUpdate: CartUpdate): Promise<CommercetoolsCart> {

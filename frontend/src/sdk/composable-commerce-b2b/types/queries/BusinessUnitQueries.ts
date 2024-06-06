@@ -1,3 +1,5 @@
+import { ApprovalFlowStatus, ApprovalRuleStatus } from '@shared/types/business-unit';
+
 type GetBusinessUnitQuery = {
   businessUnitKey: string;
 };
@@ -47,6 +49,39 @@ type SetBusinessUnitAndStoreKeysQuery = {
   storeKey: string;
 };
 
+type CreateApprovalRuleQuery = {
+  businessUnitKey: string;
+  storeKey: string;
+};
+
+type QueryApprovalRulesQuery = {
+  businessUnitKey: string;
+  limit?: number;
+  //sortAttributes: // TODO
+  approvalRuleStatus?: ApprovalRuleStatus[];
+  approvalRuleIds: string[];
+};
+
+type UpdateApprovalRuleQuery = {
+  businessUnitKey: string;
+};
+
+type QueryApprovalFlowsQuery = {
+  businessUnitKey: string;
+  limit?: number;
+  //sortAttributes: // TODO
+  approvalFlowStatus?: ApprovalFlowStatus[];
+  approvalFlowIds: string[];
+};
+
+type ApproveApprovalFlowQuery = {
+  businessUnitKey: string;
+};
+
+type RejectApprovalFlowQuery = {
+  businessUnitKey: string;
+};
+
 export {
   type GetBusinessUnitQuery,
   type GetBusinessUnitsQuery,
@@ -60,4 +95,10 @@ export {
   type UpdateBusinessUnitAddressQuery,
   type RemoveBusinessUnitAddressQuery,
   type SetBusinessUnitAndStoreKeysQuery,
+  type CreateApprovalRuleQuery,
+  type QueryApprovalRulesQuery,
+  type UpdateApprovalRuleQuery,
+  type QueryApprovalFlowsQuery,
+  type ApproveApprovalFlowQuery,
+  type RejectApprovalFlowQuery,
 };

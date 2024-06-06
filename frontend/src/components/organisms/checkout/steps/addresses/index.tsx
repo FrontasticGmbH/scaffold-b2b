@@ -287,7 +287,11 @@ const AddressesStep = ({
                   : ''
               }
               options={addresses.map((address) => ({
-                name: formatAddress(address).replace(/\n/g, ', '),
+                name: formatAddress(address)
+                  .split('\n')
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+                  .join(', '),
                 value: formatAddress(address),
               }))}
               onChange={(value) =>

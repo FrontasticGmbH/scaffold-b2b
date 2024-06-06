@@ -36,7 +36,12 @@ const QuoteRequestDetailsClientWrapper = ({ data }: TasticProps<DataSource<DataS
     <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
       <QuoteDetailsPage
         quote={mapQuoteRequest(quoteRequest, { businessUnits })}
-        viewOnly={!permissions.UpdateMyQuoteRequests}
+        permissions={{
+          canAccept: permissions.AcceptMyQuotes,
+          canDecline: permissions.DeclineMyQuotes,
+          canRenegotiate: permissions.RenegotiateMyQuotes,
+          canRevoke: permissions.UpdateMyQuoteRequests,
+        }}
         isQuoteRequest
         onRevoke={async () => {
           await cancelQuoteRequest(quoteRequest.quoteRequestId as string);

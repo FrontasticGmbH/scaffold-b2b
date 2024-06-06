@@ -1,18 +1,35 @@
 import {
+  ApprovalRule as CommercetoolsApprovalRule,
+  ApprovalRuleStatus as CommercetoolsApprovalRuleStatus,
+  ApproverHierarchy as CommercetoolsApproverHierarchy,
   Associate as CommercetoolsAssociate,
   AssociateRole as CommercetoolsAssociateRole,
-  InheritedAssociate as CommercetoolsInheritedAssociate,
-  BusinessUnit as CommercetoolsBusinessUnit,
-  StoreKeyReference as CommercetoolsStoreKeyReference,
-  Permission as CommercetoolsPermission,
   AssociateRoleKeyReference as CommercetoolsAssociateRoleKeyReference,
+  BusinessUnit as CommercetoolsBusinessUnit,
   BusinessUnitKeyReference as CommercetoolsBusinessUnitKeyReference,
+  InheritedAssociate as CommercetoolsInheritedAssociate,
+  Permission as CommercetoolsPermission,
+  RuleRequester as CommercetoolsRuleRequester,
+  StoreKeyReference as CommercetoolsStoreKeyReference,
+  ApprovalFlow as CommercetoolsApprovalFlow,
+  OrderReference as CommercetoolsOrderReference,
 } from '@commercetools/platform-sdk';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Store } from '@Types/store/Store';
 import { Associate, AssociateRole, Permission } from '@Types/business-unit/Associate';
+import {
+  ApprovalFlow,
+  ApprovalFlowStatus,
+  ApprovalRule,
+  ApprovalRuleStatus,
+  ApproverHierarchy,
+} from '@Types/business-unit';
+import { ApprovalRuleDraft as CommerceToolsApprovalRuleDraft } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/approval-rule';
+import { Order } from '@Types/cart';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
+import CartMapper from '@Commerce-commercetools/mappers/CartMapper';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 export default class BusinessUnitMapper {
   static commercetoolsBusinessUnitToBusinessUnit(commercetoolsBusinessUnit: CommercetoolsBusinessUnit): BusinessUnit {
@@ -141,6 +158,14 @@ export default class BusinessUnitMapper {
     };
   }
 
+  static commercetoolsAssociateRoleReferenceToAssociateRole(associateRole: CommercetoolsAssociateRole): AssociateRole {
+    return {
+      key: associateRole.key,
+      name: associateRole.name,
+      permissions: this.commercetoolsPermissionsToPermissions(associateRole.permissions),
+    };
+  }
+
   static commercetoolsPermissionsToPermissions(commercetoolsPermissions: CommercetoolsPermission[]): Permission[] {
     const permissions: Permission[] = [];
 
@@ -192,5 +217,179 @@ export default class BusinessUnitMapper {
     });
 
     return permissions;
+  }
+
+  static commercetoolsApprovalRuleToApprovalRule(response: CommercetoolsApprovalRule): ApprovalRule {
+    return {
+      key: response.key,
+      approvalRuleVersion: response.version,
+      approvalRuleId: response.id,
+      approvers: this.commercetoolsApprovalRuleApproverToApprover(response.approvers),
+      name: response.name,
+      approvalRuleStatus: this.commercetoolsApprovalRuleStatusToStatus(response.status),
+      description: response.description,
+      predicate: response.predicate,
+      requesters: this.commercetoolsRuleRequesterToApprovalRuleRequester(response.requesters),
+    };
+  }
+
+  static approvalRuleToCommercetoolsApprovalRule(approvalRuleDraft: ApprovalRule): CommerceToolsApprovalRuleDraft {
+    return {
+      key: approvalRuleDraft.key,
+      name: approvalRuleDraft.name,
+      status: approvalRuleDraft.approvalRuleStatus,
+      approvers: BusinessUnitMapper.approvalRuleApproverToCommercetoolsApprovalRuleApprover(
+        approvalRuleDraft.approvers,
+      ),
+      predicate: approvalRuleDraft.predicate,
+      requesters: BusinessUnitMapper.approvalRuleRequesterToCommercetoolsRuleRequester(approvalRuleDraft.requesters),
+      description: approvalRuleDraft.description,
+    };
+  }
+
+  private static commercetoolsApprovalRuleStatusToStatus(status: CommercetoolsApprovalRuleStatus): ApprovalRuleStatus {
+    switch (status) {
+      case 'Active':
+        return 'Active';
+      case 'Inactive':
+        return 'Inactive';
+      default:
+        throw new ValidationError({ message: 'Approval rule status permission' });
+    }
+  }
+
+  private static commercetoolsRuleRequesterToApprovalRuleRequester(
+    requesters: CommercetoolsRuleRequester[],
+  ): AssociateRole[] {
+    return requesters.map((requester) => {
+      return {
+        key: requester.associateRole.key,
+        typeId: requester.associateRole.typeId,
+      };
+    });
+  }
+
+  private static commercetoolsApprovalRuleApproverToApprover(
+    approvers: CommercetoolsApproverHierarchy,
+  ): ApproverHierarchy {
+    return {
+      tiers: approvers.tiers.map((tier) => ({
+        and: tier.and.map((conjunction) => ({
+          or: conjunction.or.map((approver) => ({
+            key: approver.associateRole.key,
+            typeId: approver.associateRole.typeId,
+          })),
+        })),
+      })),
+    };
+  }
+
+  static approvalRuleApproverToCommercetoolsApprovalRuleApprover(
+    approvers: ApproverHierarchy,
+  ): CommercetoolsApproverHierarchy {
+    return {
+      tiers: approvers.tiers.map((tier) => ({
+        and: tier.and.map((conjunction) => ({
+          or: conjunction.or.map((approver) => {
+            return {
+              associateRole: {
+                typeId: 'associate-role',
+                key: approver.key,
+              },
+            };
+          }),
+        })),
+      })),
+    };
+  }
+
+  static approvalRuleRequesterToCommercetoolsRuleRequester(requesters: AssociateRole[]): CommercetoolsRuleRequester[] {
+    return requesters.map((requester) => {
+      return {
+        associateRole: {
+          typeId: 'associate-role',
+          key: requester.key,
+        },
+      };
+    });
+  }
+
+  static commercetoolsApprovalFlowToApprovalFlow(
+    commercetoolsApprovalFlow: CommercetoolsApprovalFlow,
+    locale: Locale,
+  ): ApprovalFlow {
+    return {
+      approvalFlowId: commercetoolsApprovalFlow.id,
+      approvalFlowVersion: commercetoolsApprovalFlow.version,
+      order: this.commercetoolsOrderReferenceToOrder(commercetoolsApprovalFlow.order, locale),
+      businessUnitKey: commercetoolsApprovalFlow.businessUnit.key,
+      approvalRules: commercetoolsApprovalFlow.rules.map((commercetoolsRule) => {
+        return this.commercetoolsApprovalRuleToApprovalRule(commercetoolsRule);
+      }),
+      approvalFlowStatus: this.commercetoolsApprovalFlowStatusToApprovalStatus(commercetoolsApprovalFlow.status),
+      approvalFlowRejection: {
+        rejecter: this.commercetoolsAssociateToAssociate(commercetoolsApprovalFlow.rejection.rejecter),
+        rejectedAt: new Date(commercetoolsApprovalFlow.rejection.rejectedAt),
+        reason: commercetoolsApprovalFlow.rejection?.reason,
+      },
+      approvalFlowApproval: commercetoolsApprovalFlow.approvals.map((approval) => {
+        return {
+          approver: this.commercetoolsAssociateToAssociate(approval.approver),
+          approvedAt: new Date(approval.approvedAt),
+        };
+      }),
+      eligibleApprovers: commercetoolsApprovalFlow.eligibleApprovers.map((commercetoolsRuleApprover) => {
+        return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(commercetoolsRuleApprover.associateRole);
+      }),
+      pendingApprovers: commercetoolsApprovalFlow.pendingApprovers.map((commercetoolsPendingApprover) => {
+        return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(commercetoolsPendingApprover.associateRole);
+      }),
+      currentTierPendingApprovers: commercetoolsApprovalFlow.currentTierPendingApprovers.map(
+        (commercetoolsCurrentTierPendingApprovers) => {
+          return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(
+            commercetoolsCurrentTierPendingApprovers.associateRole,
+          );
+        },
+      ),
+    };
+  }
+
+  static commercetoolsOrderReferenceToOrder(order: CommercetoolsOrderReference, locale: Locale): Order {
+    return {
+      cartId: order?.id,
+      ...CartMapper.commercetoolsOrderToOrder(order.obj, locale),
+    };
+  }
+
+  static commercetoolsAssociateToAssociate(commercetoolsAssociate: CommercetoolsAssociate): Associate {
+    if (!commercetoolsAssociate.customer?.obj) {
+      throw new Error('Invalid commercetoolsAssociate: customer object is missing');
+    }
+
+    const associate: Associate = AccountMapper.commercetoolsCustomerToAccount(commercetoolsAssociate.customer.obj);
+
+    associate.roles =
+      commercetoolsAssociate.associateRoleAssignments?.map((commercetoolsAssociateRoleAssignment) => {
+        return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(
+          commercetoolsAssociateRoleAssignment.associateRole,
+        );
+      }) || [];
+
+    return associate;
+  }
+
+  private static commercetoolsApprovalFlowStatusToApprovalStatus(
+    status: CommercetoolsApprovalRuleStatus,
+  ): ApprovalFlowStatus {
+    switch (status) {
+      case 'Pending':
+        return 'Pending';
+      case 'Approved':
+        return 'Approved';
+      case 'Rejected':
+        return 'Rejected';
+      default:
+        throw new ValidationError({ message: 'Approval rule status does not exist' });
+    }
   }
 }

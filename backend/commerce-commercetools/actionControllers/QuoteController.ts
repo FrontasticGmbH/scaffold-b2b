@@ -11,27 +11,13 @@ import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteA
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseQueryParams from '@Commerce-commercetools/utils/requestHandlers/parseRequestParams';
+import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 export interface QuoteRequestBody {
   comment: string;
   purchaseOrderNumber?: string;
-}
-
-function queryParamsToSortAttributes(queryParams: any) {
-  const sortAttributes: SortAttributes = {};
-
-  if (queryParams.sortAttributes) {
-    let sortAttribute;
-
-    for (sortAttribute of Object.values(queryParams.sortAttributes)) {
-      const key = Object.keys(sortAttribute)[0];
-      sortAttributes[key] = sortAttribute[key] ? sortAttribute[key] : SortOrder.ASCENDING;
-    }
-  }
-
-  return sortAttributes;
 }
 
 export const createQuoteRequest: ActionHook = async (request: Request, actionContext: ActionContext) => {

@@ -29,6 +29,7 @@ import ProductDetailsTastic from './product-details';
 import QuoteRequestDetailsTastic from './quote-request-detail';
 import QuoteCheckoutTastic from './quote-checkout';
 import QuoteThankYouTastic from './quote-thank-you';
+import SpacerTastic from './spacer';
 import type { TasticRegistry } from './types';
 
 const tastics = {
@@ -63,6 +64,7 @@ const tastics = {
   'commercetools/ui/thank-you': ThankYouTastic,
   'commercetools/ui/quote-thank-you': QuoteThankYouTastic,
   'commercetools/ui/products/product-slider': ProductSliderTastic,
+  'commercetools/ui/spacer': SpacerTastic,
 } as TasticRegistry;
 
 export default tastics;

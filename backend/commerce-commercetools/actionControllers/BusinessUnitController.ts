@@ -2,6 +2,9 @@ import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
+import { ApprovalRule } from '@Types/business-unit';
+import { ApprovalRuleQuery } from '@Types/business-unit/ApprovalRule';
+import { ApprovalFlowsQuery } from '@Types/business-unit/ApprovalFlow';
 import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHandlers/Request';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
@@ -13,6 +16,9 @@ import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAut
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
 import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
+import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
+import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
+import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -393,6 +399,176 @@ export const getAssociate: ActionHook = async (request: Request, actionContext: 
     };
 
     return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const createApprovalRule: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    assertIsAuthenticated(request);
+
+    const account = fetchAccountFromSession(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+    const storeKey = getStoreKey(request);
+
+    const approvalRuleRequest = parseRequestBody<{ approvalRule: ApprovalRule }>(request.body);
+
+    if (!businessUnitKey || !storeKey) {
+      throw new ValidationError({ message: 'Business unit or store key is missing.' });
+    }
+
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
+
+    const approvalRule = await businessUnitApi.createApprovalRule(
+      account.accountId,
+      businessUnitKey,
+      approvalRuleRequest.approvalRule,
+    );
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(approvalRule),
+      sessionData: request.sessionData,
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const queryApprovalRules: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const account = assertIsAuthenticated(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
+
+    const approvalRuleQuery: ApprovalRuleQuery = {
+      limit: request.query?.limit ?? undefined,
+      approvalRuleStatus: queryParamsToStates('approvalRuleStatus', request.query),
+      sortAttributes: queryParamsToSortAttributes(request.query),
+      approvalRuleIds: queryParamsToIds('approvalRuleIds', request.query),
+    };
+
+    const queryResult = await businessUnitApi.queryApprovalRules(businessUnitKey, account.accountId, approvalRuleQuery);
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(queryResult),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const updateApprovalRule: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const account = assertIsAuthenticated(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
+
+    const approvalRuleRequest = parseRequestBody<{ approvalRule: Omit<ApprovalRule, 'approvalRuleVersion'> }>(
+      request.body,
+    );
+
+    const approvalRule = await businessUnitApi.updateApprovalRule(
+      approvalRuleRequest.approvalRule,
+      account.accountId,
+      businessUnitKey,
+    );
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(approvalRule),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const queryApprovalFlows: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const account = assertIsAuthenticated(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
+
+    const approvalFlowsQuery: ApprovalFlowsQuery = {
+      limit: request.query?.limit ?? undefined,
+      sortAttributes: queryParamsToSortAttributes(request.query),
+      approvalFlowStatus: queryParamsToStates('approvalFlowStatus', request.query),
+      approvalFlowIds: queryParamsToIds('approvalFlowIds', request.query),
+    };
+
+    const approvalRules = await businessUnitApi.queryApprovalFlows(
+      businessUnitKey,
+      account.accountId,
+      approvalFlowsQuery,
+    );
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(approvalRules),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const approveApprovalFlow: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const account = assertIsAuthenticated(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
+
+    const { approvalFlowId } = parseRequestBody<{ approvalFlowId: string }>(request.body);
+
+    const approvalFlow = await businessUnitApi.approveApprovalFlow(businessUnitKey, account.accountId, approvalFlowId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(approvalFlow),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const rejectApprovalFlow: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const account = assertIsAuthenticated(request);
+    const businessUnitKey = getBusinessUnitKey(request);
+
+    const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
+
+    const { approvalFlowId, reason } = parseRequestBody<{ approvalFlowId: string; reason?: string }>(request.body);
+
+    const approvalFlow = await businessUnitApi.rejectApprovalFlow(
+      businessUnitKey,
+      account.accountId,
+      approvalFlowId,
+      reason,
+    );
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(approvalFlow),
+      sessionData: request.sessionData,
+    };
   } catch (error) {
     return handleError(error, request);
   }
