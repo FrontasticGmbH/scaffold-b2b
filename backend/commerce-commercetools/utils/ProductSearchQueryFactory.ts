@@ -20,6 +20,7 @@ import {
   _ProductSearchFacetExpression,
 } from '@commercetools/platform-sdk';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { SearchSorting } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/search';
 
 const EXPANDS = [
   'categories[*].ancestors[*]',
@@ -84,6 +85,7 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest = this.applySortAttributes(
       commercetoolsProductSearchRequest,
       productQuery,
+      facetDefinitions,
       locale,
     );
     commercetoolsProductSearchRequest = this.rearrangeProductSearchQuery(commercetoolsProductSearchRequest);
@@ -106,6 +108,7 @@ export class ProductSearchFactory {
         priceCurrency: locale.currency,
         expand: EXPANDS,
       },
+      markMatchingVariants: true,
     };
 
     commercetoolsProductSearchRequest.limit = +productQuery.limit || 24;
@@ -525,16 +528,59 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   };
 
-  private static applySortAttributes: ProductSearchFactoryUtilMethod = (
+  private static applySortAttributes: (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
   ) => {
     if (productQuery.sortAttributes) {
-      commercetoolsProductSearchRequest.sort = Object.keys(productQuery.sortAttributes).map((key) => ({
-        field: key === 'price' ? 'variants.prices.centAmount' : key,
-        order: productQuery.sortAttributes[key],
-      }));
+      const searchSortings: SearchSorting[] = [];
+
+      Object.entries(productQuery.sortAttributes).forEach(([sortAttributeKey, sortAttributeOrder]) => {
+        let searchSorting: SearchSorting = {
+          order: sortAttributeOrder,
+          field: sortAttributeKey,
+        };
+
+        switch (true) {
+          case sortAttributeKey === 'price':
+            searchSorting = {
+              ...searchSorting,
+              field: 'variants.prices.centAmount',
+            };
+            break;
+          case sortAttributeKey === 'description' || sortAttributeKey === 'name' || sortAttributeKey === 'slug':
+            searchSorting = {
+              ...searchSorting,
+              language: locale.language,
+            };
+            break;
+          default:
+        }
+
+        const facetDefinition = facetDefinitions.find(
+          (facetDefinition) => facetDefinition.attributeId === sortAttributeKey,
+        );
+
+        if (facetDefinition) {
+          searchSorting = {
+            ...searchSorting,
+            ...this.facetDefinitionToSearchSorting(facetDefinition, locale),
+          };
+        }
+
+        searchSortings.push(searchSorting);
+      });
+
+      commercetoolsProductSearchRequest.sort = searchSortings;
     }
+
     return commercetoolsProductSearchRequest;
   };
 
@@ -748,7 +794,7 @@ export class ProductSearchFactory {
     switch (facetDefinition.attributeType) {
       case 'money':
         return {
-          name: `${facetDefinition.attributeId}.centAmount`,
+          name: `${facetDefinition.attributeId}`,
           field: `${facetDefinition.attributeId}.centAmount`,
         };
 
@@ -902,5 +948,56 @@ export class ProductSearchFactory {
       ('distinct' in facet && facet.distinct?.name) ||
       ('ranges' in facet && facet.ranges?.name)
     );
+  }
+
+  private static facetDefinitionToSearchSorting(
+    facetDefinition: FacetDefinition,
+    locale: Locale,
+  ): Pick<SearchSorting, 'field' | 'fieldType' | 'language'> {
+    switch (facetDefinition.attributeType) {
+      case 'money':
+        return {
+          field: `${facetDefinition.attributeId}.centAmount`,
+        };
+
+      case 'enum':
+        return {
+          field: `${facetDefinition.attributeId}.label`,
+          fieldType: 'enum',
+        };
+
+      case 'lenum':
+        return {
+          field: `${facetDefinition.attributeId}.label`,
+          fieldType: 'lenum',
+          language: locale.language,
+        };
+
+      case 'ltext':
+        return {
+          field: `${facetDefinition.attributeId}`,
+          fieldType: 'ltext',
+          language: locale.language,
+        };
+
+      case 'text':
+        return {
+          field: `${facetDefinition.attributeId}`,
+          fieldType: 'text',
+        };
+
+      case 'boolean':
+        return {
+          field: `${facetDefinition.attributeId}`,
+          fieldType: 'boolean',
+        };
+
+      case 'range':
+      case 'reference':
+      default:
+        return {
+          field: `${facetDefinition.attributeId}`,
+        };
+    }
   }
 }

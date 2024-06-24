@@ -7,6 +7,6 @@ export default {
   component: QuoteDetailsPage,
 } as Meta<typeof QuoteDetailsPage>;
 
-const Template: StoryFn<typeof QuoteDetailsPage> = () => <QuoteDetailsPage quote={quote} permissions={{}} />;
+const Template: StoryFn<typeof QuoteDetailsPage> = () => <QuoteDetailsPage quote={quote} />;
 
 export const Primary = Template.bind({});

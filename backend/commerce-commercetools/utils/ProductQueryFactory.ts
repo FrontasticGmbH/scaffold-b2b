@@ -60,7 +60,7 @@ export class ProductQueryFactory {
     /**
      * Map query
      */
-    productQuery.query = queryParams?.query || undefined;
+    productQuery.query = queryParams?.query || queryParams?.lquery || undefined;
 
     /**
      * Map Categories
@@ -87,10 +87,11 @@ export class ProductQueryFactory {
     /**
      * Map skus
      */
-    if (queryParams?.skus && Array.isArray(queryParams?.skus)) {
-      queryParams?.skus.map((sku: string | number) => {
-        productQuery.skus.push(sku.toString());
-      });
+    // Temporary fix to prevent queries to fail if skus come in the wrong format
+    if (queryParams?.skus && queryParams.skus.length) {
+      const skusArray = Array.isArray(queryParams.skus) ? queryParams.skus : queryParams.skus.split(',');
+
+      productQuery.skus.push(...skusArray.map((sku: string | number) => sku.toString()));
     }
 
     /**

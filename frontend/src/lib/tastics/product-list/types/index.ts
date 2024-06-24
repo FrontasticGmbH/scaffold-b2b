@@ -10,7 +10,7 @@ export interface DataSourceProps {
   category?: string;
   items: Array<Product>;
   facets: Array<
-    Omit<RangeFacet | TermFacet | RangeFacet, 'terms'> & {
+    Omit<RangeFacet | TermFacet, 'terms'> & {
       label: string;
       selected?: boolean;
       terms?: Array<{

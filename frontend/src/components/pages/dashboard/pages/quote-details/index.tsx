@@ -12,7 +12,6 @@ const QuoteDetailsPage = ({
   quote,
   isQuoteRequest,
   viewOnly = false,
-  permissions,
   onAccept,
   onCommentUpdate,
   onReject,
@@ -90,15 +89,12 @@ const QuoteDetailsPage = ({
                 ...(!viewOnly
                   ? {
                       reply: reply && !isRenegotiating[index],
-                      canAccept: permissions.canAccept,
-                      canReject: permissions.canDecline,
                       onAccept,
                       onReject,
                       ctaLink:
                         renegotiate || revoke
                           ? translate(`dashboard.cta.${renegotiate ? 'renegotiate' : 'revoke'}`)
                           : '',
-                      ctaLinkIsDisabled: renegotiate ? !permissions.canRenegotiate : !permissions.canRevoke,
                       onCtaLinkClick:
                         renegotiate || revoke
                           ? renegotiate
@@ -107,10 +103,9 @@ const QuoteDetailsPage = ({
                           : undefined,
                     }
                   : {}),
-                ...(viewOrder
+                ...(viewOrder && !viewOnly
                   ? {
                       ctaButton: translate('dashboard.view.order.details'),
-                      ctaButtonIsDisabled: viewOnly,
                       onCtaButtonClick: onViewOrder,
                     }
                   : {}),

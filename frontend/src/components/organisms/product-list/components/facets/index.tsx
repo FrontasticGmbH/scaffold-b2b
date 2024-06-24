@@ -23,7 +23,7 @@ const Facets = () => {
             <div className="flex flex-col gap-7">
               {sortValues.map(({ name, value, vector }) => (
                 <Radio
-                  key={value}
+                  key={`${value}-${vector}`}
                   label={name}
                   checked={value === currentSortValue && vector === currentSortVector}
                   onSelected={() => onSortValueChange(value, vector)}

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Tabs from '@/components/organisms/tabs';
+import EmptyState from '@/components/molecules/empty-state';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
 import useDisclosure from '@/hooks/useDisclosure';
 import CurrentRefinements from './components/current-refinements';
@@ -81,9 +82,11 @@ const QuotesPage = ({
           <h1 className="text-18 font-extrabold text-gray-800 md:text-20 lg:text-24">
             {translate(`common.${selected}`)}
           </h1>
-          <div className="rounded-md bg-primary px-[6px] py-[2px] text-12 font-semibold text-white">
-            {quotes.length}
-          </div>
+          {quotes.length > 0 && (
+            <div className="rounded-md bg-primary px-[6px] py-[2px] text-12 font-semibold text-white">
+              {quotes.length}
+            </div>
+          )}
         </div>
         <InfoIcon className="h-[24px] w-[24px] cursor-pointer text-gray-600 md:hidden" onClick={onStatusModalOpen} />
       </div>
@@ -109,16 +112,28 @@ const QuotesPage = ({
           </Tabs.TabList>
           <Tabs.Panels className="overflow-visible">
             <Tabs.Panel>
-              <RefinementsDrawer {...refinementProps} />
-              <Refinements {...refinementProps} />
-              <CurrentRefinements {...currentRefinementsProps} />
-              <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+              {quotes.length > 0 ? (
+                <>
+                  <RefinementsDrawer {...refinementProps} />
+                  <Refinements {...refinementProps} />
+                  <CurrentRefinements {...currentRefinementsProps} />
+                  <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+                </>
+              ) : (
+                <EmptyState header={translate('common.no.results.found')} />
+              )}
             </Tabs.Panel>
             <Tabs.Panel>
-              <RefinementsDrawer {...refinementProps} />
-              <Refinements {...refinementProps} />
-              <CurrentRefinements {...currentRefinementsProps} />
-              <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+              {quotes.length > 0 ? (
+                <>
+                  <RefinementsDrawer {...refinementProps} />
+                  <Refinements {...refinementProps} />
+                  <CurrentRefinements {...currentRefinementsProps} />
+                  <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+                </>
+              ) : (
+                <EmptyState header={translate('common.no.results.found')} />
+              )}
             </Tabs.Panel>
           </Tabs.Panels>
         </Tabs>

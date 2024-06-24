@@ -16,6 +16,7 @@ const useFacetComponent = () => {
         navigation: <NavigationFacet {...(facet as NavigationFacetType)} />,
         term: <TermFacet {...(facet as TermFacetType)} />,
         range: <RangeFacet {...(facet as RangeFacetType)} />,
+        boolean: <TermFacet {...(facet as TermFacetType)} />,
       } as Record<Facet['type'], JSX.Element>
     )[facet.type];
   }, []);

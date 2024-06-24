@@ -1,4 +1,14 @@
 
+## Version 1.7.1 (2024-06-06)
+
+** New Features and Improvements **
+
+* Added business unit create and reject approval flow actions
+* Created busniess unit queryApprovalRules, updateApprovalRule and queryApprovalFlows actions
+* Added business unit createApprovalRule action
+* Removed unsetting of split shipping after adding line items
+* Added missing distribution and supply channel when adding items on a recreated cart
+
 ## Version 1.7.0 (2024-05-16)
 
 ** New Features and Improvements **

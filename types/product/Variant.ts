@@ -24,4 +24,5 @@ export interface Variant {
   isOnStock?: boolean;
   availableQuantity?: number;
   restockableInDays?: number;
+  isMatchingVariant?: boolean;
 }

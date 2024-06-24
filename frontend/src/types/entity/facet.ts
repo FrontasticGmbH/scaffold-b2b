@@ -17,10 +17,14 @@ export interface TermFacet extends BaseFacet {
   maxVisibleItems?: number;
 }
 
+export interface BooleanFacet extends Omit<TermFacet, 'type'> {
+  type: 'boolean';
+}
+
 export interface NavigationFacet extends BaseFacet {
   type: 'navigation';
   values: Array<BaseFacet>;
   maxVisibleItems?: number;
 }
 
-export type Facet = RangeFacet | NavigationFacet | TermFacet;
+export type Facet = RangeFacet | NavigationFacet | TermFacet | BooleanFacet;

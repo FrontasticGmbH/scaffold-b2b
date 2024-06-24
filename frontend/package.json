@@ -1,6 +1,6 @@
 {
   "name": "@b2bdev/poc-frontend",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "license": "MIT",
   "main": "index.js",
   "private": true,
@@ -20,7 +20,7 @@
     "postbuild": "rimraf ./public/storybook && yarn storybook:build"
   },
   "dependencies": {
-    "@commercetools/frontend-sdk": "1.12.1",
+    "@commercetools/frontend-sdk": "1.13.1",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "date-fns": "^2.30.0",

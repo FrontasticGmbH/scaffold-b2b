@@ -184,5 +184,6 @@
   "estimated": "Est",
   "estimated.delivery": "Est. Delivery to agent",
   "discard": "Discard",
-  "name.validation": "Only letters are allowed"
+  "name.validation": "Only letters are allowed",
+  "select.predicate": "Select a predicate"
 }

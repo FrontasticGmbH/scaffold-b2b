@@ -44,8 +44,8 @@ export default class ProductApi extends BaseApi {
       .execute()
       .then((response) => {
         const items = response.body.results.map((product) =>
-          ProductMapper.commercetoolsProductProjectionToProduct(
-            product.productProjection,
+          ProductMapper.commercetoolsProductSearchResultToProduct(
+            product,
             this.productIdField,
             this.categoryIdField,
             locale,

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from '@/components/atoms/link';
 import Card from '@/components/molecules/card';
 import InfoTooltip from '@/components/atoms/info-tooltip';
+import EmptyState from '@/components/molecules/empty-state';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
 import useOrders from '@/lib/hooks/useOrders';
@@ -40,8 +41,7 @@ const DashboardPage: React.FC = () => {
           >
             <Link
               href={href}
-              className="block w-full"
-              style={{ opacity: disabled ? 0.5 : 1 }}
+              className={`block w-full ${disabled ? 'opacity-50' : ''}`}
               underlineOnHover={false}
               {...(disabled ? { onClick: (e) => e.preventDefault() } : {})}
             >
@@ -64,7 +64,11 @@ const DashboardPage: React.FC = () => {
         <h2 className="mb-4 text-16 font-extrabold text-gray-800 md:mb-5 md:text-18 lg:mb-6 lg:text-20">
           {translate('common.orders.latest')}
         </h2>
-        <OrdersTable orders={mappedOrders ?? []} />
+        {mappedOrders && mappedOrders.length > 0 ? (
+          <OrdersTable orders={mappedOrders} />
+        ) : (
+          <EmptyState header={translate('common.no.results.found')} />
+        )}
       </div>
     </div>
   );

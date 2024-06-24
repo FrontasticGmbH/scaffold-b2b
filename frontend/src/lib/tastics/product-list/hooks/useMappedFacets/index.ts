@@ -4,7 +4,7 @@ import { DataSourceProps, Props } from '../../types';
 
 const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props>) => {
   const { translate } = useTranslation();
-
+  console.log(facets);
   // Only facet keys present here will be picked up
   const allowedFacets = new Set([
     'variants.scopedPrice.value',
@@ -16,7 +16,12 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
   const mappedFacets = (facets ?? [])
     .filter((facet) => allowedFacets.has(facet.identifier))
     .map((facet) => {
-      if (facet.type === 'term' && !facet.terms?.length) return;
+      const isNavigationFacet = facet.identifier === 'categories.id';
+      const isBooleanFacet = facet.type === 'boolean';
+      const isTermFacet = facet.type === 'term' || isBooleanFacet;
+      const isRangeFacet = facet.type === 'range';
+
+      if (isTermFacet && !facet.terms?.length) return;
 
       const res = {
         id: facet.identifier,
@@ -26,24 +31,24 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
         type: facet.type,
       } as Facet;
 
-      if (facet.identifier === 'categories.id') res.type = 'navigation';
+      if (isNavigationFacet) res.type = 'navigation';
 
-      if (facet.type === 'term') {
+      if (isTermFacet) {
         (res as TermFacet).values = (facet.terms ?? []).map((term) => {
           const value = {
             id: term.identifier,
-            name: term.label,
+            name: isBooleanFacet ? translate(`product.${facet.identifier}.${term.identifier}`) : term.label,
             selected: term.selected,
             count: term.count,
           };
 
-          if (facet.identifier === 'categories.id') value.name = categories?.find((c) => c.categoryId)?.name ?? '';
+          if (isNavigationFacet) value.name = categories?.find((c) => c.categoryId)?.name ?? '';
 
           return value;
         });
       }
 
-      if (facet.type === 'range') {
+      if (isRangeFacet) {
         (res as RangeFacet).min = (facet.minSelected ?? 0) / 100;
         (res as RangeFacet).max = (facet.maxSelected ?? 0) / 100;
       }
