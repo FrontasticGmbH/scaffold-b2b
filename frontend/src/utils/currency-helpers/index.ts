@@ -63,8 +63,8 @@ export class CurrencyHelpers {
     typeof costInCents === 'string'
       ? CurrencyHelpers.formatStringForCurrency(costInCents, locale, currencyCode, fractionDigits)
       : typeof costInCents === 'number'
-      ? CurrencyHelpers.formatNumberForCurrency(costInCents, locale, currencyCode, fractionDigits)
-      : CurrencyHelpers.formatMoneyCurrency(costInCents, locale);
+        ? CurrencyHelpers.formatNumberForCurrency(costInCents, locale, currencyCode, fractionDigits)
+        : CurrencyHelpers.formatMoneyCurrency(costInCents, locale);
 
   static addCurrency: (value1?: Money, value2?: Money) => Money = (value1?: Money, value2?: Money) => {
     if (!value1) value1 = { centAmount: 0 };

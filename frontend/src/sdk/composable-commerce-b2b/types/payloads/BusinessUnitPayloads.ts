@@ -58,11 +58,12 @@ type UpdateApprovalRulePayload = {
 };
 
 type ApproveApprovalFlowPayload = {
-  businessUnitKey: string;
+  approvalFlowId: string;
 };
 
 type RejectApprovalFlowPayload = {
-  businessUnitKey: string;
+  approvalFlowId: string;
+  reason: string;
 };
 
 export {

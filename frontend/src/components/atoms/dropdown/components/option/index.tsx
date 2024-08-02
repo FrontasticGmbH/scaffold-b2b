@@ -7,15 +7,13 @@ import { useDropdown } from '../../context';
 const DropdownOption = ({ children, value }: React.PropsWithChildren<Props>) => {
   const { value: selectedValue, defaultValue } = useDropdown();
 
+  const isActive = value === selectedValue || value === defaultValue;
+
   return (
-    <Listbox.Option
-      key={value}
-      className={({ active }) => classnames('relative cursor-default select-none', { 'bg-neutral-200': active })}
-      value={{ value }}
-    >
+    <Listbox.Option key={value} className={classnames('relative cursor-default select-none')} value={{ value }}>
       <div
         className={classnames('block truncate px-3 py-[10px] text-14 text-gray-700 lg:py-1', {
-          'bg-neutral-200': value === selectedValue || value === defaultValue,
+          'bg-neutral-200': isActive,
         })}
       >
         {children}

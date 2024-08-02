@@ -14,6 +14,7 @@ const Confirmation = ({
   onConfirm,
   isOpen: isOpenProp,
   disabled = false,
+  className = '',
 }: React.PropsWithChildren<ConfirmationProps>) => {
   const [isOpen, setIsOpen] = useControllableState(isOpenProp, false);
 
@@ -44,8 +45,10 @@ const Confirmation = ({
 
   return (
     <>
-      <div onClick={onOpen}>{children}</div>
-      <ResponsiveModal className="lg:max-w-[400px]" isOpen={isOpen} onRequestClose={onClose} closeButton>
+      <div className={className} onClick={onOpen}>
+        {children}
+      </div>
+      <ResponsiveModal className="lg:max-w-[400px]" isOpen={isOpen} onRequestClose={handleCancel} closeButton>
         <div className="px-6">
           <h4 className="pb-4 pt-6 text-20 font-semibold text-gray-800">{translations.title}</h4>
           <p className="text-14 text-gray-700">{translations.summary}</p>

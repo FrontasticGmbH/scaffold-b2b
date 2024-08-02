@@ -3,6 +3,7 @@ import { sdk } from '@/sdk';
 import { Providers } from '@/providers';
 import PreviewRenderer from '@/lib/preview-renderer';
 import { getTranslations } from '@/utils/I18n/get-translations';
+import Toaster from '@/components/atoms/toaster';
 
 export const fetchCache = 'force-no-store';
 
@@ -37,8 +38,13 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 
   return (
-    <Providers translations={translations} locale={locale} initialData={{}} page={page}>
-      <PreviewRenderer data={page.data} params={params} searchParams={searchParams} />
-    </Providers>
+    <div data-theme={(!page.isError && page.data.pageFolder.configuration.displayTheme) ?? 'default'}>
+      <Providers translations={translations} locale={locale} initialData={{}} page={page}>
+        <PreviewRenderer data={page.data} params={params} searchParams={searchParams} />
+        <Toaster />
+      </Providers>
+
+      <div id="react-modal-custom-portal" />
+    </div>
   );
 }

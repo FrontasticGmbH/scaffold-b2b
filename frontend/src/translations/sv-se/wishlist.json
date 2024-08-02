@@ -1,15 +1,15 @@
 {
-  "my.wishlist": "min Inköpslista",
+  "my.wishlist": "Min inköpslista",
   "wishlist": "Inköpslista",
-  "items": "Inköpslista objekt",
-  "items.in.view": "objekt i Inköpslistan, visa Inköpslista",
+  "items": "Inköpslista Artiklar",
+  "items.in.view": "artiklar i Inköpslista, se Inköpslista",
   "oops": "Hoppsan...",
-  "empty": "Din Inköpslista är tom",
+  "empty": "Din inköpslista är tom",
   "add.items": "Lägg till objekt",
   "add.to.cart": "Flytta till kundvagn",
   "clear.list": "Rensa listan",
   "move": "Flytta",
   "move.to.list": "Flytta till listan",
-  "select.list": "Välj inköpslista",
+  "select.list": "Välj Inköpslista",
   "item.added": "Objekt lades till"
 }

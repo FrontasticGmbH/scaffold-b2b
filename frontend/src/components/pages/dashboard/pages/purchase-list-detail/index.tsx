@@ -29,16 +29,16 @@ const PurchaseListDetailPage = ({
     <div>
       <div className="flex flex-col gap-5 border-b border-neutral-400 pb-4 md:flex-row md:items-start md:justify-between md:pb-6 lg:pb-8">
         <div>
-          <h1 className="py-6 text-18 font-extrabold leading-[100%] text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
+          <h1 className="py-6 text-18 font-extrabold leading-tight text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
             {purchaseList.name}
           </h1>
-          <p className="text-14 leading-[100%] text-gray-600 lg:text-16">{purchaseList.description}</p>
+          <p className="text-14 leading-tight text-gray-600 lg:text-16">{purchaseList.description}</p>
         </div>
         <div className="flex items-center gap-3 md:pt-5 lg:pt-8">
           <PreviousPageLink className="hidden md:block" />
           <div className="flex w-full flex-col items-stretch gap-4 md:w-fit md:flex-row md:items-center md:gap-3">
             <Button
-              className="w-full px-[0px] py-[8px] md:order-[2] md:w-[75px]"
+              className="w-full px-0 py-[8px] md:order-2 md:w-[75px]"
               size="m"
               disabled
               onClick={() => onOrderPurchaseList?.(purchaseList.id)}
@@ -46,7 +46,7 @@ const PurchaseListDetailPage = ({
               {translate('common.order')}
             </Button>
             <EditPurchaseListModal purchaseList={purchaseList} onUpdatePurchaseList={onUpdatePurchaseList}>
-              <Button className="w-full px-[0px] py-[8px] md:w-[75px]" size="m" variant="secondary">
+              <Button className="w-full px-0 py-[8px] md:w-[75px]" size="m" variant="secondary">
                 {translate('common.edit')}
               </Button>
             </EditPurchaseListModal>
@@ -64,7 +64,7 @@ const PurchaseListDetailPage = ({
                 else showDeletedFailedMessage();
               }}
             >
-              <Button className="w-full px-[0px] py-[8px] md:w-[75px]" size="m" variant="secondary">
+              <Button className="w-full px-0 py-[8px] md:w-[75px]" size="m" variant="secondary">
                 {translate('common.delete')}
               </Button>
             </Confirmation>

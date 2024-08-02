@@ -8,6 +8,8 @@ export type Attribute = {
 
 export interface Product {
   id: string;
+  key?: string;
+  ref?: string;
   sku?: string;
   name: string;
   description?: string;

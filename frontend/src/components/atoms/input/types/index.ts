@@ -12,6 +12,7 @@ export interface InputProps
   onClear?: () => void;
   icon?: React.ReactNode;
   containerClassName?: string;
+  outerContainerClassName?: string;
   unStyled?: boolean;
   focusOnMount?: boolean;
 }

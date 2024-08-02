@@ -6,38 +6,48 @@ import { Quote, QuoteState } from '@shared/types/quote/Quote';
 import { PaginatedResult } from '@shared/types/result';
 import { Options } from './types';
 
-const useQuotes = ({ cursor, limit, states, ids, businessUnitKey }: Options) => {
+const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes }: Options) => {
   const quotesResponse = useSWR(
-    !businessUnitKey ? null : ['/action/quote/query', limit, cursor, ids, states, businessUnitKey],
+    !businessUnitKey ? null : ['/action/quote/query', limit, cursor, ids, states, businessUnitKey, sortAttributes],
     () =>
-      sdk.composableCommerce.quote.query({
-        businessUnitKey: businessUnitKey as string,
-        ...(limit ? { limit } : {}),
-        ...(cursor ? { cursor } : {}),
-        ...(ids ? { quoteIds: ids } : {}),
-        ...(states ? { quoteStates: states as QuoteState[] } : {}),
-      }),
+      sdk.composableCommerce.quote.query(
+        {
+          businessUnitKey: businessUnitKey as string,
+          ...(limit ? { limit } : {}),
+          ...(cursor ? { cursor } : {}),
+          ...(ids ? { quoteIds: ids } : {}),
+          ...(states ? { quoteStates: states as QuoteState[] } : {}),
+          ...(sortAttributes ? { sortAttributes } : ''),
+        },
+        { skipQueue: true },
+      ),
   );
 
   const quoteRequestsResponse = useSWR(
-    !businessUnitKey ? null : ['/action/quote/queryQuoteRequests', limit, cursor, ids, states, businessUnitKey],
+    !businessUnitKey
+      ? null
+      : ['/action/quote/queryQuoteRequests', limit, cursor, ids, states, businessUnitKey, sortAttributes],
     () =>
-      sdk.composableCommerce.quote.queryRequests({
-        businessUnitKey: businessUnitKey as string,
-        ...(limit ? { limit } : {}),
-        ...(cursor ? { cursor } : {}),
-        ...(ids ? { quoteIds: ids } : {}),
-        ...(states ? { quoteStates: states as QuoteState[] } : {}),
-      }),
+      sdk.composableCommerce.quote.queryRequests(
+        {
+          businessUnitKey: businessUnitKey as string,
+          ...(limit ? { limit } : {}),
+          ...(cursor ? { cursor } : {}),
+          ...(ids ? { quoteIds: ids } : {}),
+          ...(states ? { quoteStates: states as QuoteState[] } : {}),
+          ...(sortAttributes ? { sortAttributes } : ''),
+        },
+        { skipQueue: true },
+      ),
   );
 
   const quotes = quotesResponse.data?.isError
     ? ({} as Partial<PaginatedResult<Quote>>)
-    : quotesResponse.data?.data ?? ({} as Partial<PaginatedResult<Quote>>);
+    : (quotesResponse.data?.data ?? ({} as Partial<PaginatedResult<Quote>>));
 
   const quoteRequests = quoteRequestsResponse.data?.isError
     ? ({} as Partial<PaginatedResult<QuoteRequest>>)
-    : quoteRequestsResponse.data?.data ?? ({} as Partial<PaginatedResult<QuoteRequest>>);
+    : (quoteRequestsResponse.data?.data ?? ({} as Partial<PaginatedResult<QuoteRequest>>));
 
   const cancelQuoteRequest = useCallback(
     async (id: string) => {

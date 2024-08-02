@@ -1,3 +1,5 @@
+import { SortAttribute } from '@/types/entity/sort-attribute';
+
 export interface Options {
   cursor?: string;
   limit?: number;
@@ -5,4 +7,5 @@ export interface Options {
   states?: string[];
   businessUnitKey?: string;
   storeKey?: string;
+  sortAttributes?: SortAttribute[];
 }

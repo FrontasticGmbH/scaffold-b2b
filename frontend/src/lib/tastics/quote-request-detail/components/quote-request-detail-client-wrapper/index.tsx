@@ -32,11 +32,26 @@ const QuoteRequestDetailsClientWrapper = ({ data }: TasticProps<DataSource<DataS
 
   if (!quoteRequest) return <></>;
 
+  const mappedQuoteRequest = mapQuoteRequest(quoteRequest, { businessUnits, account });
+
   return (
     <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
       <QuoteDetailsPage
-        quote={mapQuoteRequest(quoteRequest, { businessUnits })}
-        viewOnly={!permissions.UpdateMyQuoteRequests}
+        quote={mappedQuoteRequest}
+        permissions={{
+          canAccept:
+            (!mappedQuoteRequest.ownedByOtherUser && permissions.AcceptMyQuotes) ||
+            (mappedQuoteRequest.ownedByOtherUser && permissions.AcceptOthersQuotes),
+          canDecline:
+            (!mappedQuoteRequest.ownedByOtherUser && permissions.DeclineMyQuotes) ||
+            (mappedQuoteRequest.ownedByOtherUser && permissions.DeclineOthersQuotes),
+          canRenegotiate:
+            (!mappedQuoteRequest.ownedByOtherUser && permissions.RenegotiateMyQuotes) ||
+            (mappedQuoteRequest.ownedByOtherUser && permissions.RenegotiateOthersQuotes),
+          canRevoke:
+            (!mappedQuoteRequest.ownedByOtherUser && permissions.UpdateMyQuoteRequests) ||
+            (mappedQuoteRequest.ownedByOtherUser && permissions.UpdateOthersQuoteRequests),
+        }}
         isQuoteRequest
         onRevoke={async () => {
           await cancelQuoteRequest(quoteRequest.quoteRequestId as string);

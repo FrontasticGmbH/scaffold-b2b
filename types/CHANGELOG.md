@@ -1,4 +1,15 @@
 
+## Version 1.9.0 (2024-08-01)
+
+## Version 1.8.0 (2024-06-28)
+
+** New Features and Improvements **
+
+## Version 1.7.0 (2024-06-24)
+
+** New Features and Improvements **
+- Use markMatchingVariant for price filter
+
 ## Version 1.6.3 (2024-06-06)
 
 ## Version 1.6.2 (2024-05-09)

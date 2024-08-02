@@ -32,16 +32,19 @@ const useOrders = ({
           sortAttributes,
         ],
     () =>
-      sdk.composableCommerce.cart.queryOrders({
-        ...(limit ? { limit } : {}),
-        ...(cursor ? { cursor } : {}),
-        ...(ids ? { orderNumbers: ids } : {}),
-        ...(states ? { orderStates: states } : {}),
-        ...(createdFrom ? { createdFrom } : {}),
-        ...(createdTo ? { createdTo } : {}),
-        ...(businessUnitKey ? { businessUnitKey } : {}),
-        ...(sortAttributes ? { sortAttributes } : ''),
-      }),
+      sdk.composableCommerce.cart.queryOrders(
+        {
+          ...(limit ? { limit } : {}),
+          ...(cursor ? { cursor } : {}),
+          ...(ids ? { orderNumbers: ids } : {}),
+          ...(states ? { orderStates: states } : {}),
+          ...(createdFrom ? { createdFrom } : {}),
+          ...(createdTo ? { createdTo } : {}),
+          ...(businessUnitKey ? { businessUnitKey } : {}),
+          ...(sortAttributes ? { sortAttributes } : ''),
+        },
+        { skipQueue: true },
+      ),
     { revalidateIfStale: true },
   );
 
@@ -51,7 +54,7 @@ const useOrders = ({
 
   const orders = ordersResponse.data?.isError
     ? ({} as Partial<PaginatedResult<Order>>)
-    : ordersResponse.data?.data ?? ({} as Partial<PaginatedResult<Order>>);
+    : (ordersResponse.data?.data ?? ({} as Partial<PaginatedResult<Order>>));
 
   const cancelOrder = useCallback(
     async (order: Order) => {

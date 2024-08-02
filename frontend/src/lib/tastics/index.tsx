@@ -29,7 +29,11 @@ import ProductDetailsTastic from './product-details';
 import QuoteRequestDetailsTastic from './quote-request-detail';
 import QuoteCheckoutTastic from './quote-checkout';
 import QuoteThankYouTastic from './quote-thank-you';
+import ApprovalRulesTastic from './approval-rules';
 import SpacerTastic from './spacer';
+import ApprovalFlowsTastic from './approval-flows';
+import RelatedProductSliderTastic from './related-products-slider';
+import ApprovalFlowDetailsTastic from './approval-flow-details';
 import type { TasticRegistry } from './types';
 
 const tastics = {
@@ -64,7 +68,11 @@ const tastics = {
   'commercetools/ui/thank-you': ThankYouTastic,
   'commercetools/ui/quote-thank-you': QuoteThankYouTastic,
   'commercetools/ui/products/product-slider': ProductSliderTastic,
+  'commercetools/ui/products/related-products-slider': RelatedProductSliderTastic,
   'commercetools/ui/spacer': SpacerTastic,
+  'commercetools/ui/approval-rules': ApprovalRulesTastic,
+  'commercetools/ui/approval-flows': ApprovalFlowsTastic,
+  'commercetools/ui/approval-flow-details': ApprovalFlowDetailsTastic,
 } as TasticRegistry;
 
 export default tastics;

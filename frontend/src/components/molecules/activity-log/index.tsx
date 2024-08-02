@@ -37,11 +37,15 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
             onCommentUpdate,
             onCommentCancel,
             reply,
+            canAccept,
+            canReject,
             onAccept,
             onReject,
             ctaLink,
+            ctaLinkIsDisabled,
             onCtaLinkClick,
             ctaButton,
+            ctaButtonIsDisabled,
             onCtaButtonClick,
           },
           index,
@@ -126,6 +130,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
                   size="l"
                   className="leading-[16px]"
                   loading={declineProcessing[index]}
+                  disabled={!canReject}
                   onClick={async () => {
                     setDeclineProcessing({ ...declineProcessing, [index]: true });
                     await onReject?.();
@@ -139,6 +144,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
                   size="l"
                   className="py-[12px] leading-[16px]"
                   loading={replyProcessing[index]}
+                  disabled={!canAccept}
                   onClick={async () => {
                     setReplyProcessing({ ...replyProcessing, [index]: true });
                     await onAccept?.();
@@ -157,6 +163,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
                   size="l"
                   className="w-full max-w-[350px] py-[12px] leading-[16px]"
                   loading={actionProcessing[index]}
+                  disabled={ctaButtonIsDisabled}
                   onClick={async () => {
                     setActionProcess({ ...actionProcessing, [index]: true });
                     await onCtaButtonClick?.();
@@ -168,7 +175,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
               </div>
             )}
 
-            {ctaLink && (
+            {ctaLink && !ctaLinkIsDisabled && (
               <span
                 className="mt-5 block cursor-pointer text-14 text-[#274082] underline underline-offset-2"
                 onClick={onCtaLinkClick}

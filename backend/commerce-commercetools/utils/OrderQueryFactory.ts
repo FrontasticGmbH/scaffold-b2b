@@ -32,7 +32,7 @@ export class OrderQueryFactory {
     }
 
     const sortAttributes: SortAttributes = {};
-    const querySortAttributes = JSON.parse(queryParams.sortAttributes);
+    const querySortAttributes = queryParams.sortAttributes;
 
     if (querySortAttributes) {
       let sortAttribute;

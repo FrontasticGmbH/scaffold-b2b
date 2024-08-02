@@ -81,5 +81,6 @@
   "view.only.desc": "Um Artikel zum Warenkorb hinzuzufügen, bitten Sie Ihren Unternehmensadministrator, Ihnen die erforderlichen Berechtigungen zu erteilen",
   "checkout.request.disabled": "Um eine Bestellung oder ein Angebot zu erstellen, bitten Sie Ihren Unternehmensadministrator, Ihnen die erforderlichen Berechtigungen zu erteilen",
   "checkout.unavailable": "Kasse nicht verfügbar",
-  "invalid.addresses.requirements": "Es werden keine Versand- und Rechnungsadressen hinzugefügt. Bitten Sie Ihren Unternehmensadministrator, einen hinzuzufügen"
+  "invalid.addresses.requirements": "Es werden keine Versand- und Rechnungsadressen hinzugefügt. Bitten Sie Ihren Unternehmensadministrator, einen hinzuzufügen",
+  "cart.amount": "Warenkorbbetrag"
 }

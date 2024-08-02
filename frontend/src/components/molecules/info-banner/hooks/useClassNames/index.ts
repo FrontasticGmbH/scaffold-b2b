@@ -6,12 +6,14 @@ const useClassNames = ({ variant }: Partial<InfoBannerProps>) => {
   const resolveBannerVariant = cva({
     intent: {
       primary: 'bg-[#ECF0FB]',
+      warning: 'bg-yellow-100',
     },
   });
 
   const resolveSidebarVariant = cva({
     intent: {
       primary: 'bg-[#416BD8]',
+      warning: 'bg-yellow-500',
     },
   });
 

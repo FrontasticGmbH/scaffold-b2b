@@ -21,10 +21,7 @@ import {
   ProductSearchMatchingVariants as CommercetoolsProductSearchMatchingVariants,
   ProductSearchResult as CommercetoolsProductSearchResult,
 } from '@commercetools/platform-sdk';
-import {
-  Attribute as CommercetoolsAttribute,
-  ProductProjection as CommercetoolsProductProjection,
-} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
+import { Attribute as CommercetoolsAttribute } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { Attributes, FacetDefinition, Money, Product } from '@Types/product';
 import { ProductDiscount as CommercetoolsProductDiscount } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-discount';
 import {
@@ -51,6 +48,8 @@ const TypeMap = new Map<string, string>([
   ['number', FilterFieldTypes.NUMBER],
   ['lenum', FilterFieldTypes.ENUM],
   ['ltext', FilterFieldTypes.TEXT],
+  ['reference', FilterFieldTypes.TEXT],
+  ['money', FilterFieldTypes.MONEY],
 ]);
 
 export default class ProductMapper {
@@ -62,7 +61,9 @@ export default class ProductMapper {
     supplyChannelId?: string,
   ): Product {
     const product: Product = {
-      productId: commercetoolsProduct?.productProjection?.[productIdField],
+      productId: commercetoolsProduct?.productProjection?.id,
+      productKey: commercetoolsProduct?.productProjection?.key,
+      productRef: commercetoolsProduct?.productProjection?.[productIdField],
       version: commercetoolsProduct?.productProjection.version?.toString(),
       name: commercetoolsProduct?.productProjection.name?.[locale.language],
       slug: commercetoolsProduct?.productProjection.slug?.[locale.language],
@@ -380,6 +381,7 @@ export default class ProductMapper {
               : attribute.name,
         };
 
+        // Store facets by attributeId to avoid duplicated attributes
         facetDefinitionsIndex[facetDefinition.attributeId] = facetDefinition;
       });
     });
@@ -403,11 +405,20 @@ export default class ProductMapper {
           commercetoolsFacetResult.name,
         );
 
+        let facetLabel = commercetoolsFacetResult.name;
+
+        facetDefinitions.filter((facet) => {
+          if (facet.attributeId === commercetoolsFacetResult.name) {
+            facetLabel = facet.attributeLabel;
+          }
+        });
+
         if (commercetoolsFacetExpression) {
           if ('ranges' in commercetoolsFacetExpression) {
             return this.commercetoolsFacetResultBucketToRangeFacet(
               commercetoolsFacetExpression as ProductSearchFacetRangesExpression,
               commercetoolsFacetResult as ProductSearchFacetResultBucket,
+              facetLabel,
             );
           }
           if ('count' in commercetoolsFacetExpression) {
@@ -415,12 +426,14 @@ export default class ProductMapper {
               commercetoolsFacetExpression as ProductSearchFacetCountExpression,
               commercetoolsFacetResult as ProductSearchFacetResultCount,
               facetDefinitions,
+              facetLabel,
             );
           }
           if ('distinct' in commercetoolsFacetExpression) {
             return this.commercetoolsFacetResultBucketToTermFacet(
               commercetoolsFacetExpression as ProductSearchFacetDistinctExpression,
               commercetoolsFacetResult as ProductSearchFacetResultBucket,
+              facetLabel,
             );
           }
         }
@@ -432,6 +445,7 @@ export default class ProductMapper {
   static commercetoolsFacetResultBucketToRangeFacet = (
     commercetoolsFacetRangesExpression: ProductSearchFacetRangesExpression,
     commercetoolsFacetResultBucket: ProductSearchFacetResultBucket,
+    facetLabel: string,
   ): RangeFacet => {
     const min = parseInt(
       commercetoolsFacetResultBucket.buckets[0].key.substring(
@@ -452,7 +466,7 @@ export default class ProductMapper {
     return {
       type: FacetTypes.RANGE,
       identifier: commercetoolsFacetResultBucket.name,
-      label: commercetoolsFacetResultBucket.name,
+      label: facetLabel,
       key: commercetoolsFacetResultBucket.name,
       min: isNaN(min) ? 0 : min,
       max: isNaN(max) ? Number.MAX_SAFE_INTEGER : max,
@@ -466,6 +480,7 @@ export default class ProductMapper {
     commercetoolsFacetCountExpression: ProductSearchFacetCountExpression,
     commercetoolsFacetResultCount: ProductSearchFacetResultCount,
     facetDefinitions: FacetDefinition[],
+    facetLabel: string,
   ): Facet => {
     const selected = this.getSelectedFilterFromFacetSearchQuery(
       commercetoolsFacetResultCount.name,
@@ -478,7 +493,7 @@ export default class ProductMapper {
     return {
       type: definition.attributeType === FacetTypes.BOOLEAN ? FacetTypes.BOOLEAN : FacetTypes.TERM,
       identifier: commercetoolsFacetResultCount.name,
-      label: commercetoolsFacetResultCount.name,
+      label: facetLabel,
       key: commercetoolsFacetResultCount.name,
       count: commercetoolsFacetResultCount.value,
       selected: !!selected,
@@ -488,6 +503,7 @@ export default class ProductMapper {
   static commercetoolsFacetResultBucketToTermFacet = (
     commercetoolsFacetDistinctExpression: ProductSearchFacetDistinctExpression,
     commercetoolsFacetResultBucket: ProductSearchFacetResultBucket,
+    facetLabel: string,
   ): TermFacet => {
     const selected = this.getSelectedFilterFromFacetSearchQuery(
       commercetoolsFacetResultBucket.name,
@@ -499,7 +515,7 @@ export default class ProductMapper {
       type:
         commercetoolsFacetDistinctExpression.distinct.fieldType === 'boolean' ? FacetTypes.BOOLEAN : FacetTypes.TERM,
       identifier: commercetoolsFacetResultBucket.name,
-      label: commercetoolsFacetResultBucket.name,
+      label: facetLabel,
       key: commercetoolsFacetResultBucket.name,
       selected: selected?.length > 0,
       terms: commercetoolsFacetResultBucket.buckets.map((facetResultTerm) => {
@@ -660,6 +676,10 @@ export default class ProductMapper {
         key: commercetoolsAttributeValue['key'],
         label: this.extractAttributeValue(commercetoolsAttributeValue['label'], locale),
       };
+    }
+
+    if (commercetoolsAttributeValue['typeId'] === 'product' && commercetoolsAttributeValue['id'] !== undefined) {
+      return commercetoolsAttributeValue['id'];
     }
 
     if (commercetoolsAttributeValue instanceof Array) {

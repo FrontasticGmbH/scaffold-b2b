@@ -1,4 +1,30 @@
 
+## Version 1.10.0 (2024-08-01)
+
+## Version 1.9.1 (2024-06-28)
+
+** New Features and Improvements **
+
+- User is able to set theme in studio via project configuration
+
+## Version 1.9.0 (2024-06-28)
+
+** New Features and Improvements **
+
+## Version 1.8.0 (2024-06-24)
+
+** New Features and Improvements **
+
+- Move theme application to layout
+- Add theme selection through studio
+- Updated @commercetools/frontend-sdk dependency to 1.13.1
+- Approval rule listing page restored
+- Rule builder component restored
+- Granular permissions for quotes restored
+- Approval rule listing page
+- Multiple themes support
+- Rule builder component
+
 ## Version 1.7.6 (2024-06-06)
 
 ## Version 1.7.5 (2024-05-16)

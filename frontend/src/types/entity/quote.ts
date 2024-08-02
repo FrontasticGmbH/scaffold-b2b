@@ -48,5 +48,6 @@ export interface Quote {
   billingAddress?: string;
   shippingMethod?: string;
   paymentMethod?: string;
+  ownedByOtherUser?: boolean;
   url?: string;
 }

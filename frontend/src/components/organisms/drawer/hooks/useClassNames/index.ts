@@ -25,7 +25,7 @@ const useClassNames = (variant: DrawerVariant) => {
   });
 
   const drawerClassName = classnames(
-    'fixed z-[999] h-[100vh] shadow-lg',
+    'fixed z-[999] h-screen shadow-lg',
     resolveVariant(`${variant}.position`) as string,
   );
 

@@ -1,12 +1,6 @@
 // import { SortOrder } from '@shared/types/query';
 
-// interface SortAttribute {
-//   [key: string]: 'asc' | 'desc';
-// }
-//
-// interface SortAttributesParams {
-//   [index: string]: SortAttribute;
-// }
+import { SortAttribute } from '@/types/entity/sort-attribute';
 
 export interface Options {
   cursor?: string;
@@ -16,5 +10,5 @@ export interface Options {
   businessUnitKey?: string;
   createdFrom?: string;
   createdTo?: string;
-  sortAttributes?: string;
+  sortAttributes?: SortAttribute[];
 }

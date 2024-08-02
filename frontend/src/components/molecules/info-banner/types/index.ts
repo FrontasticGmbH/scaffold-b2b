@@ -1,4 +1,4 @@
-type Variant = 'primary';
+type Variant = 'primary' | 'warning';
 
 export interface InfoBannerProps {
   variant?: Variant;

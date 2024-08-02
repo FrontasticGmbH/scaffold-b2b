@@ -29,11 +29,12 @@ const Input = ({
   requiredStyle = 'asterisk',
   className = '',
   containerClassName = '',
+  outerContainerClassName = '',
   unStyled = false,
   focusOnMount = false,
   ...props
 }: InputProps) => {
-  const [value, setValue] = useControllableState(valueProp);
+  const [value, setValue] = useControllableState(valueProp, '');
 
   const { isOpen: isFocused, onOpen: onFocus, onClose: onBlur } = useDisclosure();
 
@@ -64,7 +65,7 @@ const Input = ({
   }, [focusOnMount]);
 
   return (
-    <div>
+    <div className={outerContainerClassName}>
       <Label
         required={required}
         showOptionalLabel={showOptionalLabel}

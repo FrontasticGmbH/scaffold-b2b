@@ -51,6 +51,7 @@ const Header = ({
                   items={props.quickOrderProducts}
                   addItem={props.addToCart}
                   csvProducts={props.csvShowProducts}
+                  csvProductsLoading={props.csvShowProductsLoading}
                   handleSKUsUpdate={props.handleSKUsUpdate}
                   addItemDisabled={props.addToCartDisabled}
                 />

@@ -8,7 +8,15 @@ const SearchPanel = ({ className, variant, panelItems, onClick }: SearchPanelPro
     <div className={className}>
       {panelItems.slice(0, 6).map((item) =>
         variant === 'lg' ? (
-          <SearchPanelItemsLarge key={item.id} {...item} />
+          <SearchPanelItemsLarge
+            key={item.id}
+            id={item.id}
+            sku={item.sku}
+            name={item.name}
+            image={item.image}
+            url={item.url}
+            maxQuantity={item.maxQuantity}
+          />
         ) : (
           <div
             key={item.sku}

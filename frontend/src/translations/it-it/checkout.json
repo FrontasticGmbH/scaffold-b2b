@@ -70,16 +70,16 @@
   "purchase.order": "Ordinazione d'acquisto",
   "purchase.order.desc": "Inserisci un singolo numero di ordine di acquisto autorizzato generato dalla tua organizzazione. Il numero dell'ordine d'acquisto e le istruzioni per il pagamento appariranno sulla fattura.",
   "credit.or.debit": "Carta di credito o debito",
-  "review.quote": "Rivedi la citazione",
+  "review.quote": "Rivedi citazione",
   "review.order": "Rivedi l'ordine",
   "po.number": "Numero dell'ordine d'acquisto",
   "invoice.memo": "Promemoria fattura",
   "unsaved.changes": "Modifiche non salvate",
   "unsaved.address.changes.confirmation": "Sei sicuro di voler continuare? Le informazioni sul tuo indirizzo non verranno salvate.",
   "save.and.review": "Salva e rivedi",
-  "quote.checkout": "Verifica preventivo",
+  "quote.checkout": "aggiornamento per Invia preventivo",
   "quote.summary": "Riepilogo preventivo",
   "quote.items": "Articoli citati",
   "submit.quote.request": "Invia richiesta di preventivo",
-  "tax.rates.undefined": "Non sono definite aliquote fiscali per questa regione"
+  "tax.rates.undefined": "Non ci sono aliquote fiscali definite per questa regione"
 }

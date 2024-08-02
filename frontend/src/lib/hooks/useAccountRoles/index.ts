@@ -11,8 +11,8 @@ const useAccountRoles = (businessUnitKey?: string) => {
     sdk.composableCommerce.businessUnit.getAssociate({ businessUnitKey: businessUnitKey as string }),
   );
 
-  const defaultData = defaultResponse.data?.isError ? null : defaultResponse.data?.data ?? null;
-  const dataCorrespondingToBu = response.data?.isError ? null : response.data?.data ?? null;
+  const defaultData = defaultResponse.data?.isError ? null : (defaultResponse.data?.data ?? null);
+  const dataCorrespondingToBu = response.data?.isError ? null : (response.data?.data ?? null);
 
   const data = defaultData ?? dataCorrespondingToBu ?? {};
 

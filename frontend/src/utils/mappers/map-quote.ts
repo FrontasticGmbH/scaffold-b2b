@@ -4,6 +4,7 @@ import { QuoteRequest } from '@shared/types/quote/QuoteRequest';
 import { Quote as CoCoQuote } from '@shared/types/quote/Quote';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
 import { BusinessUnit } from '@shared/types/business-unit';
+import { Account } from '@shared/types/account';
 import { mapLineItem } from './map-lineitem';
 
 const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status']) => {
@@ -162,7 +163,10 @@ const getQuoteTransaction = (
   };
 };
 
-export const mapQuote = (quote: CoCoQuote, { businessUnits }: { businessUnits?: BusinessUnit[] } = {}): Quote => {
+export const mapQuote = (
+  quote: CoCoQuote,
+  { businessUnits, account }: { businessUnits?: BusinessUnit[]; account?: Account } = {},
+): Quote => {
   const statusMapping = {
     DeclinedForRenegotiation: 'waiting',
     RenegotiationAddressed: 'renegotiating',
@@ -196,12 +200,13 @@ export const mapQuote = (quote: CoCoQuote, { businessUnits }: { businessUnits?: 
     ],
     ...getQuoteTransaction(quote),
     items: (quote.lineItems ?? []).map(mapLineItem),
+    ownedByOtherUser: account && account.accountId !== quote.account?.accountId,
   };
 };
 
 export const mapQuoteRequest = (
   quoteRequest: QuoteRequest,
-  { businessUnits }: { businessUnits?: BusinessUnit[] } = {},
+  { businessUnits, account }: { businessUnits?: BusinessUnit[]; account?: Account } = {},
 ): Quote => {
   const statusMapping = {} as Record<Required<QuoteRequest>['quoteRequestState'], Quote['status']>;
 
@@ -232,5 +237,6 @@ export const mapQuoteRequest = (
     ],
     ...getQuoteTransaction(quoteRequest),
     items: (quoteRequest.lineItems ?? []).map(mapLineItem),
+    ownedByOtherUser: account && account.accountId !== quoteRequest.account?.accountId,
   };
 };

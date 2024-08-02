@@ -8,7 +8,7 @@ import { HeaderContext } from '../../../context';
 
 const CategorySection = () => {
   const { translate } = useTranslation();
-  const { categoryLinks, navigationLevel, hideHeaderMenu, insertCategory, isAdmin } = useContext(HeaderContext);
+  const { categoryLinks, navigationLevel, hideHeaderMenu, insertCategory } = useContext(HeaderContext);
   const categorySectionClassNames = classnames(
     'pb-2 lg:py-6',
     navigationLevel.length === 0 ? 'border-t' : '',
@@ -64,13 +64,20 @@ const CategorySection = () => {
           )}
         </>
       )}
-      {isAdmin && (
+
+      {navigationLevel && navigationLevel[navigationLevel.length - 1]?.name === 'My Account' && (
         <>
-          {navigationLevel && navigationLevel[navigationLevel.length - 1]?.name === 'My Account' && (
+          <div className="h-[48px] w-full pb-2 lg:h-fit lg:pb-7">
             <Typography fontSize={16} fontWeight="normal" className="text-gray-300">
               {`${translate('common.company.admin')} - ${translate('common.desktop.only')}`}
             </Typography>
-          )}
+          </div>
+
+          <div className="h-[48px] w-full pb-2 lg:h-fit lg:pb-7">
+            <Typography fontSize={16} fontWeight="normal" className="text-gray-300">
+              {`${translate('common.approval.rules')} - ${translate('common.desktop.only')}`}
+            </Typography>
+          </div>
         </>
       )}
     </div>

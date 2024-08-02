@@ -22,7 +22,7 @@ export interface ApprovalRule {
   key?: string;
   name: string;
   description?: string;
-  approvalRuleStatus: ApprovalRuleStatus;
+  approvalRuleStatus?: ApprovalRuleStatus;
   predicate: string;
   approvers: ApproverHierarchy;
   requesters: AssociateRole[];

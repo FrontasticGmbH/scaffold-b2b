@@ -19,35 +19,43 @@ const useProductHandlers = (
   const memoizedClearFiles = useCallback(handleClearFiles, [handleClearFiles]);
   const [loading, setLoading] = useState(false);
 
-  const productMapper = (file: string): Product => {
-    return {
-      sku: file.split(',')[0],
-      quantity: parseInt(file.split(',')[1]),
-      inStock: csvProducts.find(
-        (product) =>
-          product.sku === file.split(',')[0] && product.inStock && product.quantity >= parseInt(file.split(',')[1]),
-      )
-        ? true
-        : false,
-      exists: csvProducts.find((product) => product.sku === file.split(',')[0]) ? true : false,
-    };
-  };
+  const mappedProducts = products.map((product) => ({
+    sku: product.sku,
+    quantity: product.quantity,
+    inStock: csvProducts.some((p) => p.sku === product.sku && p.inStock && p.quantity >= product.quantity),
+    exists: csvProducts.some((p) => p.sku === product.sku),
+  }));
 
   const handleUploadClick = (files: File[]) => {
     const newProducts: Product[] = [];
     const newChecked = { ...checked };
 
     files.forEach((file) => {
-      const formattedFile = readFiles[file.name].split('\n').slice(1).slice(0, -1);
-      const skus = formattedFile.map((file) => {
-        return file.split(',')[0];
-      });
+      const formattedFile = readFiles[file.name]
+        .split('\n')
+        .slice(1)
+        .filter(Boolean)
+        .filter((l) => l.includes(','));
+
+      const readProducts = formattedFile.map((l) => ({
+        sku: l.split(',')[0].trim(),
+        quantity: parseInt(l.split(',')[1].trim() || '1'),
+      }));
+
+      const skus = readProducts.map((p) => p.sku);
+
       handleSKUsUpdate?.(skus);
 
-      formattedFile.forEach((file) => {
-        newChecked[file.split(',')[0]] = true;
+      readProducts.forEach((p) => {
+        newChecked[p.sku] = true;
 
-        const product: Product = productMapper(file);
+        const product: Product = {
+          sku: p.sku,
+          quantity: p.quantity,
+          inStock: false,
+          exists: false,
+        };
+
         const target = newProducts.find((productItem) => productItem.sku === product.sku);
         if (target) {
           target.quantity += product.quantity;
@@ -71,7 +79,7 @@ const useProductHandlers = (
 
   const handleAddToCart = () => {
     setLoading(true);
-    const inStockProducts = products.filter((product) => checked[product.sku] && product.inStock);
+    const inStockProducts = mappedProducts.filter((product) => checked[product.sku] && product.inStock);
     const lineItems = inStockProducts.map((item) => {
       return { sku: item.sku, count: item.quantity };
     });
@@ -86,7 +94,7 @@ const useProductHandlers = (
   return {
     loading,
     checked,
-    products,
+    products: mappedProducts,
     handleUploadClick,
     handleProductClear,
     handleAddToCart,

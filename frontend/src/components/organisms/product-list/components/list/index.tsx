@@ -14,7 +14,7 @@ const List = ({ onAddToCart, addToCartDisabled }: ProductListProps) => {
     showModal(product);
   };
   return (
-    <div className={classnames('grid grid-cols-1 gap-[1px]', { 'md:grid-cols-2 xl:grid-cols-3': view === 'grid' })}>
+    <div className={classnames('grid grid-cols-1 gap-px', { 'md:grid-cols-2 xl:grid-cols-3': view === 'grid' })}>
       {products.map((product) => (
         <div key={product.id} className="outline outline-1 outline-neutral-400">
           <ProductTile

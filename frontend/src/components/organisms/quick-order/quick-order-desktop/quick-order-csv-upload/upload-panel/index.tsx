@@ -24,6 +24,7 @@ const UploadPanel = () => {
     handleDrop,
     handleRemoveClick,
     handleUploadClick,
+    productsLoading,
   } = useContext(QuickOrderDesktopContext);
 
   const handleClearClick = () => {
@@ -103,6 +104,7 @@ const UploadPanel = () => {
           variant="primary"
           size="full"
           disabled={uploadDisable}
+          loading={productsLoading}
           onClick={() => handleUploadClick(files)}
           className="text-14"
         >

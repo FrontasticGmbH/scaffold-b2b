@@ -30,10 +30,9 @@ const NavigationFacet = (facet: NavigationFacetType) => {
         <span
           key={value.id}
           onClick={() => refine(value.id)}
-          className={classnames(
-            'cursor-pointer text-14 text-gray-600 underline-offset-[2px] hover:underline lg:text-16',
-            { 'font-semibold': value.selected },
-          )}
+          className={classnames('cursor-pointer text-14 text-gray-600 underline-offset-2 hover:underline lg:text-16', {
+            'font-semibold': value.selected,
+          })}
         >
           {value.name} ({value.count})
         </span>

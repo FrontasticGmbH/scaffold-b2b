@@ -20,7 +20,7 @@ const Refinements = ({
       title: 'orders.label',
       Component: (
         <SearchInput
-          className="h-[38px] w-[360px]"
+          containerClassName="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
           placeholder={`${translate('dashboard.search.for.orders')}...`}

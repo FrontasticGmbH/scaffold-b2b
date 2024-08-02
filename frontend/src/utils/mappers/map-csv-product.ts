@@ -1,11 +1,11 @@
-import { Product } from '@shared/types/product';
+import { Variant } from '@shared/types/product';
 import { Product as CsvProduct } from '@/components/organisms/quick-order/types';
 
-export const mapCsvProduct = (product: Product): CsvProduct => {
+export const mapCsvProduct = (variant: Variant): CsvProduct => {
   return {
-    sku: product.variants[0].sku,
-    quantity: product.variants[0].availableQuantity ?? 0,
-    inStock: product.variants[0].isOnStock,
+    sku: variant.sku,
+    quantity: variant.availableQuantity ?? 0,
+    inStock: variant.isOnStock,
     exists: true,
   } as CsvProduct;
 };

@@ -70,16 +70,16 @@
   "purchase.order": "Auftragsbestätigung",
   "purchase.order.desc": "Bitte geben Sie eine einzelne autorisierte Bestellnummer ein, die von Ihrer Organisation generiert wurde. Die Bestellnummer und die Zahlungsanweisungen erscheinen auf der Rechnung.",
   "credit.or.debit": "Kredit- oder Debitkarte",
-  "review.quote": "Überprüfen Sie das Zitat",
+  "review.quote": "Angebot überprüfen",
   "review.order": "Überprüfen Sie die Bestellung",
   "po.number": "Bestellnummer",
   "invoice.memo": "Rechnungsnotiz",
   "unsaved.changes": "Nicht gespeicherte Änderungen",
   "unsaved.address.changes.confirmation": "Bist du dir sicher, dass du weitermachen willst? Ihre Adressdaten werden nicht gespeichert.",
   "save.and.review": "Speichern und überprüfen",
-  "quote.checkout": "Angebotskauf",
+  "quote.checkout": "Update zum Senden eines Angebots",
   "quote.summary": "Zusammenfassung des Angebots",
   "quote.items": "Zitierte Artikel",
   "submit.quote.request": "Angebotsanfrage senden",
-  "tax.rates.undefined": "Es sind keine Steuersätze für diese Region definiert"
+  "tax.rates.undefined": "Für diese Region sind keine Steuersätze definiert"
 }

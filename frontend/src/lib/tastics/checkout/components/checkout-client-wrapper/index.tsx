@@ -17,6 +17,7 @@ import useAccount from '@/lib/hooks/useAccount';
 import { TasticProps } from '@/lib/tastics/types';
 import { isEmptyObject } from '@/utils/object/is-empty-object';
 import { Address } from '@/types/entity/address';
+import useApprovalFlows from '@/lib/hooks/useApprovalFlows';
 import { Props } from '../../types';
 import usePaymentMethods from '../../hooks/usePaymentMethods';
 
@@ -30,6 +31,8 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   const { addAddress } = useBusinessUnits();
 
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
+
+  const { mutateAll: mutateAllApprovalFlows } = useApprovalFlows({ businessUnitKey: selectedBusinessUnit?.key });
 
   const { cart, updateCart, setShippingMethod, redeemDiscount, removeDiscount } = useCart(
     selectedBusinessUnit?.key,
@@ -127,8 +130,10 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
         const orderId = await selectedPaymentMethod.makePayment(paymentData);
 
-        if (orderId) router.push(`/thank-you?orderId=${orderId}`);
-        else toast.error(translate('common.something.went.wrong'), { position: 'top-right' });
+        if (orderId) {
+          mutateAllApprovalFlows();
+          router.push(`/thank-you?orderId=${orderId}`);
+        } else toast.error(translate('common.something.went.wrong'), { position: 'top-right' });
 
         return !!orderId;
       }}

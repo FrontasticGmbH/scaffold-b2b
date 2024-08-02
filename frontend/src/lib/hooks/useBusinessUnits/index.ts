@@ -132,7 +132,7 @@ const useBusinessUnits = () => {
   );
 
   return {
-    businessUnits: data?.isError ? [] : data?.data ?? [],
+    businessUnits: data?.isError ? [] : (data?.data ?? []),
     defaultBusinessUnit: data?.isError ? undefined : data?.data?.[0],
     addBusinessUnit,
     updateBusinessUnit,

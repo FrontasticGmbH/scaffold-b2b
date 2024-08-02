@@ -339,7 +339,6 @@ export default class CartApi extends BaseApi {
       },
       version: +cart.cartVersion,
       orderNumber: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${String(Date.now()).slice(-6, -1)}`,
-      orderState: 'Confirmed',
       purchaseOrderNumber: purchaseOrderNumber !== undefined ? purchaseOrderNumber : undefined,
     };
 

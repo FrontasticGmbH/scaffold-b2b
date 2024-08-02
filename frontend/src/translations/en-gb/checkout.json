@@ -80,5 +80,6 @@
   "quote.checkout": "update to Submit Quote",
   "quote.summary": "Quote summary",
   "quote.items": "Items quoted",
-  "submit.quote.request": "Submit quote request"
+  "submit.quote.request": "Submit quote request",
+  "tax.rates.undefined": "There are no tax rates defined for this region"
 }

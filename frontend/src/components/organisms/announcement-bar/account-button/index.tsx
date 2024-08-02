@@ -91,7 +91,7 @@ const AccountButton = ({
             )}
           </div>
         ))}
-        <div className="h-[1px] border-t" />
+        <div className="h-px border-t" />
 
         <div className="px-4 pt-4">
           <div className="flex flex-col gap-y-4 pb-5 pt-1">

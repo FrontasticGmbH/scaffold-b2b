@@ -14,6 +14,7 @@ const QuickOrderDesktop = ({
   items,
   downloadLink,
   csvProducts,
+  csvProductsLoading,
   onSearch,
   addItem,
   addItemDisabled,
@@ -25,6 +26,7 @@ const QuickOrderDesktop = ({
   return (
     <QuickOrderDesktopProvider
       csvProducts={csvProducts}
+      csvProductsLoading={csvProductsLoading}
       downloadLink={downloadLink}
       addItem={addItem}
       handleSKUsUpdate={handleSKUsUpdate}

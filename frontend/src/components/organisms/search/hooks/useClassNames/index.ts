@@ -19,7 +19,7 @@ const useClassNames = (variant: SearchVariant, focused: boolean) => {
 
   const SearchWrapperClassNames = classnames(
     focused && !isLargerThanTablet && variant === 'lg'
-      ? 'absolute left-0 top-0 z-[450] h-[100vh] w-full px-4 pb-3 pt-4'
+      ? 'absolute left-0 top-0 z-[450] h-screen w-full px-4 pb-3 pt-4'
       : 'relative z-[340]',
     'bg-white',
     resolveSearchWrapper(variant) as string,

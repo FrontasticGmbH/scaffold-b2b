@@ -11,6 +11,8 @@ const config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/shared/types/(.*)$': '<rootDir>/../types/$1',
   },
+  setupFilesAfterEnv: ['<rootDir>/jest/setup/setupTests.ts'],
 };
 
 module.exports = config;
+

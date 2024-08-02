@@ -1,0 +1,8 @@
+{
+  "dynamicPageType": "frontastic/approval-rule-page",
+  "name": "Approval Rule",
+  "category": "Approvals",
+  "icon": "picture_in_picture",
+  "dataSourceType": "frontastic/approval-rule",
+  "isMultiple": true
+}

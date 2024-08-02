@@ -19,8 +19,8 @@ import {
   SearchWildCardExpression,
   _ProductSearchFacetExpression,
 } from '@commercetools/platform-sdk';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import { SearchSorting } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/search';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 const EXPANDS = [
   'categories[*].ancestors[*]',
@@ -58,7 +58,7 @@ export class ProductSearchFactory {
       productQuery,
       locale,
     );
-    commercetoolsProductSearchRequest = this.applyQueryProductIds(
+    commercetoolsProductSearchRequest = this.applyQueryProducts(
       commercetoolsProductSearchRequest,
       productQuery,
       productIdField,
@@ -375,18 +375,31 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   };
 
-  private static applyQueryProductIds(
+  private static applyQueryProducts(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
     productIdField: string,
   ): ProductSearchRequest {
+    // Handle productRefs base on value set in productIdField
+    if (productQuery.productRefs?.length) {
+      switch (productIdField) {
+        case 'id':
+          productQuery.productIds.push(...productQuery.productRefs);
+          break;
+        case 'key':
+        default:
+          productQuery.productKeys.push(...productQuery.productRefs);
+          break;
+      }
+    }
+
     if (productQuery.productIds?.length) {
       const productSearchExactExpressions: SearchExactExpression[] = [];
 
       productQuery.productIds.forEach((productId) => {
         productSearchExactExpressions.push({
           exact: {
-            field: productIdField,
+            field: 'id',
             value: productId,
           },
         });
@@ -396,6 +409,24 @@ export class ProductSearchFactory {
         productSearchExactExpressions,
       );
     }
+
+    if (productQuery.productKeys?.length) {
+      const productSearchExactExpressions: SearchExactExpression[] = [];
+
+      productQuery.productKeys.forEach((productId) => {
+        productSearchExactExpressions.push({
+          exact: {
+            field: 'key',
+            value: productId,
+          },
+        });
+      });
+      commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
+        commercetoolsProductSearchRequest,
+        productSearchExactExpressions,
+      );
+    }
+
     return commercetoolsProductSearchRequest;
   }
 
@@ -638,6 +669,7 @@ export class ProductSearchFactory {
                 searchFacetExpression,
                 productSearchQueryFilters,
               );
+
               commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
                 commercetoolsProductSearchRequest,
                 productSearchQueryFilters,
@@ -676,6 +708,7 @@ export class ProductSearchFactory {
         query = this.hydrateQueryExpressionWithLanguage(query, fieldType, locale);
       }
     }
+
     return query;
   };
 

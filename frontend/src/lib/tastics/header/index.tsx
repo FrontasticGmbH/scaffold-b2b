@@ -33,6 +33,7 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     quickOrderSearch,
     quickOrderProducts,
     csvShowProducts,
+    csvShowProductsLoading,
     addToCart,
     onHeaderSearch,
     onQuickOrderSearch,
@@ -78,7 +79,7 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
 
   return (
     <div className={classnames(data.variant === 'navigation' ? 'h-[179px] lg:h-[112px]' : 'h-[72px]')}>
-      <div id="header-container" className=" fixed top-0 z-50  w-full">
+      <div id="header-container" className="fixed top-0 z-50 w-full">
         <div className="relative">
           {data.variant === 'navigation' && (
             <AnnouncementBar
@@ -127,6 +128,7 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
             onHeaderSearchAction={headerSearchAction}
             addToCart={addToCart}
             csvShowProducts={csvShowProducts}
+            csvShowProductsLoading={csvShowProductsLoading}
             handleSKUsUpdate={handleSKUsUpdate}
           />
         </div>

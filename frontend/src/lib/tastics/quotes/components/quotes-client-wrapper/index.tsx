@@ -50,6 +50,7 @@ const QuotesClientWrapper = () => {
     businessUnitKey: selectedBusinessUnit?.key ?? '',
     limit,
     cursor,
+    sortAttributes: [{ createdAt: 'desc' }],
     ...(states.length ? { states } : {}),
     ...(debouncedSearch ? { ids: [debouncedSearch] } : {}),
   });

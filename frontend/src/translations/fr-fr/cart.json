@@ -50,7 +50,7 @@
   "codeNotValid": "Le code de réduction n'est pas valide",
   "codeAdded": "Code de réduction ajouté",
   "add": "Ajouter au panier",
-  "move.to.wishlist": "Placer dans la liste de souhaits",
+  "move.to.wishlist": "Passer à la liste d'achat",
   "checkout.go": "Aller à la caisse",
   "go": "Aller au panier",
   "delivery.time": "Délai de livraison",
@@ -81,5 +81,6 @@
   "view.only.desc": "Pour ajouter des articles au panier, veuillez demander à l'administrateur de votre entreprise de vous accorder les autorisations nécessaires.",
   "checkout.request.disabled": "Pour créer une commande ou un devis, veuillez demander à l'administrateur de votre entreprise de vous accorder les autorisations nécessaires.",
   "checkout.unavailable": "Paiement indisponible",
-  "invalid.addresses.requirements": "Aucune adresse de livraison et de facturation n'est ajoutée. Veuillez demander à l'administrateur de votre entreprise d'en ajouter un"
+  "invalid.addresses.requirements": "Aucune adresse de livraison et de facturation n'est ajoutée. Veuillez demander à l'administrateur de votre entreprise d'en ajouter un",
+  "cart.amount": "Montant du panier"
 }

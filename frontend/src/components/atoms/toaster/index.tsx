@@ -10,7 +10,7 @@ const Toaster = () => {
     <ReactToaster>
       {(t) => (
         <div
-          className="h-10 w-full md:w-[400px]"
+          className="w-full md:w-[400px]"
           style={{ boxShadow: '-1px 8px 24px 0px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.05);' }}
         >
           <ToastBar

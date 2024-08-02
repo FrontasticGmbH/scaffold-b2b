@@ -12,8 +12,16 @@ import { QuickOrderDesktopContext } from '../quick-order-csv-upload/context';
 const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadProps>) => {
   const { translate } = useTranslation();
 
-  const { checked, products, files, addToCartLoading, handleProductClear, handleAddToCart, onCheckboxChange } =
-    useContext(QuickOrderDesktopContext);
+  const {
+    checked,
+    products,
+    productsLoading,
+    files,
+    addToCartLoading,
+    handleProductClear,
+    handleAddToCart,
+    onCheckboxChange,
+  } = useContext(QuickOrderDesktopContext);
 
   const checkboxLabelClassNames = (product: Product) =>
     classnames(!product.inStock ? 'text-gray-500 line-through' : '');
@@ -37,7 +45,7 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
         {translate('quick-order.upload.csv')}
       </Accordion.Button>
       <Accordion.Panel defaultSpacing={false} className="p-3">
-        {products.length === 0 ? (
+        {productsLoading || products.length === 0 ? (
           <UploadPanel />
         ) : (
           <>

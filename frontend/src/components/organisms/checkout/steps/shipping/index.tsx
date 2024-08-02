@@ -66,8 +66,8 @@ const ShippingStep = ({
 
   return (
     <div>
-      <div className="px-[1px]">
-        <div className="grid grid-cols-1 gap-[1px]">
+      <div className="px-px">
+        <div className="grid grid-cols-1 gap-px">
           {shippingMethods.map(({ id, name, price, currency, estimatedDeliveryDate }, index, arr) => (
             <div
               key={id}

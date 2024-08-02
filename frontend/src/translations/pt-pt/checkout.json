@@ -70,16 +70,16 @@
   "purchase.order": "Ordem de Compra",
   "purchase.order.desc": "Insira um único número de pedido de compra autorizado gerado por sua organização. O número do pedido e as instruções de pagamento aparecerão na fatura.",
   "credit.or.debit": "Cartão de crédito ou débito",
-  "review.quote": "Revisar citação",
+  "review.quote": "Cotação de revisão",
   "review.order": "Revisar pedido",
   "po.number": "Número do pedido",
   "invoice.memo": "Nota de fatura",
   "unsaved.changes": "Alterações não salvas",
   "unsaved.address.changes.confirmation": "Você tem certeza que quer continuar? Suas informações de endereço não serão salvas.",
   "save.and.review": "Salvar e revisar",
-  "quote.checkout": "Finalização da cotação",
+  "quote.checkout": "atualize para enviar cotação",
   "quote.summary": "Resumo da cotação",
   "quote.items": "Itens cotados",
   "submit.quote.request": "Enviar solicitação de orçamento",
-  "tax.rates.undefined": "Não existem taxas de imposto definidas para esta região"
+  "tax.rates.undefined": "Não há taxas de imposto definidas para esta região"
 }

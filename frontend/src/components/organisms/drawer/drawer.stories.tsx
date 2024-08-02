@@ -25,7 +25,7 @@ const Template: StoryFn<typeof Drawer> = ({ headline = 'Headline' }) => {
   };
   return (
     <div className="mt-6 w-full">
-      <div className="flex w-[25%] flex-col gap-y-8">
+      <div className="flex w-1/4 flex-col gap-y-8">
         <Button variant="primary" onClick={leftDrawerClick}>
           Open Left Drawer
         </Button>

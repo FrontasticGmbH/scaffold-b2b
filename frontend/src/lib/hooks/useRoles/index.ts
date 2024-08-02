@@ -9,7 +9,7 @@ const useRoles = () => {
 
   const response = useSWR('/action/buinsess-unit/getAssociateRoles', getRoles);
 
-  return { ...response, data: response.data?.isError ? [] : response.data?.data ?? [] };
+  return { ...response, data: response.data?.isError ? [] : (response.data?.data ?? []) };
 };
 
 export default useRoles;

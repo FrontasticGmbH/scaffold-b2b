@@ -85,7 +85,7 @@ const RefinementsDrawer = ({
         onClose={onClose}
         direction="left"
         headline={translate('product.sortAndFilter')}
-        className="h-[100vh] w-[90vw] max-w-[350px] px-4 lg:px-5"
+        className="h-screen w-[90vw] max-w-[350px] px-4 lg:px-5"
         headerClassName="border-y border-neutral-400 px-[0px]"
       >
         <div className="flex h-full flex-col">

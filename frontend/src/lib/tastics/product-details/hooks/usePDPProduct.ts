@@ -1,19 +1,26 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { mapProduct } from '@/utils/mappers/map-product';
 import { Product as SharedProduct } from '@shared/types/product';
 import { mapAttribute } from '@/utils/mappers/map-attribute';
+import usePath from '@/hooks/usePath';
+import useCustomRouter from '@/hooks/useCustomRouter';
 
 const usePDPProduct = (product: SharedProduct) => {
-  const [currentVariantIndex, setCurrentVariantIndex] = useState(0);
+  const router = useCustomRouter();
+  const { path } = usePath();
+
+  //   Update the currentVariantIndex to use the sku from the path
+  const currentVariantIndex = product.variants.findIndex((v) => v.sku === path.split('/')[3]);
 
   const onChangeVariant = useCallback(
     (variant: 'color' | 'model', value: string) => {
-      const updatedVariantIdx = product.variants.findIndex((v) =>
+      const updatedVariantSKU = product.variants.find((v) =>
         v.attributes?.[variant].key ? v.attributes?.[variant].key === value : v.attributes?.[variant] === value,
-      );
-      setCurrentVariantIndex(updatedVariantIdx ?? 0);
+      )?.sku;
+
+      router.replace(`/slug/p/${updatedVariantSKU}`);
     },
-    [product.variants],
+    [product.variants, router],
   );
 
   const mappedProduct = useMemo(

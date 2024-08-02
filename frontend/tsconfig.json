@@ -30,7 +30,8 @@
       "@/*": ["./src/*"],
       "@shared/types/*": ["../types/*"]
     },
-    "plugins": [{ "name": "next" }]
+    "plugins": [{ "name": "next" }],
+    "types": ["jest", "@testing-library/jest-dom"]
   },
   "include": [
     "next-env.d.ts",

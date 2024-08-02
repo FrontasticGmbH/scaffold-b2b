@@ -10,6 +10,7 @@ const QuickOrderDesktopContext = createContext(initialQuickOrderState);
 
 const QuickOrderDesktopProvider = ({
   csvProducts,
+  csvProductsLoading,
   downloadLink,
   addItem,
   handleSKUsUpdate,
@@ -58,6 +59,7 @@ const QuickOrderDesktopProvider = ({
         fileError,
         addToCartLoading,
         products,
+        productsLoading: csvProductsLoading,
         handleProductClear,
         handleChange,
         handleClearFiles,

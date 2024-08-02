@@ -11,6 +11,7 @@ export interface QuickOrderProps {
   items: ProductSuggestion[];
   searchText?: string;
   csvProducts: Product[];
+  csvProductsLoading: boolean;
   addItemDisabled?: boolean;
   addItem?: (
     lineItems: Array<{
@@ -23,7 +24,10 @@ export interface QuickOrderProps {
   handleSKUsUpdate?: (skus: string[]) => void;
 }
 
-export type QuickOrderContentProps = Omit<QuickOrderProps, 'downloadLink' | 'handleSKUsUpdate' | 'csvProducts'>;
+export type QuickOrderContentProps = Omit<
+  QuickOrderProps,
+  'downloadLink' | 'handleSKUsUpdate' | 'csvProducts' | 'csvProductsLoading'
+>;
 
 export interface QuickOrderDesktopProps extends QuickOrderProps {
   downloadLink: string;
@@ -39,6 +43,7 @@ export interface ProductItemProps {
 export interface QuickOrderCSVUploadProps {
   downloadLink: string;
   csvProducts: Product[];
+  csvProductsLoading: boolean;
   onClose?: () => void;
   handleSKUsUpdate?: (skus: string[]) => void;
   addItemDisabled?: boolean;
@@ -61,6 +66,7 @@ export interface contextShape {
   handleRemoveClick: (removedFile: File) => void;
   addToCartLoading: boolean;
   products: Product[];
+  productsLoading: boolean;
   checked: Record<string, boolean>;
   handleAddToCart: () => void;
   onCheckboxChange: (product: Product, value: boolean) => void;

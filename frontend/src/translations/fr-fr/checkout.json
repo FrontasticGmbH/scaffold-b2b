@@ -70,16 +70,16 @@
   "purchase.order": "Bon de commande",
   "purchase.order.desc": "Veuillez saisir un seul numéro de bon de commande autorisé généré par votre organisation. Le numéro de bon de commande et les instructions de paiement apparaîtront sur la facture.",
   "credit.or.debit": "Carte de crédit ou de débit",
-  "review.quote": "Vérifier la citation",
+  "review.quote": "Examiner le devis",
   "review.order": "Vérifier la commande",
   "po.number": "Numéro de bon de commande",
   "invoice.memo": "Note de facture",
   "unsaved.changes": "Modifications non enregistrées",
   "unsaved.address.changes.confirmation": "Es-tu sur de vouloir continuer? Vos informations d’adresse ne seront pas enregistrées.",
   "save.and.review": "Enregistrer et réviser",
-  "quote.checkout": "Paiement du devis",
+  "quote.checkout": "mise à jour pour soumettre un devis",
   "quote.summary": "Résumé du devis",
   "quote.items": "Articles cités",
   "submit.quote.request": "Soumettre une demande de devis",
-  "tax.rates.undefined": "Il n'y a pas de taux de taxe définis pour cette région"
+  "tax.rates.undefined": "Aucun taux d'imposition n'est défini pour cette région"
 }

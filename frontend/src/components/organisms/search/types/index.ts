@@ -2,6 +2,8 @@ import { SearchVariant } from '@/components/atoms/search-input/types';
 
 export interface ProductSuggestion {
   id: string;
+  key?: string;
+  ref?: string;
   sku: string;
   name: string;
   url: string;

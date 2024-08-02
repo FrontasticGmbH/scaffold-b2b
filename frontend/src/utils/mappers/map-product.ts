@@ -48,6 +48,8 @@ export const mapProduct = (product: Product, { variantIndex = -1 }: { variantInd
 
   return {
     id: product.productId ?? '',
+    key: product.productKey,
+    ref: product.productRef,
     sku: variant.sku,
     name: product.name ?? '',
     description: product.description,

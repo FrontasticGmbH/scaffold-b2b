@@ -4,7 +4,7 @@ import { DataSourceProps, Props } from '../../types';
 
 const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props>) => {
   const { translate } = useTranslation();
-  console.log(facets);
+
   // Only facet keys present here will be picked up
   const allowedFacets = new Set([
     'variants.scopedPrice.value',

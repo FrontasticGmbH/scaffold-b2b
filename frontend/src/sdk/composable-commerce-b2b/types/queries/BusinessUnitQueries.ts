@@ -1,3 +1,4 @@
+import { SortAttribute } from '@/types/entity/sort-attribute';
 import { ApprovalFlowStatus, ApprovalRuleStatus } from '@shared/types/business-unit';
 
 type GetBusinessUnitQuery = {
@@ -57,7 +58,8 @@ type CreateApprovalRuleQuery = {
 type QueryApprovalRulesQuery = {
   businessUnitKey: string;
   limit?: number;
-  //sortAttributes: // TODO
+  cursor?: string;
+  sortAttributes?: SortAttribute[];
   approvalRuleStatus?: ApprovalRuleStatus[];
   approvalRuleIds: string[];
 };
@@ -69,17 +71,19 @@ type UpdateApprovalRuleQuery = {
 type QueryApprovalFlowsQuery = {
   businessUnitKey: string;
   limit?: number;
-  //sortAttributes: // TODO
+  cursor?: string;
+  sortAttributes?: SortAttribute[];
   approvalFlowStatus?: ApprovalFlowStatus[];
   approvalFlowIds: string[];
 };
 
 type ApproveApprovalFlowQuery = {
-  businessUnitKey: string;
+  approvalFlowId: string;
 };
 
 type RejectApprovalFlowQuery = {
-  businessUnitKey: string;
+  approvalFlowId: string;
+  reason: string;
 };
 
 export {

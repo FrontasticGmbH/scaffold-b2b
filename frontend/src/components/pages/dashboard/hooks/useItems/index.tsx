@@ -8,6 +8,8 @@ import {
   ClipboardDocumentListIcon as PurchaseListsIcon,
   Cog6ToothIcon as SettingsIcon,
   MapPinIcon as AddressesIcon,
+  CheckIcon as ApprovalIcon,
+  ArrowsRightLeftIcon as FlowIcon,
 } from '@heroicons/react/24/outline';
 import { DashboardLinks } from '../../constants';
 
@@ -62,6 +64,24 @@ const useItems = () => {
       disabledMessage: '',
       order: 5,
     },
+    approvalRules: {
+      icon: <ApprovalIcon />,
+      name: translate('common.approval.rules'),
+      summary: translate('dashboard.approval.rules.summary'),
+      href: DashboardLinks.approvalRules,
+      disabled: !isLargerThanDesktop,
+      disabledMessage: translate('dashboard.approval.rules.disabled.on.small.screen'),
+      order: isLargerThanDesktop ? 6 : 999,
+    },
+    approvalFlows: {
+      icon: <FlowIcon />,
+      name: translate('common.approval.flows'),
+      summary: translate('dashboard.approval.flows.summary'),
+      href: DashboardLinks.approvalFlows,
+      disabled: false,
+      disabledMessage: '',
+      order: 7,
+    },
     settings: {
       icon: <SettingsIcon />,
       name: translate('common.settings'),
@@ -69,7 +89,7 @@ const useItems = () => {
       href: DashboardLinks.settings,
       disabled: false,
       disabledMessage: '',
-      order: 6,
+      order: 8,
     },
     addresses: {
       icon: <AddressesIcon />,
@@ -78,7 +98,7 @@ const useItems = () => {
       href: DashboardLinks.addresses,
       disabled: false,
       disabledMessage: '',
-      order: 7,
+      order: 9,
     },
   };
 
@@ -88,11 +108,22 @@ const useItems = () => {
     items.quotes,
     items.companyAdmin,
     items.purchaseLists,
+    items.approvalRules,
+    items.approvalFlows,
     items.settings,
     items.addresses,
   ];
 
-  const cardItems = sidebarItems.slice(1);
+  const cardItems = [
+    items.orders,
+    items.quotes,
+    items.companyAdmin,
+    items.purchaseLists,
+    items.approvalRules,
+    items.approvalFlows,
+    items.settings,
+    items.addresses,
+  ];
 
   return { sidebarItems, cardItems };
 };

@@ -53,6 +53,7 @@ const useSteps = ({
       },
     ];
   }, [
+    translations,
     addresses,
     onAddAddress,
     onCompleteAddresses,

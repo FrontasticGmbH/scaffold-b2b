@@ -1,22 +1,14 @@
 import { useCallback } from 'react';
-import { useParams } from 'next/navigation';
 import { Currency } from '@/types/currency';
 import { Address } from '@/types/entity/address';
 
 const useFormat = () => {
-  const { locale } = useParams();
-
-  const formatCurrency = useCallback(
-    (price: number, currency: Currency) => {
-      const intlLocaleMapping = { en: 'en-US', sv: 'sv-SE' };
-
-      return new Intl.NumberFormat(intlLocaleMapping[locale as keyof typeof intlLocaleMapping], {
-        style: 'currency',
-        currency,
-      }).format(price);
-    },
-    [locale],
-  );
+  const formatCurrency = useCallback((price: number, currency: Currency) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency,
+    }).format(price);
+  }, []);
 
   const formatAddress = useCallback((address: Address) => {
     return `${address.name} ${address.careOf ? `(c/o ${address.careOf})` : ''}\n${address.line1}\n${address.zip} ${
@@ -36,7 +28,19 @@ const useFormat = () => {
     return `${day}-${month}-${year}`;
   }, []);
 
-  return { formatCurrency, formatAddress, formatLocalDate };
+  const formatPosition = useCallback((position: number) => {
+    let suffix = '';
+
+    if (position % 100 >= 10 && position % 100 <= 20) {
+      suffix = 'th';
+    } else {
+      suffix = ['st', 'nd', 'rd'][(position % 10) - 1] ?? 'th';
+    }
+
+    return `${position}${suffix}`;
+  }, []);
+
+  return { formatCurrency, formatAddress, formatLocalDate, formatPosition };
 };
 
 export default useFormat;

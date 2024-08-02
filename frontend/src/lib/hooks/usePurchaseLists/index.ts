@@ -4,7 +4,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { Wishlist } from '@shared/types/wishlist/Wishlist';
 import useAccount from '../useAccount';
 
-const usePurchaseLists = (storeKey?: string, skipQueue?: boolean) => {
+const usePurchaseLists = (storeKey?: string) => {
   const { mutate: globalMutate } = useSWRConfig();
 
   const account = useAccount();
@@ -15,7 +15,7 @@ const usePurchaseLists = (storeKey?: string, skipQueue?: boolean) => {
         accountId: account.account?.accountId ?? '',
         storeKey: storeKey ?? '',
       },
-      { skipQueue },
+      { skipQueue: true },
     ),
   );
 
@@ -109,7 +109,7 @@ const usePurchaseLists = (storeKey?: string, skipQueue?: boolean) => {
   );
 
   return {
-    purchaseLists: response.data?.isError ? null : response.data?.data ?? null,
+    purchaseLists: response.data?.isError ? null : (response.data?.data ?? null),
     mutateAll,
     createPurchaseList,
     updatePurchaseList,

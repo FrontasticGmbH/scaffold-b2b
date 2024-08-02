@@ -1,0 +1,29 @@
+{
+  "name": "Related Products Slider",
+  "tasticType": "commercetools/ui/products/related-products-slider",
+  "category": "Products",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Headline",
+          "field": "headline",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "Data Source",
+      "fields": [
+        {
+          "label": "Products",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/referenced-products",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

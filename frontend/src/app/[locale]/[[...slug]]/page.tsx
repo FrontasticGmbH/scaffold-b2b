@@ -82,18 +82,22 @@ export default async function Page({ params, searchParams }: PageProps) {
   );
 
   return (
-    <Providers
-      translations={translations}
-      locale={locale}
-      initialData={{
-        account: auth.isError ? {} : auth.data,
-        associate: associate.isError ? {} : associate.data,
-        businessUnits: businessUnits.isError ? [] : businessUnits.data,
-      }}
-      page={page}
-    >
-      <Renderer data={page.data} params={params} searchParams={searchParams} />
-      <Toaster />
-    </Providers>
+    <div data-theme={(!page.isError && page.data.pageFolder.configuration.displayTheme) ?? 'default'}>
+      <Providers
+        translations={translations}
+        locale={locale}
+        initialData={{
+          account: auth.isError ? {} : auth.data,
+          associate: associate.isError ? {} : associate.data,
+          businessUnits: businessUnits.isError ? [] : businessUnits.data,
+        }}
+        page={page}
+      >
+        <Renderer data={page.data} params={params} searchParams={searchParams} />
+        <Toaster />
+      </Providers>
+
+      <div id="react-modal-custom-portal" />
+    </div>
   );
 }

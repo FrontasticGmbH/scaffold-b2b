@@ -32,6 +32,7 @@ export interface HeaderProps {
   quickOrderSearch: string;
   headerSearch: string;
   csvShowProducts: CsvProduct[];
+  csvShowProductsLoading: boolean;
   addToCartDisabled?: boolean;
   onBusinessUnitChange?: (businessUnit: string) => void;
   onStoreChange?: (store: string) => void;

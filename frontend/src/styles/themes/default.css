@@ -1,7 +1,7 @@
 @tailwind base;
 
 @layer base {
-  html[data-theme='default'] {
+  [data-theme='default'] {
     --color-primary: 23 58 95;
     --color-secondary: 65 90 119;
     --color-accent-blue: 119 141 169;

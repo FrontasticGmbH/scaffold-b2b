@@ -44,6 +44,7 @@ const OrdersClientWrapper = () => {
     createdFrom: ISODate.from,
     createdTo: ISODate.to,
     businessUnitKey: selectedBusinessUnit?.key,
+    sortAttributes: [{ createdAt: 'desc' }],
   });
 
   const mappedOrders = orders.items?.map((order) => mapOrder(order, { businessUnits }));

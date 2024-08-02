@@ -43,11 +43,11 @@ const Slider = (
   );
 
   const responsiveSlideWidth = useResponsiveValue(
-    typeof slideWidth === 'number' ? { base: slideWidth } : slideWidth ?? {},
+    typeof slideWidth === 'number' ? { base: slideWidth } : (slideWidth ?? {}),
   );
 
   const responsiveSlidesToShow = useResponsiveValue(
-    typeof slidesToShow === 'number' ? { base: slidesToShow } : slidesToShow ?? {},
+    typeof slidesToShow === 'number' ? { base: slidesToShow } : (slidesToShow ?? {}),
   ) as number;
 
   return (

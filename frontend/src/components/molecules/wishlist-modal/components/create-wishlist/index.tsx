@@ -39,7 +39,7 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
           fontWeight="semibold"
           fontSize={16}
           lineHeight="loose"
-          className=" pt-4 text-gray-700 md:pt-6 md:text-20 lg:mx-auto lg:max-w-[400px]"
+          className="pt-4 text-gray-700 md:pt-6 md:text-20 lg:mx-auto lg:max-w-[400px]"
         >
           {translate('product.add.to.new.list')}
         </Typography>

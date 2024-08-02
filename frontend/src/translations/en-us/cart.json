@@ -81,5 +81,6 @@
   "view.only.desc": "To add items to the cart, please request your company administrator to grant you the necessary permissions",
   "checkout.request.disabled": "To create an order or a quote, please request your company administrator to grant you the necessary permissions",
   "checkout.unavailable": "Checkout Unavailable",
-  "invalid.addresses.requirements": "No shipping and billing addresses are added. Please ask your company administrator to add one"
+  "invalid.addresses.requirements": "No shipping and billing addresses are added. Please ask your company administrator to add one",
+  "cart.amount": "Cart amount"
 }

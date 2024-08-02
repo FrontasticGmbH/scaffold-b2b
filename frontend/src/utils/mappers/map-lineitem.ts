@@ -6,7 +6,7 @@ export const mapLineItem = (lineItem: LineItem): Product => {
 
   const price =
     (lineItem.price?.centAmount ?? variant?.price?.centAmount ?? 0) -
-    (lineItem.taxRate?.includedInPrice ? lineItem.taxed?.taxAmount?.centAmount ?? 0 : 0);
+    (lineItem.taxRate?.includedInPrice ? (lineItem.taxed?.taxAmount?.centAmount ?? 0) : 0);
   const discountedPrice = lineItem.discountedPrice?.centAmount ?? variant?.discountedPrice?.centAmount;
   const fractionDigits = lineItem.price?.fractionDigits ?? variant?.price?.fractionDigits ?? 2;
   const currency = lineItem.price?.currencyCode ?? variant?.price?.currencyCode ?? 'USD';

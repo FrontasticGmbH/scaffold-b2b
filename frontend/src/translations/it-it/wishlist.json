@@ -1,15 +1,15 @@
 {
-  "my.wishlist": "La mia Lista acquisti",
+  "my.wishlist": "La mia lista degli acquisti",
   "wishlist": "Lista acquisti",
-  "items": "Articoli della Lista acquisti",
-  "items.in.view": "articoli nella Lista acquisti, visualizza la Lista acquisti",
+  "items": "Articoli della lista acquisti",
+  "items.in.view": "elementi nell'Elenco acquisti, visualizzare l'Elenco acquisti",
   "oops": "Ops...",
-  "empty": "La tua Lista acquisti è vuota",
+  "empty": "La tua lista acquisti è vuota",
   "add.items": "Aggiungi elementi",
   "add.to.cart": "Sposta nel carrello",
   "clear.list": "Cancella l'elenco",
   "move": "Mossa",
   "move.to.list": "Sposta nell'elenco",
-  "select.list": "Seleziona la lista della spesa",
+  "select.list": "Seleziona Lista acquisti",
   "item.added": "L'articolo è stato aggiunto a"
 }

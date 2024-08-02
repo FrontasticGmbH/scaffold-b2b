@@ -60,7 +60,7 @@
   "complete.purchase": "Compra completa",
   "address.delivery.add": "Agregar nueva dirección de entrega",
   "address.billing.add": "Agregar nueva dirección de facturación",
-  "continue.to.shipping": "Continuar con el envío",
+  "continue.to.shipping": "Continuar con la entrega",
   "continue.to.billing.address": "Continuar a la dirección de facturación",
   "continue.to.payment": "Continuar con el pago",
   "by.placing.order": "Al realizar su pedido, usted acepta las",
@@ -70,16 +70,16 @@
   "purchase.order": "Orden de compra",
   "purchase.order.desc": "Ingrese un único número de orden de compra autorizada generado por su organización. El número de orden de compra y las instrucciones de pago aparecerán en la factura.",
   "credit.or.debit": "Tarjeta de crédito o débito",
-  "review.quote": "Revisar citação",
+  "review.quote": "Revisar cotización",
   "review.order": "Revisar orden",
   "po.number": "numero postal",
   "invoice.memo": "nota de factura",
   "unsaved.changes": "Cambios no guardados",
   "unsaved.address.changes.confirmation": "Estás seguro de que quieres continuar? La información de su dirección no se guardará.",
   "save.and.review": "Guardar y revisar",
-  "quote.checkout": "Pago de cotización",
+  "quote.checkout": "actualizar para enviar cotización",
   "quote.summary": "Resumen de cotización",
   "quote.items": "Artículos cotizados",
   "submit.quote.request": "Enviar solicitud de cotización",
-  "tax.rates.undefined": "No hay tasas de impuestos definidas para esta región"
+  "tax.rates.undefined": "No hay tasas impositivas definidas para esta región."
 }

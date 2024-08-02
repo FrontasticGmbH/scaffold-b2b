@@ -50,7 +50,7 @@
   "codeNotValid": "Rabattkoden är inte giltig",
   "codeAdded": "Rabattkod tillagd",
   "add": "Lägg till i kundvagn",
-  "move.to.wishlist": "Flytta till Inköpslista",
+  "move.to.wishlist": "Flytta till inköpslistan",
   "checkout.go": "Gå till kassan",
   "go": "Gå till varukorgen",
   "delivery.time": "Leveranstid",
@@ -81,5 +81,6 @@
   "view.only.desc": "För att lägga till artiklar i kundvagnen ber du din företagsadministratör att ge dig de nödvändiga behörigheterna",
   "checkout.request.disabled": "För att skapa en beställning eller en offert, vänligen be din företagsadministratör att ge dig de nödvändiga behörigheterna",
   "checkout.unavailable": "Kassa ej tillgänglig",
-  "invalid.addresses.requirements": "Inga leverans- och faktureringsadresser läggs till. Be din företagsadministratör att lägga till en"
+  "invalid.addresses.requirements": "Inga leverans- och faktureringsadresser läggs till. Be din företagsadministratör att lägga till en",
+  "cart.amount": "Varukorgsbelopp"
 }

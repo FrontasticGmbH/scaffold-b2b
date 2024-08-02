@@ -20,7 +20,7 @@ const Timeline = ({
               <div
                 className={classnames(
                   'h-[8px] flex-1',
-                  index < activeIndex ? classNames.trackActive ?? 'bg-primary' : classNames.track ?? 'bg-gray-300',
+                  index < activeIndex ? (classNames.trackActive ?? 'bg-primary') : (classNames.track ?? 'bg-gray-300'),
                 )}
               />
             )),
@@ -40,7 +40,9 @@ const Timeline = ({
                 <div
                   className={classnames(
                     'h-[16px] w-[16px] rounded-[999px]',
-                    index <= activeIndex ? classNames.bulletActive ?? 'bg-primary' : classNames.bullet ?? 'bg-gray-300',
+                    index <= activeIndex
+                      ? (classNames.bulletActive ?? 'bg-primary')
+                      : (classNames.bullet ?? 'bg-gray-300'),
                   )}
                 />
               </div>

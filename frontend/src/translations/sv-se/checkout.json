@@ -71,14 +71,15 @@
   "purchase.order.desc": "Ange ett enda auktoriserat inköpsordernummer som genererats av din organisation. PO-nummer och betalningsinstruktioner kommer att finnas på fakturan.",
   "credit.or.debit": "Kredit-eller betalkort",
   "review.quote": "Granska citat",
-  "review.order": "Revisar pedido",
+  "review.order": "Granska beställning",
   "po.number": "PO-nummer",
   "invoice.memo": "Fakturamemo",
   "unsaved.changes": "Osparade ändringar",
   "unsaved.address.changes.confirmation": "Är du säker på att du vill fortsätta? Din adressinformation kommer inte att sparas.",
   "save.and.review": "Spara och granska",
-  "quote.checkout": "Offert kassan",
+  "quote.checkout": "uppdatera till Skicka offert",
   "quote.summary": "Citat sammanfattning",
   "quote.items": "Objekt som citeras",
-  "submit.quote.request": "Skicka in offertförfrågan"
+  "submit.quote.request": "Skicka in offertförfrågan",
+  "tax.rates.undefined": "Det finns inga skattesatser definierade för denna region"
 }

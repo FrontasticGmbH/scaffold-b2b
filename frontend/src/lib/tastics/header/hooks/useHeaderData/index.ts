@@ -129,7 +129,12 @@ const useHeaderData = () => {
 
   const handleSKUsUpdate = (skus: string[]) => setSKUs(skus);
 
-  const { products: csvShowProducts } = useProductSearch('', skus, skus?.length ?? 0, selectedStore?.key);
+  const { products: csvShowProducts, isLoading: csvShowProductsLoading } = useProductSearch(
+    '',
+    skus,
+    skus?.length ?? 0,
+    selectedStore?.key,
+  );
 
   return {
     account,
@@ -145,7 +150,8 @@ const useHeaderData = () => {
     headerProducts,
     quickOrderSearch,
     quickOrderProducts,
-    csvShowProducts: csvShowProducts.map((product) => mapCsvProduct(product)),
+    csvShowProducts: csvShowProducts.map((product) => product.variants.map(mapCsvProduct)).flat(),
+    csvShowProductsLoading,
     addToCart: addItem,
     onBusinessUnitSelect,
     onStoreSelect,

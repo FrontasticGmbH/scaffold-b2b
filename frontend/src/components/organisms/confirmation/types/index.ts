@@ -1,4 +1,5 @@
 export interface ConfirmationProps {
+  className?: string;
   translations: {
     title?: string;
     summary?: string;

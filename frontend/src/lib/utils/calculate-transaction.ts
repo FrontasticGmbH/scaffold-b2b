@@ -34,9 +34,9 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
     cart.lineItems
       .filter((item) => !item.taxIncludedInPrice)
       .reduce((acc, curr) => acc + (curr.taxed?.taxAmount?.centAmount ?? 0), 0) +
-    (!cart.shippingInfo?.taxIncludedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount ?? 0 : 0);
+    (!cart.shippingInfo?.taxIncludedInPrice ? (cart.shippingInfo?.taxed?.taxAmount?.centAmount ?? 0) : 0);
 
-  const totalTax = totalAmount > 0 ? cart.taxed?.taxAmount?.centAmount ?? 0 : 0;
+  const totalTax = totalAmount > 0 ? (cart.taxed?.taxAmount?.centAmount ?? 0) : 0;
 
   const isEstimatedShipping = !cart.shippingInfo;
 

@@ -1,0 +1,7 @@
+{
+    "customDataSourceType": "frontastic/approval-rule",
+    "name": "Approval Rule",
+    "category": "Approvals",
+    "icon": "picture_in_picture",
+    "schema": []
+}

@@ -1,0 +1,19 @@
+{
+  "tasticType": "commercetools/ui/approval-flow-details",
+  "name": "Approval Flow Details",
+  "Category": "Dashboard",
+  "schema": [
+    {
+      "name": "Configuration",
+      "fields": [
+        {
+          "label": "Approval flow",
+          "field": "data",
+          "type": "dataSource",
+          "dataSourceType": "frontastic/approval-flow",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

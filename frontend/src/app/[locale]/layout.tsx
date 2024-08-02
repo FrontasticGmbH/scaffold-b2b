@@ -5,19 +5,12 @@ import 'react-tooltip/dist/react-tooltip.css';
 import 'flag-icons/css/flag-icons.min.css';
 import '@/styles/global/index.css';
 import { CookiesProvider } from 'next-client-cookies/server';
-import fetchPageData from '@/utils/server/fetch-page-data';
 
-export default async function RootLayout({ children, params, searchParams }: LayoutProps) {
+export default function RootLayout({ children, params }: LayoutProps) {
   const { locale } = params;
 
-  const page = await fetchPageData(params, searchParams);
-
   return (
-    <html
-      lang={locale}
-      className={inter.variable}
-      data-theme={(!page.isError && page.data.pageFolder.configuration.displayTheme) ?? 'default'}
-    >
+    <html lang={locale} className={inter.variable}>
       <body>
         <CookiesProvider>{children}</CookiesProvider>
       </body>

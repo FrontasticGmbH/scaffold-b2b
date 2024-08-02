@@ -6,6 +6,8 @@ export const mapProductSuggestion = (product: Product): ProductSuggestion => {
 
   return {
     id: product.productId,
+    key: product.productKey,
+    ref: product.productRef,
     sku: variant?.sku ?? '',
     name: product.name ?? '',
     description: variant?.attributes?.['Product-Specifications'],

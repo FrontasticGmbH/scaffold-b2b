@@ -1,4 +1,6 @@
 import {
+  ApprovalFlow as CommercetoolsApprovalFlow,
+  ApprovalFlowStatus as CommercetoolsApprovalFlowStatus,
   ApprovalRule as CommercetoolsApprovalRule,
   ApprovalRuleStatus as CommercetoolsApprovalRuleStatus,
   ApproverHierarchy as CommercetoolsApproverHierarchy,
@@ -8,11 +10,10 @@ import {
   BusinessUnit as CommercetoolsBusinessUnit,
   BusinessUnitKeyReference as CommercetoolsBusinessUnitKeyReference,
   InheritedAssociate as CommercetoolsInheritedAssociate,
+  OrderReference as CommercetoolsOrderReference,
   Permission as CommercetoolsPermission,
   RuleRequester as CommercetoolsRuleRequester,
   StoreKeyReference as CommercetoolsStoreKeyReference,
-  ApprovalFlow as CommercetoolsApprovalFlow,
-  OrderReference as CommercetoolsOrderReference,
 } from '@commercetools/platform-sdk';
 import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { Store } from '@Types/store/Store';
@@ -27,7 +28,6 @@ import {
 import { ApprovalRuleDraft as CommerceToolsApprovalRuleDraft } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/approval-rule';
 import { Order } from '@Types/cart';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
-import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import CartMapper from '@Commerce-commercetools/mappers/CartMapper';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
@@ -158,14 +158,6 @@ export default class BusinessUnitMapper {
     };
   }
 
-  static commercetoolsAssociateRoleReferenceToAssociateRole(associateRole: CommercetoolsAssociateRole): AssociateRole {
-    return {
-      key: associateRole.key,
-      name: associateRole.name,
-      permissions: this.commercetoolsPermissionsToPermissions(associateRole.permissions),
-    };
-  }
-
   static commercetoolsPermissionsToPermissions(commercetoolsPermissions: CommercetoolsPermission[]): Permission[] {
     const permissions: Permission[] = [];
 
@@ -212,7 +204,7 @@ export default class BusinessUnitMapper {
         case 'ViewOthersQuotes':
           return permissions.push(commercetoolsPermission);
         default:
-          throw new ValidationError({ message: 'Invalid permission' });
+          return undefined;
       }
     });
 
@@ -226,35 +218,35 @@ export default class BusinessUnitMapper {
       approvalRuleId: response.id,
       approvers: this.commercetoolsApprovalRuleApproverToApprover(response.approvers),
       name: response.name,
-      approvalRuleStatus: this.commercetoolsApprovalRuleStatusToStatus(response.status),
+      approvalRuleStatus: this.commercetoolsApprovalRuleStatusToApprovalRuleStatus(response.status),
       description: response.description,
       predicate: response.predicate,
       requesters: this.commercetoolsRuleRequesterToApprovalRuleRequester(response.requesters),
     };
   }
 
-  static approvalRuleToCommercetoolsApprovalRule(approvalRuleDraft: ApprovalRule): CommerceToolsApprovalRuleDraft {
+  static approvalRuleToCommercetoolsApprovalRuleDraft(approvalRule: ApprovalRule): CommerceToolsApprovalRuleDraft {
     return {
-      key: approvalRuleDraft.key,
-      name: approvalRuleDraft.name,
-      status: approvalRuleDraft.approvalRuleStatus,
-      approvers: BusinessUnitMapper.approvalRuleApproverToCommercetoolsApprovalRuleApprover(
-        approvalRuleDraft.approvers,
-      ),
-      predicate: approvalRuleDraft.predicate,
-      requesters: BusinessUnitMapper.approvalRuleRequesterToCommercetoolsRuleRequester(approvalRuleDraft.requesters),
-      description: approvalRuleDraft.description,
+      key: approvalRule?.key,
+      name: approvalRule.name,
+      status: approvalRule.approvalRuleStatus,
+      approvers: BusinessUnitMapper.approvalRuleApproverToCommercetoolsApprovalRuleApprover(approvalRule.approvers),
+      predicate: approvalRule.predicate,
+      requesters: BusinessUnitMapper.approvalRuleRequesterToCommercetoolsRuleRequester(approvalRule.requesters),
+      description: approvalRule.description,
     };
   }
 
-  private static commercetoolsApprovalRuleStatusToStatus(status: CommercetoolsApprovalRuleStatus): ApprovalRuleStatus {
+  private static commercetoolsApprovalRuleStatusToApprovalRuleStatus(
+    status: CommercetoolsApprovalRuleStatus,
+  ): ApprovalRuleStatus {
     switch (status) {
       case 'Active':
         return 'Active';
       case 'Inactive':
         return 'Inactive';
       default:
-        throw new ValidationError({ message: 'Approval rule status permission' });
+        return undefined;
     }
   }
 
@@ -326,13 +318,17 @@ export default class BusinessUnitMapper {
       approvalRules: commercetoolsApprovalFlow.rules.map((commercetoolsRule) => {
         return this.commercetoolsApprovalRuleToApprovalRule(commercetoolsRule);
       }),
-      approvalFlowStatus: this.commercetoolsApprovalFlowStatusToApprovalStatus(commercetoolsApprovalFlow.status),
-      approvalFlowRejection: {
-        rejecter: this.commercetoolsAssociateToAssociate(commercetoolsApprovalFlow.rejection.rejecter),
-        rejectedAt: new Date(commercetoolsApprovalFlow.rejection.rejectedAt),
-        reason: commercetoolsApprovalFlow.rejection?.reason,
-      },
-      approvalFlowApproval: commercetoolsApprovalFlow.approvals.map((approval) => {
+      approvalFlowStatus: this.commercetoolsApprovalFlowStatusToApprovalFlowStatus(commercetoolsApprovalFlow.status),
+      approvalFlowRejection: commercetoolsApprovalFlow.rejection
+        ? {
+            rejecter: this.commercetoolsAssociateToAssociate(commercetoolsApprovalFlow.rejection.rejecter),
+            rejectedAt: commercetoolsApprovalFlow.rejection.rejectedAt
+              ? new Date(commercetoolsApprovalFlow.rejection.rejectedAt)
+              : undefined,
+            reason: commercetoolsApprovalFlow.rejection.reason,
+          }
+        : undefined,
+      approvalFlowApprovals: commercetoolsApprovalFlow.approvals.map((approval) => {
         return {
           approver: this.commercetoolsAssociateToAssociate(approval.approver),
           approvedAt: new Date(approval.approvedAt),
@@ -357,29 +353,34 @@ export default class BusinessUnitMapper {
   static commercetoolsOrderReferenceToOrder(order: CommercetoolsOrderReference, locale: Locale): Order {
     return {
       cartId: order?.id,
-      ...CartMapper.commercetoolsOrderToOrder(order.obj, locale),
+      ...(order?.obj ? CartMapper.commercetoolsOrderToOrder(order.obj, locale) : {}),
     };
   }
 
   static commercetoolsAssociateToAssociate(commercetoolsAssociate: CommercetoolsAssociate): Associate {
     if (!commercetoolsAssociate.customer?.obj) {
-      throw new Error('Invalid commercetoolsAssociate: customer object is missing');
+      return {
+        accountId: commercetoolsAssociate.customer.id,
+      };
     }
 
-    const associate: Associate = AccountMapper.commercetoolsCustomerToAccount(commercetoolsAssociate.customer.obj);
+    const account = AccountMapper.commercetoolsCustomerToAccount(commercetoolsAssociate.customer.obj);
 
-    associate.roles =
+    const roles =
       commercetoolsAssociate.associateRoleAssignments?.map((commercetoolsAssociateRoleAssignment) => {
         return this.commercetoolsAssociateRoleKeyReferenceToAssociateRole(
           commercetoolsAssociateRoleAssignment.associateRole,
         );
       }) || [];
 
-    return associate;
+    return {
+      ...account,
+      roles,
+    };
   }
 
-  private static commercetoolsApprovalFlowStatusToApprovalStatus(
-    status: CommercetoolsApprovalRuleStatus,
+  private static commercetoolsApprovalFlowStatusToApprovalFlowStatus(
+    status: CommercetoolsApprovalFlowStatus,
   ): ApprovalFlowStatus {
     switch (status) {
       case 'Pending':
@@ -389,7 +390,7 @@ export default class BusinessUnitMapper {
       case 'Rejected':
         return 'Rejected';
       default:
-        throw new ValidationError({ message: 'Approval rule status does not exist' });
+        return undefined;
     }
   }
 }

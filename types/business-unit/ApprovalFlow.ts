@@ -23,9 +23,9 @@ export interface ApprovalFlow {
   order: Order;
   businessUnitKey: string;
   approvalRules: ApprovalRule[];
-  approvalFlowStatus: ApprovalFlowStatus;
+  approvalFlowStatus?: ApprovalFlowStatus;
   approvalFlowRejection: ApprovalFlowRejection;
-  approvalFlowApproval: ApprovalFlowApproval[];
+  approvalFlowApprovals: ApprovalFlowApproval[];
   eligibleApprovers: AssociateRole[];
   pendingApprovers: AssociateRole[];
   currentTierPendingApprovers: AssociateRole[];

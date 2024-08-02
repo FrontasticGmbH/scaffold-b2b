@@ -34,10 +34,13 @@ const ShoppingListCTA = ({
     const shoppingLists = await getWishlists();
     setLists(shoppingLists ?? []);
 
-    const checkedBoxes = shoppingLists?.reduce((acc, list) => {
-      acc[list.id] = !!list.productIsInWishlist;
-      return acc;
-    }, {} as Record<string, boolean>);
+    const checkedBoxes = shoppingLists?.reduce(
+      (acc, list) => {
+        acc[list.id] = !!list.productIsInWishlist;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    );
 
     setCheckedBoxes(checkedBoxes ?? {});
   }, [getWishlists]);

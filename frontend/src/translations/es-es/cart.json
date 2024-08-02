@@ -50,7 +50,7 @@
   "codeNotValid": "El código de descuento no es válido",
   "codeAdded": "Código de descuento agregado",
   "add": "Añadir a la cesta",
-  "move.to.wishlist": "Mover a la Lista de compras",
+  "move.to.wishlist": "Mover a la lista de compras",
   "checkout.go": "Ir a pagar",
   "go": "Ir al carrito",
   "delivery.time": "El tiempo de entrega",
@@ -81,5 +81,6 @@
   "view.only.desc": "Para agregar artículos al carrito, solicite al administrador de su empresa que le otorgue los permisos necesarios.",
   "checkout.request.disabled": "Para crear un pedido o una cotización, solicite al administrador de su empresa que le otorgue los permisos necesarios.",
   "checkout.unavailable": "Pagar no disponible",
-  "invalid.addresses.requirements": "No se agregan direcciones de envío y facturación. Pídale al administrador de su empresa que agregue uno"
+  "invalid.addresses.requirements": "No se agregan direcciones de envío y facturación. Pídale al administrador de su empresa que agregue uno",
+  "cart.amount": "Cantidad del carrito"
 }

@@ -19,7 +19,7 @@ const Refinements = ({
       title: 'dashboard.quote.search',
       Component: (
         <SearchInput
-          className="h-[38px] w-[360px]"
+          containerClassName="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
           placeholder={`${translate('dashboard.search.by.id.sku')}...`}
@@ -57,7 +57,7 @@ const Refinements = ({
           </div>
         ))}
       </div>
-      <div className="mt-4 hidden items-center gap-1 text-gray-600 md:flex">
+      <div className="hidden items-center gap-1 text-gray-600 md:flex">
         <span className="text-14">{translate('common.status')}</span>
         <InfoIcon className="h-[24px] w-[24px] cursor-pointer" onClick={onInfoClick} />
       </div>

@@ -446,6 +446,7 @@ export const queryApprovalRules: ActionHook = async (request: Request, actionCon
 
     const approvalRuleQuery: ApprovalRuleQuery = {
       limit: request.query?.limit ?? undefined,
+      cursor: request.query?.cursor ?? undefined,
       approvalRuleStatus: queryParamsToStates('approvalRuleStatus', request.query),
       sortAttributes: queryParamsToSortAttributes(request.query),
       approvalRuleIds: queryParamsToIds('approvalRuleIds', request.query),
@@ -502,6 +503,7 @@ export const queryApprovalFlows: ActionHook = async (request: Request, actionCon
 
     const approvalFlowsQuery: ApprovalFlowsQuery = {
       limit: request.query?.limit ?? undefined,
+      cursor: request.query?.cursor ?? undefined,
       sortAttributes: queryParamsToSortAttributes(request.query),
       approvalFlowStatus: queryParamsToStates('approvalFlowStatus', request.query),
       approvalFlowIds: queryParamsToIds('approvalFlowIds', request.query),

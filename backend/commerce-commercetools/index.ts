@@ -11,6 +11,7 @@ import { Quote } from '@Types/quote/Quote';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { Order } from '@Types/cart/Order';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
+import { ApprovalFlow, ApprovalRule } from '@Types/business-unit';
 import { actions } from './actionControllers';
 import dataSources from './dataSources';
 import CategoryRouter from './utils/routers/CategoryRouter';
@@ -21,6 +22,7 @@ import CartRouter from '@Commerce-commercetools/utils/routers/CartRouter';
 import QuoteRouter from '@Commerce-commercetools/utils/routers/QuoteRouter';
 import WishlistRouter from '@Commerce-commercetools/utils/routers/WishlistRouter';
 import handleError from '@Commerce-commercetools/utils/handleError';
+import ApprovalRouter from '@Commerce-commercetools/utils/routers/ApprovalRouter';
 
 export default {
   'dynamic-page-handler': async (
@@ -208,6 +210,62 @@ export default {
         if (result) {
           return {
             dynamicPageType: 'frontastic/quote-requests-page',
+            dataSourcePayload: result,
+            pageMatchingPayload: result,
+          };
+        }
+        return null;
+      }
+
+      // Identify Approval Flow
+      if (ApprovalRouter.identifyApprovalFlowFrom(request)) {
+        const approvalFlow: ApprovalFlow = await ApprovalRouter.loadApprovalFlowFor(request, context.frontasticContext);
+
+        if (approvalFlow) {
+          return {
+            dynamicPageType: 'frontastic/approval-flow-page',
+            dataSourcePayload: approvalFlow,
+            pageMatchingPayload: approvalFlow,
+          };
+        }
+        return null;
+      }
+
+      // Identify Approval Rule
+      if (ApprovalRouter.identifyApprovalRuleFrom(request)) {
+        const approvalRule: ApprovalRule = await ApprovalRouter.loadApprovalRuleFor(request, context.frontasticContext);
+
+        if (approvalRule) {
+          return {
+            dynamicPageType: 'frontastic/approval-rule-page',
+            dataSourcePayload: approvalRule,
+            pageMatchingPayload: approvalRule,
+          };
+        }
+        return null;
+      }
+
+      // Identify Approval Flows
+      if (ApprovalRouter.identifyApprovalFlowsFrom(request)) {
+        const result = await ApprovalRouter.loadApprovalFlowsFor(request, context.frontasticContext);
+
+        if (result) {
+          return {
+            dynamicPageType: 'frontastic/approval-flows-page',
+            dataSourcePayload: result,
+            pageMatchingPayload: result,
+          };
+        }
+        return null;
+      }
+
+      // Identify Approval Rules
+      if (ApprovalRouter.identifyApprovalRulesFrom(request)) {
+        const result = await ApprovalRouter.loadApprovalRulesFor(request, context.frontasticContext);
+
+        if (result) {
+          return {
+            dynamicPageType: 'frontastic/approval-flows-page',
             dataSourcePayload: result,
             pageMatchingPayload: result,
           };

@@ -62,6 +62,8 @@
   "variants.attributes.brand": "Marca",
   "variants.prices.centAmount": "Preço",
   "variants.attributes.iso45001": "ISO 45001",
+  "variants.attributes.iso45001.true": "ISO 45001",
+  "variants.attributes.iso45001.false": "Regular",
   "variants.attributes.mobility": "Mobilidade",
   "search.results": "Procurar Resultados",
   "add.to.new.list": "Adicionar à nova lista",

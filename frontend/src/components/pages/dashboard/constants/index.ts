@@ -6,8 +6,12 @@ export const DashboardLinks = {
   quotes: '/quotes',
   orders: '/orders',
   settings: '/settings',
+  approvalRules: '/approval-rules',
+  approvalFlows: '/approval-flows',
   shoppingListDetail: (id: string) => `/purchase-list/${id.replace(/\s+/g, '-')}`,
   quoteDetail: (id: string) => `/quote/${id.replace(/\s+/g, '-')}`,
   quoteRequestDetail: (id: string) => `/quote-request/${id.replace(/\s+/g, '-')}`,
   orderDetail: (id: string) => `/order/${id.replace(/\s+/g, '-')}`,
+  approvalRuleDetail: (id: string) => `/approval-rule/${id.replace(/\s+/g, '-')}`,
+  approvalFlowDetail: (id: string) => `/approval-flow/${id.replace(/\s+/g, '-')}`,
 };

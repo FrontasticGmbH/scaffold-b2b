@@ -17,7 +17,7 @@ const Template: StoryFn<typeof ResponsiveModal> = ({ closeButton = true }) => {
         Open Modal
       </Button>
       <ResponsiveModal isOpen={open} closeButton={closeButton} onRequestClose={() => setOpen(false)}>
-        <div className="min-h-[400px] w-[100vw] max-w-[600px] px-8 py-12">I&apos;m a modal!</div>
+        <div className="min-h-[400px] w-screen max-w-[600px] px-8 py-12">I&apos;m a modal!</div>
       </ResponsiveModal>
     </div>
   );

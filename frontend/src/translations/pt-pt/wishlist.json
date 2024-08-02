@@ -1,15 +1,15 @@
 {
-  "my.wishlist": "Minha Lista de Compras",
-  "wishlist": "Lista de Compras",
+  "my.wishlist": "Minha lista de compras",
+  "wishlist": "Lista de compras",
   "items": "Itens da lista de compras",
-  "items.in.view": "itens na lista de compras, ver lista de compras",
+  "items.in.view": "itens na lista de compras, visualizar lista de compras",
   "oops": "Ops...",
-  "empty": "Sua Lista de Compras está vazia",
+  "empty": "Sua lista de compras está vazia",
   "add.items": "Adicionar itens",
   "add.to.cart": "Mover para o carrinho",
   "clear.list": "Limpe a lista",
   "move": "Mover",
   "move.to.list": "Mover para lista",
-  "select.list": "Selecione lista de compras",
+  "select.list": "Selecione Lista de Compras",
   "item.added": "O item foi adicionado a"
 }

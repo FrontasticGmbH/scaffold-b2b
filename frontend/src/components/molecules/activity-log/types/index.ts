@@ -7,11 +7,15 @@ export interface ActivityLog {
   onCommentUpdate?: (comment: string) => Promise<void>;
   onCommentCancel?: () => void;
   reply?: boolean;
+  canAccept?: boolean;
+  canReject?: boolean;
   onAccept?: () => Promise<void>;
   onReject?: () => Promise<void>;
   ctaLink?: string;
+  ctaLinkIsDisabled?: boolean;
   onCtaLinkClick?: () => void;
   ctaButton?: string;
+  ctaButtonIsDisabled?: boolean;
   onCtaButtonClick?: () => Promise<void>;
 }
 

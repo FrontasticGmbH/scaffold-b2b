@@ -48,9 +48,10 @@ const SettingsClientWrapper = () => {
     },
     onDeleteAccount: async (password: string) => {
       const res = await deleteAccount(password);
-      await logout();
-      router.refresh();
-      router.push('/login');
+      if (res.success) {
+        await logout();
+        router.refresh();
+      }
       return res.success;
     },
   } as SettingsPageProps;

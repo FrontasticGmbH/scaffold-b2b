@@ -4,11 +4,19 @@ import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
 import Button from '@/components/atoms/button';
 import InfoBanner from '@/components/molecules/info-banner';
+import { classnames } from '@/utils/classnames/classnames';
 import { OrderDetailsPageProps } from './types';
 import OrderStatusBar from './components/order-status-bar';
 import PreviousPageLink from '../../components/previous-page-link';
 
-const OrderDetailsPage = ({ order, viewOnly, onReturn, onReorder }: OrderDetailsPageProps) => {
+const OrderDetailsPage = ({
+  order,
+  viewOnly,
+  onReturn,
+  onReorder,
+  showCtaButtons = true,
+  showOrderStatusBar = true,
+}: OrderDetailsPageProps) => {
   const { translate } = useTranslation();
 
   const { formatCurrency, formatLocalDate } = useFormat();
@@ -44,23 +52,25 @@ const OrderDetailsPage = ({ order, viewOnly, onReturn, onReorder }: OrderDetails
         <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
           {translate('dashboard.order.details')}
         </h1>
-        <div className="hidden items-center justify-normal gap-x-3 md:flex">
-          <PreviousPageLink />
+        {showCtaButtons && (
+          <div className="hidden items-center justify-normal gap-x-3 md:flex">
+            <PreviousPageLink />
 
-          {!viewOnly && (
-            <Button size="s" variant="secondary" onClick={handleReturn} loading={loading.return}>
-              {translate('orders.return')}
-            </Button>
-          )}
-          {/* <Button size="s" variant="secondary" disabled>
-            {translate('orders.download.invoice')}
-          </Button> */}
-          {!viewOnly && !order.isFromAQuote && (
-            <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
-              {translate('orders.reorder')}
-            </Button>
-          )}
-        </div>
+            {!viewOnly && (
+              <Button size="s" variant="secondary" onClick={handleReturn} loading={loading.return}>
+                {translate('orders.return')}
+              </Button>
+            )}
+            {/* <Button size="s" variant="secondary" disabled>
+                  {translate('orders.download.invoice')}
+                </Button> */}
+            {!viewOnly && !order.isFromAQuote && (
+              <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
+                {translate('orders.reorder')}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       <h3 className="text-14 text-gray-600">
@@ -73,25 +83,35 @@ const OrderDetailsPage = ({ order, viewOnly, onReturn, onReorder }: OrderDetails
         </h3>
       )}
 
-      <div className="pb-8 pt-12 md:border-b md:border-neutral-400 md:pb-12 md:pt-[56px] lg:pb-[56px]">
-        <OrderStatusBar order={order} />
-      </div>
+      {showOrderStatusBar && (
+        <div className="pb-8 pt-12 md:border-b md:border-neutral-400 md:pb-12 md:pt-[56px] lg:pb-[56px]">
+          <OrderStatusBar order={order} />
+        </div>
+      )}
 
-      <div className="flex flex-col items-center justify-normal gap-y-4 md:hidden">
-        <PreviousPageLink />
+      {showCtaButtons && (
+        <div className="flex flex-col items-center justify-normal gap-y-4 md:hidden">
+          <PreviousPageLink />
 
-        <Button size="full" variant="secondary">
-          {translate('orders.return')}
-        </Button>
-        <Button size="full" variant="secondary" disabled>
-          {translate('orders.download.invoice')}
-        </Button>
-        <Button size="full" variant="primary">
-          {translate('orders.reorder')}
-        </Button>
-      </div>
+          {!viewOnly && (
+            <Button size="full" variant="secondary" onClick={handleReturn} loading={loading.return}>
+              {translate('orders.return')}
+            </Button>
+          )}
 
-      <div>
+          {/* <Button size="full" variant="secondary" disabled>
+            {translate('orders.download.invoice')}
+          </Button> */}
+
+          {!viewOnly && !order.isFromAQuote && (
+            <Button size="full" variant="primary" onClick={handleReorder} loading={loading.reorder}>
+              {translate('orders.reorder')}
+            </Button>
+          )}
+        </div>
+      )}
+
+      <div className={classnames({ 'mt-8 border-t border-neutral-400 md:mt-12': !showCtaButtons })}>
         <h5 className="pb-7 pt-6 text-gray-700">
           {translate('dashboard.items.ordered')} <span className="text-gray-600">({order.items.length})</span>
         </h5>

@@ -4,6 +4,8 @@ import Button from '@/components/atoms/button';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
+import Confirmation from '@/components/organisms/confirmation';
+import useBusinessUnit from '@/lib/tastics/company-admin/hooks/useBusinessUnit';
 import { Props } from './types';
 
 const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
@@ -14,6 +16,9 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
   const [data, setData] = useState({ password: '' });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { activeBusinessUnit } = useBusinessUnit();
+  const isLastAssociate = activeBusinessUnit?.associates?.length === 1;
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,32 +27,24 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
     [data],
   );
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
-      setIsLoading(true);
-
-      const success = await onDeleteAccount?.(data.password);
-
-      if (success) router.push('/login');
-      else {
-        toast.error(translate('dashboard.failed.to.delete.account'), {
-          position: 'top-right',
-        });
-      }
-
-      setIsLoading(false);
-    },
-    [onDeleteAccount, data, router, translate],
-  );
+  const handleSubmit = useCallback(async () => {
+    setIsLoading(true);
+    const success = await onDeleteAccount?.(data.password);
+    if (success === true) {
+      router.push('/login');
+    } else {
+      toast.error(translate('dashboard.failed.to.delete.account'), {
+        position: 'top-right',
+      });
+    }
+    setIsLoading(false);
+  }, [onDeleteAccount, data, router, translate]);
 
   const isDisabled = !data.password;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <p className="pb-4 text-14 text-gray-700">{translate('dashboard.cannot.regain.access')}</p>
-
       <PasswordInput
         containerClassName="w-[370px]"
         name="password"
@@ -61,16 +58,32 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
         <Button variant="secondary" size="m" onClick={onCancel} type="button" className="min-w-[112px]">
           {translate('common.cancel')}
         </Button>
-        <Button
-          variant="warning"
-          size="m"
-          type="submit"
-          disabled={isDisabled}
-          loading={isLoading}
-          className="min-w-[112px]"
+        <Confirmation
+          translations={{
+            title: translate('account.delete.account'),
+            summary: translate(
+              isLastAssociate ? 'dashboard.associate.delete.disabled' : 'dashboard.cannot.regain.access',
+            ),
+            cancel: translate('common.cancel'),
+            confirm: translate('common.delete'),
+          }}
+          isOpen={isOpen}
+          onCancel={() => setIsOpen(false)}
+          disabled={isLastAssociate}
+          onConfirm={handleSubmit}
         >
-          {translate('common.delete')}
-        </Button>
+          <Button
+            variant="warning"
+            size="m"
+            type="button"
+            disabled={isDisabled}
+            loading={isLoading}
+            onClick={() => setIsOpen(true)}
+            className="min-w-[112px]"
+          >
+            {translate('common.delete')}
+          </Button>
+        </Confirmation>
       </div>
     </form>
   );

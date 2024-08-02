@@ -112,30 +112,6 @@ export default class BusinessUnitApi extends BaseApi {
       });
   }
 
-  async createApprovalRule(
-    accountId: string,
-    businessUnitKey: string,
-    approvalRuleDraft: ApprovalRule,
-  ): Promise<ApprovalRule> {
-    const approvalRule = BusinessUnitMapper.approvalRuleToCommercetoolsApprovalRule(approvalRuleDraft);
-
-    return this.associateRequestBuilder(accountId)
-      .inBusinessUnitKeyWithBusinessUnitKeyValue({
-        businessUnitKey: businessUnitKey,
-      })
-      .approvalRules()
-      .post({
-        body: approvalRule,
-      })
-      .execute()
-      .then((response) => {
-        return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-      });
-  }
-
   async getByKeyForAccount(businessUnitKey: string, accountId: string, expandStores?: boolean): Promise<BusinessUnit> {
     const expand = ['associates[*].customer', 'inheritedAssociates[*].customer'];
 
@@ -423,6 +399,30 @@ export default class BusinessUnitApi extends BaseApi {
     return this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
   }
 
+  async createApprovalRule(
+    accountId: string,
+    businessUnitKey: string,
+    approvalRule: ApprovalRule,
+  ): Promise<ApprovalRule> {
+    const approvalRuleDraft = BusinessUnitMapper.approvalRuleToCommercetoolsApprovalRuleDraft(approvalRule);
+
+    return this.associateRequestBuilder(accountId)
+      .inBusinessUnitKeyWithBusinessUnitKeyValue({
+        businessUnitKey: businessUnitKey,
+      })
+      .approvalRules()
+      .post({
+        body: approvalRuleDraft,
+      })
+      .execute()
+      .then((response) => {
+        return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
+  }
+
   async queryApprovalRules(
     businessUnitKey: string,
     accountId: string,
@@ -617,6 +617,7 @@ export default class BusinessUnitApi extends BaseApi {
       .get({
         queryArgs: {
           where: whereClause,
+          expand: ['order', 'approvals[*].approver.customer'],
           limit: limit,
           offset: getOffsetFromCursor(approvalRuleQuery.cursor),
           sort: sortAttributes,
@@ -649,7 +650,11 @@ export default class BusinessUnitApi extends BaseApi {
       .inBusinessUnitKeyWithBusinessUnitKeyValue({ businessUnitKey })
       .approvalFlows()
       .withId({ ID: approvalFlowId })
-      .get()
+      .get({
+        queryArgs: {
+          expand: ['order', 'approvals[*].approver.customer'],
+        },
+      })
       .execute()
       .then((response) => {
         return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale);
@@ -667,15 +672,18 @@ export default class BusinessUnitApi extends BaseApi {
   ): Promise<ApprovalFlow> {
     const locale = await this.getCommercetoolsLocal();
 
-    return this.getApprovalFlowById(accountId, businessUnitKey, approvalFlowId).then((approvalRule) =>
+    return this.getApprovalFlowById(accountId, businessUnitKey, approvalFlowId).then((approvalFlow) =>
       this.associateRequestBuilder(accountId)
         .inBusinessUnitKeyWithBusinessUnitKeyValue({ businessUnitKey })
         .approvalFlows()
-        .withId({ ID: approvalRule.approvalFlowId })
+        .withId({ ID: approvalFlow.approvalFlowId })
         .post({
           body: {
-            version: approvalRule.approvalFlowVersion,
+            version: approvalFlow.approvalFlowVersion,
             actions,
+          },
+          queryArgs: {
+            expand: ['order', 'approvals[*].approver.customer'],
           },
         })
         .execute()

@@ -23,6 +23,8 @@ export class ProductQueryFactory {
     const productQuery: ProductQuery = {
       categories: [],
       productIds: [],
+      productKeys: [],
+      productRefs: [],
       skus: [],
       productSelectionIds: [],
     };
@@ -44,8 +46,15 @@ export class ProductQueryFactory {
           case 'categories':
             queryParams['categories'] = (value as string).split(',').map((val: string) => val.trim());
             break;
+          case 'productId':
+          case 'productRef':
           case 'productIds':
-            queryParams['productIds'] = (value as string).split(',').map((val: string) => val.trim());
+          case 'productRefs':
+            // For backward compatibility, productIds and productRefs from Studio are the same
+            queryParams['productRefs'] = (value as string).split(',').map((val: string) => val.trim());
+            break;
+          case 'productKeys': // For backward compatibility, we support both productIds and products
+            queryParams['productKeys'] = (value as string).split(',').map((val: string) => val.trim());
             break;
           case 'productSkus':
             queryParams['skus'] = (value as string).split(',').map((val: string) => val.trim());
@@ -76,11 +85,23 @@ export class ProductQueryFactory {
     }
 
     /**
-     * Map productIds
+     * Map products
      */
+    if (queryParams?.productRefs && Array.isArray(queryParams?.productRefs)) {
+      queryParams?.productRefs.map((product: string | number) => {
+        productQuery.productRefs.push(product.toString());
+      });
+    }
+
     if (queryParams?.productIds && Array.isArray(queryParams?.productIds)) {
       queryParams?.productIds.map((productId: string | number) => {
         productQuery.productIds.push(productId.toString());
+      });
+    }
+
+    if (queryParams?.productKeys && Array.isArray(queryParams?.productKeys)) {
+      queryParams?.productKeys.map((productId: string | number) => {
+        productQuery.productKeys.push(productId.toString());
       });
     }
 

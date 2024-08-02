@@ -39,7 +39,14 @@ const Modal = ({
   };
 
   return (
-    <ReactModal {...props} ariaHideApp={false} preventScroll={false} style={modalStyle} className={modalClassNames}>
+    <ReactModal
+      {...props}
+      ariaHideApp={false}
+      preventScroll={false}
+      style={modalStyle}
+      className={modalClassNames}
+      parentSelector={() => document.getElementById('react-modal-custom-portal') ?? document.body}
+    >
       {closeButton && (
         <CloseIcon
           className="absolute right-4 top-4 h-6 w-6 cursor-pointer text-gray-700"

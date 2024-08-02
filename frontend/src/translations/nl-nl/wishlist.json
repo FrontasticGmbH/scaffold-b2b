@@ -1,15 +1,15 @@
 {
-  "my.wishlist": "mijn aankooplijst",
-  "wishlist": "aankooplijst",
-  "items": "aankooplijstartikelen",
-  "items.in.view": "items in aankooplijst, aankooplijst bekijken",
+  "my.wishlist": "Mijn aankooplijst",
+  "wishlist": "Aankooplijst",
+  "items": "Aankooplijstartikelen",
+  "items.in.view": "items in Aankooplijst, bekijk Aankooplijst",
   "oops": "Oeps...",
-  "empty": "Jouw wens lijst is leeg",
+  "empty": "Uw aankooplijst is leeg",
   "add.items": "Items toevoegen",
   "add.to.cart": "Ga naar winkelwagen",
   "clear.list": "Wis de lijst",
   "move": "Beweging",
   "move.to.list": "Verplaats naar lijst",
-  "select.list": "Selecteer boodschappenlijstje",
+  "select.list": "Selecteer Aankooplijst",
   "item.added": "Artikel is toegevoegd"
 }

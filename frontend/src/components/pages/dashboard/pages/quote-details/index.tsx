@@ -12,6 +12,7 @@ const QuoteDetailsPage = ({
   quote,
   isQuoteRequest,
   viewOnly = false,
+  permissions,
   onAccept,
   onCommentUpdate,
   onReject,
@@ -37,7 +38,7 @@ const QuoteDetailsPage = ({
       )}
 
       <div className="flex items-center justify-between py-6 md:py-7 lg:py-9">
-        <h1 className="text-18 font-extrabold leading-[100%] text-gray-800 md:text-20 lg:text-24">
+        <h1 className="text-18 font-extrabold leading-tight text-gray-800 md:text-20 lg:text-24">
           {translate(isQuoteRequest ? 'dashboard.quote.request.details' : 'dashboard.quote.details')}
         </h1>
         <PreviousPageLink className="hidden md:block" />
@@ -89,12 +90,15 @@ const QuoteDetailsPage = ({
                 ...(!viewOnly
                   ? {
                       reply: reply && !isRenegotiating[index],
+                      canAccept: permissions.canAccept,
+                      canReject: permissions.canDecline,
                       onAccept,
                       onReject,
                       ctaLink:
                         renegotiate || revoke
                           ? translate(`dashboard.cta.${renegotiate ? 'renegotiate' : 'revoke'}`)
                           : '',
+                      ctaLinkIsDisabled: renegotiate ? !permissions.canRenegotiate : !permissions.canRevoke,
                       onCtaLinkClick:
                         renegotiate || revoke
                           ? renegotiate
@@ -103,9 +107,10 @@ const QuoteDetailsPage = ({
                           : undefined,
                     }
                   : {}),
-                ...(viewOrder && !viewOnly
+                ...(viewOrder
                   ? {
                       ctaButton: translate('dashboard.view.order.details'),
+                      ctaButtonIsDisabled: viewOnly,
                       onCtaButtonClick: onViewOrder,
                     }
                   : {}),
