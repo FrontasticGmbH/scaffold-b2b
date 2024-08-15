@@ -1,4 +1,4 @@
-import { Facet, RangeFacet, TermFacet } from '@/types/entity/facet';
+import { BooleanFacet, Facet, RangeFacet, TermFacet } from '@/types/entity/facet';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { DataSourceProps, Props } from '../../types';
 
@@ -9,6 +9,7 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
   const allowedFacets = new Set([
     'variants.scopedPrice.value',
     'variants.prices.centAmount',
+    'variants.prices',
     'variants.attributes.iso45001',
     'variants.attributes.mobility',
   ]);
@@ -18,7 +19,7 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
     .map((facet) => {
       const isNavigationFacet = facet.identifier === 'categories.id';
       const isBooleanFacet = facet.type === 'boolean';
-      const isTermFacet = facet.type === 'term' || isBooleanFacet;
+      const isTermFacet = facet.type === 'term';
       const isRangeFacet = facet.type === 'range';
 
       if (isTermFacet && !facet.terms?.length) return;
@@ -33,8 +34,8 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
 
       if (isNavigationFacet) res.type = 'navigation';
 
-      if (isTermFacet) {
-        (res as TermFacet).values = (facet.terms ?? []).map((term) => {
+      if (isTermFacet || isBooleanFacet) {
+        (res as TermFacet | BooleanFacet).values = (facet.terms ?? []).map((term) => {
           const value = {
             id: term.identifier,
             name: isBooleanFacet ? translate(`product.${facet.identifier}.${term.identifier}`) : term.label,

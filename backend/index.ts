@@ -5,11 +5,11 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 import {
-  ExtensionRegistry,
   ActionRegistry,
   DynamicPageHandler,
   DynamicPageRedirectResult,
   DynamicPageSuccessResult,
+  ExtensionRegistry,
 } from '@frontastic/extension-types';
 
 import appHealthExtension from './extensions-runner-test';
@@ -61,8 +61,9 @@ const mergeDynamicPageHandlers = (extensions: Array<ExtensionRegistry>): Dynamic
   };
 };
 
-export default {
+const extensionRegistry: ExtensionRegistry = {
   'dynamic-page-handler': mergeDynamicPageHandlers(extensionsToMerge),
   'data-sources': extensionsToMerge.map((extension) => extension['data-sources'] || {}).reduce(Object.assign, {}),
   actions: mergeActions(extensionsToMerge),
-} as ExtensionRegistry;
+};
+export default extensionRegistry;

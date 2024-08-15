@@ -50,4 +50,5 @@ export interface Quote {
   paymentMethod?: string;
   ownedByOtherUser?: boolean;
   url?: string;
+  purchaseOrderNumber?: string;
 }

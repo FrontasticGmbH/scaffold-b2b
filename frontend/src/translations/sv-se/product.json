@@ -59,6 +59,7 @@
   "categories.id": "Kategori",
   "variants.scopedPrice.value": "Omfattning Pris",
   "variants.price": "Spanien",
+  "variants.prices": "Spanien",
   "variants.attributes.brand": "varumärke",
   "variants.prices.centAmount": "Spanien",
   "variants.attributes.iso45001": "ISO 45001",

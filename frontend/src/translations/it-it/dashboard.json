@@ -176,5 +176,6 @@
   "await.reply.from.tier": "In attesa di risposta dal livello {tier}",
   "flow.rejected": "Flusso rifiutato",
   "rules.setup.incomplete": "L'impostazione delle regole è incompleta!",
-  "tiers.setup.incomplete": "La configurazione dei livelli è incompleta!"
+  "tiers.setup.incomplete": "La configurazione dei livelli è incompleta!",
+  "purchase.order.number": "PO numero"
 }

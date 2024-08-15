@@ -176,5 +176,6 @@
   "await.reply.from.tier": "Väntar på svar från nivån {tier}",
   "flow.rejected": "Flödet avvisades",
   "rules.setup.incomplete": "Regelinställningen är ofullständig!",
-  "tiers.setup.incomplete": "Nivåinställningen är ofullständig!"
+  "tiers.setup.incomplete": "Nivåinställningen är ofullständig!",
+  "purchase.order.number": "PO siffra"
 }

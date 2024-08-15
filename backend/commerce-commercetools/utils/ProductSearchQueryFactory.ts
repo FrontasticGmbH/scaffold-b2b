@@ -18,8 +18,12 @@ import {
   ProductSearchRequest,
   SearchWildCardExpression,
   _ProductSearchFacetExpression,
+  ProductSearchFacetCountExpression,
+  ProductSearchFacetDistinctExpression,
+  ProductSearchFacetRangesExpression,
+  _SearchQuery,
+  SearchSorting,
 } from '@commercetools/platform-sdk';
-import { SearchSorting } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/search';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 const EXPANDS = [
@@ -52,6 +56,7 @@ export class ProductSearchFactory {
       productQuery,
       locale,
     );
+
     commercetoolsProductSearchRequest = this.applyQueryString(commercetoolsProductSearchRequest, productQuery, locale);
     commercetoolsProductSearchRequest = this.applyQueryCategories(
       commercetoolsProductSearchRequest,
@@ -89,11 +94,14 @@ export class ProductSearchFactory {
       locale,
     );
     commercetoolsProductSearchRequest = this.rearrangeProductSearchQuery(commercetoolsProductSearchRequest);
+    commercetoolsProductSearchRequest = this.rearrangeProductSearchPostFilter(commercetoolsProductSearchRequest);
+    commercetoolsProductSearchRequest = this.rearrangeProductSearchFacets(commercetoolsProductSearchRequest);
     commercetoolsProductSearchRequest = this.applyDefaultQueryIfEmpty(
       commercetoolsProductSearchRequest,
       productQuery,
       locale,
     );
+
     return commercetoolsProductSearchRequest;
   }
 
@@ -109,6 +117,7 @@ export class ProductSearchFactory {
         expand: EXPANDS,
       },
       markMatchingVariants: true,
+      postFilter: {},
     };
 
     commercetoolsProductSearchRequest.limit = +productQuery.limit || 24;
@@ -125,7 +134,7 @@ export class ProductSearchFactory {
   }
 
   /**
-   * Rearrange the productSearchQuery by removing extra "and" and "or" fields
+   * Rearrange the query by removing extra "and" and "or" fields
    *
    * @param {ProductSearchRequest} commercetoolsProductSearchRequest - the original product search request
    * @return {ProductSearchRequest} the rearranged product search request
@@ -133,77 +142,143 @@ export class ProductSearchFactory {
   private static rearrangeProductSearchQuery(
     commercetoolsProductSearchRequest: ProductSearchRequest,
   ): ProductSearchRequest {
-    const { query } = commercetoolsProductSearchRequest;
+    const query = this.rearrangeSearchQuery(commercetoolsProductSearchRequest.query);
 
-    // Extract the "or" and "and" fields from the query object for easier access
-    const intermediateValues: Record<string, number | SearchQuery[]> = {
+    return { ...commercetoolsProductSearchRequest, query };
+  }
+
+  /**
+   * Rearrange the postFilter by removing extra "and" and "or" fields
+   *
+   * @param {ProductSearchRequest} commercetoolsProductSearchRequest - the original product search request
+   * @return {ProductSearchRequest} the rearranged product search request
+   */
+  private static rearrangeProductSearchPostFilter(
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+  ): ProductSearchRequest {
+    const postFilter = this.rearrangeSearchQuery(commercetoolsProductSearchRequest.postFilter);
+
+    return { ...commercetoolsProductSearchRequest, postFilter };
+  }
+
+  /**
+   * Rearrange the facets filters by by removing extra "and" and "or" fields
+   *
+   * @param {ProductSearchRequest} commercetoolsProductSearchRequest - the original product search request
+   * @return {ProductSearchRequest} the rearranged product search request
+   */
+  private static rearrangeProductSearchFacets(
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+  ): ProductSearchRequest {
+    const facets = commercetoolsProductSearchRequest.facets?.map((facet) => {
+      switch (true) {
+        case 'count' in facet:
+          (facet as Writeable<ProductSearchFacetCountExpression>).count.filter = this.rearrangeSearchQuery(
+            (facet as ProductSearchFacetCountExpression).count.filter,
+          );
+          break;
+        case 'distinct' in facet:
+          (facet as Writeable<ProductSearchFacetDistinctExpression>).distinct.filter = this.rearrangeSearchQuery(
+            (facet as ProductSearchFacetDistinctExpression).distinct.filter,
+          );
+          break;
+        case 'ranges' in facet:
+          (facet as Writeable<ProductSearchFacetRangesExpression>).ranges.filter = this.rearrangeSearchQuery(
+            (facet as ProductSearchFacetRangesExpression).ranges.filter,
+          );
+      }
+
+      return facet;
+    });
+
+    return {
+      ...commercetoolsProductSearchRequest,
+      facets,
+    };
+  }
+
+  /**
+   * Rearrange the searchQuery by removing extra "and" and "or" fields
+   */
+  private static rearrangeSearchQuery(searchQuery: _SearchQuery | undefined): _SearchQuery | undefined {
+    if (!searchQuery) {
+      return undefined;
+    }
+
+    const intermediateValues: {
+      orLength: number;
+      andLength: number;
+      orList: SearchQuery[];
+      andList: SearchQuery[];
+    } = {
       orLength: 0,
       andLength: 0,
       orList: [],
       andList: [],
     };
 
-    if ('or' in query) {
-      intermediateValues.orLength = query.or.length || 0;
-      intermediateValues.orList = query.or;
+    if ('or' in searchQuery) {
+      intermediateValues.orLength = searchQuery.or.length || 0;
+      intermediateValues.orList = searchQuery.or;
     }
 
-    if ('and' in query) {
-      intermediateValues.andLength = query.and.length || 0;
-      intermediateValues.andList = query.and;
+    if ('and' in searchQuery) {
+      intermediateValues.andLength = searchQuery.and.length || 0;
+      intermediateValues.andList = searchQuery.and;
     }
 
-    // If neither "or" nor "and" fields exist or they have a length of 0, an empty query object is returned.
+    // If neither "or" nor "and" fields exist or they have a length of 0, an empty searchQuery object is returned.
     if (intermediateValues.orLength === 0 && intermediateValues.andLength === 0) {
-      return { ...commercetoolsProductSearchRequest, query: {} };
+      return undefined;
     }
 
     // If only one "or" and one "and" field, and they have the same field name, the function returns the "or" field.
     if (intermediateValues.orLength === 1 && intermediateValues.andLength === 1) {
-      const orField = (intermediateValues.orList[0] as SearchExactExpression).exact?.field;
-      const andField = intermediateValues.andList[0].exact?.field || intermediateValues.andList[0].range?.field;
+      const orField =
+        'exact' in intermediateValues.orList[0]
+          ? (intermediateValues.orList[0] as SearchExactExpression).exact?.field
+          : undefined;
+      const andField =
+        'exact' in intermediateValues.andList[0]
+          ? (intermediateValues.andList[0] as SearchExactExpression).exact?.field
+          : 'range' in intermediateValues.andList[0]
+            ? (intermediateValues.andList[0] as SearchNumberRangeExpression).range?.field
+            : undefined;
 
       if (orField === andField) {
-        return { ...commercetoolsProductSearchRequest, query: intermediateValues.orList[0] };
+        return intermediateValues.andList[0] as _SearchQuery;
       }
 
       return {
-        ...commercetoolsProductSearchRequest,
-        query: { or: [intermediateValues.andList[0], intermediateValues.orList[0]] },
+        or: [intermediateValues.andList[0], intermediateValues.orList[0]] as SearchQuery,
       };
     }
 
     // If there is only one "or" field, the function returns it
     if (intermediateValues.andLength === 0) {
       if (intermediateValues.orLength === 1) {
-        return { ...commercetoolsProductSearchRequest, query: intermediateValues.orList[0] };
+        return intermediateValues.orList[0] as _SearchQuery;
       }
       return {
-        ...commercetoolsProductSearchRequest,
-        query: {
-          or: intermediateValues.orList,
-        },
+        or: intermediateValues.orList,
       };
     }
 
     // If there is only one "and" field, the function returns it
     if (intermediateValues.orLength === 0) {
       if (intermediateValues.andLength === 1) {
-        return { ...commercetoolsProductSearchRequest, query: intermediateValues.andList[0] };
+        return intermediateValues.andList[0] as _SearchQuery;
       }
       return {
-        ...commercetoolsProductSearchRequest,
-        query: {
-          and: intermediateValues.andList,
-        },
+        and: intermediateValues.andList,
       };
     }
 
     // If there are multiple "or" or "and" fields
-    return commercetoolsProductSearchRequest;
+    return searchQuery;
   }
 
-  private static pushToProductSearchAndExpression: (
+  private static pushToProductSearchRequestQueryAndExpression: (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     expression: SearchQuery | SearchQuery[],
   ) => ProductSearchRequest = (
@@ -232,7 +307,7 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   };
 
-  private static pushToProductSearchOrExpression: (
+  private static pushToProductSearchRequestQueryOrExpression: (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     expression: SearchQuery | SearchQuery[],
   ) => ProductSearchRequest = (
@@ -261,12 +336,115 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   };
 
+  private static pushToProductSearchRequestPostFilterAndExpression: (
+    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    expression: SearchQuery | SearchQuery[],
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
+    if ('and' in commercetoolsProductSearchRequest.postFilter) {
+      if (Array.isArray(expression)) {
+        commercetoolsProductSearchRequest.postFilter.and.push(...expression);
+      } else {
+        commercetoolsProductSearchRequest.postFilter.and.push(expression);
+      }
+    } else {
+      if (Array.isArray(expression)) {
+        (commercetoolsProductSearchRequest.postFilter as Writeable<SearchQuery>) = {
+          ...commercetoolsProductSearchRequest.postFilter,
+          and: [...expression],
+        };
+      } else {
+        (commercetoolsProductSearchRequest.postFilter as Writeable<SearchQuery>) = {
+          ...commercetoolsProductSearchRequest.postFilter,
+          and: [expression],
+        };
+      }
+    }
+    return commercetoolsProductSearchRequest;
+  };
+
+  private static pushToProductSearchFacetExpressionFilterAndExpression: (
+    productSearchFacetExpression: Writeable<ProductSearchFacetExpression>,
+    expression: SearchQuery | SearchQuery[],
+  ) => ProductSearchFacetExpression = (
+    productSearchFacetExpression: ProductSearchFacetExpression,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
+    switch (true) {
+      case 'count' in productSearchFacetExpression:
+        (productSearchFacetExpression as Writeable<ProductSearchFacetCountExpression>).count.filter =
+          this.pushToSeachQueryAndExpresion(
+            (productSearchFacetExpression as ProductSearchFacetCountExpression).count.filter,
+            expression,
+          );
+        break;
+      case 'distinct' in productSearchFacetExpression:
+        (productSearchFacetExpression as Writeable<ProductSearchFacetDistinctExpression>).distinct.filter =
+          this.pushToSeachQueryAndExpresion(
+            (productSearchFacetExpression as ProductSearchFacetDistinctExpression).distinct.filter,
+            expression,
+          );
+        break;
+      case 'ranges' in productSearchFacetExpression:
+        (productSearchFacetExpression as Writeable<ProductSearchFacetRangesExpression>).ranges.filter =
+          this.pushToSeachQueryAndExpresion(
+            (productSearchFacetExpression as ProductSearchFacetRangesExpression).ranges.filter,
+            expression,
+          );
+        break;
+    }
+
+    return productSearchFacetExpression;
+  };
+
+  private static pushToSeachQueryAndExpresion: (
+    filter: Writeable<_SearchQuery>,
+    expression: SearchQuery | SearchQuery[],
+  ) => _SearchQuery = (filter: _SearchQuery, expression: SearchQuery | SearchQuery[]) => {
+    if (filter && 'and' in filter) {
+      if (Array.isArray(expression)) {
+        filter.and.push(...expression);
+      } else {
+        filter.and.push(expression);
+      }
+    } else {
+      if (Array.isArray(expression)) {
+        (filter as Writeable<SearchQuery>) = {
+          ...filter,
+          and: [...expression],
+        };
+      } else {
+        (filter as Writeable<SearchQuery>) = {
+          ...filter,
+          and: [expression],
+        };
+      }
+    }
+
+    return filter;
+  };
+
   private static applyQueryString: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
     locale: Locale,
   ) => {
     if (productQuery.query) {
+      let queryValue: string = undefined;
+
+      switch (true) {
+        case typeof productQuery.query === 'string':
+          queryValue = productQuery.query as string;
+          break;
+        case typeof productQuery.query === 'object':
+          queryValue = (productQuery.query[locale.language] as string) ?? (productQuery.query[0] as string);
+          break;
+        default:
+          break;
+      }
+
       const productSearchOrExpression: SearchOrExpression = {
         or: [],
       };
@@ -275,28 +453,31 @@ export class ProductSearchFactory {
           wildcard: {
             field,
             language: locale.language,
-            value: `*${productQuery.query}*`,
+            value: `*${queryValue}*`,
             caseInsensitive: true,
           },
         };
         productSearchOrExpression.or.push(fullTextQuery);
       });
 
+      // Allow exact search for other values passed in query
       KEYWORD_EXACT_QUERY_FIELDS.forEach((field) => {
         const exactFieldQuery: SearchExactExpression = {
           exact: {
             field,
-            value: productQuery.query,
+            value: queryValue,
             caseInsensitive: true,
           },
         };
         productSearchOrExpression.or.push(exactFieldQuery);
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
+
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
         commercetoolsProductSearchRequest,
         productSearchOrExpression,
       );
     }
+
     return commercetoolsProductSearchRequest;
   };
 
@@ -338,7 +519,7 @@ export class ProductSearchFactory {
           },
         });
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
         commercetoolsProductSearchRequest,
         productSearchExactExpressions,
       );
@@ -352,12 +533,15 @@ export class ProductSearchFactory {
   ) => {
     if (productQuery.productSelectionIds?.length) {
       if (productQuery.productSelectionIds?.length === 1) {
-        commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(commercetoolsProductSearchRequest, {
-          exact: {
-            field: 'productSelections',
-            value: productQuery.productSelectionIds[0],
+        commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
+          commercetoolsProductSearchRequest,
+          {
+            exact: {
+              field: 'productSelections',
+              value: productQuery.productSelectionIds[0],
+            },
           },
-        });
+        );
       } else {
         const productSearchExactExpressions: SearchExactExpression[] = productQuery.productSelectionIds.map((id) => ({
           exact: {
@@ -366,7 +550,7 @@ export class ProductSearchFactory {
           },
         }));
 
-        commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
+        commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryOrExpression(
           commercetoolsProductSearchRequest,
           productSearchExactExpressions,
         );
@@ -404,7 +588,7 @@ export class ProductSearchFactory {
           },
         });
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryOrExpression(
         commercetoolsProductSearchRequest,
         productSearchExactExpressions,
       );
@@ -421,7 +605,7 @@ export class ProductSearchFactory {
           },
         });
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryOrExpression(
         commercetoolsProductSearchRequest,
         productSearchExactExpressions,
       );
@@ -435,12 +619,15 @@ export class ProductSearchFactory {
     productQuery: ProductQuery,
   ) => {
     if (productQuery.storeId) {
-      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(commercetoolsProductSearchRequest, {
-        exact: {
-          field: 'stores',
-          value: productQuery.storeId,
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
+        commercetoolsProductSearchRequest,
+        {
+          exact: {
+            field: 'stores',
+            value: productQuery.storeId,
+          },
         },
-      });
+      );
     }
     return commercetoolsProductSearchRequest;
   };
@@ -459,7 +646,7 @@ export class ProductSearchFactory {
           },
         });
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchOrExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryOrExpression(
         commercetoolsProductSearchRequest,
         productSearchExactExpressions,
       );
@@ -483,6 +670,7 @@ export class ProductSearchFactory {
       productQuery.filters.forEach((filter) => {
         switch (filter.type) {
           case FilterTypes.TERM:
+          case FilterTypes.ENUM:
             (filter as TermFilter).terms.forEach((term) => {
               const productSearchExactSearchExpression: SearchExactExpression = {
                 exact: this.hydrateProductSearchExpressionValue(
@@ -522,20 +710,93 @@ export class ProductSearchFactory {
               ) as SearchNumberRangeValue,
             };
             if ((filter as RangeFilter).min) {
-              rangeQuery.range.gt = (filter as RangeFilter).min;
+              rangeQuery.range.gte = (filter as RangeFilter).min;
             }
             if ((filter as RangeFilter).max) {
-              rangeQuery.range.lt = (filter as RangeFilter).max;
+              rangeQuery.range.lte = (filter as RangeFilter).max;
             }
             productSearchExpressions.push(rangeQuery);
             break;
         }
       });
-      commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
+      commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
         commercetoolsProductSearchRequest,
         productSearchExpressions,
       );
     }
+    return commercetoolsProductSearchRequest;
+  };
+
+  private static applySortAttributes: (
+    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
+  ) => {
+    const searchSortings: SearchSorting[] = [];
+
+    switch (true) {
+      case productQuery.sortAttributes !== undefined:
+        Object.entries(productQuery.sortAttributes).forEach(([sortAttributeKey, sortAttributeOrder]) => {
+          let searchSorting: SearchSorting = {
+            order: sortAttributeOrder,
+            field: sortAttributeKey,
+          };
+
+          switch (true) {
+            case sortAttributeKey === 'price':
+              searchSorting = {
+                ...searchSorting,
+                field: 'variants.prices.centAmount',
+              };
+              break;
+            case sortAttributeKey === 'description' || sortAttributeKey === 'name' || sortAttributeKey === 'slug':
+              searchSorting = {
+                ...searchSorting,
+                language: locale.language,
+              };
+              break;
+            default:
+          }
+
+          const facetDefinition = facetDefinitions.find(
+            (facetDefinition) => facetDefinition.attributeId === sortAttributeKey,
+          );
+
+          if (facetDefinition) {
+            searchSorting = {
+              ...searchSorting,
+              ...this.facetDefinitionToSearchSorting(facetDefinition, locale),
+            };
+          }
+
+          searchSortings.push(searchSorting);
+        });
+
+        break;
+      default:
+        // By default, in CoCo, search results are sorted descending by their relevancy with respect to the provided
+        // text (that is their “score”). Sorting by score and then by id will ensure consistent products order
+        // across several search requests for products that have the same relevance score.
+        const scoreSorting: SearchSorting = {
+          order: 'desc',
+          field: 'score',
+        };
+
+        const idSorting: SearchSorting = {
+          order: 'desc',
+          field: 'id',
+        };
+        searchSortings.push(scoreSorting, idSorting);
+    }
+
+    commercetoolsProductSearchRequest.sort = searchSortings;
+
     return commercetoolsProductSearchRequest;
   };
 
@@ -559,62 +820,6 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   };
 
-  private static applySortAttributes: (
-    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
-    productQuery: ProductQuery,
-    facetDefinitions: FacetDefinition[],
-    locale: Locale,
-  ) => ProductSearchRequest = (
-    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
-    productQuery: ProductQuery,
-    facetDefinitions: FacetDefinition[],
-    locale: Locale,
-  ) => {
-    if (productQuery.sortAttributes) {
-      const searchSortings: SearchSorting[] = [];
-
-      Object.entries(productQuery.sortAttributes).forEach(([sortAttributeKey, sortAttributeOrder]) => {
-        let searchSorting: SearchSorting = {
-          order: sortAttributeOrder,
-          field: sortAttributeKey,
-        };
-
-        switch (true) {
-          case sortAttributeKey === 'price':
-            searchSorting = {
-              ...searchSorting,
-              field: 'variants.prices.centAmount',
-            };
-            break;
-          case sortAttributeKey === 'description' || sortAttributeKey === 'name' || sortAttributeKey === 'slug':
-            searchSorting = {
-              ...searchSorting,
-              language: locale.language,
-            };
-            break;
-          default:
-        }
-
-        const facetDefinition = facetDefinitions.find(
-          (facetDefinition) => facetDefinition.attributeId === sortAttributeKey,
-        );
-
-        if (facetDefinition) {
-          searchSorting = {
-            ...searchSorting,
-            ...this.facetDefinitionToSearchSorting(facetDefinition, locale),
-          };
-        }
-
-        searchSortings.push(searchSorting);
-      });
-
-      commercetoolsProductSearchRequest.sort = searchSortings;
-    }
-
-    return commercetoolsProductSearchRequest;
-  };
-
   private static applyFacetDefinitionsToFacets: (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
@@ -632,52 +837,64 @@ export class ProductSearchFactory {
     );
 
     if (productSearchFacetExpressions.length) {
-      commercetoolsProductSearchRequest.facets = productSearchFacetExpressions;
-
       if (productQuery.facets?.length) {
-        commercetoolsProductSearchRequest.facets.forEach((searchFacetExpression: _ProductSearchFacetExpression) => {
-          const identifier = this.getProductSearchFacetIdentifier(searchFacetExpression);
-          const productSearchQueryFilters: SearchQuery[] = [];
+        productQuery.facets.forEach((queryFacet) => {
+          let searchQuery: _SearchQuery;
 
-          if (identifier) {
-            const queryFacet = productQuery.facets.find((f) => f.identifier === identifier);
-            if (queryFacet) {
-              switch (queryFacet.type) {
-                case FilterTypes.TERM:
-                  (queryFacet as TermFilter).terms.forEach((term) =>
-                    productSearchQueryFilters.push(
-                      this.getSearchQueryFilterExpressionFromTermFacet(searchFacetExpression, term, locale),
-                    ),
-                  );
+          const productSearchFacetExpression = productSearchFacetExpressions.find(
+            (productSearchFacetExpression) =>
+              this.getProductSearchFacetIdentifier(productSearchFacetExpression) === queryFacet.identifier,
+          );
 
-                  break;
-                case FilterTypes.BOOLEAN:
-                  productSearchQueryFilters.push(
-                    this.getSearchQueryFilterExpressionFromBooleanFacet(searchFacetExpression, queryFacet, locale),
-                  );
+          switch (queryFacet.type) {
+            case FilterTypes.TERM:
+              searchQuery = this.getSearchQueryFilterExpressionFromTermFacet(
+                productSearchFacetExpression,
+                queryFacet,
+                locale,
+              );
+              break;
+            case FilterTypes.BOOLEAN:
+              searchQuery = this.getSearchQueryFilterExpressionFromBooleanFacet(
+                productSearchFacetExpression,
+                queryFacet,
+                locale,
+              );
+              break;
+            case FilterTypes.RANGE:
+              searchQuery = this.getSearchQueryFilterExpressionFromRangeFacet(
+                productSearchFacetExpression,
+                queryFacet,
+                locale,
+                productQuery.distributionChannelId,
+              );
+              break;
+          }
 
-                  break;
-                case FilterTypes.RANGE:
-                  productSearchQueryFilters.push(
-                    this.getSearchQueryFilterExpressionFromRangeFacet(searchFacetExpression, queryFacet, locale),
-                  );
+          if (searchQuery) {
+            // Apply filters to PostFilter
+            commercetoolsProductSearchRequest = this.pushToProductSearchRequestPostFilterAndExpression(
+              commercetoolsProductSearchRequest,
+              searchQuery,
+            );
 
-                  break;
+            // Apply filters to productSearchFacetExpressions
+            productSearchFacetExpressions.map((productSearchFacetExpression: ProductSearchFacetExpression) => {
+              // Filters are only applied to the facets that are not the same as the current queryFacet
+              if (this.getProductSearchFacetIdentifier(productSearchFacetExpression) !== queryFacet.identifier) {
+                productSearchFacetExpression = this.pushToProductSearchFacetExpressionFilterAndExpression(
+                  productSearchFacetExpression,
+                  searchQuery,
+                );
               }
 
-              searchFacetExpression = this.pushFiltersIntoProductFacetExpression(
-                searchFacetExpression,
-                productSearchQueryFilters,
-              );
-
-              commercetoolsProductSearchRequest = this.pushToProductSearchAndExpression(
-                commercetoolsProductSearchRequest,
-                productSearchQueryFilters,
-              );
-            }
+              return productSearchFacetExpression;
+            });
           }
         });
       }
+
+      commercetoolsProductSearchRequest.facets = productSearchFacetExpressions;
     }
 
     return commercetoolsProductSearchRequest;
@@ -776,10 +993,16 @@ export class ProductSearchFactory {
         case 'ltext':
         case 'boolean':
         case 'text':
+        case 'number':
+        case 'set_reference':
           facet = {
             distinct: {
               ...facetValue,
               level: 'products',
+              sort: {
+                by: 'key',
+                order: 'asc',
+              },
             },
           };
           break;
@@ -799,7 +1022,6 @@ export class ProductSearchFactory {
           };
           break;
 
-        case 'reference':
         default:
           facet = {
             count: {
@@ -827,103 +1049,76 @@ export class ProductSearchFactory {
     switch (facetDefinition.attributeType) {
       case 'money':
         return {
-          name: `${facetDefinition.attributeId}`,
+          name: facetDefinition.attributeId,
           field: `${facetDefinition.attributeId}.centAmount`,
         };
 
       case 'enum':
         return {
-          name: `${facetDefinition.attributeId}`,
+          name: facetDefinition.attributeId,
           field: `${facetDefinition.attributeId}.label`,
-          fieldType: 'enum',
+          fieldType: facetDefinition.attributeType,
         };
 
       case 'lenum':
         return {
-          name: `${facetDefinition.attributeId}`,
+          name: facetDefinition.attributeId,
           field: `${facetDefinition.attributeId}.label`,
-          fieldType: 'lenum',
+          fieldType: facetDefinition.attributeType,
           language: locale.language,
         };
 
       case 'ltext':
         return {
-          name: `${facetDefinition.attributeId}`,
-          field: `${facetDefinition.attributeId}`,
-          fieldType: 'ltext',
+          name: facetDefinition.attributeId,
+          field: facetDefinition.attributeId,
+          fieldType: facetDefinition.attributeType,
           language: locale.language,
         };
 
       case 'text':
-        return {
-          name: `${facetDefinition.attributeId}`,
-          field: `${facetDefinition.attributeId}`,
-          fieldType: 'text',
-        };
-
+      case 'number':
       case 'boolean':
         return {
-          name: `${facetDefinition.attributeId}`,
-          field: `${facetDefinition.attributeId}`,
-          fieldType: 'boolean',
+          name: facetDefinition.attributeId,
+          field: facetDefinition.attributeId,
+          fieldType: facetDefinition.attributeType,
+        };
+
+      case 'set_reference':
+        return {
+          name: facetDefinition.attributeId,
+          field: `${facetDefinition.attributeId}.id`,
+          fieldType: facetDefinition.attributeType,
         };
 
       case 'range':
-      case 'reference':
       default:
         return {
-          name: `${facetDefinition.attributeId}`,
-          field: `${facetDefinition.attributeId}`,
+          name: facetDefinition.attributeId,
+          field: facetDefinition.attributeId,
         };
     }
   };
 
-  private static pushFiltersIntoProductFacetExpression = (
-    facet: Writeable<_ProductSearchFacetExpression>,
-    productSearchQueryFilters: SearchQuery[],
-  ): ProductSearchFacetExpression => {
-    if (!productSearchQueryFilters.length) {
-      return facet;
-    }
-
-    let filterExpression: SearchQuery = {};
-
-    if (productSearchQueryFilters.length === 1) {
-      filterExpression = productSearchQueryFilters[0];
-    } else {
-      filterExpression = {
-        and: productSearchQueryFilters.map((searchQuery) => searchQuery),
-      };
-    }
-
-    if ('count' in facet) {
-      facet.count.filter = filterExpression;
-    }
-    if ('distinct' in facet) {
-      facet.distinct.filter = filterExpression;
-    }
-    if ('ranges' in facet) {
-      facet.ranges.filter = filterExpression;
-    }
-
-    return facet;
-  };
-
-  private static getOffsetFromCursor = (cursor: string): number => {
+  private static getOffsetFromCursor(cursor: string): number {
     if (cursor === undefined) {
       return undefined;
     }
 
     const offsetMach = cursor.match(/(?<=offset:).+/);
     return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
-  };
+  }
 
   private static getSearchQueryFilterExpressionFromRangeFacet(
     searchFacetExpression: _ProductSearchFacetExpression,
     queryFacet: Facet,
     locale: Locale,
-  ): SearchNumberRangeExpression {
-    const priceQuery: Writeable<SearchNumberRangeExpression> = {
+    priceChannel?: string,
+  ): SearchQueryExpression {
+    const searchQueryExpressions: SearchQueryExpression[] = [];
+
+    const searchNumberRangeExpression: Writeable<SearchNumberRangeExpression> = {
       range: this.hydrateQueryExpressionWithAttributeType(
         searchFacetExpression,
         {
@@ -933,12 +1128,43 @@ export class ProductSearchFactory {
       ) as SearchNumberRangeValue,
     };
     if ((queryFacet as RangeFilter).min) {
-      priceQuery.range.gt = (queryFacet as RangeFilter).min;
+      searchNumberRangeExpression.range.gte = (queryFacet as RangeFilter).min;
     }
     if ((queryFacet as RangeFilter).max) {
-      priceQuery.range.lt = (queryFacet as RangeFilter).max;
+      searchNumberRangeExpression.range.lte = (queryFacet as RangeFilter).max;
     }
-    return priceQuery;
+
+    searchQueryExpressions.push(searchNumberRangeExpression);
+
+    // If the queryFacet is a price range, we also need to specify the currencyCode and channel
+    if (queryFacet.identifier === 'variants.prices') {
+      // Add a two more filters for the currencyCode and channel
+      const searchExactExpresionPriceCurrencyCode: SearchExactExpression = {
+        exact: {
+          field: `${queryFacet.identifier}.currencyCode`,
+          value: locale.currency,
+        },
+      };
+      searchQueryExpressions.push(searchExactExpresionPriceCurrencyCode);
+
+      if (priceChannel) {
+        const searchExactExpresionPriceChannel: SearchExactExpression = {
+          exact: {
+            field: `${queryFacet.identifier}.channel`,
+            value: priceChannel,
+          },
+        };
+        searchQueryExpressions.push(searchExactExpresionPriceChannel);
+      }
+    }
+
+    if (searchQueryExpressions.length === 1) {
+      return searchQueryExpressions[0];
+    }
+
+    return {
+      and: searchQueryExpressions.map((searchQueryExpression) => searchQueryExpression),
+    };
   }
 
   private static getSearchQueryFilterExpressionFromBooleanFacet(
@@ -958,7 +1184,7 @@ export class ProductSearchFactory {
     };
   }
 
-  private static getSearchQueryFilterExpressionFromTermFacet(
+  private static getSearchQueryFilterExpressionFromTermFacetValue(
     searchFacetExpression: _ProductSearchFacetExpression,
     term: string,
     locale: Locale,
@@ -972,6 +1198,30 @@ export class ProductSearchFactory {
         },
         locale,
       ),
+    };
+  }
+
+  private static getSearchQueryFilterExpressionFromTermFacet(
+    searchFacetExpression: _ProductSearchFacetExpression,
+    queryFacet: Facet,
+    locale: Locale,
+  ): SearchQueryExpression {
+    const searchQueryExpressions: SearchQueryExpression[] = [];
+
+    (queryFacet as TermFilter).terms.forEach((term) =>
+      // Create a filter expression for each term
+      searchQueryExpressions.push(
+        this.getSearchQueryFilterExpressionFromTermFacetValue(searchFacetExpression, term, locale),
+      ),
+    );
+
+    if (searchQueryExpressions.length === 1) {
+      return searchQueryExpressions[0];
+    }
+
+    // Add the filter expressions to the product search post filter using OR expression if there are multiple terms
+    return {
+      or: searchQueryExpressions.map((searchQueryExpression) => searchQueryExpression),
     };
   }
 

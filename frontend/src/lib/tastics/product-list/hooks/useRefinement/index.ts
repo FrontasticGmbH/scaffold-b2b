@@ -20,9 +20,9 @@ const useRefinement = () => {
   const currentSortValue =
     Array.from(params.keys())
       .find((key) => key.startsWith('sortAttributes'))
-      ?.match(/sortAttributes\[0\]\[(.+)\]/)?.[1] ?? 'price';
+      ?.match(/sortAttributes\[0\]\[(.+)\]/)?.[1] ?? '';
 
-  const currentSortVector = params.get(`sortAttributes[0][${currentSortValue}]`) ?? 'asc';
+  const currentSortVector = params.get(`sortAttributes[0][${currentSortValue}]`) ?? 'desc';
 
   const onSortValueChange = useCallback(
     (key: string, vector: 'asc' | 'desc') => {
@@ -32,7 +32,7 @@ const useRefinement = () => {
         if (key.startsWith('sortAttributes')) newParams.delete(key);
       }
 
-      newParams.set(`sortAttributes[0][${key}]`, vector);
+      if (key) newParams.set(`sortAttributes[0][${key}]`, vector);
 
       router.push(`${pathWithoutQuery}?${newParams.toString()}`);
     },
@@ -48,29 +48,35 @@ const useRefinement = () => {
     facet.values
       .filter((value) => value.selected)
       .forEach((value, index) => {
-        newParams.set(`facets[${facet.id}][${facet.type === 'boolean' ? 'boolean' : 'terms'}][${index}]`, value.id);
+        newParams.set(`facets[${facet.id}][terms][${index}]`, value.id);
       });
+  }, []);
+
+  const refineBoolean = useCallback((facet: TermFacet | NavigationFacet | BooleanFacet, newParams: URLSearchParams) => {
+    const selectedValue = facet.values.find((v) => v.selected);
+
+    if (selectedValue) newParams.set(`facets[${facet.id}][boolean]`, selectedValue.id);
   }, []);
 
   const onRefine = useCallback(
     (facets: Facet[]) => {
       const newParams = new URLSearchParams();
 
-      newParams.set(`sortAttributes[0][${currentSortValue}]`, 'asc');
+      if (currentSortValue) newParams.set(`sortAttributes[0][${currentSortValue}]`, 'asc');
 
       facets
         .filter((facet) => facet.selected)
         .forEach((facet) => {
           if (facet.type === 'range') refineRange(facet, newParams);
-          else if (facet.type === 'navigation' || facet.type === 'term' || facet.type === 'boolean')
-            refineTerms(facet, newParams);
+          else if (facet.type === 'navigation' || facet.type === 'term') refineTerms(facet, newParams);
+          else if (facet.type === 'boolean') refineBoolean(facet, newParams);
         });
 
       if (searchQuery) newParams.set('query', searchQuery);
 
       router.push(`${pathWithoutQuery}?${newParams.toString()}`);
     },
-    [currentSortValue, refineRange, refineTerms, pathWithoutQuery, router, searchQuery],
+    [currentSortValue, refineRange, refineTerms, refineBoolean, pathWithoutQuery, router, searchQuery],
   );
 
   const onLoadMore = useCallback(() => {

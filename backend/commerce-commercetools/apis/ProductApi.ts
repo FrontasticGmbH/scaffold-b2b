@@ -61,6 +61,7 @@ export default class ProductApi extends BaseApi {
             response.body.facets,
             commercetoolsProductSearchRequest,
             facetDefinitions,
+            productQuery,
           ),
           previousCursor: ProductMapper.calculatePreviousCursor(response.body.offset, count),
           nextCursor: ProductMapper.calculateNextCursor(response.body.offset, count, response.body.total),

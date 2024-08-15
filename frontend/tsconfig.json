@@ -13,7 +13,7 @@
     "noImplicitThis": true,
     "allowUnreachableCode": false,
     "noFallthroughCasesInSwitch": true,
-    "target": "es5",
+    "target": "esnext",
     "declaration": false,
     "sourceMap": true,
     "esModuleInterop": true,

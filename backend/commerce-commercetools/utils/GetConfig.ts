@@ -18,6 +18,8 @@ export const getConfig = (context: Context, engine: string): ClientConfig => {
       .split(',')
       .map((associateRoleKey: string) => associateRoleKey.trim()),
     defaultStoreKey: getFromProjectConfig(`${prefix}_DEFAULT_STORE_KEY`, context),
+    sessionUrl: getFromProjectConfig(`${prefix}_SESSION_URL`, context),
+    checkoutApplicationKey: getFromProjectConfig(`${prefix}_CHECKOUT_APPLICATION_KEY`, context),
   };
 
   if (!clientConfig.authUrl) {
@@ -54,6 +56,14 @@ export const getConfig = (context: Context, engine: string): ClientConfig => {
 
   if (!clientConfig.defaultStoreKey) {
     clientConfig.defaultStoreKey = context.project.configuration?.[engine]?.defaultStoreKey;
+  }
+
+  if (!clientConfig.sessionUrl) {
+    clientConfig.sessionUrl = context.project.configuration?.[engine]?.sessionUrl;
+  }
+
+  if (!clientConfig.checkoutApplicationKey) {
+    clientConfig.checkoutApplicationKey = context.project.configuration?.[engine]?.checkoutApplicationKey;
   }
 
   return clientConfig;

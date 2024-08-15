@@ -176,5 +176,6 @@
   "await.reply.from.tier": "Aguardando resposta da camada {tier}",
   "flow.rejected": "Fluxo rejeitado",
   "rules.setup.incomplete": "A configuração das regras está incompleta!",
-  "tiers.setup.incomplete": "A configuração das camadas está incompleta!"
+  "tiers.setup.incomplete": "A configuração das camadas está incompleta!",
+  "purchase.order.number": "PO número"
 }

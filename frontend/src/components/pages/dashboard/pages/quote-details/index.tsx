@@ -53,6 +53,12 @@ const QuoteDetailsPage = ({
           {translate('dashboard.creation.date')}: {quote.creationDate ? formatLocalDate(quote.creationDate) : '-'}
         </h3>
 
+        {quote.purchaseOrderNumber && (
+          <h3 className="text-14 text-gray-600 lg:order-2">
+            {translate('dashboard.purchase.order.number')}: {quote.purchaseOrderNumber}
+          </h3>
+        )}
+
         <h3 className="flex items-center gap-2 lg:order-4">
           <span className="text-14 text-gray-600">{translate('common.status')}:</span>
           <QuoteStatusTag status={quote.status} />

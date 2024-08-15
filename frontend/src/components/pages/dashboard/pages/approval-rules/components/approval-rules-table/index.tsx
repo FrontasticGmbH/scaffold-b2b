@@ -47,7 +47,7 @@ const ApprovalRulesTable = ({ approvalRules, onDuplicate, pagination, viewOnly }
               </Table.Cell>
               <Table.Cell>
                 <div className="flex items-center justify-end gap-5 text-primary">
-                  <Link href={`?subPath=edit-approval-rule&id=${approvalRule.id}`}>
+                  <Link href={!viewOnly ? `?subPath=edit-approval-rule&id=${approvalRule.id}` : '#'}>
                     <EditIcon
                       className={classnames({ 'cursor-not-allowed opacity-30': viewOnly, 'cursor-pointer': !viewOnly })}
                       width={20}

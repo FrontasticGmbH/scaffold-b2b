@@ -1,4 +1,7 @@
+// @ts-ignore
 import * as crypto from 'crypto';
+// @ts-ignore
+import fetch from 'node-fetch';
 import {
   ApiRoot,
   AssociateRole as CommercetoolsAssociateRole,
@@ -424,6 +427,8 @@ export default abstract class BaseApi {
   protected clientHashKey: string;
   protected token: Token;
   protected currency: string;
+  protected sessionData: any | null;
+  protected checkoutHashKey: string;
   protected commercetoolsFrontendContext: Context;
 
   constructor(commercetoolsFrontendContext: Context, locale: string | null, currency: string | null) {
@@ -443,6 +448,7 @@ export default abstract class BaseApi {
     this.productSelectionIdField = this.clientSettings?.productSelectionIdField || 'key';
     this.defaultAssociateRoleKeys = this.clientSettings?.defaultAssociateRoleKeys || ['admin'];
     this.token = clientTokensStored.get(this.getClientHashKey());
+    this.checkoutHashKey = null;
 
     this.commercetoolsFrontendContext = commercetoolsFrontendContext;
   }
@@ -590,6 +596,117 @@ export default abstract class BaseApi {
       .inBusinessUnitKeyWithBusinessUnitKeyValue({
         businessUnitKey,
       });
+  }
+
+  private async getCheckoutHashKey(cartId: string): Promise<string> {
+    if (this.checkoutHashKey) {
+      return this.checkoutHashKey;
+    }
+
+    this.checkoutHashKey = crypto
+      .createHash('md5')
+      .update(this.clientSettings.checkoutApplicationKey + cartId)
+      .digest('hex');
+
+    return this.checkoutHashKey;
+  }
+
+  async getSessionCheckoutSessionToken(cartId: string): Promise<Token | undefined> {
+    const checkoutHashKey = await this.getCheckoutHashKey(cartId);
+
+    return this.sessionData?.checkoutSessionToken?.[checkoutHashKey];
+  }
+
+  protected async generateCheckoutSessionToken(cartId: string) {
+    const checkoutSessionToken = await this.getSessionCheckoutSessionToken(cartId);
+
+    if (!tokenHasExpired(checkoutSessionToken)) {
+      // The token exist and is not expired, so we don't need to generate a new one.
+      return checkoutSessionToken;
+    }
+
+    if (checkoutSessionToken) {
+      try {
+        return await this.refreshCheckoutSessionToken(cartId, checkoutSessionToken);
+      } catch (error) {
+        // We are ignoring the error refreshing the token and trying to generate a new one
+      }
+    }
+
+    const url = `${this.clientSettings.sessionUrl}/${this.projectKey}/sessions`;
+
+    const body = JSON.stringify({
+      cart: {
+        cartRef: {
+          id: cartId,
+        },
+      },
+      metadata: {
+        applicationKey: this.clientSettings.checkoutApplicationKey,
+      },
+    });
+
+    return await this.fetchCheckoutSessionToken(cartId, url, body);
+  }
+
+  private async refreshCheckoutSessionToken(cartId: string, checkoutSessionToken: Token) {
+    const url = `${this.clientSettings.sessionUrl}/${this.projectKey}/sessions/${checkoutSessionToken.token}`;
+
+    const body = JSON.stringify({
+      actions: [
+        {
+          action: 'refresh',
+        },
+      ],
+    });
+
+    return await this.fetchCheckoutSessionToken(cartId, url, body);
+  }
+
+  async setSessionCheckoutSessionToken(cartId: string, token: Token): Promise<void> {
+    const checkoutHashKey = await this.getCheckoutHashKey(cartId);
+
+    this.sessionData.checkoutSessionToken = {};
+    this.sessionData.checkoutSessionToken[checkoutHashKey] = token;
+  }
+
+  private async fetchCheckoutSessionToken(cartId: string, url: string, body: string) {
+    const headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${this.token.token}`,
+    };
+
+    const requestOptions = {
+      method: 'POST',
+      headers,
+      body,
+    };
+
+    const response = await fetch(url, requestOptions)
+      .then((response: any) => {
+        return response.json();
+      })
+      .catch((error: any) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error });
+      });
+
+    if (response?.errors) {
+      throw new ExternalError({
+        statusCode: response?.statusCode,
+        message: response.errors[0].message,
+        body: response,
+        errors: response?.errors,
+      });
+    }
+
+    const token: Token = {
+      token: response?.id,
+      expirationTime: response?.expiryAt ? new Date(response?.expiryAt).getTime() : undefined,
+    };
+
+    await this.setSessionCheckoutSessionToken(cartId, token);
+
+    return token;
   }
 
   private commercetoolsTokenCache(): TokenCache {

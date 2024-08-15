@@ -3,6 +3,8 @@ import { login, register, requestReset } from '../commerce-commercetools/actionC
 import { Account } from '../../types/account/Account';
 import { createFakeUser, dummyAccount, dummyActionContext, generateFakeEmailAddress } from './data-provider';
 
+jest.mock('node-fetch', () => jest.fn());
+
 describe.skip('commerce-commercetools:: Account Functionalities', () => {
   beforeEach(() => {
     jest.setTimeout(100000);

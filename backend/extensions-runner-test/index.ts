@@ -2,7 +2,7 @@ import { ExtensionRegistry } from '@frontastic/extension-types';
 import * as teamActions from './actions';
 import SportsAPI from './api-source';
 
-export default {
+const extensionRegistry: ExtensionRegistry = {
   'data-sources': {
     'integration/test': async () => {
       const contentApi = new SportsAPI();
@@ -14,4 +14,5 @@ export default {
   actions: {
     teams: teamActions,
   },
-} as ExtensionRegistry;
+};
+export default extensionRegistry;

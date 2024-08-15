@@ -21,4 +21,5 @@ export interface Order {
   shippingMethod?: string;
   paymentMethod?: string;
   isFromAQuote?: boolean;
+  purchaseOrderNumber?: string;
 }

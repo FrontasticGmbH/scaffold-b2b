@@ -7,7 +7,7 @@ import Link from '@/components/atoms/link';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
-const AddressesTable = ({ onDeleteAddress, addresses = [] }: Partial<CompanyAdminPageProps>) => {
+const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly }: Partial<CompanyAdminPageProps>) => {
   const { translate } = useTranslation();
 
   const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('address');
@@ -62,22 +62,24 @@ const AddressesTable = ({ onDeleteAddress, addresses = [] }: Partial<CompanyAdmi
               <Table.Cell>{zip}</Table.Cell>
               <Table.Cell>{country}</Table.Cell>
               <Table.Cell>
-                <div className="flex items-center justify-end gap-5 text-primary">
-                  <Confirmation
-                    translations={{
-                      title: translate('dashboard.address.delete'),
-                      summary: translate('dashboard.address.delete.confirm'),
-                      cancel: translate('common.cancel'),
-                      confirm: translate('common.delete'),
-                    }}
-                    onConfirm={async () => handleDelete(id)}
-                  >
-                    <DeleteIcon className="cursor-pointer" width={20} />
-                  </Confirmation>
-                  <Link href={`?subPath=edit-address&id=${id}`}>
-                    <EditIcon className="cursor-pointer" width={20} />
-                  </Link>
-                </div>
+                {!addressesAreViewOnly && (
+                  <div className="flex items-center justify-end gap-5 text-primary">
+                    <Confirmation
+                      translations={{
+                        title: translate('dashboard.address.delete'),
+                        summary: translate('dashboard.address.delete.confirm'),
+                        cancel: translate('common.cancel'),
+                        confirm: translate('common.delete'),
+                      }}
+                      onConfirm={async () => handleDelete(id)}
+                    >
+                      <DeleteIcon className="cursor-pointer" width={20} />
+                    </Confirmation>
+                    <Link href={`?subPath=edit-address&id=${id}`}>
+                      <EditIcon className="cursor-pointer" width={20} />
+                    </Link>
+                  </div>
+                )}
               </Table.Cell>
             </Table.Row>
           ))}

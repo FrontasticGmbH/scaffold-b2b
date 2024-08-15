@@ -24,7 +24,7 @@ import WishlistRouter from '@Commerce-commercetools/utils/routers/WishlistRouter
 import handleError from '@Commerce-commercetools/utils/handleError';
 import ApprovalRouter from '@Commerce-commercetools/utils/routers/ApprovalRouter';
 
-export default {
+const extensionRegistry: ExtensionRegistry = {
   'dynamic-page-handler': async (
     request: Request,
     context: DynamicPageContext,
@@ -362,4 +362,5 @@ export default {
   },
   'data-sources': dataSources,
   actions,
-} as ExtensionRegistry;
+};
+export default extensionRegistry;

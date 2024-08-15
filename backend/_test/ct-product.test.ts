@@ -4,6 +4,8 @@ import { Product } from '../../types/product';
 import { ProductPaginatedResult } from '../../types/result';
 import { dummyAccount, dummyActionContext, commercetoolsFrontendSession } from './data-provider';
 
+jest.mock('node-fetch', () => jest.fn());
+
 jest.setTimeout(10000);
 
 describe.skip('commerce-commercetools:: Project Functionalities', () => {

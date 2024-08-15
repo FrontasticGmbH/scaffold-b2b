@@ -30,13 +30,33 @@ const ApprovalFlowDetailsPage = ({
     return tier.rules.some((r) => isInApproverTiers(approver, r));
   }, []);
 
+  const mergedApprovers = useMemo<Group[]>(() => {
+    if (!approvalFlow.rules) return [];
+
+    const maxTiersLength = approvalFlow.rules.reduce((acc, curr) => Math.max(acc, curr.approvers?.length ?? 0), 0);
+
+    const tiers = [] as Group[];
+
+    for (let i = 0; i < maxTiersLength; ++i) {
+      tiers.push({ type: 'group', combinator: 'AND', rules: [] });
+
+      for (const approvalRule of approvalFlow.rules) {
+        if (!approvalRule.approvers?.length) continue;
+
+        if (i < approvalRule.approvers.length) (tiers.at(-1) as Group).rules.push(approvalRule.approvers[i]);
+      }
+    }
+
+    return tiers;
+  }, [approvalFlow.rules]);
+
   //Next tier index to be approved
-  const currentPendingTierIndex = (approvalFlow.rules?.[0].approvers ?? []).findIndex((rule) =>
+  const currentPendingTierIndex = mergedApprovers.findIndex((rule) =>
     (approvalFlow.currentPendingApproverTiers ?? []).some((approver) => isInApproverTiers(approver, rule)),
   );
 
   //Next tier the current user can approve
-  const currentUserPendingTierIndex = (approvalFlow.rules?.[0].approvers ?? []).findIndex(
+  const currentUserPendingTierIndex = mergedApprovers.findIndex(
     (rule) =>
       userRoles.some((role) => isInApproverTiers(role, rule)) &&
       userRoles.some((role) => (approvalFlow.currentPendingApproverTiers ?? []).some((r) => r.key === role.key)),
@@ -159,7 +179,7 @@ const ApprovalFlowDetailsPage = ({
                       commentDisabled: true,
                     } as ActivityLogProps['activities'][0],
                   ]
-                : (approvalFlow.rules?.[0].approvers ?? []).map((rule, index) => {
+                : mergedApprovers.map((rule, index) => {
                     const flowApprovals = approvalFlow.approvals.filter((approval) =>
                       approval.approver.roles.some((role) => isInApproverTiers(role, rule)),
                     );

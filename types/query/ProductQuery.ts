@@ -11,13 +11,17 @@ export interface SortAttributes {
   [key: string]: any;
 }
 
+export interface LocalizedString {
+  [key: string]: string;
+}
+
 export interface ProductQuery extends PaginatedQuery {
   categories?: string[];
   productIds?: string[];
   productKeys?: string[];
   productRefs?: string[];
   skus?: string[];
-  query?: string;
+  query?: string | LocalizedString;
   filters?: Filter[];
   facets?: Facet[];
   sortAttributes?: SortAttributes;

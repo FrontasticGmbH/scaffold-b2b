@@ -176,5 +176,6 @@
   "await.reply.from.tier": "Awaiting reply from {tier} tier",
   "flow.rejected": "Flow rejected",
   "rules.setup.incomplete": "Rules setup is incomplete!",
-  "tiers.setup.incomplete": "Tiers setup is incomplete!"
+  "tiers.setup.incomplete": "Tiers setup is incomplete!",
+  "purchase.order.number": "PO number"
 }

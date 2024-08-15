@@ -56,7 +56,7 @@ const TablePagination = ({
             { name: '25', value: '25' },
             { name: '50', value: '50' },
             { name: '100', value: '100' },
-            { name: 'All', value: '' },
+            { name: 'All', value: totalItems.toString() },
           ]}
         />
       </div>
@@ -71,8 +71,14 @@ const TablePagination = ({
           })}
         </Typography>
         <div className="flex gap-4">
-          <ChevronLeftIcon stroke="#212121" {...previousIconProps} onClick={onPrevious} />
-          <ChevronRightIcon stroke="#212121" {...nextIconProps} onClick={onNext} />
+          <ChevronLeftIcon
+            role="button"
+            aria-label="Previous page"
+            stroke="#212121"
+            {...previousIconProps}
+            onClick={onPrevious}
+          />
+          <ChevronRightIcon role="button" aria-label="Next page" stroke="#212121" {...nextIconProps} onClick={onNext} />
         </div>
       </div>
     </div>

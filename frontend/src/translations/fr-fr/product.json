@@ -59,6 +59,7 @@
   "categories.id": "Catégorie",
   "variants.scopedPrice.value": "Prix défini",
   "variants.price": "Prix",
+  "variants.prices": "Prix",
   "variants.attributes.brand": "Marque",
   "variants.prices.centAmount": "Prix",
   "variants.attributes.iso45001": "OIN 45001",

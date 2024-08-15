@@ -176,5 +176,6 @@
   "await.reply.from.tier": "In afwachting van antwoord van niveau {tier}",
   "flow.rejected": "Stroom afgewezen",
   "rules.setup.incomplete": "Het instellen van de regels is onvolledig!",
-  "tiers.setup.incomplete": "Niveau-instellingen zijn onvolledig!"
+  "tiers.setup.incomplete": "Niveau-instellingen zijn onvolledig!",
+  "purchase.order.number": "PO nummer"
 }

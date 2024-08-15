@@ -53,6 +53,20 @@
           "required": false
         },
         {
+          "label": "Session URL",
+          "field": "EXTENSION_COMMERCETOOLS_SESSION_URL",
+          "type": "string",
+          "translatable": false,
+          "required": true
+          },
+        {
+          "label": "Checkout Application Key",
+          "field": "EXTENSION_COMMERCETOOLS_CHECKOUT_APPLICATION_KEY",
+          "type": "string",
+          "translatable": true,
+          "required": false
+        },
+        {
           "label": "ProductSelections ID Field",
           "field": "EXTENSION_COMMERCETOOLS_PRODUCT_SELECTIONS_ID_FIELD",
           "type": "string",

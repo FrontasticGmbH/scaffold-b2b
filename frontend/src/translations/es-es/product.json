@@ -59,6 +59,7 @@
   "categories.id": "Categoría",
   "variants.scopedPrice.value": "Precio con alcance",
   "variants.price": "Precio",
+  "variants.prices": "Precio",
   "variants.attributes.brand": "Marca",
   "variants.prices.centAmount": "Precio",
   "variants.attributes.iso45001": "ISO 45001",

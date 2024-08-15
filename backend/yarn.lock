@@ -1197,16 +1197,16 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@commercetools/platform-sdk@7.6.0":
-  version "7.6.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/platform-sdk/-/platform-sdk-7.6.0.tgz#c70127243e1ffbf85700fe1a9d7d431d4aa2e02d"
-  integrity sha512-YPxrziC7ZsAG7IVcbzN1u2Zgd2WdWBdWYNlubsnvkaZgf/F45Fv47JvPpZbOfCxssNb+5mags2FskfCGaJCYNw==
+"@commercetools/platform-sdk@7.9.0":
+  version "7.9.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/platform-sdk/-/platform-sdk-7.9.0.tgz#7c2aef18d15f1b59a104ed030b19e3a107160bbe"
+  integrity sha512-dj5T7DCM5YrSr5Y02OgDWHFx6GFXi/9E34TTzpJH1VjybMFLYEqD7HKHhC9a3QT0xySWGXfa+7wCnSNgq8U4Jg==
   dependencies:
-    "@commercetools/sdk-client-v2" "^2.4.0"
+    "@commercetools/sdk-client-v2" "^2.5.0"
     "@commercetools/sdk-middleware-auth" "^7.0.0"
     "@commercetools/sdk-middleware-http" "^7.0.0"
     "@commercetools/sdk-middleware-logger" "^3.0.0"
-    "@commercetools/ts-client" "^1.2.0"
+    "@commercetools/ts-client" "^2.0.0"
 
 "@commercetools/sdk-client-v2@2.3.0":
   version "2.3.0"
@@ -1216,10 +1216,10 @@
     buffer "^6.0.3"
     node-fetch "^2.6.1"
 
-"@commercetools/sdk-client-v2@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/sdk-client-v2/-/sdk-client-v2-2.4.0.tgz#bc5729b0249467030ad411cc0bb3cf32faccf33b"
-  integrity sha512-EEp8lPcBSPOsozGydWtF3llLmb83G2ILtep7UQ+uvAztfMYgjYLUI2MfYlVfjbVoZKbWTfmW2Ed69UQ6lwYCng==
+"@commercetools/sdk-client-v2@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/sdk-client-v2/-/sdk-client-v2-2.5.0.tgz#3fe33f733d059472896f4fd0820cf899a30cd150"
+  integrity sha512-v1y++O6yllG+IRTYm9jPE8s667+GapnysyGIf8NJDZbVwhvcanixZL4d20imXjCpOr4u1iZrgRftc90mgYqblw==
   dependencies:
     buffer "^6.0.3"
     node-fetch "^2.6.1"
@@ -1241,15 +1241,15 @@
   resolved "https://registry.yarnpkg.com/@commercetools/sdk-middleware-logger/-/sdk-middleware-logger-3.0.0.tgz#4bfc7441d485b3f1046001f44200d12926accb84"
   integrity sha512-DhMXAA2yIch/AaGxy7st85Z1HFmeLtHWGkr9z5rX4xKjan4PHGB/IE5saAR+SNGHhs6+1Lp8vZEHDo3tFqVLmg==
 
-"@commercetools/ts-client@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@commercetools/ts-client/-/ts-client-1.2.0.tgz#5137534cc2fd787ad99ee318e383c753c4e0a547"
-  integrity sha512-oMuv9AFFyx/lbkbw+/AYpUGPUNMa1AiCgAcAVU798fOHMrDn3/NrVmuMM+PDwaPoTISUUUoPRheMNXSwprxHrw==
+"@commercetools/ts-client@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@commercetools/ts-client/-/ts-client-2.0.0.tgz#e145ae98c4652a67cce49639876bf1dc5ba706f4"
+  integrity sha512-yf78GbZ9SPI7DdzbLNJmiuU+NnnWfoM+NTGPVWNL77932T4oBWXPOCQenRbk4hCRvQztVh1oqfWwdRu6xyH9yg==
   dependencies:
     abort-controller "3.0.0"
     buffer "^6.0.3"
     node-fetch "^2.6.1"
-    uuid "9.0.0"
+    uuid "9.0.1"
 
 "@esbuild/android-arm64@0.18.20":
   version "0.18.20"
@@ -5419,7 +5419,16 @@ string-length@^4.0.1:
     char-regex "^1.0.2"
     strip-ansi "^6.0.0"
 
-"string-width-cjs@npm:string-width@^4.2.0", string-width@^4.1.0, string-width@^4.2.0:
+"string-width-cjs@npm:string-width@^4.2.0":
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
+  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
+  dependencies:
+    emoji-regex "^8.0.0"
+    is-fullwidth-code-point "^3.0.0"
+    strip-ansi "^6.0.1"
+
+string-width@^4.1.0, string-width@^4.2.0:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -5464,7 +5473,14 @@ string.prototype.trimstart@^1.0.7:
     define-properties "^1.2.0"
     es-abstract "^1.22.1"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
+  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
+  dependencies:
+    ansi-regex "^5.0.1"
+
+strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -5845,10 +5861,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-uuid@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
-  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
+uuid@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.1.tgz#e188d4c8853cc722220392c424cd637f32293f30"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
@@ -5977,7 +5993,16 @@ word-wrap@^1.2.3, word-wrap@~1.2.3:
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
 
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
+wrap-ansi@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==

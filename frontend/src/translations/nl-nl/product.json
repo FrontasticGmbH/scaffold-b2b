@@ -59,6 +59,7 @@
   "categories.id": "Categorie",
   "variants.scopedPrice.value": "Scope-prijs",
   "variants.price": "Prijs",
+  "variants.prices": "Prijs",
   "variants.attributes.brand": "Merk",
   "variants.prices.centAmount": "Prijs",
   "variants.attributes.iso45001": "ISO45001",

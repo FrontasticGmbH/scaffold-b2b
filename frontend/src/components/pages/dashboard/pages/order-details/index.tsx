@@ -83,6 +83,12 @@ const OrderDetailsPage = ({
         </h3>
       )}
 
+      {order.purchaseOrderNumber && (
+        <h3 className="mt-4 text-14 text-gray-600">
+          {translate('dashboard.purchase.order.number')}: {order.purchaseOrderNumber}
+        </h3>
+      )}
+
       {showOrderStatusBar && (
         <div className="pb-8 pt-12 md:border-b md:border-neutral-400 md:pb-12 md:pt-[56px] lg:pb-[56px]">
           <OrderStatusBar order={order} />

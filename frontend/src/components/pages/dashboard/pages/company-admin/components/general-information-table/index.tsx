@@ -5,7 +5,10 @@ import { PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
 import { CompanyAdminPageProps } from '../../types';
 
-const GeneralInformationTable = ({ generalInformation = [] }: Partial<CompanyAdminPageProps>) => {
+const GeneralInformationTable = ({
+  generalInformation = [],
+  businessUnitsAreViewOnly,
+}: Partial<CompanyAdminPageProps>) => {
   const { translate } = useTranslation();
 
   return (
@@ -22,11 +25,13 @@ const GeneralInformationTable = ({ generalInformation = [] }: Partial<CompanyAdm
               <Table.Cell>{name}</Table.Cell>
               <Table.Cell>{email}</Table.Cell>
               <Table.Cell>
-                <div className="flex justify-end">
-                  <Link href={`?subPath=edit-general-info&id=${id}`}>
-                    <EditIcon className="cursor-pointer text-primary" width={20} />
-                  </Link>
-                </div>
+                {!businessUnitsAreViewOnly && (
+                  <div className="flex justify-end">
+                    <Link href={`?subPath=edit-general-info&id=${id}`}>
+                      <EditIcon className="cursor-pointer text-primary" width={20} />
+                    </Link>
+                  </div>
+                )}
               </Table.Cell>
             </Table.Row>
           ))}

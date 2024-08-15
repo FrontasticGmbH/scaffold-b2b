@@ -11,4 +11,6 @@ export interface ClientConfig {
   productSelectionIdField?: string;
   defaultAssociateRoleKeys?: string[];
   defaultStoreKey?: string;
+  sessionUrl: string;
+  checkoutApplicationKey: string;
 }

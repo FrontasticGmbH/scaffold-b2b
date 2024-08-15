@@ -5,6 +5,7 @@ import { Cart } from '@Types/cart/Cart';
 import { Address } from '@Types/account/Address';
 import { Discount, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
+import { Token } from '@Types/Token';
 import { EmailApiFactory } from '../utils/EmailApiFactory';
 import { CartFetcher } from '../utils/CartFetcher';
 import { getLocale } from '../utils/requestHandlers/Request';
@@ -526,6 +527,33 @@ export const removeDiscount: ActionHook = async (request: Request, actionContext
       sessionData: {
         ...request.sessionData,
         cartId: cart.cartId,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const getCheckoutSessionToken: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    let checkoutSessionToken: Token;
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    // We are getting the cartId from the session data so carts that are not active can be used
+    const cartId = request.sessionData?.cartId;
+
+    if (cartId !== undefined) {
+      checkoutSessionToken = await cartApi.getCheckoutSessionToken(cartId);
+    }
+
+    const response: Response = {
+      statusCode: 200,
+      body: checkoutSessionToken ? JSON.stringify(checkoutSessionToken) : '',
+      sessionData: {
+        ...request.sessionData,
+        cartId: cartId,
       },
     };
 

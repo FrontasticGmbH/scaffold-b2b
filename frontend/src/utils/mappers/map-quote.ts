@@ -201,6 +201,7 @@ export const mapQuote = (
     ...getQuoteTransaction(quote),
     items: (quote.lineItems ?? []).map(mapLineItem),
     ownedByOtherUser: account && account.accountId !== quote.account?.accountId,
+    purchaseOrderNumber: quote.purchaseOrderNumber,
   };
 };
 
@@ -238,5 +239,6 @@ export const mapQuoteRequest = (
     ...getQuoteTransaction(quoteRequest),
     items: (quoteRequest.lineItems ?? []).map(mapLineItem),
     ownedByOtherUser: account && account.accountId !== quoteRequest.account?.accountId,
+    purchaseOrderNumber: quoteRequest.purchaseOrderNumber,
   };
 };

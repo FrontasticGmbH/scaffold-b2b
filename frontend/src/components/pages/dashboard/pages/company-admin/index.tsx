@@ -51,7 +51,7 @@ const CompanyAdminPage = ({
         </InfoBanner>
       )}
 
-      {selectedTab === '3' && businessUnitsAreViewOnly && (
+      {(selectedTab === '0' || selectedTab === '3') && businessUnitsAreViewOnly && (
         <InfoBanner className="mt-3">
           <b>{translate('common.view.only')}</b> {translate('dashboard.business.units.view.only.desc')}
         </InfoBanner>
@@ -89,7 +89,10 @@ const CompanyAdminPage = ({
           </Tabs.TabList>
           <Tabs.Panels>
             <Tabs.Panel>
-              <GeneralInformationTable generalInformation={generalInformation} />
+              <GeneralInformationTable
+                generalInformation={generalInformation}
+                businessUnitsAreViewOnly={businessUnitsAreViewOnly}
+              />
             </Tabs.Panel>
             <Tabs.Panel>
               <SearchPanel
@@ -100,7 +103,11 @@ const CompanyAdminPage = ({
                 isEmpty={!addresses.length}
                 entity={translate('common.addresses').toLowerCase()}
               >
-                <AddressesTable addresses={addresses} onDeleteAddress={onDeleteAddress} />
+                <AddressesTable
+                  addresses={addresses}
+                  onDeleteAddress={onDeleteAddress}
+                  addressesAreViewOnly={addressesAreViewOnly}
+                />
               </SearchPanel>
             </Tabs.Panel>
             <Tabs.Panel>

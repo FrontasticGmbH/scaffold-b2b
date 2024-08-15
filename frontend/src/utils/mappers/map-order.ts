@@ -32,5 +32,6 @@ export const mapOrder = (order: Order, { businessUnits }: { businessUnits?: Busi
     shippingCosts: shipping.centAmount,
     total: total.centAmount,
     isFromAQuote: !!order.quoteId,
+    purchaseOrderNumber: order.purchaseOrderNumber,
   };
 };

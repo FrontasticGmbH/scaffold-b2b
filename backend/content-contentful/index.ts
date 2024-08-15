@@ -3,7 +3,7 @@ import ContentApi from './apis/ContentApi';
 import * as ContentActions from './actionControllers/ContentController';
 import { getLocale } from './utils/Request';
 
-export default {
+const extensionRegistry: ExtensionRegistry = {
   'data-sources': {
     'frontastic/content': async (config: DataSourceConfiguration, context: DataSourceContext) => {
       const contentApi = new ContentApi(context.frontasticContext, getLocale(context.request));
@@ -16,4 +16,5 @@ export default {
   actions: {
     content: ContentActions,
   },
-} as ExtensionRegistry;
+};
+export default extensionRegistry;

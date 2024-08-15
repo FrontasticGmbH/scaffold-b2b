@@ -41,7 +41,11 @@ const ApprovalRulesPage = ({
           onChange={onBusinessUnitChange}
         />
 
-        <Link href="?subPath=add-approval-rule" className="block w-full md:w-fit" underlineOnHover={false}>
+        <Link
+          href={!viewOnly ? '?subPath=add-approval-rule' : '#'}
+          className="block w-full md:w-fit"
+          underlineOnHover={false}
+        >
           <Button size="m" className="w-full px-6" disabled={viewOnly}>
             {translate('dashboard.approval.rule.add')}
           </Button>

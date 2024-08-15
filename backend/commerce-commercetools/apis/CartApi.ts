@@ -32,6 +32,7 @@ import {
   PaymentUpdateAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { Context } from '@frontastic/extension-types';
+import { Token } from '@Types/Token';
 import CartMapper from '../mappers/CartMapper';
 import { isReadyForCheckout } from '../utils/Cart';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
@@ -915,6 +916,10 @@ export default class CartApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
+  }
+
+  async getCheckoutSessionToken(cartId: string): Promise<Token> {
+    return await this.generateCheckoutSessionToken(cartId);
   }
 
   protected async assertCorrectLocale(commercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {

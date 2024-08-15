@@ -2,6 +2,8 @@ import { Request } from '@frontastic/extension-types';
 import { addToWishlist, getWishlist } from '../commerce-commercetools/actionControllers/WishlistController';
 import { dummyAccount, dummyActionContext } from './data-provider';
 
+jest.mock('node-fetch', () => jest.fn());
+
 describe.skip('commerce-commercetools:: Wishlist Functionalities', () => {
   let request: Request;
   beforeEach(() => {

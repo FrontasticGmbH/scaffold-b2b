@@ -1,6 +1,9 @@
 import { Context, Request, Response } from '@frontastic/extension-types';
+
 import { getProjectSettings } from '../commerce-commercetools/actionControllers/ProjectController';
 import { dummyAccount, dummyActionContext } from './data-provider';
+
+jest.mock('node-fetch', () => jest.fn());
 
 describe.skip('commerce-commercetools:: Project Functionalities', () => {
   it('should test getProjectSettings | should succeed', async function () {
