@@ -25,6 +25,7 @@ export interface PaymentMethod {
 }
 
 export type CartProps = {
+  loading?: boolean;
   lineItems: Product[];
   account: Pick<Account, 'email'>;
   paymentMethods: Array<PaymentMethod>;
@@ -42,7 +43,7 @@ export type CartProps = {
 
 export type CartContentProps = Pick<
   CartProps,
-  'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'lineItems'
+  'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'lineItems' | 'loading'
 > & {
   className?: string;
 };

@@ -21,6 +21,7 @@ const ApprovalFlowsPage = ({
   searchValue,
   pagination,
   approvalFlows,
+  loading,
 }: ApprovalFlowsPageProps) => {
   const { translate } = useTranslation();
 
@@ -36,7 +37,7 @@ const ApprovalFlowsPage = ({
     approvalFlows.length > 0 ? (
       <ApprovalFlowsTable approvalFlows={approvalFlows} pagination={pagination} />
     ) : (
-      <EmptyState header={translate('common.no.results.found')} />
+      <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
     );
 
   return (

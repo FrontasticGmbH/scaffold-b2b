@@ -32,7 +32,7 @@ const ApprovalFlowsClientWrapper = () => {
     rejected: useRefinements(),
   } as Record<ApprovalFlowStatus, ReturnType<typeof useRefinements>>;
 
-  const { approvalFlows, totalItems, previousCursor, nextCursor } = useApprovalFlows({
+  const { approvalFlows, isLoading, totalItems, previousCursor, nextCursor } = useApprovalFlows({
     businessUnitKey: activeBusinessUnit?.key,
     filters: {
       searchQuery: refinements[selectedStatus].debouncedSearch,
@@ -69,6 +69,7 @@ const ApprovalFlowsClientWrapper = () => {
           },
         }}
         approvalFlows={approvalFlows.map(mapApprovalFlow)}
+        loading={isLoading}
       />
     </Dashboard>
   );

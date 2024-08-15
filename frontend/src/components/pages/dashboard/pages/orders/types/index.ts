@@ -4,6 +4,7 @@ import { Order } from '@/types/entity/order';
 
 interface OrdersPage {
   orders: Order[];
+  loading?: boolean;
   filters: {
     sort?: string;
     search?: string;

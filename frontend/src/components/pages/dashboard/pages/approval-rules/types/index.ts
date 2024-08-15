@@ -17,6 +17,7 @@ export interface ApprovalRulesPageProps {
   businessUnitOptions: Option[];
   onBusinessUnitChange?: (businessUnit: string) => void;
   approvalRules: ApprovalRule[];
+  loading?: boolean;
   roles: Option[];
   rulesCriteria: Criteria[];
   approversCriteria: Criteria[];

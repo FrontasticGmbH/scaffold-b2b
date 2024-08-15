@@ -20,7 +20,7 @@ const CartClientWrapper = ({}: TasticProps<Props>) => {
 
   const { permissions } = useAccountRoles(selectedBusinessUnit?.key);
 
-  const { cart, addItem, updateItem, removeItem, clearCart, removeDiscount, redeemDiscount } = useCart(
+  const { cart, isLoading, addItem, updateItem, removeItem, clearCart, removeDiscount, redeemDiscount } = useCart(
     selectedBusinessUnit?.key,
     selectedStore?.key,
   );
@@ -48,6 +48,7 @@ const CartClientWrapper = ({}: TasticProps<Props>) => {
     <Cart
       {...cart}
       key={`${selectedBusinessUnit?.key}-${selectedStore?.key}`}
+      loading={isLoading}
       lineItems={(cart?.lineItems ?? []).map(mapLineItem)}
       viewCartDisabled={!permissions.ViewMyCarts}
       checkoutDisabled={!permissions.CreateMyOrdersFromMyCarts || invalidAddressesRequirements}

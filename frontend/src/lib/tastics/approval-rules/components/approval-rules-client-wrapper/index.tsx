@@ -33,7 +33,7 @@ const ApprovalRulesTastic = () => {
 
   const { page, limit, setLimit, cursor, setCursor } = useRefinements();
 
-  const { approvalRules, totalItems, previousCursor, nextCursor, createApprovalRule, updateApprovalRule } =
+  const { approvalRules, isLoading, totalItems, previousCursor, nextCursor, createApprovalRule, updateApprovalRule } =
     useApprovalRules({
       businessUnitKey: activeBusinessUnit?.key,
       storeKey: activeBusinessUnit.stores?.[0].key,
@@ -50,6 +50,7 @@ const ApprovalRulesTastic = () => {
     initialBusinessUnit: activeBusinessUnit?.key,
     onBusinessUnitChange: onBusinessUnitSelected,
     approvalRules: approvalRules.map(mapApprovalRule),
+    loading: isLoading,
     roles: rolesData.map((role) => ({ name: role.name, value: role.key })),
     rulesCriteria: Object.entries(approvalRulesConfig).map(([key, config]) => ({
       key,

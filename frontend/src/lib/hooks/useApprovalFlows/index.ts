@@ -7,7 +7,7 @@ const useApprovalFlows = ({
   businessUnitKey,
   filters: { searchQuery, status, cursor } = {},
 }: UseApprovalFlowsOptions) => {
-  const { data } = useSWR(
+  const { data, ...response } = useSWR(
     !businessUnitKey ? null : ['/action/business-unit/queryApprovalFlows', businessUnitKey, searchQuery, status],
     () =>
       sdk.composableCommerce.businessUnit.queryApprovalFlows(
@@ -21,6 +21,8 @@ const useApprovalFlows = ({
         { skipQueue: true },
       ),
   );
+
+  const isLoading = !businessUnitKey || response.isLoading;
 
   const { mutate: mutateSwr } = useSWRConfig();
 
@@ -73,7 +75,16 @@ const useApprovalFlows = ({
     [businessUnitKey, mutateAll],
   );
 
-  return { approvalFlows, totalItems, previousCursor, nextCursor, approveApprovalFlow, rejectApprovalFlow, mutateAll };
+  return {
+    approvalFlows,
+    isLoading,
+    totalItems,
+    previousCursor,
+    nextCursor,
+    approveApprovalFlow,
+    rejectApprovalFlow,
+    mutateAll,
+  };
 };
 
 export default useApprovalFlows;

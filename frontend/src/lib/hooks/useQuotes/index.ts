@@ -45,9 +45,13 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes
     ? ({} as Partial<PaginatedResult<Quote>>)
     : (quotesResponse.data?.data ?? ({} as Partial<PaginatedResult<Quote>>));
 
+  const quotesLoading = !businessUnitKey || quotesResponse.isLoading;
+
   const quoteRequests = quoteRequestsResponse.data?.isError
     ? ({} as Partial<PaginatedResult<QuoteRequest>>)
     : (quoteRequestsResponse.data?.data ?? ({} as Partial<PaginatedResult<QuoteRequest>>));
+
+  const quoteRequestsLoading = !businessUnitKey || quoteRequestsResponse.isLoading;
 
   const cancelQuoteRequest = useCallback(
     async (id: string) => {
@@ -93,7 +97,16 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes
     [businessUnitKey],
   );
 
-  return { quotes, quoteRequests, cancelQuoteRequest, declineQuote, renegotiateQuote, acceptQuote };
+  return {
+    quotes,
+    quotesLoading,
+    quoteRequests,
+    quoteRequestsLoading,
+    cancelQuoteRequest,
+    declineQuote,
+    renegotiateQuote,
+    acceptQuote,
+  };
 };
 
 export default useQuotes;

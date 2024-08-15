@@ -5,7 +5,7 @@ import { ApprovalRule } from '@shared/types/business-unit';
 import { useApprovalRulesOptions } from './types';
 
 const useApprovalRules = ({ businessUnitKey, storeKey, filters: { cursor, limit } = {} }: useApprovalRulesOptions) => {
-  const { data, mutate } = useSWR(
+  const { data, mutate, ...response } = useSWR(
     !businessUnitKey ? null : ['/action/business-unit/queryApprovalRules', businessUnitKey, cursor, limit],
     () =>
       sdk.composableCommerce.businessUnit.queryApprovalRules(
@@ -20,6 +20,8 @@ const useApprovalRules = ({ businessUnitKey, storeKey, filters: { cursor, limit 
         { skipQueue: true },
       ),
   );
+
+  const isLoading = !businessUnitKey || response.isLoading;
 
   const approvalRules = data?.isError ? [] : (data?.data?.items ?? []);
 
@@ -61,7 +63,7 @@ const useApprovalRules = ({ businessUnitKey, storeKey, filters: { cursor, limit 
     [businessUnitKey, storeKey, mutate],
   );
 
-  return { approvalRules, totalItems, previousCursor, nextCursor, createApprovalRule, updateApprovalRule };
+  return { approvalRules, isLoading, totalItems, previousCursor, nextCursor, createApprovalRule, updateApprovalRule };
 };
 
 export default useApprovalRules;

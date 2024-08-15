@@ -5,7 +5,7 @@ import SearchPanel from '../../components/search-panel';
 import AddressesTable from '../company-admin/components/addresses-table';
 import { AddressesPageProps } from './types';
 
-const AddressesPage = ({ addresses, onDeleteAddress, onSearchAddresses, viewOnly }: AddressesPageProps) => {
+const AddressesPage = ({ addresses, loading, onDeleteAddress, onSearchAddresses, viewOnly }: AddressesPageProps) => {
   const { translate } = useTranslation();
 
   return (
@@ -26,6 +26,7 @@ const AddressesPage = ({ addresses, onDeleteAddress, onSearchAddresses, viewOnly
         buttonDisabled={viewOnly}
         onSearchChange={onSearchAddresses}
         isEmpty={!addresses.length}
+        isLoading={loading}
         entity={translate('common.addresses')}
       >
         <AddressesTable onDeleteAddress={onDeleteAddress} addresses={addresses} />

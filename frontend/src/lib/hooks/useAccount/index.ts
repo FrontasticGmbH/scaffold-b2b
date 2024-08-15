@@ -136,6 +136,7 @@ const useAccount = () => {
 
   return {
     account: data.loggedIn ? data.account : undefined,
+    isLoading: result.isLoading,
     loggedIn: !!data.loggedIn,
     defaultShippingAddress,
     defaultBillingAddress,

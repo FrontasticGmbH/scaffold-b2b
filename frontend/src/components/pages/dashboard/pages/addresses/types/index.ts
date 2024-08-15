@@ -3,6 +3,7 @@ import { Address } from '@/types/entity/address';
 
 export interface AddressesPageProps {
   addresses: Address[];
+  loading?: boolean;
   viewOnly?: boolean;
   onAddAddress?: (address: Address) => Promise<boolean>;
   onDeleteAddress?: (id: string) => Promise<boolean>;

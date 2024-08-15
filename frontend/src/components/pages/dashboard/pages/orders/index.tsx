@@ -9,6 +9,7 @@ import CurrentRefinements from './components/current-refinements';
 
 const OrdersPage = ({
   orders,
+  loading,
   onClearRefinements,
   onStatusRefine,
   onCreationDateRefine,
@@ -59,16 +60,18 @@ const OrdersPage = ({
           </div>
         )}
       </div>
-      {orders.length > 0 ? (
-        <div className="flex flex-col gap-y-8 overflow-visible">
-          <RefinementsDrawer {...refinementProps} />
-          <Refinements {...refinementProps} />
-          <CurrentRefinements {...currentRefinementsProps} />
+
+      <div className="flex flex-col gap-y-8 overflow-visible">
+        <RefinementsDrawer {...refinementProps} />
+        <Refinements {...refinementProps} />
+        <CurrentRefinements {...currentRefinementsProps} />
+
+        {orders.length > 0 ? (
           <OrdersTable orders={orders} pagination={tablePaginationProps} />
-        </div>
-      ) : (
-        <EmptyState header={translate('common.no.results.found')} />
-      )}
+        ) : (
+          <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+        )}
+      </div>
     </div>
   );
 };

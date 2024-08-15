@@ -16,10 +16,11 @@ const PurchaseListsClientWrapper = () => {
 
   const { selectedStore } = useStoreAndBusinessUnits();
 
-  const { purchaseLists, createPurchaseList } = usePurchaseLists(selectedStore?.key);
+  const { purchaseLists, isLoading, createPurchaseList } = usePurchaseLists(selectedStore?.key);
 
   const purchaseListProps = {
     purchaseLists: purchaseLists?.items.map(mapPurchaseList),
+    loading: isLoading,
     onAddPurchaseList: async (purchaseList) => {
       if (!selectedStore) return;
 

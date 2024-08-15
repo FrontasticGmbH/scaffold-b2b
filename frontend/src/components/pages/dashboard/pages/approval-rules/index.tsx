@@ -4,6 +4,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import InfoBanner from '@/components/molecules/info-banner';
+import EmptyState from '@/components/molecules/empty-state';
 import { ApprovalRulesPageProps } from './types';
 import ApprovalRulesTable from './components/approval-rules-table';
 
@@ -13,6 +14,7 @@ const ApprovalRulesPage = ({
   onBusinessUnitChange,
   businessUnitOptions,
   approvalRules,
+  loading,
   pagination,
   onDuplicate,
 }: ApprovalRulesPageProps) => {
@@ -53,12 +55,16 @@ const ApprovalRulesPage = ({
       </div>
 
       <div className="mt-8">
-        <ApprovalRulesTable
-          approvalRules={approvalRules}
-          onDuplicate={onDuplicate}
-          pagination={pagination}
-          viewOnly={viewOnly}
-        />
+        {approvalRules.length > 0 ? (
+          <ApprovalRulesTable
+            approvalRules={approvalRules}
+            onDuplicate={onDuplicate}
+            pagination={pagination}
+            viewOnly={viewOnly}
+          />
+        ) : (
+          <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+        )}
       </div>
     </div>
   );

@@ -3,9 +3,17 @@ import Typography from '@/components/atoms/typography';
 import Image from '@/components/atoms/Image';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Link from '@/components/atoms/link';
+import LoadingIcon from '@/components/atoms/loading-icon';
 
-const EmptyCart = () => {
+const EmptyCart = ({ loading }: { loading?: boolean }) => {
   const { translate } = useTranslation();
+
+  if (loading)
+    return (
+      <div className="flex w-full justify-center">
+        <LoadingIcon svgWidth={20} svgHeight={20} className="fill-gray-700" />
+      </div>
+    );
 
   return (
     <div className="mx-auto grid w-fit place-items-center gap-12">

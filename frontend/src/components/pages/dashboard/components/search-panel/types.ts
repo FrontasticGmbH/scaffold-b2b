@@ -6,5 +6,6 @@ export interface Props {
   buttonDisabled?: boolean;
   onSearchChange?: (val: string) => void;
   isEmpty?: boolean;
+  isLoading?: boolean;
   entity: string;
 }

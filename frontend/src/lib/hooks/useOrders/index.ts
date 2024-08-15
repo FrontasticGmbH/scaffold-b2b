@@ -48,6 +48,8 @@ const useOrders = ({
     { revalidateIfStale: true },
   );
 
+  const isLoading = !businessUnitKey || ordersResponse.isLoading;
+
   const mutateAll = useCallback(() => {
     globalMutate((key) => typeof key === 'object' && key?.[0] === '/action/cart/queryOrders');
   }, [globalMutate]);
@@ -81,7 +83,7 @@ const useOrders = ({
     [businessUnitKey, mutateAll],
   );
 
-  return { orders, cancelOrder, replicateOrder };
+  return { orders, isLoading, cancelOrder, replicateOrder };
 };
 
 export default useOrders;

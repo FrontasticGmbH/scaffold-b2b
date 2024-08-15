@@ -3,6 +3,7 @@ import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import SearchInput from '@/components/atoms/search-input';
+import LoadingIcon from '@/components/atoms/loading-icon';
 import { Props } from './types';
 import EntitiesNotFound from '../entities-not-found';
 
@@ -13,6 +14,7 @@ const SearchPanel = ({
   onSearchChange,
   buttonDisabled,
   isEmpty,
+  isLoading,
   entity,
 }: React.PropsWithChildren<Props>) => {
   const { translate } = useTranslation();
@@ -44,7 +46,14 @@ const SearchPanel = ({
       </div>
       <div>
         {children}
-        {isEmpty && <EntitiesNotFound search={!!search} entity={entity} />}
+        {isEmpty &&
+          (isLoading ? (
+            <div className="flex w-full justify-center border-x border-b border-neutral-400 py-8">
+              <LoadingIcon svgWidth={20} svgHeight={20} className="fill-gray-700" />
+            </div>
+          ) : (
+            <EntitiesNotFound search={!!search} entity={entity} />
+          ))}
       </div>
     </div>
   );

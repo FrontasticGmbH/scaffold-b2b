@@ -20,4 +20,5 @@ export interface ApprovalFlowsPageProps {
   searchValue?: string;
   pagination: Pagination;
   approvalFlows: ApprovalFlow[];
+  loading?: boolean;
 }

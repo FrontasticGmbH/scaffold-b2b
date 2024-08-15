@@ -15,6 +15,7 @@ import QuotesRequestStatusModal from './components/quote-request-status-modal';
 
 const QuotesPage = ({
   quotes,
+  loading,
   onClearRefinements,
   onStatusRefine,
   onCreationDateRefine,
@@ -112,27 +113,25 @@ const QuotesPage = ({
           </Tabs.TabList>
           <Tabs.Panels className="overflow-visible">
             <Tabs.Panel>
+              <RefinementsDrawer {...refinementProps} />
+              <Refinements {...refinementProps} />
+              <CurrentRefinements {...currentRefinementsProps} />
+
               {quotes.length > 0 ? (
-                <>
-                  <RefinementsDrawer {...refinementProps} />
-                  <Refinements {...refinementProps} />
-                  <CurrentRefinements {...currentRefinementsProps} />
-                  <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
-                </>
+                <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
               ) : (
-                <EmptyState header={translate('common.no.results.found')} />
+                <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
               )}
             </Tabs.Panel>
             <Tabs.Panel>
+              <RefinementsDrawer {...refinementProps} />
+              <Refinements {...refinementProps} />
+              <CurrentRefinements {...currentRefinementsProps} />
+
               {quotes.length > 0 ? (
-                <>
-                  <RefinementsDrawer {...refinementProps} />
-                  <Refinements {...refinementProps} />
-                  <CurrentRefinements {...currentRefinementsProps} />
-                  <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
-                </>
+                <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
               ) : (
-                <EmptyState header={translate('common.no.results.found')} />
+                <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
               )}
             </Tabs.Panel>
           </Tabs.Panels>

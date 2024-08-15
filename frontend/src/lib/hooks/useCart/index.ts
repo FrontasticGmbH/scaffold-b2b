@@ -17,10 +17,12 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
     return result.isError ? ({} as Cart) : result.data;
   }, [businessUnitKey, storeKey]);
 
-  const { data, mutate } = useSWR(
+  const { data, mutate, ...response } = useSWR(
     !(businessUnitKey && storeKey) ? null : ['/action/cart/getCart', businessUnitKey, storeKey],
     getCart,
   );
+
+  const isLoading = !(businessUnitKey && storeKey) || response.isLoading;
 
   const isQuotationCart = data?.origin === 'Quote';
 
@@ -179,6 +181,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
 
   return {
     cart: data ? { ...data, transaction: calculateTransaction(data) } : undefined,
+    isLoading,
     isQuotationCart,
     shippingMethods,
     totalItems: data?.lineItems?.reduce((acc, curr) => acc + (curr.count ?? 1), 0) ?? 0,

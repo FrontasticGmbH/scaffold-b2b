@@ -1,4 +1,20 @@
 
+## Version 1.11.0 (2024-08-15)
+
+** New Features and Improvements **
+
+- Add checkout
+- Concatenated product type name to the attribute name on searchableAttributes
+- Used label as key for searchable attributes
+- Handled enum filter types when applying B2B product filters
+- Casted query type after verify if it's string or localized string
+- Handled localized string values as part of product list query
+- Applied default sort on B2B search
+- Added currency and channel post filter when price facet filter applied
+- Reuse method to rearange search queries
+- Set order asc on distinct facet values
+- Get facet type from facet expresion
+
 ## Version 1.10.0 (2024-08-01)
 ** New Features and Improvements **
 

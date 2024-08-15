@@ -15,6 +15,7 @@ import CheckoutCTA from '../order-summary/components/checkout-cta';
 import { CheckoutCTAProps } from '../order-summary/types';
 
 const Cart = ({
+  loading,
   paymentMethods,
   transaction,
   lineItems: lineItemsProp,
@@ -105,6 +106,7 @@ const Cart = ({
 
       <div className="flex flex-col bg-white py-4 md:py-6 lg:flex-row lg:items-start lg:gap-6 lg:bg-transparent lg:p-12">
         <CartContent
+          loading={loading}
           lineItems={lineItems ?? []}
           className="grow bg-white px-4 py-3 md:px-6 lg:rounded-lg lg:p-9"
           {...props}

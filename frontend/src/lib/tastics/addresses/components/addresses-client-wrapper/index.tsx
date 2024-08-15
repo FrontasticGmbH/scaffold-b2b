@@ -15,7 +15,7 @@ import useSubPath from '../../hooks/useSubPath';
 import useSearch from '../../hooks/useSearch';
 
 const AddressesClientWrapper = () => {
-  const { account } = useAccount();
+  const { account, isLoading } = useAccount();
 
   const { selectedBusinessUnit } = useStoreAndBusinessUnits();
 
@@ -31,6 +31,7 @@ const AddressesClientWrapper = () => {
 
   const addressesProps = {
     addresses: searchedAddresses,
+    loading: isLoading || !selectedBusinessUnit?.key,
     onSearchAddresses: handleSearch('addresses'),
     viewOnly,
     onAddAddress: async (address) => {

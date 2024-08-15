@@ -1,5 +1,6 @@
 export interface EmptyStateProps {
   className?: string;
-  header: string;
+  header?: string;
   image?: React.ReactNode;
+  isLoading?: boolean;
 }

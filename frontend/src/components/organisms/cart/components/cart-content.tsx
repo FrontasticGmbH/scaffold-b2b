@@ -5,6 +5,7 @@ import EmptyCart from './empty-cart';
 import { CartContentProps } from '../types';
 
 const CartContent = ({
+  loading,
   className,
   lineItems,
   onUpdateQuantity,
@@ -37,7 +38,7 @@ const CartContent = ({
           />
         </>
       ) : (
-        <EmptyCart />
+        <EmptyCart loading={loading} />
       )}
     </div>
   );

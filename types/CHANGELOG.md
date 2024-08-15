@@ -1,4 +1,10 @@
 
+## Version 1.10.0 (2024-08-15)
+
+** New Features and Improvements **
+
+- Added missing type for localized string product query
+
 ## Version 1.9.0 (2024-08-01)
 
 ## Version 1.8.0 (2024-06-28)

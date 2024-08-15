@@ -7,7 +7,7 @@ import { PurchaseListsPageProps } from './types';
 import SearchPanel from '../../components/search-panel';
 import { DashboardLinks } from '../../constants';
 
-const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
+const PurchaseListsPage = ({ purchaseLists, loading }: PurchaseListsPageProps) => {
   const { translate } = useTranslation();
 
   return (
@@ -15,6 +15,7 @@ const PurchaseListsPage = ({ purchaseLists }: PurchaseListsPageProps) => {
       translations={{ button: translate('dashboard.purchase.list.add') }}
       buttonLink={`?subPath=add-purchase-list`}
       isEmpty={!purchaseLists?.length}
+      isLoading={loading}
       entity={translate('common.purchase.lists')}
     >
       <Table>

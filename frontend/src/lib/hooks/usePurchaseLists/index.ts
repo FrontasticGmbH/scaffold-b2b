@@ -21,6 +21,8 @@ const usePurchaseLists = (storeKey?: string) => {
 
   const { mutate } = response;
 
+  const isLoading = !(storeKey && account.account?.accountId) || response.isLoading;
+
   const mutateAll = useCallback(() => {
     globalMutate((key) => typeof key === 'object' && key?.[0] === '/action/wishlist/');
   }, [globalMutate]);
@@ -110,6 +112,7 @@ const usePurchaseLists = (storeKey?: string) => {
 
   return {
     purchaseLists: response.data?.isError ? null : (response.data?.data ?? null),
+    isLoading,
     mutateAll,
     createPurchaseList,
     updatePurchaseList,
