@@ -8,7 +8,7 @@
   "orderConfirmed": "Votre commande a été confirmée",
   "orderConfirmation": "Nous avons envoyé votre confirmation de commande et votre facture à :",
   "continueShopping": "Continuer vos achats",
-  "wentWrong": "Quelque chose s'est mal passé lors du paiement",
+  "wentWrong": "Une erreur s'est produite lors du paiement, veuillez vérifier vos informations de paiement et réessayer.",
   "yourOrderId": "Numéro de commande:",
   "tryAgain": "Essayer à nouveau",
   "backToShop": "Retour à la boutique",
@@ -81,5 +81,6 @@
   "quote.summary": "Résumé du devis",
   "quote.items": "Articles cités",
   "submit.quote.request": "Soumettre une demande de devis",
-  "tax.rates.undefined": "Aucun taux d'imposition n'est défini pour cette région"
+  "tax.rates.undefined": "Aucun taux d'imposition n'est défini pour cette région",
+  "your.token.has.expired": "Votre jeton de paiement a expiré. Veuillez vous reconnecter.."
 }

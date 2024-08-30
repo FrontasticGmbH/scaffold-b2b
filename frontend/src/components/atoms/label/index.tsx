@@ -8,6 +8,7 @@ const Label = ({
   showOptionalLabel,
   optionalLabel,
   requiredStyle = 'asterisk',
+  htmlFor,
 }: React.PropsWithChildren<LabelProps>) => {
   const { translate } = useTranslation();
 
@@ -16,7 +17,7 @@ const Label = ({
   return (
     <div className="mb-2 flex items-center justify-between">
       {children && (
-        <label className="block text-14">
+        <label data-testid="label" htmlFor={htmlFor} className="block text-14">
           <span className="text-gray-700">{children}</span>{' '}
           {!required && showOptionalLabel && (
             <span className="lowercase text-gray-600">({optionalLabel ?? translate('common.optional')})</span>

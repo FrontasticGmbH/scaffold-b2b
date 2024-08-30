@@ -22,8 +22,7 @@ const OrdersClientWrapper = () => {
     setCursor,
     clearRefinements,
     states,
-    addState,
-    removeState,
+    setStates,
     search,
     debouncedSearch,
     setSearch,
@@ -64,12 +63,7 @@ const OrdersClientWrapper = () => {
         sortOptions={[]}
         statusOptions={orderStatusOptions}
         onSearch={(val) => setSearch(val)}
-        onStatusRefine={(status) => {
-          const isRefined = states.includes(status);
-
-          if (!isRefined) addState(status);
-          else removeState(status);
-        }}
+        onStatusRefine={setStates}
         onClearRefinements={clearRefinements}
         onCreationDateRefine={onCreationDateRefine}
         page={page}

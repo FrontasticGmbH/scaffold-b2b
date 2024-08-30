@@ -24,7 +24,7 @@
       "typescript": true
     }
   },
-  "ignorePatterns": ["node_modules", "out", "*.config.js", "src/sdk"],
+  "ignorePatterns": ["node_modules", "jest", "out", "*.config.js", "src/sdk"],
   "rules": {
     "@typescript-eslint/no-empty-function": "off",
     "tailwindcss/classnames-order": ["warn", { "officialSorting": true }],

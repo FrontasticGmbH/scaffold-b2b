@@ -12,9 +12,6 @@ const useRefinements = () => {
 
   const page = Math.floor(+cursor.split(':')[1] / limit) + 1;
 
-  const addState = useCallback((state: string) => setStates([...states, state]), [states]);
-  const removeState = useCallback((state: string) => setStates(states.filter((s) => s !== state)), [states]);
-
   const extractDate = useCallback((date: Date) => {
     const [day, month, year] = [
       date.getDate().toString().padStart(2, '0'),
@@ -49,8 +46,6 @@ const useRefinements = () => {
     cursor,
     setCursor,
     states,
-    addState,
-    removeState,
     setStates,
     search,
     debouncedSearch,

@@ -21,6 +21,7 @@ import {
   ReturnOrderItemsAction,
   CancelOrderAction,
   QueryOrdersAction,
+  GetCheckoutSessionTokenAction,
 } from '../../types/actions/CartActions';
 import { Cart, Order, Payment, ShippingMethod } from '@shared/types/cart';
 import {
@@ -62,6 +63,7 @@ import {
   QueryOrdersQuery,
 } from '../../types/queries/CartQueries';
 import { PaginatedResult } from '@shared/types/result';
+import { Token } from '@shared/types/Token';
 
 export type CartActions = {
   clearCart: ClearCartAction;
@@ -84,6 +86,7 @@ export type CartActions = {
   returnOrderItems: ReturnOrderItemsAction;
   cancelOrder: CancelOrderAction;
   queryOrders: QueryOrdersAction;
+  getCheckoutSessionToken: GetCheckoutSessionTokenAction;
 };
 
 export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActions => {
@@ -450,6 +453,21 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       const response = await sdk.callAction<PaginatedResult<Order>>({
         actionName: 'cart/queryOrders',
         query,
+        skipQueue: options.skipQueue,
+        customHeaderValue: options.customHeaderValue,
+        serverOptions: options.serverOptions,
+      });
+      return response;
+    },
+    getCheckoutSessionToken: async (
+      options: {
+        skipQueue?: boolean;
+        customHeaderValue?: string;
+        serverOptions?: ServerOptions;
+      } = {},
+    ) => {
+      const response = await sdk.callAction<Token>({
+        actionName: "cart/getCheckoutSessionToken",
         skipQueue: options.skipQueue,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,

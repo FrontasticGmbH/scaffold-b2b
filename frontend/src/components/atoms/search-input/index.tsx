@@ -1,8 +1,8 @@
 import React, { KeyboardEventHandler, useCallback, useState } from 'react';
 import {
+  ArrowLeftIcon as BackIcon,
   MagnifyingGlassIcon as SearchIcon,
   XMarkIcon as CloseIcon,
-  ArrowLeftIcon as BackIcon,
 } from '@heroicons/react/24/solid';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
@@ -25,7 +25,7 @@ const SearchInput = ({
   handleOnChange,
   handleSearchAction,
 }: SearchInputProps) => {
-  const [value, setValue] = useControllableState(searchValue);
+  const [value, setValue] = useControllableState(searchValue, '');
 
   const [searchFocused, setSearchFocused] = useState(false);
 
@@ -64,7 +64,11 @@ const SearchInput = ({
       {label && variant !== 'lg' && <Label required={false}>{label}</Label>}
       <div className={classnames(searchBarClassNames, containerClassName)}>
         {variant === 'lg' && mobile && (
-          <button onClick={onBackClick} className="flex items-center justify-center bg-white px-3 transition">
+          <button
+            data-testid="back-button"
+            onClick={onBackClick}
+            className="flex items-center justify-center bg-white px-3 transition"
+          >
             <BackIcon className="w-5 fill-gray-600 stroke-0" />
           </button>
         )}
@@ -82,7 +86,7 @@ const SearchInput = ({
           onKeyDown={onEnterKeyDown}
         />
         {variant === 'lg' && value && (
-          <button onClick={handleClear} className="shrink-0 bg-white px-4 transition">
+          <button onClick={handleClear} className="shrink-0 bg-white px-4 transition" data-testid="clear-button">
             <CloseIcon className="w-5 fill-gray-600 stroke-0" />
           </button>
         )}

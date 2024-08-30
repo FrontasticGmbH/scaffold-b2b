@@ -34,10 +34,10 @@ const DateCaption = ({ displayMonth }: CaptionProps) => {
       <Select defaultValue={displayMonth.getFullYear().toString()} options={getYearOptions()} onChange={goToYear} />
 
       <div className="flex gap-2">
-        <Button variant="ghost" size="fit" onClick={() => previousMonth && goToMonth(previousMonth)}>
+        <Button data-testid="prev" variant="ghost" size="fit" onClick={() => previousMonth && goToMonth(previousMonth)}>
           <ChevronLeftIcon className="h-5 w-5" />
         </Button>
-        <Button variant="ghost" size="fit" onClick={() => nextMonth && goToMonth(nextMonth)}>
+        <Button data-testid="next" variant="ghost" size="fit" onClick={() => nextMonth && goToMonth(nextMonth)}>
           <ChevronRightIcon className="h-5 w-5" />
         </Button>
       </div>

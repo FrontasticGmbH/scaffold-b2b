@@ -8,7 +8,7 @@ import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/r
 
 export class CartFetcher {
   static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> {
-    const cart = await this.fetchCartFromSession(request, actionContext);
+    const cart = await this.fetchActiveCartFromSession(request, actionContext);
 
     if (cart) {
       return cart;
@@ -27,7 +27,7 @@ export class CartFetcher {
     return await getCartApi(request, actionContext.frontasticContext).getInStore(storeKey);
   }
 
-  static async fetchCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
+  static async fetchActiveCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
     const cartId = request.sessionData?.cartId;
     const account = fetchAccountFromSession(request);
     const businessUnitKey = getBusinessUnitKey(request);
@@ -41,7 +41,10 @@ export class CartFetcher {
 
     try {
       const cart = await cartApi.getById(cartId);
-      if (cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)) {
+      if (
+        cartApi.assertCartIsActive(cart) &&
+        cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)
+      ) {
         return cart;
       }
     } catch (error) {

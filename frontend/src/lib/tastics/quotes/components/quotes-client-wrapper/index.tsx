@@ -39,8 +39,7 @@ const QuotesClientWrapper = () => {
     setCursor,
     clearRefinements,
     states,
-    addState,
-    removeState,
+    setStates,
     search,
     debouncedSearch,
     setSearch,
@@ -78,12 +77,7 @@ const QuotesClientWrapper = () => {
         sortOptions={[]}
         statusOptions={statusOptions}
         onSearch={(val) => setSearch(val)}
-        onStatusRefine={(status) => {
-          const isRefined = states.includes(status);
-
-          if (!isRefined) addState(status);
-          else removeState(status);
-        }}
+        onStatusRefine={setStates}
         onClearRefinements={clearRefinements}
         quotes={(quotesRes?.items ?? [])
           .map((item) =>

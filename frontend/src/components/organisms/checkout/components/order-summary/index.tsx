@@ -34,25 +34,23 @@ const OrderSummary = ({
 
   const [isLargerThanDesktop] = useMediaQuery(desktop);
 
-  const { isLastStep } = useCheckout();
+  const { isLastStep, isCtCheckoutEnabled, checkoutIsProcessing, setCheckoutIsProcessing } = useCheckout();
 
   const [buyerComment, setBuyerComment] = useState('');
 
   const { formatCurrency } = useFormat();
 
-  const [loading, setLoading] = useState(false);
-
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      setLoading(true);
+      setCheckoutIsProcessing(true);
 
       await onSubmitPurchase({ buyerComment });
 
-      setLoading(false);
+      setCheckoutIsProcessing(false);
     },
-    [onSubmitPurchase, buyerComment],
+    [onSubmitPurchase, buyerComment, setCheckoutIsProcessing],
   );
 
   return (
@@ -144,9 +142,22 @@ const OrderSummary = ({
         )}
 
         <div className="mt-5">
-          <Button variant="primary" size="full" disabled={!isLastStep} loading={loading} type="submit">
+          <Button
+            variant="primary"
+            size="full"
+            disabled={!isLastStep}
+            loading={checkoutIsProcessing}
+            type={isCtCheckoutEnabled ? 'button' : 'submit'}
+            {...(isCtCheckoutEnabled
+              ? {
+                  'data-ctc-selector': 'paymentButton',
+                }
+              : {})}
+          >
             {translations.purchase || translate('checkout.complete.purchase')}
           </Button>
+
+          {isCtCheckoutEnabled && <div className="mt-3" data-ctc-selector="vendorPaymentButton"></div>}
         </div>
       </form>
     </div>

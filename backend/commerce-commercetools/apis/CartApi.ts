@@ -1,4 +1,4 @@
-import { Cart } from '@Types/cart/Cart';
+import { Cart, CartState } from '@Types/cart/Cart';
 import { LineItem } from '@Types/cart/LineItem';
 import { Address } from '@Types/account/Address';
 import { Order, OrderState, ReturnLineItem } from '@Types/cart/Order';
@@ -31,7 +31,7 @@ import {
   PaymentDraft,
   PaymentUpdateAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
-import { Context } from '@frontastic/extension-types';
+import { Context, Request } from '@frontastic/extension-types';
 import { Token } from '@Types/Token';
 import CartMapper from '../mappers/CartMapper';
 import { isReadyForCheckout } from '../utils/Cart';
@@ -60,8 +60,9 @@ export default class CartApi extends BaseApi {
     businessUnitKey?: string,
     distributionChannelId?: string,
     supplyChannelId?: string,
+    request?: Request | null,
   ) {
-    super(context, locale, currency);
+    super(context, locale, currency, request);
     this.accountId = accountId;
     this.businessUnitKey = businessUnitKey;
     this.distributionChannelId = distributionChannelId;
@@ -96,6 +97,8 @@ export default class CartApi extends BaseApi {
   }
 
   async getInStore(storeKey: string): Promise<Cart> {
+    this.invalidateSessionCheckoutData();
+
     const locale = await this.getCommercetoolsLocal();
 
     const allCarts = await this.getAllCartsInStore(storeKey);
@@ -744,6 +747,10 @@ export default class CartApi extends BaseApi {
       cart.businessUnitKey === businessUnitKey &&
       cart.storeKey === storeKey
     );
+  };
+
+  assertCartIsActive: (cart: Cart) => boolean = (cart: Cart) => {
+    return cart.cartState === CartState.Active;
   };
 
   async replicateCart(orderId: string): Promise<Cart> {

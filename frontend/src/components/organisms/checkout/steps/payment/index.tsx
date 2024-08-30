@@ -9,17 +9,20 @@ import Image from '@/components/atoms/Image';
 import PurchaseOrderForm from '@/components/organisms/checkout/components/purchase-order-form';
 import PurchaseOrderPreview from '@/components/organisms/checkout/components/purchase-order-preview';
 import { useCheckout } from '../../provider';
+import { Props as StepProps } from '../../components/step/types';
 import { CheckoutProps } from '../../types';
 
 const PaymentStep = ({
+  isCompleted,
   paymentMethods,
   onCompletePayment,
   initialData = {},
   translations,
-}: Pick<CheckoutProps, 'paymentMethods' | 'onCompletePayment' | 'initialData' | 'translations'>) => {
+}: Pick<CheckoutProps, 'paymentMethods' | 'onCompletePayment' | 'initialData' | 'translations'> &
+  Pick<StepProps, 'isActive' | 'isCompleted'>) => {
   const { translate } = useTranslation();
 
-  const { activeStep, nextStep, tempData, setTempData } = useCheckout();
+  const { nextStep, tempData, setTempData } = useCheckout();
 
   const [loading, setLoading] = useState(false);
 
@@ -41,8 +44,6 @@ const PaymentStep = ({
 
     setLoading(false);
   }, [selectedPaymentMethodId, onCompletePayment, nextStep, translate, paymentData]);
-
-  const isCompleted = activeStep > 2;
 
   if (isCompleted) {
     const paymentMethod = paymentMethods.find((method) => method.id === selectedPaymentMethodId);

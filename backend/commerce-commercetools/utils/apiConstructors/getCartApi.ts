@@ -26,6 +26,7 @@ const getCartApi = (request: Request, actionContext: Context): CartApi => {
     businessUnitKey,
     distributionChannelId,
     supplyChannelId,
+    request,
   );
 };
 

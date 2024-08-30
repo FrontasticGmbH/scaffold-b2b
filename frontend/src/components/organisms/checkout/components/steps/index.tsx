@@ -42,7 +42,7 @@ const Steps = ({
           isCompleted={activeStep > index}
           onNavigate={() => resetStepTo(index)}
         >
-          {Component}
+          {Component({ isActive: activeStep === index, isCompleted: activeStep > index })}
         </Step>
       ))}
     </div>

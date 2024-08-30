@@ -8,7 +8,7 @@
   "orderConfirmed": "Ihre Bestellung wurde bestätigt",
   "orderConfirmation": "Wir haben Ihre Bestellbestätigung und Rechnung gesendet an:",
   "continueShopping": "Mit dem Einkaufen fortfahren",
-  "wentWrong": "Bei der Zahlung ist ein Fehler aufgetreten",
+  "wentWrong": "Es ist ein Fehler bei der Zahlung aufgetreten. Bitte überprüfen Sie Ihre Zahlungsdetails und versuchen Sie es erneut.",
   "yourOrderId": "Auftragsnummer:",
   "tryAgain": "Versuchen Sie es erneut",
   "backToShop": "Zurück zum Shop",
@@ -81,5 +81,6 @@
   "quote.summary": "Zusammenfassung des Angebots",
   "quote.items": "Zitierte Artikel",
   "submit.quote.request": "Angebotsanfrage senden",
-  "tax.rates.undefined": "Für diese Region sind keine Steuersätze definiert"
+  "tax.rates.undefined": "Für diese Region sind keine Steuersätze definiert",
+  "your.token.has.expired": "Ihr Checkout-Token ist abgelaufen. Bitte melden Sie sich erneut an."
 }

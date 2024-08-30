@@ -34,7 +34,7 @@ const Button: FC<ButtonProps> = ({
       {(loading || added) && <FeedbackIconLayer loading={loading} variant={variant} />}
       {children}
       {icon}
-      {asSkeleton && <Skeleton />}
+      {asSkeleton && <Skeleton data-testid="skeleton" />}
     </button>
   );
 };

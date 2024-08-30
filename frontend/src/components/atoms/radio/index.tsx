@@ -7,14 +7,16 @@ import { RadioProps } from './types';
 import useClassNames from './hooks/useClassNames';
 
 const Radio = ({ label, checked: checkedProp, onSelected, disabled, className, size = 'lg', ...props }: RadioProps) => {
-  const [checked, setChecked] = useControllableState(checkedProp);
+  const [checked, setChecked] = useControllableState(checkedProp, false);
 
   const { radioClassName, labelClassName, dotClassName } = useClassNames({ checked, disabled, size });
 
   const handleChange = useCallback(() => {
+    if (disabled) return;
+
     setChecked(true);
     onSelected?.();
-  }, [setChecked, onSelected]);
+  }, [setChecked, onSelected, disabled]);
 
   return (
     <label className="flex w-fit items-center gap-2">

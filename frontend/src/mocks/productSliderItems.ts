@@ -29,7 +29,7 @@ export const sliderItems: Product[] = [
   },
   {
     id: '4',
-    name: 'Brake Pad Set, disc brake DELPHI LP20',
+    name: 'Brake Pad Set, disc brake DELPHI LP21',
     sku: 'Castrol',
     price: 9.64,
     priceRange: [9.64, 12.46],
@@ -38,7 +38,7 @@ export const sliderItems: Product[] = [
   },
   {
     id: '5',
-    name: 'Brake Disk Set, disc brake DELPHI LP20',
+    name: 'Brake Disk Set, disc brake DELPHI LP21',
     sku: 'Castrol',
     price: 9.64,
     discountedPrice: 3.64,
@@ -47,7 +47,7 @@ export const sliderItems: Product[] = [
   },
   {
     id: '6',
-    name: 'Brake System Set, disc brake DELPHI LP20',
+    name: 'Brake System Set, disc brake DELPHI LP21',
     sku: 'Castrol',
     price: 9.64,
     images: ['/sb-assets/brake-system.png'],

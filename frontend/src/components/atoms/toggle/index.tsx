@@ -31,7 +31,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
             { 'translate-x-full': checked },
           )}
         >
-          <span className={!checked ? 'hidden' : 'block'}>
+          <span data-testid="checked-icon" className={!checked ? 'hidden' : 'block'}>
             <svg
               className="stroke-[#415A77]"
               width="11"
@@ -46,7 +46,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
               ></path>
             </svg>
           </span>
-          <span className={checked ? 'hidden' : 'block'}>
+          <span data-testid="unchecked-icon" className={checked ? 'hidden' : 'block'}>
             <svg
               className="h-4 w-4 stroke-[#415A77]"
               fill="none"

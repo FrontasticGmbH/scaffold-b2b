@@ -1,4 +1,13 @@
 
+## Version 1.12.0 (2024-08-30)
+
+** New Features and Improvements **
+
+- Enhance region extraction from commercetools host URL:
+- Validated active cart status before fetch it
+- Fetch POnumber from order or custom field
+- Removed product type from facet name
+
 ## Version 1.11.0 (2024-08-15)
 
 ** New Features and Improvements **

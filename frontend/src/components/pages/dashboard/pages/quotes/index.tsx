@@ -116,9 +116,10 @@ const QuotesPage = ({
               <RefinementsDrawer {...refinementProps} />
               <Refinements {...refinementProps} />
               <CurrentRefinements {...currentRefinementsProps} />
-
               {quotes.length > 0 ? (
-                <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+                <>
+                  <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+                </>
               ) : (
                 <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
               )}
@@ -127,9 +128,10 @@ const QuotesPage = ({
               <RefinementsDrawer {...refinementProps} />
               <Refinements {...refinementProps} />
               <CurrentRefinements {...currentRefinementsProps} />
-
               {quotes.length > 0 ? (
-                <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+                <>
+                  <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
+                </>
               ) : (
                 <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
               )}

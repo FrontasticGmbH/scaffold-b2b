@@ -38,7 +38,7 @@ const Select = ({
       <Dropdown.Button>
         {({ selected, isExpanded }) => {
           if (!enableSearch || !isExpanded)
-            return options?.find((option) => option.value === selected.value)?.name ?? placeholder;
+            return options?.find((option) => option.value === selected.value)?.name || placeholder;
 
           return (
             <Input

@@ -72,13 +72,19 @@ const TablePagination = ({
         </Typography>
         <div className="flex gap-4">
           <ChevronLeftIcon
-            role="button"
-            aria-label="Previous page"
+            data-testid="previous-arrow"
+            data-disabled={disablePrevious}
             stroke="#212121"
             {...previousIconProps}
             onClick={onPrevious}
           />
-          <ChevronRightIcon role="button" aria-label="Next page" stroke="#212121" {...nextIconProps} onClick={onNext} />
+          <ChevronRightIcon
+            data-testid="next-arrow"
+            data-disabled={disableNext}
+            stroke="#212121"
+            {...nextIconProps}
+            onClick={onNext}
+          />
         </div>
       </div>
     </div>

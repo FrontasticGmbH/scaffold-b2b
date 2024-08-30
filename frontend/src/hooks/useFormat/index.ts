@@ -10,8 +10,8 @@ const useFormat = () => {
     }).format(price);
   }, []);
 
-  const formatAddress = useCallback((address: Address) => {
-    return `${address.name} ${address.careOf ? `(c/o ${address.careOf})` : ''}\n${address.line1}\n${address.zip} ${
+  const formatAddress = useCallback((address: Partial<Address>) => {
+    return `${address.name}${address.careOf ? ` (c/o ${address.careOf})` : ''}\n${address.line1}\n${address.zip} ${
       address.city
     }, ${address.country}`.replace(/[^\S\r\n]+/g, ' ');
   }, []);

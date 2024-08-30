@@ -23,10 +23,10 @@ export interface PaymentMethod {
     src: string;
   };
 }
-
+type ProductWithDeleteAttr = Product & { deleted?: boolean };
 export type CartProps = {
   loading?: boolean;
-  lineItems: Product[];
+  lineItems: ProductWithDeleteAttr[];
   account: Pick<Account, 'email'>;
   paymentMethods: Array<PaymentMethod>;
   viewCartDisabled?: boolean;

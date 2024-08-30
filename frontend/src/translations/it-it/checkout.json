@@ -8,7 +8,7 @@
   "orderConfirmed": "Il tuo ordine è stato confermato",
   "orderConfirmation": "Abbiamo inviato la conferma dell'ordine e la fattura a:",
   "continueShopping": "Continua a fare acquisti",
-  "wentWrong": "Qualcosa è andato storto durante il pagamento",
+  "wentWrong": "Si è verificato un errore durante il pagamento, controlla i tuoi dettagli di pagamento e riprova.",
   "yourOrderId": "ID ordine:",
   "tryAgain": "Riprova",
   "backToShop": "Ritorno al negozio",
@@ -81,5 +81,6 @@
   "quote.summary": "Riepilogo preventivo",
   "quote.items": "Articoli citati",
   "submit.quote.request": "Invia richiesta di preventivo",
-  "tax.rates.undefined": "Non ci sono aliquote fiscali definite per questa regione"
+  "tax.rates.undefined": "Non ci sono aliquote fiscali definite per questa regione",
+  "your.token.has.expired": "Il tuo token di pagamento è scaduto. Per favore accedi di nuovo.."
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useRef } from 'react';
-import { XMarkIcon as ClearIcon, CheckIcon as ValidIcon } from '@heroicons/react/24/solid';
+import { CheckIcon as ValidIcon, XMarkIcon as ClearIcon } from '@heroicons/react/24/solid';
 import { classnames } from '@/utils/classnames/classnames';
 import useControllableState from '@/hooks/useControllableState';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -71,6 +71,7 @@ const Input = ({
         showOptionalLabel={showOptionalLabel}
         optionalLabel={optionalLabel}
         requiredStyle={requiredStyle}
+        htmlFor={props.id || props.name}
       >
         {label}
       </Label>
@@ -98,13 +99,20 @@ const Input = ({
             onBlurProp?.(e);
           }}
           {...props}
+          id={props.id || props.name}
         />
         {(clearButton || valid || icon) && (
           <div className="flex items-center justify-center px-3">
             {clearButton && (
-              <ClearIcon width={16} height={16} className="cursor-pointer text-gray-700" onClick={handleClear} />
+              <ClearIcon
+                data-testid={'clear-button'}
+                width={16}
+                height={16}
+                className="cursor-pointer text-gray-700"
+                onClick={handleClear}
+              />
             )}
-            {valid && <ValidIcon width={16} height={16} className="text-green-500" />}
+            {valid && <ValidIcon data-testid="valid-icon" width={16} height={16} className="text-green-500" />}
             {icon && <span className="text-gray-700">{icon}</span>}
           </div>
         )}

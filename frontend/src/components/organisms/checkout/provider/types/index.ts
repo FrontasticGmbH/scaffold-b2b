@@ -1,4 +1,7 @@
 export interface CheckoutProviderShape {
+  isCtCheckoutEnabled?: boolean;
+  checkoutIsProcessing: boolean;
+  setCheckoutIsProcessing: (processing: boolean) => void;
   activeStep: number;
   isLastStep: boolean;
   nextStep: () => void;

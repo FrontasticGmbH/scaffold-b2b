@@ -53,6 +53,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
         ) => (
           <div
             key={index}
+            data-testid="activity-log"
             className={classnames('relative pb-9 pl-6 lg:pb-12', {
               'border-l border-neutral-400': index < arr.length - 1,
             })}
@@ -67,6 +68,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
 
             {comment && (
               <form
+                role="form"
                 className="mt-7"
                 onSubmit={async (e) => {
                   e.preventDefault();
@@ -74,6 +76,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
                   if (commentValue[index]) await onCommentUpdate?.(commentValue[index]);
                   setCommentProcessing({ ...commentProcessing, [index]: false });
                   setCommentFocused({ ...commentFocused, [index]: false });
+                  (document.activeElement as HTMLTextAreaElement).blur();
                 }}
               >
                 <h5 className="text-12 font-medium uppercase text-gray-600">{commentLabel}</h5>
@@ -95,7 +98,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
                     setCommentValue({ ...commentValue, [index]: e.target.value });
                     setCommentLength({ ...commentLength, [index]: e.target.value.length });
                   }}
-                  onFocus={() => setCommentFocused({ ...commentFocused, [index]: true })}
+                  onFocus={() => setCommentFocused({ ...commentFocused, [index]: !commentDisabled })}
                   onBlur={() => setCommentFocused({ ...commentFocused, [index]: false })}
                 />
                 {commentFocused[index] && (

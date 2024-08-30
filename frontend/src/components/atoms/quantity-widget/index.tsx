@@ -8,7 +8,8 @@ import Input from '../input';
 const QuantityWidget = ({
   value: valueProp,
   defaultValue = 0,
-  maxValue,
+  minValue = 0,
+  maxValue = Number.MAX_VALUE,
   onChange,
   disabled,
   showLabel = true,
@@ -19,8 +20,6 @@ const QuantityWidget = ({
   const [rawValue, setRawValue] = useState(value.toString());
 
   const handleDecrement = useCallback(() => {
-    if (value === 0) return;
-
     const newValue = value - 1;
 
     setValue(newValue);
@@ -28,13 +27,11 @@ const QuantityWidget = ({
   }, [value, setValue, onChange]);
 
   const handleIncrement = useCallback(() => {
-    if (value === maxValue) return;
-
     const newValue = value + 1;
 
     setValue(newValue);
     onChange?.(newValue);
-  }, [value, setValue, onChange, maxValue]);
+  }, [value, setValue, onChange]);
 
   useEffect(() => {
     setRawValue(value.toString());
@@ -47,13 +44,11 @@ const QuantityWidget = ({
   }, []);
 
   const handleRawValueSubmit = useCallback(() => {
-    if (isNaN(+rawValue)) return;
-
-    const number = Math.max(0, Math.min(maxValue ?? Number.MAX_VALUE, +rawValue));
+    const number = Math.max(minValue, Math.min(maxValue, +rawValue));
 
     setValue(number);
     onChange?.(number);
-  }, [rawValue, maxValue, onChange, setValue]);
+  }, [rawValue, minValue, maxValue, onChange, setValue]);
 
   const boxClassName = classnames('flex h-[40px] w-[40px] items-center justify-center p-0');
 
@@ -66,7 +61,7 @@ const QuantityWidget = ({
       {showLabel && <span className="text-14 text-gray-700">{translate('common.quantity.shorthand')}</span>}
       <div className="flex overflow-hidden rounded-md border border-gray-300 text-gray-700">
         <button
-          disabled={value <= 0 || disabled}
+          disabled={value <= minValue || disabled}
           className={classnames(boxClassName, buttonClassName, 'border-r')}
           onClick={handleDecrement}
         >
@@ -89,7 +84,7 @@ const QuantityWidget = ({
           />
         </form>
         <button
-          disabled={value >= (maxValue ?? Number.MAX_VALUE) || disabled}
+          disabled={value >= maxValue || disabled}
           className={classnames(boxClassName, buttonClassName, 'border-l')}
           onClick={handleIncrement}
         >

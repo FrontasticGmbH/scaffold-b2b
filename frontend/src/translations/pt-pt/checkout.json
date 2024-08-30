@@ -8,7 +8,7 @@
   "orderConfirmed": "Seu pedido foi confirmado",
   "orderConfirmation": "Enviamos a confirmação do seu pedido e a fatura para:",
   "continueShopping": "Continue comprando",
-  "wentWrong": "Algo deu errado durante o pagamento",
+  "wentWrong": "Ocorreu um erro durante o pagamento, por favor verifique os seus dados de pagamento e tente novamente.",
   "yourOrderId": "ID do pedido:",
   "tryAgain": "Tente novamente",
   "backToShop": "De volta à loja",
@@ -81,5 +81,6 @@
   "quote.summary": "Resumo da cotação",
   "quote.items": "Itens cotados",
   "submit.quote.request": "Enviar solicitação de orçamento",
-  "tax.rates.undefined": "Não há taxas de imposto definidas para esta região"
+  "tax.rates.undefined": "Não há taxas de imposto definidas para esta região",
+  "your.token.has.expired": "Seu token de checkout expirou. Por favor faça login novamente.."
 }

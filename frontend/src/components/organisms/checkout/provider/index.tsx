@@ -6,8 +6,12 @@ import { CheckoutProps } from '../types';
 
 const CheckoutContext = React.createContext({} as CheckoutProviderShape);
 
-const CheckoutProvider = ({ children }: React.PropsWithChildren<Partial<CheckoutProps>>) => {
+const CheckoutProvider = ({ children, buyerCanAddComment }: React.PropsWithChildren<Partial<CheckoutProps>>) => {
   const router = useCustomRouter();
+
+  const [checkoutIsProcessing, setCheckoutIsProcessing] = useState(false);
+
+  const isCtCheckoutEnabled = process.env.NEXT_PUBLIC_COMMERCETOOLS_CHECKOUT_ENABLED === '1';
 
   const [tempData, setTempData] = useState<Record<string, string>>({});
 
@@ -39,6 +43,9 @@ const CheckoutProvider = ({ children }: React.PropsWithChildren<Partial<Checkout
   return (
     <CheckoutContext.Provider
       value={{
+        isCtCheckoutEnabled: isCtCheckoutEnabled && !buyerCanAddComment,
+        checkoutIsProcessing,
+        setCheckoutIsProcessing,
         activeStep,
         isLastStep,
         nextStep,

@@ -49,7 +49,7 @@ const Step = ({ number, title, isActive, isCompleted, onNavigate, children }: Re
         )}
       </div>
 
-      {(isActive || isCompleted) && <div className="pt-4 md:pt-6 lg:pt-7">{children}</div>}
+      <div className={classnames('pt-4 md:pt-6 lg:pt-7', { hidden: !(isActive || isCompleted) })}>{children}</div>
     </div>
   );
 };

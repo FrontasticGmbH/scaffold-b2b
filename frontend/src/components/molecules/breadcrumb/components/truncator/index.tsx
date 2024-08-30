@@ -8,7 +8,7 @@ const Truncator = ({ children }: React.PropsWithChildren) => {
     <div className="relative">
       <Menu>
         <Menu.Button className="inline-flex w-full justify-center rounded-md bg-white p-1 transition hover:bg-black/5 focus:outline-none">
-          <TruncateIcon className="text-gray-700" width={16} />
+          <TruncateIcon data-testid="truncate-icon" className="text-gray-700" width={16} />
         </Menu.Button>
         <Transition
           as={Fragment}

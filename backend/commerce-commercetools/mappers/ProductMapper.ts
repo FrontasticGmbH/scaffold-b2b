@@ -316,7 +316,7 @@ export default class ProductMapper {
           return;
         }
 
-        filterFields.push(this.commercetoolsAttributeDefinitionToFilterField(attribute, productType.name, locale));
+        filterFields.push(this.commercetoolsAttributeDefinitionToFilterField(attribute, locale));
       });
     });
 
@@ -325,7 +325,6 @@ export default class ProductMapper {
 
   static commercetoolsAttributeDefinitionToFilterField(
     commercetoolsAttributeDefinition: CommercetoolsAttributeDefinition,
-    productTypeName: string,
     locale: Locale,
   ): FilterField {
     let commercetoolsAttributeTypeName = commercetoolsAttributeDefinition.type.name;
@@ -360,9 +359,7 @@ export default class ProductMapper {
       type: TypeMap.has(commercetoolsAttributeTypeName)
         ? TypeMap.get(commercetoolsAttributeTypeName)
         : commercetoolsAttributeTypeName,
-      label:
-        productTypeName + ' - ' + commercetoolsAttributeDefinition.label?.[locale.language] ??
-        commercetoolsAttributeDefinition.name,
+      label: commercetoolsAttributeDefinition.label?.[locale.language] ?? commercetoolsAttributeDefinition.name,
       values: filterFieldValues.length > 0 ? filterFieldValues : undefined,
       translatable: false,
     };

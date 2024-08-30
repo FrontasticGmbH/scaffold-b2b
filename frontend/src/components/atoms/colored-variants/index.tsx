@@ -8,7 +8,7 @@ const ColoredVariant = ({ className, color, active, onClick }: ColoredVariantPro
     className,
   );
 
-  return <div className={variantClassName} style={{ backgroundColor: color }} onClick={onClick} />;
+  return <div role={'button'} className={variantClassName} style={{ backgroundColor: color }} onClick={onClick} />;
 };
 
 export default ColoredVariant;

@@ -11,9 +11,6 @@ const useRefinements = () => {
 
   const page = Math.floor(+cursor.split(':')[1] / limit) + 1;
 
-  const addState = useCallback((state: string) => setStates([...states, state]), [states]);
-  const removeState = useCallback((state: string) => setStates(states.filter((s) => s !== state)), [states]);
-
   const clearRefinements = useCallback(() => {
     setLimit(25);
     setStates([]);
@@ -27,8 +24,6 @@ const useRefinements = () => {
     cursor,
     setCursor,
     states,
-    addState,
-    removeState,
     setStates,
     search,
     debouncedSearch,

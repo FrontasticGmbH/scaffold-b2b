@@ -8,7 +8,7 @@
   "orderConfirmed": "Tu pedido fue confirmado",
   "orderConfirmation": "Hemos enviado la confirmación de su pedido y la factura a:",
   "continueShopping": "Seguir comprando",
-  "wentWrong": "Algo salió mal durante el pago",
+  "wentWrong": "Algo salió mal durante el pago, por favor revisa tus detalles de pago y vuelve a intentarlo.",
   "yourOrderId": "Solicitar ID:",
   "tryAgain": "Intentar otra vez",
   "backToShop": "volver a la tienda",
@@ -81,5 +81,6 @@
   "quote.summary": "Resumen de cotización",
   "quote.items": "Artículos cotizados",
   "submit.quote.request": "Enviar solicitud de cotización",
-  "tax.rates.undefined": "No hay tasas impositivas definidas para esta región."
+  "tax.rates.undefined": "No hay tasas impositivas definidas para esta región.",
+  "your.token.has.expired": "Su token de pago ha caducado. Por favor inicie sesión nuevamente.."
 }

@@ -112,6 +112,7 @@ const PurchaseListItem = ({
             className="min-w-[150px]"
             onClick={handleAddToCart}
             loading={addingToCart}
+            disabled={!inStock}
           >
             {translate('cart.add')}
           </Button>

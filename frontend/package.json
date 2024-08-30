@@ -4,6 +4,7 @@
   "license": "MIT",
   "main": "index.js",
   "private": true,
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "dev": "concurrently -n NEXT,TSC -c magenta,cyan \"next dev\" \"yarn ts --watch\"",
     "prod": "concurrently -n NEXT,TSC -c magenta,cyan \"NODE_ENV=production next dev\" \"yarn ts --watch\"",
@@ -12,6 +13,7 @@
     "build:analyze": "cross-env ANALYZE=true next build",
     "start": "next start",
     "test": "jest -c jest.config.js",
+    "test:coverage": "jest -c jest.config.js --coverage",
     "ts": "tsc --noEmit --incremental --preserveWatchOutput --pretty",
     "lint": "next lint",
     "lint:fix": "yarn lint --fix",
@@ -22,6 +24,7 @@
     "postbuild": "rimraf ./public/storybook && yarn storybook:build && concurrently \"yarn run sitemap_index:generate\" \"yarn run robots_file:generate\""
   },
   "dependencies": {
+    "@commercetools/checkout-browser-sdk": "^0.7.1",
     "@commercetools/frontend-sdk": "1.13.1",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
@@ -30,6 +33,7 @@
     "flag-icons": "^7.2.0",
     "isomorphic-dompurify": "^1.8.0",
     "markdown": "^0.5.0",
+    "matchmedia-polyfill": "^0.3.2",
     "negotiator": "^0.6.3",
     "next": "^13.4.4",
     "next-client-cookies": "^1.1.0",
@@ -60,6 +64,7 @@
     "@tailwindcss/typography": "^0.5.9",
     "@testing-library/jest-dom": "^6.4.7",
     "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.2",
     "@types/negotiator": "^0.6.1",
     "@types/node": "^20.2.5",

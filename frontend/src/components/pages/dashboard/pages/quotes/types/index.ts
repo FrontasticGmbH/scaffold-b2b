@@ -14,7 +14,7 @@ export interface QuotesPage {
   sortOptions: Option[];
   statusOptions: Array<Option & { count?: number }>;
   onClearRefinements?: () => void;
-  onStatusRefine?: (status: string) => void;
+  onStatusRefine?: (statuses: string[]) => void;
   onCreationDateRefine?: (date: string) => void;
   onSearch?: (search: string) => void;
   onSortBy?: (sort: string) => void;

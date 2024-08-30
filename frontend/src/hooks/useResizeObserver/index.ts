@@ -10,6 +10,8 @@ const useResizeObserver = <T = HTMLElement>(callback: (entry: T) => void, cleanu
   const memoizedCleanup = useCallback((entry: T) => cleanup?.(entry), []);
 
   useEffect(() => {
+    if (!('ResizeObserver' in window)) return;
+
     const observer = new ResizeObserver((entries) => memoizedCallback(entries[0].target as T));
 
     const el = ref.current;

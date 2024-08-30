@@ -51,6 +51,8 @@ const ProductTile = ({
 
   const descriptionItems = (specifications ?? []).filter((item) => !!item.value);
 
+  const maxDescriptionItems = 3;
+
   return (
     <div
       className={classnames(
@@ -101,10 +103,16 @@ const ProductTile = ({
 
         {variant === 'list-item' && (
           <>
-            <ProductAttributes className="mt-3 grid gap-1" attributes={descriptionItems.slice(0, 3)} />
-            {descriptionItems.length > 3 && (
+            <ProductAttributes
+              className="mt-3 grid gap-1"
+              attributes={descriptionItems.slice(0, maxDescriptionItems)}
+            />
+            {descriptionItems.length > maxDescriptionItems && (
               <ShowMore>
-                <ProductAttributes className="mt-1 grid gap-1" attributes={descriptionItems.slice(3)} />
+                <ProductAttributes
+                  className="mt-1 grid gap-1"
+                  attributes={descriptionItems.slice(maxDescriptionItems)}
+                />
               </ShowMore>
             )}
           </>

@@ -16,6 +16,8 @@ import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useAccount from '@/lib/hooks/useAccount';
 import { TasticProps } from '@/lib/tastics/types';
 import { SubmitPurchasePayload } from '@/components/organisms/checkout/types';
+import { isEmptyObject } from '@/utils/object/is-empty-object';
+import { Address } from '@shared/types/account';
 import { Props } from '../../types';
 import usePaymentMethods from '../../hooks/usePaymentMethods';
 
@@ -43,8 +45,14 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   return (
     <Checkout
       initialData={{
-        shippingAddress: cart?.shippingAddress && mapAddress(cart?.shippingAddress),
-        billingAddress: cart?.billingAddress && mapAddress(cart?.billingAddress),
+        shippingAddress:
+          cart?.shippingAddress && !isEmptyObject(cart.shippingAddress)
+            ? mapAddress(cart?.shippingAddress as Address)
+            : undefined,
+        billingAddress:
+          cart?.billingAddress && !isEmptyObject(cart.billingAddress)
+            ? mapAddress(cart?.billingAddress as Address)
+            : undefined,
         shippingMethodId: cart?.shippingInfo?.shippingMethodId,
       }}
       translations={{

@@ -29,7 +29,7 @@ const Checkout = ({
   const { translate } = useTranslation();
 
   return (
-    <CheckoutProvider addresses={addresses}>
+    <CheckoutProvider buyerCanAddComment={buyerCanAddComment}>
       <div className="min-h-screen p-4 md:px-5 lg:bg-neutral-200 lg:px-12 lg:py-6">
         <div className="hidden border-b border-neutral-400 pb-5 pt-3 lg:block">
           <p className="text-20 capitalize leading-normal text-gray-700">

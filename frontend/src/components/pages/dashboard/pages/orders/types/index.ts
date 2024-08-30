@@ -15,7 +15,7 @@ interface OrdersPage {
   sortOptions: Option[];
   statusOptions: Array<Option & { count?: number }>;
   onClearRefinements?: () => void;
-  onStatusRefine?: (status: string) => void;
+  onStatusRefine?: (statuses: string[]) => void;
   onCreationDateRefine?: (args: { from?: Date; to?: Date }) => void;
   onSearch?: (search: string) => void;
   onSortBy?: (sort: string) => void;

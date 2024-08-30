@@ -59,7 +59,11 @@ const RefinementsDrawer = ({
               key={value}
               label={name}
               checked={filters?.status?.includes(value)}
-              onChecked={(checked) => onStatusRefine?.(checked ? value : '')}
+              onChecked={(checked) =>
+                onStatusRefine?.(
+                  checked ? [...(filters?.status ?? []), value] : (filters?.status?.filter((s) => s !== value) ?? []),
+                )
+              }
             />
           ))}
         </div>

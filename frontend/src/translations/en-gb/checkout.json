@@ -8,7 +8,7 @@
   "orderConfirmed": "Your order was confirmed",
   "orderConfirmation": "We have sent your order confirmation and invoice to:",
   "continueShopping": "Continue shopping",
-  "wentWrong": "Something went wrong during payment",
+  "wentWrong": "Something went wrong during payment, please check your payment details and try again.",
   "yourOrderId": "Order id: ",
   "tryAgain": "Try again",
   "backToShop": "Back to shop",
@@ -81,5 +81,6 @@
   "quote.summary": "Quote summary",
   "quote.items": "Items quoted",
   "submit.quote.request": "Submit quote request",
-  "tax.rates.undefined": "There are no tax rates defined for this region"
+  "tax.rates.undefined": "There are no tax rates defined for this region",
+  "your.token.has.expired": "Your checkout token has expired. Pease login again.."
 }

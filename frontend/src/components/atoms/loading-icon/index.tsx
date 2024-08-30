@@ -6,7 +6,7 @@ const LoadingIcon = ({ svgWidth, svgHeight, className = 'fill-white' }: LoadingI
   const spinningSectorClassName = `absolute right-0 top-0 flex animate-spin justify-end`;
 
   return (
-    <div className="relative" style={{ width: svgWidth, height: svgHeight }}>
+    <div data-testid="loading-svg" className="relative" style={{ width: svgWidth, height: svgHeight }}>
       <svg xmlns="http://www.w3.org/2000/svg" width={svgWidth} height={svgWidth} viewBox="0 0 20 20" fill="none">
         <path
           className={className}

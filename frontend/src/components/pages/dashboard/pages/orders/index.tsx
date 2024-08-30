@@ -60,16 +60,14 @@ const OrdersPage = ({
           </div>
         )}
       </div>
-
-      <div className="flex flex-col gap-y-8 overflow-visible">
+      <div className="flex flex-col gap-y-5 overflow-visible lg:gap-y-8">
         <RefinementsDrawer {...refinementProps} />
         <Refinements {...refinementProps} />
         <CurrentRefinements {...currentRefinementsProps} />
-
         {orders.length > 0 ? (
           <OrdersTable orders={orders} pagination={tablePaginationProps} />
         ) : (
-          <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+          <EmptyState header={translate('common.no.results.found')} />
         )}
       </div>
     </div>

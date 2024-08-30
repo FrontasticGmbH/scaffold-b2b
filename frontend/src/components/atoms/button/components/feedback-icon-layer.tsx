@@ -26,11 +26,11 @@ const FeedbackIconLayer: FC<FeedbackIconLayerProps> = ({ loading, variant = 'pri
   const loadingIconClassName = iconInWhite ? 'fill-white' : 'fill-gray-700';
 
   return (
-    <span className={layerClassName}>
+    <span data-testid="feedback-icon-layer" className={layerClassName}>
       {loading ? (
         <LoadingIcon svgWidth={20} svgHeight={20} className={loadingIconClassName} />
       ) : (
-        <CheckIcon className={checkIconClassName} />
+        <CheckIcon data-testid="added-svg" className={checkIconClassName} />
       )}
     </span>
   );

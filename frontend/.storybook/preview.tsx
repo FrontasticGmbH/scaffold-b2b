@@ -2,6 +2,7 @@ import React from 'react';
 import type { Preview } from '@storybook/react';
 import { inter } from '@/fonts';
 import Toaster from '@/components/atoms/toaster';
+import 'tailwindcss/tailwind.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-tooltip/dist/react-tooltip.css';
 import 'flag-icons/css/flag-icons.min.css';
@@ -21,6 +22,11 @@ const preview: Preview = {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/,
+      },
+    },
+    options: {
+      storySort: {
+        order: ['Introduction', 'Atoms', 'Molecules', 'Organisms', 'Pages', '*'],
       },
     },
   },

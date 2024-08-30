@@ -6,16 +6,19 @@ import { classnames } from '@/utils/classnames/classnames';
 import Button from '@/components/atoms/button';
 import toast from 'react-hot-toast';
 import { useCheckout } from '../../provider';
+import { Props as StepProps } from '../../components/step/types';
 import { CheckoutProps } from '../../types';
 
 const ShippingStep = ({
+  isCompleted,
   shippingMethods,
   onCompleteShipping,
   initialData = {},
-}: Pick<CheckoutProps, 'shippingMethods' | 'onCompleteShipping' | 'initialData'>) => {
+}: Pick<CheckoutProps, 'shippingMethods' | 'onCompleteShipping' | 'initialData'> &
+  Pick<StepProps, 'isActive' | 'isCompleted'>) => {
   const { translate } = useTranslation();
 
-  const { activeStep, nextStep, visitedAllSteps, goToLastStep } = useCheckout();
+  const { nextStep, visitedAllSteps, goToLastStep } = useCheckout();
 
   const [loading, setLoading] = useState(false);
 
@@ -37,8 +40,6 @@ const ShippingStep = ({
 
     setLoading(false);
   }, [selectedShippingMethodId, onCompleteShipping, nextStep, translate, visitedAllSteps, goToLastStep]);
-
-  const isCompleted = activeStep > 1;
 
   if (isCompleted) {
     const shippingMethod = shippingMethods.find((method) => method.id === selectedShippingMethodId);

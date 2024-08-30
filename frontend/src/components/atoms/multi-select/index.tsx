@@ -39,7 +39,7 @@ const MultiSelect = ({
         {({ selected, isExpanded }) => {
           if (!enableSearch || !isExpanded)
             return (
-              selected?.map((s) => options.find((option) => option.value === s.value)?.name).join(', ') ?? placeholder
+              selected?.map((s) => options.find((option) => option.value === s.value)?.name).join(', ') || placeholder
             );
 
           return (

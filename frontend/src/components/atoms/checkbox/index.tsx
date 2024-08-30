@@ -14,7 +14,7 @@ const Checkbox = ({
   disabled,
   containerClassName,
   className,
-  defaultChecked,
+  defaultChecked = false,
   size = 'lg',
   ...props
 }: CheckboxProps) => {

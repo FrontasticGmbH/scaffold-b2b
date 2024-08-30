@@ -3,7 +3,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import SearchInput from '@/components/atoms/search-input';
 import Dropdown from '@/components/atoms/dropdown';
 import DatePicker from '@/components/molecules/date-picker';
-import RefinementDropdown from '@/components/atoms/refinement-dropdown';
+import MultiSelect from '@/components/atoms/multi-select';
 import { OrdersPageProps } from '../../types';
 
 const Refinements = ({
@@ -31,19 +31,15 @@ const Refinements = ({
     {
       title: 'common.status',
       Component: (
-        <RefinementDropdown
-          size="lg"
-          className="w-[200px]"
-          options={(statusOptions ?? []).map(({ name, value, count }) => ({
+        <MultiSelect
+          className="min-w-[200px]"
+          value={filters?.status}
+          options={(statusOptions ?? []).map(({ name, value }) => ({
             name,
             value,
-            count,
-            selected: !!filters?.status?.includes(value),
-            onSelected: () => onStatusRefine?.(value),
           }))}
-        >
-          {translate('common.select')}
-        </RefinementDropdown>
+          onChange={onStatusRefine}
+        />
       ),
     },
     {

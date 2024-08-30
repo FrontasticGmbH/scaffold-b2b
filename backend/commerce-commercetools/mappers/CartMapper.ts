@@ -207,7 +207,7 @@ export default class CartMapper {
       orderState: this.commercetoolsOrderStateToOrderState(commercetoolsOrder.orderState),
       orderId: commercetoolsOrder.id,
       orderNumber: commercetoolsOrder.orderNumber,
-      purchaseOrderNumber: commercetoolsOrder.purchaseOrderNumber,
+      purchaseOrderNumber: this.getPurchaseOrderNumber(commercetoolsOrder),
       quoteId: commercetoolsOrder.quote?.id,
       orderVersion: commercetoolsOrder.version.toString(),
       lineItems: this.commercetoolsLineItemsToLineItems(commercetoolsOrder.lineItems, locale),
@@ -595,5 +595,18 @@ export default class CartMapper {
 
   static isCartDiscountReference(reference: Reference): reference is CartDiscountReference {
     return (reference as CartDiscountReference).obj !== undefined;
+  }
+
+  static getPurchaseOrderNumber(commercetoolsOrder: CommercetoolsOrder): string | undefined {
+    if (commercetoolsOrder?.purchaseOrderNumber) {
+      return commercetoolsOrder.purchaseOrderNumber;
+    }
+
+    // CoCo checkout uses custom fields to store the purchase order number
+    const purchaseOrderNumber = commercetoolsOrder?.paymentInfo?.payments?.find(
+      (payment) => payment.obj?.custom?.fields?.purchaseOrderNumber !== undefined,
+    )?.obj?.custom?.fields?.purchaseOrderNumber;
+
+    return purchaseOrderNumber;
   }
 }

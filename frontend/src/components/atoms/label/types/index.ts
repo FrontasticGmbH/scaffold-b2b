@@ -3,4 +3,5 @@ export interface LabelProps {
   requiredStyle?: 'asterisk' | 'label';
   showOptionalLabel?: boolean;
   optionalLabel?: string;
+  htmlFor?: string;
 }

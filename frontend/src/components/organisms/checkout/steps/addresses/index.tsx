@@ -10,22 +10,23 @@ import { Address } from '@/types/entity/address';
 import useDisclosure from '@/hooks/useDisclosure';
 import Confirmation from '@/components/organisms/confirmation';
 import { CheckoutProps } from '../../types';
+import { Props as StepProps } from '../../components/step/types';
 import { useCheckout } from '../../provider';
 
 const AddressesStep = ({
+  isCompleted,
   addresses,
   onAddAddress,
   onCompleteAddresses,
   countryOptions = [],
   initialData = {},
-}: Pick<CheckoutProps, 'addresses' | 'onAddAddress' | 'onCompleteAddresses' | 'countryOptions' | 'initialData'>) => {
-  const { activeStep, nextStep, visitedAllSteps, goToLastStep } = useCheckout();
+}: Pick<CheckoutProps, 'addresses' | 'onAddAddress' | 'onCompleteAddresses' | 'countryOptions' | 'initialData'> &
+  Pick<StepProps, 'isActive' | 'isCompleted'>) => {
+  const { nextStep, visitedAllSteps, goToLastStep } = useCheckout();
 
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState(false);
-
-  const isCompleted = activeStep > 0;
 
   const { translate } = useTranslation();
 

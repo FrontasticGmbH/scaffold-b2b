@@ -8,7 +8,7 @@
   "orderConfirmed": "Uw bestelling is bevestigd",
   "orderConfirmation": "Wij hebben uw orderbevestiging en factuur verzonden naar:",
   "continueShopping": "Doorgaan met winkelen",
-  "wentWrong": "Er is iets misgegaan tijdens de betaling",
+  "wentWrong": "Er is iets misgegaan tijdens de betaling, controleer uw betaalgegevens en probeer het opnieuw.",
   "yourOrderId": "Order ID:",
   "tryAgain": "Probeer het nog eens",
   "backToShop": "Terug naar winkel",
@@ -81,5 +81,6 @@
   "quote.summary": "Offerte samenvatting",
   "quote.items": "Geciteerde artikelen",
   "submit.quote.request": "Offerteaanvraag indienen",
-  "tax.rates.undefined": "Er zijn geen belastingtarieven gedefinieerd voor deze regio"
+  "tax.rates.undefined": "Er zijn geen belastingtarieven gedefinieerd voor deze regio",
+  "your.token.has.expired": "Uw betaaltoken is verlopen. Log opnieuw in.."
 }

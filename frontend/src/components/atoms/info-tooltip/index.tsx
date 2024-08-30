@@ -22,7 +22,13 @@ const InfoTooltip = ({
   return (
     <div className={classnames('flex items-center gap-2', className)}>
       {children}
-      <Icon width={iconWidth} height={iconHeight} data-tooltip-id={id} data-tooltip-content={content} />
+      <Icon
+        width={iconWidth}
+        height={iconHeight}
+        data-testid="tooltip-icon"
+        data-tooltip-id={id}
+        data-tooltip-content={content}
+      />
       <Tooltip id={id} place={place} style={{ zIndex: 10, maxWidth: 230, ...style }} {...props} />
     </div>
   );

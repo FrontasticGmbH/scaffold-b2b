@@ -4,7 +4,6 @@ import useFormat from '@/hooks/useFormat';
 import Image from '@/components/atoms/Image';
 import Costs from '@/components/molecules/costs';
 import Accordion from '@/components/molecules/accordion';
-import Button from '@/components/atoms/button';
 import { ThankYouProps } from '../../types';
 
 const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems' | 'transaction'>) => {
@@ -66,9 +65,9 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
         />
       </div>
 
-      <Button className="mt-5 hidden w-full lg:block" variant="secondary" size="m" disabled>
+      {/* <Button className="mt-5 hidden w-full lg:block" variant="secondary" size="m" disabled>
         {translate('thank-you.download.invoice')}
-      </Button>
+      </Button> */}
     </div>
   );
 };

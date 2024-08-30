@@ -19,7 +19,7 @@ Default.args = {
   bg: 'bg-neutral-200',
   variant: 'default',
   image: {
-    src: '/engine.png',
+    src: './sb-assets/engine.png',
   },
   title: 'Engine',
 };
@@ -28,7 +28,7 @@ export const Inline = Template.bind({});
 Inline.args = {
   variant: 'inline',
   image: {
-    src: '/skoda-logo.png',
+    src: './sb-assets/skoda-logo.png',
   },
   title: 'SKODA',
 };

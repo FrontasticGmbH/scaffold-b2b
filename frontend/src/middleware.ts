@@ -35,6 +35,15 @@ export function middleware(request: NextRequest) {
 
   response.cookies.set('locale', locale, { maxAge: 60 * 60 * 24 * 7 * 4 * 12 * 100 }); // 100 years expiry
 
+  if (
+    process.env.BUILD_CONTEXT === 'deploy-preview' &&
+    process.env.FRONTASTIC_TESTING_SESSION &&
+    request.nextUrl.pathname !== `/${locale}/login/` &&
+    !request.cookies.get('frontastic-session')?.value
+  ) {
+    response.cookies.set('frontastic-session', process.env.FRONTASTIC_TESTING_SESSION);
+  }
+
   return response;
 }
 

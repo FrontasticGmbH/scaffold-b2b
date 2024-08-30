@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Button from '@/components/atoms/button';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -15,8 +15,7 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
 
   const [checkedBoxes, setCheckedBoxes] = useState<Record<string, boolean>>({});
 
-  const selectedIds = Object.keys(checkedBoxes).filter((key) => !!checkedBoxes[key]);
-
+  const selectedIds = useMemo(() => Object.keys(checkedBoxes).filter((key) => !!checkedBoxes[key]), [checkedBoxes]);
   const handleChange = (id: string, checked: boolean) => {
     const updated = { ...checkedBoxes };
     updated[id] = checked;
@@ -27,13 +26,13 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
     async (lists: Wishlist[]) => {
       setLoading(true);
 
-      await onSubmit?.(lists.map((list) => list.id));
+      await onSubmit?.(lists.filter((list) => selectedIds.includes(list.id)).map((list) => list.id));
 
       onClose();
 
       setLoading(false);
     },
-    [onSubmit, onClose],
+    [onSubmit, onClose, selectedIds],
   );
 
   return (

@@ -11,7 +11,7 @@ const Toaster = () => {
       {(t) => (
         <div
           className="w-full md:w-[400px]"
-          style={{ boxShadow: '-1px 8px 24px 0px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.05);' }}
+          style={{ boxShadow: '-1px 8px 24px 0px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.05)' }}
         >
           <ToastBar
             toast={t}
@@ -28,7 +28,11 @@ const Toaster = () => {
                   <span className="block shrink-0">{icon}</span>
                   <ToastMessage>{message}</ToastMessage>
                 </div>
-                <XMarkIcon className="h-5 w-5 shrink-0 hover:cursor-pointer" onClick={() => toast.dismiss(t.id)} />
+                <XMarkIcon
+                  data-testid="toast-dismiss"
+                  className="h-5 w-5 shrink-0 hover:cursor-pointer"
+                  onClick={() => toast.dismiss(t.id)}
+                />
               </div>
             )}
           </ToastBar>

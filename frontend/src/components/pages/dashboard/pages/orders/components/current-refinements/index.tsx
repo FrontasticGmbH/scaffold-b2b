@@ -20,7 +20,7 @@ const CurrentRefinements = ({
       result.push(
         ...filters.status.map((status) => ({
           name: translate(`orders.status.${status.toLowerCase()}`),
-          onRefine: () => onStatusRefine?.(status),
+          onRefine: () => onStatusRefine?.(filters.status?.filter((s) => s !== status) ?? []),
         })),
       );
 
@@ -39,7 +39,7 @@ const CurrentRefinements = ({
   if (!filters?.status?.length && !filters?.createdFrom && !filters?.createdTo) return <></>;
 
   return (
-    <div className="mt-5 lg:mt-8">
+    <div>
       <div className="flex flex-wrap gap-3">
         <div
           className="cursor-pointer rounded-md border border-gray-300 px-2 py-[6px] text-14 leading-[20px] text-gray-700"

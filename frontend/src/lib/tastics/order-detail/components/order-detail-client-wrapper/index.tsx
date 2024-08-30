@@ -28,7 +28,7 @@ const OrderDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSourcePro
 
   const order = data.data?.dataSource?.order;
 
-  const { cancelOrder, replicateOrder } = useOrders({});
+  const { cancelOrder, replicateOrder } = useOrders({ businessUnitKey: selectedBusinessUnit?.key });
 
   if (!order) return <></>;
 

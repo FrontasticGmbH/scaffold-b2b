@@ -27,7 +27,7 @@ const CurrentRefinements = ({ filters, onClearRefinements, onStatusRefine }: Par
               className="cursor-pointer text-gray-700"
               width={16}
               height={16}
-              onClick={() => onStatusRefine?.(state)}
+              onClick={() => onStatusRefine?.(filters.status?.filter((s) => s !== state) ?? [])}
             />
           </div>
         ))}

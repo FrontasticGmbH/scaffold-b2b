@@ -4,7 +4,7 @@ import useCustomRouter from '@/hooks/useCustomRouter';
 import { Option } from '@/components/atoms/select/types';
 import usePath from '@/hooks/usePath';
 import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
-import { useSWRConfig } from 'swr';
+import useCart from '@/lib/hooks/useCart';
 
 const initialMarketState = {
   selectedLanguage: {} as Option,
@@ -15,9 +15,11 @@ const initialMarketState = {
 export const ShipAndLanguageContext = createContext(initialMarketState);
 
 const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
-  const { mutate } = useSWRConfig();
   const router = useCustomRouter();
+
   const { path } = usePath();
+
+  const { mutateAll: mutateAllCarts } = useCart();
 
   const locations = [
     {
@@ -105,8 +107,8 @@ const ShipAndLanguageProvider = ({ children }: React.PropsWithChildren) => {
   const { locale } = useParams();
 
   useEffect(() => {
-    mutate((key: string[]) => key?.[0].startsWith('/action/cart/getCart'), undefined, { revalidate: true });
-  }, [locale, mutate]);
+    mutateAllCarts();
+  }, [locale, mutateAllCarts]);
 
   const [selectedLocationValue, setSelectedLocationValue] = useState(locale.split('-')[1]);
 

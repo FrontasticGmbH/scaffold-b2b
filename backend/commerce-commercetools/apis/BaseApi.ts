@@ -9,7 +9,7 @@ import {
   ProductType as CommercetoolsProductType,
   Project as CommercetoolsProject,
 } from '@commercetools/platform-sdk';
-import { Context } from '@frontastic/extension-types';
+import { Context, Request } from '@frontastic/extension-types';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
 import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 import { Token } from '@Types/Token';
@@ -431,7 +431,12 @@ export default abstract class BaseApi {
   protected checkoutHashKey: string;
   protected commercetoolsFrontendContext: Context;
 
-  constructor(commercetoolsFrontendContext: Context, locale: string | null, currency: string | null) {
+  constructor(
+    commercetoolsFrontendContext: Context,
+    locale: string | null,
+    currency: string | null,
+    request?: Request | null,
+  ) {
     this.defaultLocale = commercetoolsFrontendContext.project.defaultLocale;
     this.defaultCurrency = defaultCurrency;
 
@@ -451,6 +456,17 @@ export default abstract class BaseApi {
     this.checkoutHashKey = null;
 
     this.commercetoolsFrontendContext = commercetoolsFrontendContext;
+    this.sessionData = request?.sessionData ?? {};
+  }
+
+  invalidateSessionCheckoutData(): void {
+    this.invalidateSessionCheckoutSessionToken();
+  }
+
+  invalidateSessionCheckoutSessionToken(): void {
+    if (this.sessionData?.checkoutSessionToken) {
+      this.sessionData.checkoutSessionToken = undefined;
+    }
   }
 
   protected requestBuilder(): ByProjectKeyRequestBuilder {
@@ -665,6 +681,10 @@ export default abstract class BaseApi {
 
   async setSessionCheckoutSessionToken(cartId: string, token: Token): Promise<void> {
     const checkoutHashKey = await this.getCheckoutHashKey(cartId);
+
+    if (!this.sessionData) {
+      this.sessionData = {};
+    }
 
     this.sessionData.checkoutSessionToken = {};
     this.sessionData.checkoutSessionToken[checkoutHashKey] = token;

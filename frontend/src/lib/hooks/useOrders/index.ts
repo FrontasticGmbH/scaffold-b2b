@@ -60,10 +60,14 @@ const useOrders = ({
 
   const cancelOrder = useCallback(
     async (order: Order) => {
-      const response = await sdk.callAction({
-        actionName: 'cart/cancelOrder',
-        payload: { orderId: order.orderNumber, businessUnitKey },
-      });
+      if (!order.orderNumber || !businessUnitKey) return {} as Order;
+
+      const response = await sdk.composableCommerce.cart.cancelOrder(
+        {
+          orderId: order.orderNumber,
+        },
+        { businessUnitKey },
+      );
 
       mutateAll();
 

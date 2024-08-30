@@ -18,7 +18,13 @@ const PasswordInput: FC<InputProps> = (props) => {
   return (
     <Input
       type={hidden ? 'password' : 'text'}
-      icon={hidden ? <EyeSlashIcon {...iconProps} /> : <EyeIcon {...iconProps} />}
+      icon={
+        hidden ? (
+          <EyeSlashIcon data-testid="show-password-icon" {...iconProps} />
+        ) : (
+          <EyeIcon data-testid="hide-password-icon" {...iconProps} />
+        )
+      }
       className="py-[8px]"
       {...props}
     />
