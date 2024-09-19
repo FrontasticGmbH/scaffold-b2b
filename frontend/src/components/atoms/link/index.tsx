@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { classnames } from '@/utils/classnames/classnames';
 import { ChevronRightIcon as ChevronIcon } from '@heroicons/react/24/solid';
 import { constructLocalizedUrl } from '@/utils/links';
+import { Locale } from '@/project.config';
 import { LinkProps } from './types';
 
 const Link = ({
@@ -18,7 +19,7 @@ const Link = ({
   underlineOnHover = true,
   ...props
 }: LinkProps) => {
-  const { locale } = useParams();
+  const { locale } = useParams<{ locale: Locale }>();
 
   const linkClassName = classnames(className, 'w-fit', {
     'underline-offset-4 hover:underline': underlineOnHover,

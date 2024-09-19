@@ -3,12 +3,12 @@ import Typography from '@/components/atoms/typography';
 import FlagIcons from '@/components/atoms/icons/flag-icons';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Dropdown from '@/components/atoms/dropdown';
-import { ShipAndLanguageContext } from '@/providers/ship-and-language';
+import { useShipAndLanguage } from '@/providers/ship-and-language';
 import { HeaderContext } from '@/components/organisms/header/context';
 import { Location } from '../../types';
 
 const ShippingSelect = () => {
-  const { locations, selectedLocation, onLocationSelect } = useContext(ShipAndLanguageContext);
+  const { locations, selectedLocation, onLocationSelect } = useShipAndLanguage();
   const { showMenu } = useContext(HeaderContext);
   const { translate } = useTranslation();
   const [shippingMenuTop, setShippingMenuTop] = useState(false);

@@ -4,6 +4,7 @@ import { Address } from '@Types/account/Address';
 import { Order, OrderState, ReturnLineItem } from '@Types/cart/Order';
 import {
   Cart as CommercetoolsCart,
+  Order as CommercetoolsOrder,
   CartAddPaymentAction,
   CartDraft,
   CartRemoveDiscountCodeAction,
@@ -11,6 +12,7 @@ import {
   CartSetShippingAddressAction,
   CartSetShippingMethodAction,
   OrderFromCartDraft,
+  OrderUpdate,
 } from '@commercetools/platform-sdk';
 import {
   CartAddDiscountCodeAction,
@@ -44,6 +46,14 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPaymentNotFoundError';
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
+
+const CART_EXPANDS = [
+  'lineItems[*].discountedPrice.includedDiscounts[*].discount',
+  'discountCodes[*].discountCode',
+  'paymentInfo.payments[*]',
+];
+const ORDER_EXPANDS = [...CART_EXPANDS, 'orderState'];
+const SHIPPING_METHOD_EXPANDS = ['zoneRates[*].zone'];
 
 export default class CartApi extends BaseApi {
   protected accountId: string;
@@ -80,11 +90,7 @@ export default class CartApi extends BaseApi {
       .get({
         queryArgs: {
           limit: 1,
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-          ],
+          expand: CART_EXPANDS,
         },
       })
       .execute()
@@ -120,11 +126,7 @@ export default class CartApi extends BaseApi {
       .get({
         queryArgs: {
           limit: 15,
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-          ],
+          expand: CART_EXPANDS,
           where,
           sort: 'createdAt desc',
         },
@@ -160,11 +162,7 @@ export default class CartApi extends BaseApi {
       .carts()
       .post({
         queryArgs: {
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-          ],
+          expand: CART_EXPANDS,
         },
         body: cartDraft,
       })
@@ -354,11 +352,7 @@ export default class CartApi extends BaseApi {
       .orders()
       .post({
         queryArgs: {
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-          ],
+          expand: ORDER_EXPANDS,
         },
         body: orderFromCartDraft,
       })
@@ -377,12 +371,7 @@ export default class CartApi extends BaseApi {
       .withOrderNumber({ orderNumber: orderId })
       .get({
         queryArgs: {
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-            'state',
-          ],
+          expand: ORDER_EXPANDS,
         },
       })
       .execute()
@@ -399,6 +388,7 @@ export default class CartApi extends BaseApi {
       if (order.orderState === OrderState.Complete) {
         throw 'Cannot cancel a Completed order.';
       }
+
       return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .orders()
         .withOrderNumber({ orderNumber: orderId })
@@ -413,11 +403,7 @@ export default class CartApi extends BaseApi {
             ],
           },
           queryArgs: {
-            expand: [
-              'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-              'discountCodes[*].discountCode',
-              'paymentInfo.payments[*]',
-            ],
+            expand: ORDER_EXPANDS,
           },
         })
         .execute()
@@ -448,6 +434,9 @@ export default class CartApi extends BaseApi {
               },
             ],
           },
+          queryArgs: {
+            expand: ORDER_EXPANDS,
+          },
         })
         .execute()
         .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale))
@@ -462,7 +451,7 @@ export default class CartApi extends BaseApi {
 
     const methodArgs = {
       queryArgs: {
-        expand: ['zoneRates[*].zone'],
+        expand: SHIPPING_METHOD_EXPANDS,
         country: undefined as unknown | any,
       },
     };
@@ -494,7 +483,7 @@ export default class CartApi extends BaseApi {
       .matchingCart()
       .get({
         queryArgs: {
-          expand: ['zoneRates[*].zone'],
+          expand: SHIPPING_METHOD_EXPANDS,
           cartId: cart.cartId,
         },
       })
@@ -717,25 +706,6 @@ export default class CartApi extends BaseApi {
     return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
   }
 
-  async getBusinessUnitOrders(): Promise<Order[]> {
-    const locale = await this.getCommercetoolsLocal();
-
-    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
-      .orders()
-      .get({
-        queryArgs: {
-          expand: ['state'],
-          where: `businessUnit(key="${this.businessUnitKey}")`,
-          sort: 'createdAt desc',
-        },
-      })
-      .execute()
-      .then((response) => response.body.results.map((order) => CartMapper.commercetoolsOrderToOrder(order, locale)))
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-      });
-  }
-
   assertCartForBusinessUnitAndStore: (cart: Cart, businessUnitKey?: string, storeKey?: string) => boolean = (
     cart: Cart,
     businessUnitKey?: string,
@@ -893,12 +863,12 @@ export default class CartApi extends BaseApi {
       whereClause.push(`createdAt < "${orderQuery.created.to.toISOString()}"`);
     }
 
-    return this.associateEndpoints(this.accountId, this.businessUnitKey)
+    const queryResult = await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .get({
         queryArgs: {
           where: whereClause,
-          expand: ['orderState'],
+          expand: ORDER_EXPANDS,
           limit: limit,
           offset: getOffsetFromCursor(orderQuery.cursor),
           sort: sortAttributes,
@@ -923,10 +893,44 @@ export default class CartApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
+
+    // If the order was created without an order number, set one now
+    queryResult.items = await Promise.all(
+      queryResult.items.map(async (order) => {
+        if (!order.orderNumber) {
+          return await this.setOrderNumber(order);
+        }
+        return order;
+      }),
+    );
+
+    return queryResult;
   }
 
   async getCheckoutSessionToken(cartId: string): Promise<Token> {
     return await this.generateCheckoutSessionToken(cartId);
+  }
+
+  protected async setOrderNumber(order: Order): Promise<Order> {
+    const locale = await this.getCommercetoolsLocal();
+
+    // By default, the order number is generated using the order creation date
+    const date = new Date(order.createdAt);
+    const orderNumber = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}-${String(Date.now()).slice(-6, -1)}`;
+
+    const orderUpdate: OrderUpdate = {
+      version: +order.orderVersion,
+      actions: [
+        {
+          action: 'setOrderNumber',
+          orderNumber,
+        },
+      ],
+    };
+
+    const commercetoolsOrder = await this.updateOrder(order.orderId, orderUpdate);
+
+    return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale);
   }
 
   protected async assertCorrectLocale(commercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {
@@ -981,14 +985,8 @@ export default class CartApi extends BaseApi {
       'taxMode',
       'taxRoundingMode',
       'taxCalculationMode',
-      'shippingAddress',
-      'billingAddress',
-      'shippingMethod',
-      'externalTaxRateForShippingMethod',
       'deleteDaysAfterLastModification',
       'origin',
-      'shippingRateInput',
-      'itemShippingAddresses',
     ];
 
     // Commercetools cart only accepts customerId or anonymousId
@@ -1006,11 +1004,7 @@ export default class CartApi extends BaseApi {
       .carts()
       .post({
         queryArgs: {
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-          ],
+          expand: CART_EXPANDS,
         },
         body: cartDraft,
       })
@@ -1065,13 +1059,30 @@ export default class CartApi extends BaseApi {
       })
       .post({
         queryArgs: {
-          expand: [
-            'lineItems[*].discountedPrice.includedDiscounts[*].discount',
-            'discountCodes[*].discountCode',
-            'paymentInfo.payments[*]',
-          ],
+          expand: CART_EXPANDS,
         },
         body: cartUpdate,
+      })
+      .execute()
+      .then((response) => {
+        return response.body;
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
+  }
+
+  protected async updateOrder(orderId: string, orderUpdate: OrderUpdate): Promise<CommercetoolsOrder> {
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
+      .orders()
+      .withId({
+        ID: orderId,
+      })
+      .post({
+        queryArgs: {
+          expand: ORDER_EXPANDS,
+        },
+        body: orderUpdate,
       })
       .execute()
       .then((response) => {
