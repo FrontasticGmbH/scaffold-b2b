@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import Checkout from '@/components/organisms/checkout';
-import countries from '@/static/countries.json';
 import { resolveReference } from '@/utils/lib/resolve-reference';
 import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
 import useCart from '@/lib/hooks/useCart';
@@ -18,11 +17,15 @@ import { TasticProps } from '@/lib/tastics/types';
 import { isEmptyObject } from '@/utils/object/is-empty-object';
 import { Address } from '@/types/entity/address';
 import useApprovalFlows from '@/lib/hooks/useApprovalFlows';
+import useProjectSettings from '@/lib/hooks/useProjectSettings';
+import { mapCountry } from '@/utils/mappers/map-country';
 import { Props } from '../../types';
 import usePaymentMethods from '../../hooks/usePaymentMethods';
 
 const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   const router = useCustomRouter();
+
+  const { projectSettings } = useProjectSettings();
 
   const { account } = useAccount();
 
@@ -83,7 +86,7 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
       products={(cart?.lineItems ?? []).map(mapLineItem)}
       addresses={selectedBusinessUnit?.addresses ?? []}
       shippingMethods={(cart?.availableShippingMethods ?? []).map(mapShippingMethod)}
-      countryOptions={countries.map(({ name, code, states }) => ({
+      countryOptions={(projectSettings?.countries ?? []).map(mapCountry).map(({ name, code, states }) => ({
         name,
         value: code,
         states: states.map(({ name, code }) => ({ name, value: code })),

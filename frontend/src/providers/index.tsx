@@ -27,6 +27,7 @@ export const Providers = ({
               '/action/account/getAccount': { data: initialData.account },
               '/action/business-unit/getBusinessUnits': { data: initialData.businessUnits },
               '/action/business-unit/getAssociate': { data: initialData.associate },
+              '/action/project/getProjectSettings': { data: initialData.projectSettings },
             },
           }}
         >

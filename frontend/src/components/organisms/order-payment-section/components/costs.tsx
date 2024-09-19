@@ -2,6 +2,7 @@ import { useParams } from 'next/navigation';
 import { classnames } from '@/utils/classnames/classnames';
 import { CurrencyHelpers } from '@/utils/currency-helpers';
 import Typography from '@/components/atoms/typography';
+import { Locale } from '@/project.config';
 import useCostsData from '../hooks/useCostsData';
 import { CostsProps } from '../types';
 
@@ -14,7 +15,7 @@ const Costs = ({
   subCostClassName,
   totalAmountClassName,
 }: CostsProps) => {
-  const { locale } = useParams();
+  const { locale } = useParams<{ locale: Locale }>();
   const { loading, costsToRender, total } = useCostsData({ dataReference, order, cart });
 
   const totalAmountClassNames = classnames('mt-6 flex items-center justify-between font-medium', totalAmountClassName);

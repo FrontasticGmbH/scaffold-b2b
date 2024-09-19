@@ -7,6 +7,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import useAccount from '@/lib/hooks/useAccount';
 import useCustomRouter from '@/hooks/useCustomRouter';
+import { Locale } from '@/project.config';
 import { CheckoutProps } from '../../types';
 import { useCheckout } from '../../provider';
 import { Props as StepProps } from '../../components/step/types';
@@ -32,7 +33,7 @@ const CommercetoolsPayment = ({
 
   const { session, isExpired } = useSession();
 
-  const { locale } = useParams();
+  const { locale } = useParams<{ locale: Locale }>();
 
   const { projectSettings } = useProjectSettings();
 

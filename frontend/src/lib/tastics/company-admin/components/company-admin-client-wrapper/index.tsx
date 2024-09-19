@@ -6,12 +6,13 @@ import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import Dashboard from '@/components/pages/dashboard';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useAccount from '@/lib/hooks/useAccount';
-import countries from '@/static/countries.json';
 import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
 import { mapAssociate } from '@/utils/mappers/map-associate';
 import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import { CompanyAdminPageProps } from '@/components/pages/dashboard/pages/company-admin/types';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import useProjectSettings from '@/lib/hooks/useProjectSettings';
+import { mapCountry } from '@/utils/mappers/map-country';
 import useSearch from '../../hooks/useSearch';
 import useRole from '../../hooks/useRole';
 import useStore from '../../hooks/useStore';
@@ -19,6 +20,8 @@ import useBusinessUnit from '../../hooks/useBusinessUnit';
 import useSubPath from '../../hooks/useSubPath';
 
 const CompanyAdminClientWrapper = () => {
+  const { projectSettings } = useProjectSettings();
+
   const { activeBusinessUnit, onBusinessUnitSelected, businessUnits } = useBusinessUnit();
 
   const {
@@ -56,7 +59,7 @@ const CompanyAdminClientWrapper = () => {
     businessUnitOptions: businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' })),
     initialBusinessUnit: activeBusinessUnit?.key,
     onBusinessUnitChange: onBusinessUnitSelected,
-    countryOptions: countries.map(({ name, code, states }) => ({
+    countryOptions: (projectSettings?.countries ?? []).map(mapCountry).map(({ name, code, states }) => ({
       name,
       value: code,
       states: states.map(({ name, code }) => ({ name, value: code })),
