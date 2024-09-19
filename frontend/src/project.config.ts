@@ -1,88 +1,94 @@
 import { Currency } from '@commercetools/frontend-sdk/lib/types/Currency';
 
 interface LocalizationMapping {
-  name: string;
   locale: string;
   currency: Currency;
-  countries: string[];
+  currencyCode: string;
+  countryCode: string;
+  countryName: string;
 }
 
 const localizationMapper = {
   'en-us': {
-    name: 'English - US',
     locale: 'en_US',
     currency: 'USD',
-    countries: ['US'],
+    currencyCode: '$',
+    countryCode: 'US',
+    countryName: 'United States',
   },
   'en-gb': {
-    name: 'English - GB',
     locale: 'en_GB',
     currency: 'GBP',
-    countries: ['GB'],
+    currencyCode: '£',
+    countryCode: 'GB',
+    countryName: 'United Kingdom',
   },
   'en-au': {
-    name: 'English - AU',
     locale: 'en_AU',
     currency: 'AUD',
-    countries: ['AU'],
+    currencyCode: 'A$',
+    countryCode: 'AU',
+    countryName: 'Australia',
   },
   'en-nz': {
-    name: 'English - NZ',
     locale: 'en_NZ',
     currency: 'NZD',
-    countries: ['NZ'],
+    currencyCode: 'NZ$',
+    countryCode: 'NZ',
+    countryName: 'New Zealand',
   },
   'de-de': {
-    name: 'German - DE',
     locale: 'de_DE',
     currency: 'EUR',
-    countries: ['DE'],
+    currencyCode: '€',
+    countryCode: 'DE',
+    countryName: 'Germany',
   },
   'fr-fr': {
-    name: 'French - FR',
     locale: 'fr_FR',
     currency: 'EUR',
-    countries: ['FR'],
+    currencyCode: '€',
+    countryCode: 'FR',
+    countryName: 'France',
   },
   'es-es': {
-    name: 'Spanish - ES',
     locale: 'es_ES',
     currency: 'EUR',
-    countries: ['ES'],
+    currencyCode: '€',
+    countryCode: 'ES',
+    countryName: 'Spain',
   },
   'pt-pt': {
-    name: 'Portuguese - PT',
     locale: 'pt_PT',
     currency: 'EUR',
-    countries: ['PT'],
+    currencyCode: '€',
+    countryCode: 'PT',
+    countryName: 'Portugal',
   },
   'nl-nl': {
-    name: 'Dutch - NL',
     locale: 'nl_NL',
     currency: 'EUR',
-    countries: ['NL'],
+    currencyCode: '€',
+    countryCode: 'NL',
+    countryName: 'Netherlands',
   },
   'it-it': {
-    name: 'Italian - IT',
     locale: 'it_IT',
     currency: 'EUR',
-    countries: ['IT'],
+    currencyCode: '€',
+    countryCode: 'IT',
+    countryName: 'Italy',
   },
 } as Record<string, LocalizationMapping>;
 
 const locales = Object.keys(localizationMapper);
 const defaultLocale = locales[0];
+const countries = Object.values(localizationMapper).map(({ countryCode, countryName }) => ({
+  countryCode,
+  countryName,
+}));
 
-export const i18nConfig = {
-  defaultLocale: locales[0] as LocaleCode,
-  locales: locales as LocaleCode[],
-};
-
-export const i18n = i18nConfig;
-
-export type LocaleCode = keyof typeof localizationMapper;
-
-export type Locale = (typeof i18nConfig)['locales'][number];
+export const i18nConfig = { locales, defaultLocale, countries };
 
 export const getLocalizationInfo = (locale: string) => {
   if (!(locale in localizationMapper)) {

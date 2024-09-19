@@ -20,7 +20,7 @@ Primary.args = {
   countryOptions: countries.map(({ name, code, states }) => ({
     name,
     value: code,
-    states: (states ?? []).map(({ name, code }) => ({ name, value: code })),
+    states: states.map(({ name, code }) => ({ name, value: code })),
   })),
   roleOptions: [
     { name: 'Buyer', value: 'Buyer' },

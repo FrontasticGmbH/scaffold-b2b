@@ -7,17 +7,14 @@ import AddressesPage from '@/components/pages/dashboard/pages/addresses';
 import { AddressesPageProps } from '@/components/pages/dashboard/pages/addresses/types';
 import useAccount from '@/lib/hooks/useAccount';
 import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
+import countries from '@/static/countries.json';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
-import useProjectSettings from '@/lib/hooks/useProjectSettings';
-import { mapCountry } from '@/utils/mappers/map-country';
 import useSubPath from '../../hooks/useSubPath';
 import useSearch from '../../hooks/useSearch';
 
 const AddressesClientWrapper = () => {
-  const { projectSettings } = useProjectSettings();
-
   const { account, isLoading } = useAccount();
 
   const { selectedBusinessUnit } = useStoreAndBusinessUnits();
@@ -58,7 +55,7 @@ const AddressesClientWrapper = () => {
       const addressRes = await removeAddress({ addressId, businessUnitKey: selectedBusinessUnit?.key });
       return !!addressRes.businessUnitId;
     },
-    countryOptions: (projectSettings?.countries ?? []).map(mapCountry).map(({ name, code, states }) => ({
+    countryOptions: countries.map(({ name, code, states }) => ({
       name,
       value: code,
       states: states.map(({ name, code }) => ({ name, value: code })),

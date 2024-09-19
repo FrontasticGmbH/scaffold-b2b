@@ -7,7 +7,7 @@ import {
 } from '@shared/types/business-unit';
 import { ApprovalRule as EntityApprovalRule } from '@/types/entity/approval-rule';
 import { Group, Rule } from '@/components/organisms/rule-builder/types';
-import { ApprovalRuleConfig } from '@/lib/tastics/approval-rules/config/approval-rules';
+import { approvalRulesConfig } from '@/lib/tastics/approval-rules/config/approval-rules';
 
 export const mapCoCoApproversTiers = (approvers: EntityApprovalRule['approvers']): ApproverConjunction[] => {
   if (!approvers) return [];
@@ -31,10 +31,7 @@ export const mapCoCoApproversTiers = (approvers: EntityApprovalRule['approvers']
   return approvers.map((group) => group.rules.map(_mapApproverHierarchy)).map((group) => ({ and: group }));
 };
 
-export const mapCoCoRulesPredicate = (
-  rules: EntityApprovalRule['rules'],
-  approvalRulesConfig: ApprovalRuleConfig,
-): string => {
+export const mapCoCoRulesPredicate = (rules: EntityApprovalRule['rules']): string => {
   if (!rules) return '';
 
   const _mapRulePredicate = (rule: Group | Rule): string => {
@@ -63,21 +60,18 @@ export const mapCoCoRulesPredicate = (
   return _mapRulePredicate(rules[0]);
 };
 
-export const mapCoCoApprovalRule = (
-  approvalRule: EntityApprovalRule,
-  approvalRulesConfig: ApprovalRuleConfig,
-): ApprovalRule => {
+export const mapCoCoApprovalRule = (approvalRule: EntityApprovalRule): ApprovalRule => {
   return {
     name: approvalRule.name,
     description: approvalRule.description,
     requesters: approvalRule.requesters,
     approvalRuleStatus: approvalRule.status === 'active' ? 'Active' : 'Inactive',
     approvers: { tiers: mapCoCoApproversTiers(approvalRule.approvers) },
-    predicate: mapCoCoRulesPredicate(approvalRule.rules, approvalRulesConfig),
+    predicate: mapCoCoRulesPredicate(approvalRule.rules),
   };
 };
 
-export const mapRulesPredicate = (predicate: string, approvalRulesConfig: ApprovalRuleConfig): Group[] => {
+export const mapRulesPredicate = (predicate: string): Group[] => {
   const _mapPredicate = (predicate: string): Group => {
     const rules = [] as Array<Group | Rule>;
 
@@ -159,17 +153,14 @@ export const mapApproversTiers = (approversHierarchy: ApproverHierarchy): Group[
     })) as Group[];
 };
 
-export const mapApprovalRule = (
-  approvalRule: ApprovalRule,
-  approvalRulesConfig: ApprovalRuleConfig,
-): EntityApprovalRule => {
+export const mapApprovalRule = (approvalRule: ApprovalRule): EntityApprovalRule => {
   return {
     id: approvalRule.approvalRuleId ?? approvalRule.key ?? '',
     name: approvalRule.name,
     description: approvalRule.description,
     requesters: approvalRule.requesters.map(({ key, name }) => ({ key: key ?? '', name: name ?? key ?? '' })),
     status: (approvalRule.approvalRuleStatus ?? 'Inactive').toLowerCase() as EntityApprovalRule['status'],
-    rules: mapRulesPredicate(approvalRule.predicate, approvalRulesConfig),
+    rules: mapRulesPredicate(approvalRule.predicate),
     approvers: mapApproversTiers(approvalRule.approvers),
   };
 };

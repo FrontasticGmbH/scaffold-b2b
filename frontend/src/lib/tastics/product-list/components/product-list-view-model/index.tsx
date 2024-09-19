@@ -60,7 +60,7 @@ const ProductListViewModel = ({
       ]
     : [
         { name: translate('common.home'), link: '/' },
-        ...(slug ?? '').split('/').map((chunk, index, arr) => ({
+        ...slug.split('/').map((chunk, index, arr) => ({
           name: chunk.replace(/[-_]/g, ' '),
           link: `/${arr.slice(0, index + 1).join('/')}`,
         })),

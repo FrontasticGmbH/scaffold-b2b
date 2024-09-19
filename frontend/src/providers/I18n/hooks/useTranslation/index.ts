@@ -1,13 +1,12 @@
 import { useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { Locale } from '@/project.config';
 import { TranslationOptions } from './types';
 import { useI18n } from '../..';
 
 const useTranslation = () => {
   const { translations } = useI18n();
 
-  const { locale } = useParams<{ locale: Locale }>();
+  const { locale } = useParams();
 
   const translate = useCallback(
     (token: string, { values = {}, defaultMessage = '' }: TranslationOptions = {}) => {

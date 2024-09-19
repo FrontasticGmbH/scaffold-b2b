@@ -9,7 +9,10 @@ const Toaster = () => {
   return (
     <ReactToaster>
       {(t) => (
-        <div className="w-full md:w-[400px]">
+        <div
+          className="w-full md:w-[400px]"
+          style={{ boxShadow: '-1px 8px 24px 0px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.05)' }}
+        >
           <ToastBar
             toast={t}
             style={{
@@ -17,7 +20,6 @@ const Toaster = () => {
               height: '100%',
               padding: '12px',
               margin: '0px auto',
-              boxShadow: '-1px 8px 24px 0px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.05)',
             }}
           >
             {({ icon, message }) => (
