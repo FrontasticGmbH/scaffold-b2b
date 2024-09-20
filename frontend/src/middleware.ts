@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Negotiator from 'negotiator';
-import { i18n, Locale, LocaleCode } from './project.config';
+import { i18nConfig } from './project.config';
 
 export function middleware(request: NextRequest) {
   const headers = Object.fromEntries(request.headers.entries());
@@ -8,18 +8,18 @@ export function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname + (search ? `?${search}` : '');
 
-  const pathMissingLocale = i18n.locales.every((locale) => !path.startsWith(`/${locale}/`));
+  const pathMissingLocale = i18nConfig.locales.every((locale) => !path.startsWith(`/${locale}/`));
 
-  let locale: Locale;
+  let locale: string;
   let response: NextResponse;
 
   if (pathMissingLocale) {
-    const storedLocale = request.cookies.get('locale')?.value as Locale | undefined;
-    const preferredLocale = new Negotiator({ headers }).language(i18n.locales) as Locale | undefined;
+    const storedLocale = request.cookies.get('locale')?.value;
+    const preferredLocale = new Negotiator({ headers }).language(i18nConfig.locales);
 
-    locale = [storedLocale, preferredLocale, i18n.defaultLocale].find(
-      (l): l is Locale => l !== undefined && i18n.locales.includes(l),
-    ) as Locale;
+    locale = [storedLocale, preferredLocale, i18nConfig.defaultLocale]
+      .filter(Boolean)
+      .filter((l) => i18nConfig.locales.includes(l as string))[0] as string;
 
     response = NextResponse.redirect(new URL(`/${locale}${path}`, request.url));
   } else {

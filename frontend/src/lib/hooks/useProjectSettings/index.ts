@@ -4,8 +4,8 @@ import { sdk } from '@/sdk';
 import { ProjectSettings } from './types';
 
 const useProjectSettings = () => {
-  const response = useSWR<SDKResponse<ProjectSettings>>('/action/project/getProjectSettings', () =>
-    sdk.composableCommerce.project.getSettings({ skipQueue: true }),
+  const response = useSWR<SDKResponse<ProjectSettings>>('action/project/getProjectSettings', () =>
+    sdk.callAction({ actionName: 'project/getProjectSettings' }),
   );
 
   const projectSettings = response.data?.isError ? {} : response.data?.data;

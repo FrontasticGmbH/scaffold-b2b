@@ -32,10 +32,6 @@ const Cart = ({
 
   const [lineItems, setLineItems] = useState<Array<Product & { deleted?: boolean }> | undefined>(lineItemsProp);
 
-  const allItemsAreDeleted = !lineItems?.filter((item) => !item.deleted).length;
-
-  const containsOutOfStockItem = lineItems?.some((item) => !item.inStock);
-
   useEffect(() => {
     if (!lineItemsProp) return;
 
@@ -67,7 +63,7 @@ const Cart = ({
     onClear,
     checkoutDisabled,
     quoteRequestDisabled,
-    disabled: allItemsAreDeleted || containsOutOfStockItem,
+    disabled: (lineItems ?? []).filter((item) => !item.deleted).some((item) => !item.inStock),
   };
 
   if (viewCartDisabled) {

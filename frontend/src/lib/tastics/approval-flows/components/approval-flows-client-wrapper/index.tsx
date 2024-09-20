@@ -10,11 +10,8 @@ import useCustomRouter from '@/hooks/useCustomRouter';
 import { ApprovalFlowStatus } from '@/types/entity/approval-flow';
 import useApprovalFlows from '@/lib/hooks/useApprovalFlows';
 import { mapApprovalFlow, mapCoCoApprovalFlowStatus } from '@/utils/mappers/map-approval-flow';
-import useProjectSettings from '@/lib/hooks/useProjectSettings';
-import { generateApprovalRulesConfig } from '@/lib/tastics/approval-rules/config/approval-rules';
-import { mapCountry } from '@/utils/mappers/map-country';
-import useRefinements from '../../hooks/useRefinements';
 import useBusinessUnit from '../../hooks/useBusinessUnit';
+import useRefinements from '../../hooks/useRefinements';
 
 const ApprovalFlowsClientWrapper = () => {
   const router = useCustomRouter();
@@ -22,12 +19,6 @@ const ApprovalFlowsClientWrapper = () => {
   const searchParams = useSearchParams();
 
   const defaultStatus = searchParams.get('selected') ?? 'pending';
-
-  const { projectSettings } = useProjectSettings();
-
-  const approvalRulesConfig = generateApprovalRulesConfig({
-    countries: (projectSettings?.countries ?? []).map(mapCountry),
-  });
 
   const [selectedStatus, setSelectedStatus] = useState<ApprovalFlowStatus>(defaultStatus as ApprovalFlowStatus);
 
@@ -77,7 +68,7 @@ const ApprovalFlowsClientWrapper = () => {
             refinements[selectedStatus].setLimit(+newLimit);
           },
         }}
-        approvalFlows={approvalFlows.map((flow) => mapApprovalFlow(flow, approvalRulesConfig))}
+        approvalFlows={approvalFlows.map(mapApprovalFlow)}
         loading={isLoading}
       />
     </Dashboard>

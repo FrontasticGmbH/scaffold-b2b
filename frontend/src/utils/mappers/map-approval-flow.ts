@@ -1,4 +1,3 @@
-import { ApprovalRuleConfig } from '@/lib/tastics/approval-rules/config/approval-rules';
 import { ApprovalFlow, ApprovalFlowStatus } from '@/types/entity/approval-flow';
 import {
   ApprovalFlow as CoCoApprovalFlow,
@@ -31,16 +30,13 @@ export const mapApprovalFlowStatus = (status: CoCoApprovalFlowStatus): ApprovalF
   }
 };
 
-export const mapApprovalFlow = (
-  approvalFlow: CoCoApprovalFlow,
-  approvalRulesConfig: ApprovalRuleConfig,
-): ApprovalFlow => {
+export const mapApprovalFlow = (approvalFlow: CoCoApprovalFlow): ApprovalFlow => {
   return {
     id: approvalFlow.approvalFlowId,
     date: approvalFlow.order.createdAt ? new Date(approvalFlow.order.createdAt).toISOString() : '',
     status: mapApprovalFlowStatus(approvalFlow.approvalFlowStatus ?? 'Pending'),
     businessUnit: { key: approvalFlow.businessUnitKey },
-    rules: approvalFlow.approvalRules.map((rule) => mapApprovalRule(rule, approvalRulesConfig)) ?? [],
+    rules: approvalFlow.approvalRules.map(mapApprovalRule) ?? [],
     order: mapOrder(approvalFlow.order),
     approvals: (approvalFlow.approvalFlowApprovals ?? []).map((approval) => ({
       approvedAt: approval.approvedAt ? new Date(approval.approvedAt).toISOString() : '',

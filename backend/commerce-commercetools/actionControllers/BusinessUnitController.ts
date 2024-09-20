@@ -5,7 +5,6 @@ import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { ApprovalRule } from '@Types/business-unit';
 import { ApprovalRuleQuery } from '@Types/business-unit/ApprovalRule';
 import { ApprovalFlowsQuery } from '@Types/business-unit/ApprovalFlow';
-import { OrderQuery } from '@Types/query/OrderQuery';
 import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHandlers/Request';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
@@ -20,7 +19,6 @@ import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/ge
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
-import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -58,17 +56,12 @@ export const getBusinessUnits: ActionHook = async (request: Request, actionConte
 export const getBusinessUnitOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    const businessUnitKey = getBusinessUnitKey(request);
+    const businessUnitKey = request?.query?.['businessUnitKey'];
 
     if (!businessUnitKey) {
       throw new ValidationError({ message: 'No business unit key' });
     }
-
-    const orderQuery: OrderQuery = {
-      businessUnitKey: businessUnitKey,
-    };
-
-    const orders = await cartApi.queryOrders(orderQuery);
+    const orders = await cartApi.getBusinessUnitOrders();
 
     const response: Response = {
       statusCode: 200,

@@ -225,6 +225,7 @@ export default class CartMapper {
       shippingInfo: this.commercetoolsShippingInfoToShippingInfo(commercetoolsOrder.shippingInfo, locale),
       returnInfo: this.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
       shipmentState: this.commercetoolsShipmentStateToShipmentState(commercetoolsOrder.shipmentState),
+      // state: this.commercetoolsOrderStateToState(commercetoolsOrder.state, locale),
     };
   }
 
