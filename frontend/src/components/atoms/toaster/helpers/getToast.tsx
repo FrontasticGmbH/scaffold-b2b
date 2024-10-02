@@ -19,7 +19,7 @@ export const getToastOptions: GetToastOptions = (letters, variant, options) => {
     style: {
       backgroundColor: toastThemeRef[variant].backgroundColor,
     },
-    icon: <Icon className={classnames('h-6 w-6 stroke-white stroke-[0.5px]', toastThemeRef[variant].fill)} />,
+    icon: <Icon className={classnames('size-6 stroke-white stroke-[0.5px]', toastThemeRef[variant].fill)} />,
     duration: getToastDuration(letters),
     ...options,
   };

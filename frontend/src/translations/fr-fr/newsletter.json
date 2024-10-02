@@ -3,7 +3,7 @@
   "description.fallback": "Abonnez-vous à notre newsletter pour être averti chaque fois que nous lançons une nouvelle collection.",
   "placeholder.fallback": "Votre email ici",
   "cta.fallback": "S'abonner",
-  "disclaimer.fallback": "En cliquant sur « Envoyer », vous acceptez que nous puissions utiliser vos informations conformément à notre politique de confidentialité et traiter les données dans un but spécifique.",
+  "disclaimer.fallback": "En cliquant sur « Envoyer », vous acceptez que nous puissions utiliser vos informations conformément à notre politique de confidentialité et traiter les données dans un but spécifique.",
   "success.fallback.title": "Bienvenue à bord!",
   "success.fallback.message": "Vous êtes abonné. Nous vous tiendrons au courant de tout ce qui concerne la mode."
 }

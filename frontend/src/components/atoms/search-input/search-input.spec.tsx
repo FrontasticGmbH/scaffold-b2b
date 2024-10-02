@@ -1,8 +1,7 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, act } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import SearchInput from '@/components/atoms/search-input/index';
-import { act } from 'react-dom/test-utils';
 
 describe('[Component] SearchInput', () => {
   it('renders with label', () => {

@@ -1,7 +1,6 @@
 'use client';
 
 import { useCallback } from 'react';
-import type { NavigateOptions } from 'next/dist/shared/lib/app-router-context';
 import { useRouter, useParams } from 'next/navigation';
 import { constructLocalizedUrl } from '@/utils/links';
 
@@ -11,14 +10,20 @@ const useCustomRouter = () => {
   const { locale } = useParams();
 
   const push = useCallback(
-    (href: string, { locale: localeOverride, ...options }: NavigateOptions & { locale?: string } = {}) => {
+    (
+      href: string,
+      { locale: localeOverride, ...options }: Parameters<typeof pushRoute>[1] & { locale?: string } = {},
+    ) => {
       pushRoute(constructLocalizedUrl(href, localeOverride ?? locale), options);
     },
     [pushRoute, locale],
   );
 
   const replace = useCallback(
-    (href: string, { locale: localeOverride, ...options }: NavigateOptions & { locale?: string } = {}) => {
+    (
+      href: string,
+      { locale: localeOverride, ...options }: Parameters<typeof replaceRoute>[1] & { locale?: string } = {},
+    ) => {
       replaceRoute(constructLocalizedUrl(href, localeOverride ?? locale), options);
     },
     [replaceRoute, locale],

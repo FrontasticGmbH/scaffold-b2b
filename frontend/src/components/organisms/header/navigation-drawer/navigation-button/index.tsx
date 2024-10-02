@@ -37,7 +37,7 @@ const NavigationButton = ({ lastIndex, link, onClick }: NavigationButtonProps) =
             </div>
           </Link>
           {link.categoryId === 'quotes' && (
-            <div className="flex h-5 w-5 items-center justify-center rounded-md bg-blue-100">
+            <div className="flex size-5 items-center justify-center rounded-md bg-blue-100">
               <Typography fontSize={12} fontWeight="semibold" align="center" className="text-primary">
                 {quotes.toString()}
               </Typography>

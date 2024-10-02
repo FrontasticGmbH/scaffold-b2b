@@ -15,7 +15,7 @@ describe('Skeleton Component', () => {
 
   it('applies fillMode class when fillMode is true', () => {
     const { container } = render(<Skeleton fillMode />);
-    expect(container.firstChild).toHaveClass('absolute left-0 top-0 z-10 h-full w-full');
+    expect(container.firstChild).toHaveClass('absolute left-0 top-0 z-10 size-full');
   });
 
   it('passes additional props to ReactSkeleton', () => {

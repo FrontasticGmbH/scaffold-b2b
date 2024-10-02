@@ -44,7 +44,7 @@ const useClassNames: UseClassNames = ({
       l: 'px-12 py-3 text-16',
       fit: 'p-0',
       full: 'w-full py-3',
-      icon: 'grid h-10 w-10 items-center justify-center',
+      icon: 'grid size-10 items-center justify-center',
     },
   });
 

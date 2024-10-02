@@ -12,11 +12,21 @@ import { mapApprovalFlow } from '@/utils/mappers/map-approval-flow';
 import { ApprovalFlow } from '@shared/types/business-unit';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import useApprovalFlows from '@/lib/hooks/useApprovalFlows';
+import useProjectSettings from '@/lib/hooks/useProjectSettings';
+import { mapCountry } from '@/utils/mappers/map-country';
+import { generateApprovalRulesConfig } from '@/lib/tastics/approval-rules/config/approval-rules';
+import useRoles from '@/lib/hooks/useRoles';
 
 const ApprovalFlowsClientWrapper = ({ data }: TasticProps<DataSource<ApprovalFlow>>) => {
   const router = useCustomRouter();
 
   const approvalFlow = data.data?.dataSource;
+
+  const { projectSettings } = useProjectSettings();
+
+  const approvalRulesConfig = generateApprovalRulesConfig({
+    countries: (projectSettings?.countries ?? []).map(mapCountry),
+  });
 
   const { selectedBusinessUnit } = useStoreAndBusinessUnits();
 
@@ -26,6 +36,8 @@ const ApprovalFlowsClientWrapper = ({ data }: TasticProps<DataSource<ApprovalFlo
 
   const { roles } = useAccountRoles();
 
+  const { data: rolesData } = useRoles();
+
   const { approveApprovalFlow, rejectApprovalFlow } = useApprovalFlows({ businessUnitKey: selectedBusinessUnit?.key });
 
   if (!approvalFlow) return <></>;
@@ -33,9 +45,16 @@ const ApprovalFlowsClientWrapper = ({ data }: TasticProps<DataSource<ApprovalFlo
   return (
     <Dashboard userName={account?.firstName}>
       <ApprovalFlowDetailsPage
-        approvalFlow={mapApprovalFlow(approvalFlow)}
+        approvalFlow={mapApprovalFlow(approvalFlow, approvalRulesConfig)}
         userRoles={roles.map((role) => ({ key: role.key as string, name: role.name }))}
         viewOnly={!permissions.UpdateApprovalFlows}
+        approversCriteria={rolesData.map(({ key, name }) => ({
+          key: key as string,
+          name: name ?? (key as string),
+          type: 'text',
+          operators: [],
+          values: [],
+        }))}
         onApprove={async () => {
           const res = await approveApprovalFlow(approvalFlow.approvalFlowId);
 

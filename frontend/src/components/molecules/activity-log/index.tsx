@@ -59,7 +59,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
             })}
           >
             <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/4 rounded-full bg-white p-2">
-              <div className="h-[20px] w-[20px] rounded-full bg-[#778DA9]" />
+              <div className="size-[20px] rounded-full bg-[#778DA9]" />
             </div>
 
             <h5 className="leading-tight text-gray-700">{title}</h5>

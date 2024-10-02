@@ -13,10 +13,12 @@ import { mapApprovalRule, mapCoCoApprovalRule } from '@/utils/mappers/map-approv
 import useRoles from '@/lib/hooks/useRoles';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import useProjectSettings from '@/lib/hooks/useProjectSettings';
+import { mapCountry } from '@/utils/mappers/map-country';
 import useBusinessUnit from '../../hooks/useBusinessUnit';
 import useSubPath from '../../hooks/useSubPath';
 import useRefinements from '../../hooks/useRefinements';
-import { approvalRulesConfig } from '../../config/approval-rules';
+import { generateApprovalRulesConfig } from '../../config/approval-rules';
 
 const ApprovalRulesTastic = () => {
   const { translate } = useTranslation();
@@ -26,6 +28,12 @@ const ApprovalRulesTastic = () => {
   const searchParams = useSearchParams();
 
   const id = searchParams.get('id');
+
+  const { projectSettings } = useProjectSettings();
+
+  const approvalRulesConfig = generateApprovalRulesConfig({
+    countries: (projectSettings?.countries ?? []).map(mapCountry),
+  });
 
   const { activeBusinessUnit, onBusinessUnitSelected, businessUnits } = useBusinessUnit();
 
@@ -49,7 +57,7 @@ const ApprovalRulesTastic = () => {
     businessUnitOptions: businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' })),
     initialBusinessUnit: activeBusinessUnit?.key,
     onBusinessUnitChange: onBusinessUnitSelected,
-    approvalRules: approvalRules.map(mapApprovalRule),
+    approvalRules: approvalRules.map((rule) => mapApprovalRule(rule, approvalRulesConfig)),
     loading: isLoading,
     roles: rolesData.map((role) => ({ name: role.name, value: role.key })),
     rulesCriteria: Object.entries(approvalRulesConfig).map(([key, config]) => ({
@@ -81,7 +89,7 @@ const ApprovalRulesTastic = () => {
       },
     },
     async onDuplicate(approvalRule) {
-      const cocoApprovalRule = mapCoCoApprovalRule(approvalRule);
+      const cocoApprovalRule = mapCoCoApprovalRule(approvalRule, approvalRulesConfig);
 
       const response = await createApprovalRule(cocoApprovalRule);
 
@@ -90,7 +98,7 @@ const ApprovalRulesTastic = () => {
       return success;
     },
     async onSubmit(approvalRule) {
-      const cocoApprovalRule = mapCoCoApprovalRule(approvalRule);
+      const cocoApprovalRule = mapCoCoApprovalRule(approvalRule, approvalRulesConfig);
 
       const response = await (id ? updateApprovalRule(id, cocoApprovalRule) : createApprovalRule(cocoApprovalRule));
 

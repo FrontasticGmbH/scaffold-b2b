@@ -12,10 +12,13 @@ import CategorySection from './category-section';
 import AccountSection from './account-section';
 import BackButton from './back-button';
 import { HeaderContext } from '../../context';
+import Button from '@/components/atoms/button';
+import useHeaderData from '@/lib/tastics/header/hooks/useHeaderData';
 
 const NavigationSections = () => {
   const { translate } = useTranslation();
   const [isDesktopSize] = useMediaQuery(desktop);
+  const { onLogoutClick } = useHeaderData();
 
   const {
     pageLinks,
@@ -28,18 +31,23 @@ const NavigationSections = () => {
     quickOrderProducts,
     addToCart,
     addToCartDisabled,
+    hideHeaderMenu,
   } = useContext(HeaderContext);
 
   const showBackButton = showQuickOrder || navigationLevel.length > 0;
   const pageLinksOrMobileQuickOrderExist = !isDesktopSize || pageLinks.length > 0;
   const pageLinksAndMobileQuickOrderExist = !isDesktopSize && pageLinks.length > 0;
+  const showLogout = !navigationLevel.length || navigationLevel[0]?.name === 'My Account';
+
+  const handleLogoutClick = () => {
+    hideHeaderMenu();
+    onLogoutClick();
+  };
 
   return (
     <div className="px-4 lg:px-5">
       {(showBackButton || pageLinksOrMobileQuickOrderExist) && <div className="border-t" />}
-
       {showBackButton && <BackButton />}
-
       {!showQuickOrder && navigationLevel.length === 0 && pageLinksOrMobileQuickOrderExist && (
         <div className="py-6">
           <QuickOrderMobileButton showQuickOrderMenu={showQuickOrderMenu} />
@@ -48,7 +56,6 @@ const NavigationSections = () => {
           <PageLinksSection />
         </div>
       )}
-
       {!showQuickOrder ? (
         <>
           <AccountSection />
@@ -56,6 +63,11 @@ const NavigationSections = () => {
           <div className="block lg:hidden">
             {navigationLevel && navigationLevel.length === 0 && <ShippingAndLanguageSection />}
           </div>
+          {showLogout && (
+            <Button className="mb-4 lg:hidden" variant="secondary" size="full" onClick={handleLogoutClick}>
+              {translate('account.sign.out')}
+            </Button>
+          )}
         </>
       ) : (
         <div className="border-t">

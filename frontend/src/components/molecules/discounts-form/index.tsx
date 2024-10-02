@@ -68,9 +68,7 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
               placeholder={translate('cart.discount.enter')}
               onChange={handleChange}
               disabled={processing}
-              icon={
-                codeIsInvalid ? <XMarkIcon className="h-[20px] w-[20px] cursor-pointer" onClick={onClearForm} /> : null
-              }
+              icon={codeIsInvalid ? <XMarkIcon className="size-[20px] cursor-pointer" onClick={onClearForm} /> : null}
               error={codeIsInvalid ? customError || translate('cart.codeNotValid') : undefined}
             />
           </form>
@@ -84,7 +82,7 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
                 >
                   <label className="text-12 uppercase leading-[16px] text-secondary">{discount.code}</label>
                   <button type="button" className="shrink-0" onClick={discount.onRemove}>
-                    <XMarkIcon className="h-4 w-4 text-secondary" />
+                    <XMarkIcon className="size-4 text-secondary" />
                   </button>
                 </div>
               ))}

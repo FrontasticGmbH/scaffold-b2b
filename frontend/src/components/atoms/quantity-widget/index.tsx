@@ -50,7 +50,7 @@ const QuantityWidget = ({
     onChange?.(number);
   }, [rawValue, minValue, maxValue, onChange, setValue]);
 
-  const boxClassName = classnames('flex h-[40px] w-[40px] items-center justify-center p-0');
+  const boxClassName = classnames('flex size-[40px] items-center justify-center p-0');
 
   const buttonClassName = classnames(
     'border-gray-300 bg-white transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:hover:bg-white',

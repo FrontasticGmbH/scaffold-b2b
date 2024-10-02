@@ -27,7 +27,7 @@ export const quote: Quote = {
       price: 50,
       currency: 'USD',
       quantity: 2,
-      images: ['/sb-assets/brake-disk.png'],
+      images: ['https://cdn.com/sb-assets/brake-disk.png'],
     },
   ],
   shippingCosts: 0,

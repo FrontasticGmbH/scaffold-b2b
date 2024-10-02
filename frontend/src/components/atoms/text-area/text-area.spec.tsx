@@ -1,6 +1,5 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, act } from '@test/utils';
 import TextArea from '@/components/atoms/text-area/index';
-import { act } from 'react-dom/test-utils';
 
 describe('[Component] TextArea', () => {
   it('renders with a label', () => {

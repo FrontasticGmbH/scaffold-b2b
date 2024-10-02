@@ -19,6 +19,6 @@ Primary.args = {
     name: 'Read more',
   },
   image: {
-    src: '/car-front.png',
+    src: '/sb-assets/car-front.png',
   },
 };

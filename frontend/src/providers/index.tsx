@@ -2,6 +2,7 @@
 
 import { sdk } from '@/sdk';
 import AddToCartOverlayProvider from '@/providers/add-to-cart-overlay';
+import useProjectSettings from '@/lib/hooks/useProjectSettings';
 import { SWRProvider } from './swr';
 import I18nProvider from './I18n';
 import { ProvidersProps } from './types';
@@ -17,7 +18,7 @@ export const Providers = ({
   children,
 }: React.PropsWithChildren<ProvidersProps>) => {
   sdk.defaultConfigure(locale);
-
+  const { projectSettings } = useProjectSettings();
   return (
     <TracingProvider page={page}>
       <I18nProvider translations={translations}>
@@ -27,10 +28,11 @@ export const Providers = ({
               '/action/account/getAccount': { data: initialData.account },
               '/action/business-unit/getBusinessUnits': { data: initialData.businessUnits },
               '/action/business-unit/getAssociate': { data: initialData.associate },
+              '/action/project/getProjectSettings': { data: initialData.projectSettings },
             },
           }}
         >
-          <ShipAndLanguageProvider>
+          <ShipAndLanguageProvider projectSettings={projectSettings}>
             <StoreAndBusinessUnitsProvider>
               <AddToCartOverlayProvider>{children}</AddToCartOverlayProvider>
             </StoreAndBusinessUnitsProvider>

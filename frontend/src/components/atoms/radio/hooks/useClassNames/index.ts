@@ -20,8 +20,8 @@ const useClassNames = ({ checked, size, disabled }: RadioProps) => {
       },
     },
     size: {
-      lg: 'h-[20px] w-[20px]',
-      sm: 'h-[16px] w-[16px]',
+      lg: 'size-[20px]',
+      sm: 'size-[16px]',
     },
   });
 
@@ -60,7 +60,7 @@ const useClassNames = ({ checked, size, disabled }: RadioProps) => {
   });
 
   const dotClassName = classnames(
-    'absolute left-1/2 top-1/2 block h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full',
+    'absolute left-1/2 top-1/2 block size-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full',
     resolveDotVariant(`intent.${disabledVariant}.${checkedVariant}`) as string,
   );
 

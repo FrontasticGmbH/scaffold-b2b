@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Account } from '@Types/account/Account';
 import { Address } from '@Types/account/Address';
@@ -5,6 +6,8 @@ import { BusinessUnit } from '@Types/business-unit/BusinessUnit';
 import { ApprovalRule } from '@Types/business-unit';
 import { ApprovalRuleQuery } from '@Types/business-unit/ApprovalRule';
 import { ApprovalFlowsQuery } from '@Types/business-unit/ApprovalFlow';
+import { OrderQuery } from '@Types/query/OrderQuery';
+import { OrderState } from '@Types/cart/Order';
 import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHandlers/Request';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
@@ -19,6 +22,7 @@ import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/ge
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
+import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -56,12 +60,17 @@ export const getBusinessUnits: ActionHook = async (request: Request, actionConte
 export const getBusinessUnitOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    const businessUnitKey = request?.query?.['businessUnitKey'];
+    const businessUnitKey = getBusinessUnitKey(request);
 
     if (!businessUnitKey) {
       throw new ValidationError({ message: 'No business unit key' });
     }
-    const orders = await cartApi.getBusinessUnitOrders();
+
+    const orderQuery: OrderQuery = {
+      businessUnitKey: businessUnitKey,
+    };
+
+    const orders = await cartApi.queryOrders(orderQuery);
 
     const response: Response = {
       statusCode: 200,
@@ -112,11 +121,12 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
     const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
 
     let accountAssociate = await accountApi.getAccountByEmail(addUserBody.email);
+    const password = crypto.randomBytes(6).toString('base64').slice(0, 8);
 
     if (!accountAssociate) {
       const accountData = {
         email: addUserBody.email,
-        password: Math.random().toString(36).slice(-8),
+        password,
       };
       accountAssociate = await accountApi.create(accountData);
 
@@ -554,6 +564,7 @@ export const rejectApprovalFlow: ActionHook = async (request: Request, actionCon
   try {
     const account = assertIsAuthenticated(request);
     const businessUnitKey = getBusinessUnitKey(request);
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
@@ -565,6 +576,10 @@ export const rejectApprovalFlow: ActionHook = async (request: Request, actionCon
       approvalFlowId,
       reason,
     );
+
+    const order = await cartApi.updateOrderState(approvalFlow.order.orderId, OrderState.Cancelled);
+
+    approvalFlow.order = order;
 
     return {
       statusCode: 200,

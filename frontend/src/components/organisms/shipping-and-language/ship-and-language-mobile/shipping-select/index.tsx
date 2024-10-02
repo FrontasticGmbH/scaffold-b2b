@@ -3,12 +3,12 @@ import Typography from '@/components/atoms/typography';
 import FlagIcons from '@/components/atoms/icons/flag-icons';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Dropdown from '@/components/atoms/dropdown';
-import { ShipAndLanguageContext } from '@/providers/ship-and-language';
+import { useShipAndLanguage } from '@/providers/ship-and-language';
 import { HeaderContext } from '@/components/organisms/header/context';
 import { Location } from '../../types';
 
 const ShippingSelect = () => {
-  const { locations, selectedLocation, onLocationSelect } = useContext(ShipAndLanguageContext);
+  const { locations, selectedLocation, onLocationSelect } = useShipAndLanguage();
   const { showMenu } = useContext(HeaderContext);
   const { translate } = useTranslation();
   const [shippingMenuTop, setShippingMenuTop] = useState(false);
@@ -23,17 +23,16 @@ const ShippingSelect = () => {
 
   const menuClassName = shippingMenuTop ? 'bottom-12 shadow-500-reverse' : 'shadow-500';
 
-  const getOptionDisplay = (location: Location) => {
+  const getOptionDisplay = (location?: Location) => {
     return (
-      <div className="flex h-6 items-center gap-x-2" onClick={() => onLocationSelect(location.value)}>
-        <FlagIcons name={location.flagName} className="h-4 w-4" />
+      <div className="flex h-6 items-center gap-x-2" onClick={() => onLocationSelect(location?.value ?? '')}>
+        <FlagIcons name={location?.flagName ?? ''} className="size-4" />
         <Typography fontSize={14} className="text-gray-800">
-          {location.name}
+          {location?.name}
         </Typography>
       </div>
     );
   };
-
   return (
     <div className="pt-2" ref={locationButtonRef}>
       <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
@@ -46,7 +45,7 @@ const ShippingSelect = () => {
               <span>
                 {selected.value
                   ? getOptionDisplay(locations.find((location) => location.value === selected.value) as Location)
-                  : getOptionDisplay(selectedLocation ?? locations[0])}
+                  : getOptionDisplay(selectedLocation)}
               </span>
             )}
           </Dropdown.Button>

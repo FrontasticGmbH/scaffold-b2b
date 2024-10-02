@@ -11,7 +11,7 @@ const ButtonElement = ({ onOpen }: ButtonProps) => {
       onClick={onOpen}
     >
       {translate('account.my.account')}
-      <ChevronDownIcon className="ml-1 h-4 w-4 text-white" />
+      <ChevronDownIcon className="ml-1 size-4 text-white" />
     </div>
   );
 };

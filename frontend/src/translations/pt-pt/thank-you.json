@@ -20,7 +20,7 @@
   "quote.summary": "Resumo da cotação",
   "quote.items": "Itens cotados",
   "quote.request.id": "ID da solicitação de cotação",
-  "payment.purchase.order": "Ordem de compra {number}",
+  "payment.purchase.order": "Pedido de compra {número}",
   "quote.request.submitted": "Sua solicitação de orçamento foi enviada",
   "quote.request.submitted.desc": "Um representante de vendas fornecerá um orçamento o mais rápido possível. Você será notificado sobre atualizações de cotações em"
 }

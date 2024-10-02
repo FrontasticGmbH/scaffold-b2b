@@ -35,10 +35,10 @@ const DateCaption = ({ displayMonth }: CaptionProps) => {
 
       <div className="flex gap-2">
         <Button data-testid="prev" variant="ghost" size="fit" onClick={() => previousMonth && goToMonth(previousMonth)}>
-          <ChevronLeftIcon className="h-5 w-5" />
+          <ChevronLeftIcon className="size-5" />
         </Button>
         <Button data-testid="next" variant="ghost" size="fit" onClick={() => nextMonth && goToMonth(nextMonth)}>
-          <ChevronRightIcon className="h-5 w-5" />
+          <ChevronRightIcon className="size-5" />
         </Button>
       </div>
     </div>

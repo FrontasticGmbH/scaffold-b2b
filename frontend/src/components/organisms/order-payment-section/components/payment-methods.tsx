@@ -13,7 +13,7 @@ const PaymentMethods: FC<PaymentMethodsProps> = ({ paymentMethods }) => {
       </div>
       <div className="mt-6 flex items-center justify-start gap-4 md:justify-center lg:mt-4 lg:justify-start">
         {paymentMethods.map(({ name, image }) => (
-          <div key={name} className="relative h-7 w-7">
+          <div key={name} className="relative size-7">
             <Image {...image} alt={name} />
           </div>
         ))}

@@ -16,7 +16,7 @@ export const orders = [
         sku: 'Bd10T789',
         price: 522.56,
         quantity: 10,
-        images: ['/sb-assets/engine.png'],
+        images: ['https://cdn.com/sb-assets/engine.png'],
       },
     ],
   },

@@ -53,7 +53,7 @@ const Gallery = ({ className, images }: GalleryProps) => {
             {images.map((src) => (
               <Image
                 key={src}
-                className="mx-auto mb-3 h-[100px] w-[100px] cursor-pointer rounded-md object-contain p-1"
+                className="mx-auto mb-3 size-[100px] cursor-pointer rounded-md object-contain p-1"
                 alt=""
                 src={src}
               />
@@ -87,7 +87,7 @@ const Gallery = ({ className, images }: GalleryProps) => {
           {...commonSliderProps}
         >
           {images.map((src) => (
-            <Image key={src} className="h-[73px] w-[73px] rounded-md object-contain p-1" alt="" src={src} />
+            <Image key={src} className="size-[73px] rounded-md object-contain p-1" alt="" src={src} />
           ))}
         </Slider>
       )}

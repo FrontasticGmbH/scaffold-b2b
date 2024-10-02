@@ -54,7 +54,7 @@ const PurchaseListItem = ({
       </div>
 
       <Link href={url}>
-        <div className="relative mx-auto mt-2 h-[124px] w-[124px] shrink-0 md:mr-8 md:h-[140px] md:w-[140px]">
+        <div className="relative mx-auto mt-2 size-[124px] shrink-0 md:mr-8 md:size-[140px]">
           <Image fill src={image} alt={name} />
         </div>
       </Link>

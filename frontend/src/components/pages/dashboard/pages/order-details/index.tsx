@@ -122,7 +122,7 @@ const OrderDetailsPage = ({
           {translate('dashboard.items.ordered')} <span className="text-gray-600">({order.items.length})</span>
         </h5>
 
-        <table className="w-full">
+        <table className="w-full border-collapse">
           <thead>
             <tr className="border-b border-neutral-400 p-4 text-12 font-semibold uppercase text-gray-500">
               <th className="p-4 text-left">{translate('common.product')}</th>
@@ -137,7 +137,7 @@ const OrderDetailsPage = ({
               <tr key={id} className="border-b border-neutral-400 p-4 text-14 text-gray-600">
                 <td className="p-4 text-left">
                   <div className="flex items-center gap-3">
-                    <span className="relative block h-[40px] w-[40px]">
+                    <span className="relative block size-[40px]">
                       <Image src={images?.[0]} fill alt={name ?? ''} />
                     </span>
                     <span>{name}</span>

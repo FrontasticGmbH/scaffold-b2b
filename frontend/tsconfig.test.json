@@ -4,5 +4,5 @@
     "jsx": "react-jsx",
     "isolatedModules": false
   },
-  "include": ["**/*.spec.ts", "**/*.spec.tsx"]
+  "include": ["**/*.spec.ts", "**/*.spec.tsx", "**/types/**/*.d.ts"]
 }

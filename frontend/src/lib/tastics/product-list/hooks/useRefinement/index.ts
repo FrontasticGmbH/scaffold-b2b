@@ -84,7 +84,7 @@ const useRefinement = () => {
 
     newParams.set('limit', (+limit + 24).toString());
 
-    router.push(`${pathWithoutQuery}?${newParams.toString()}`);
+    router.push(`${pathWithoutQuery}?${newParams.toString()}`, { scroll: false });
   }, [searchParams, limit, router, pathWithoutQuery]);
 
   const onResetAll = useCallback(() => {

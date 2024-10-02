@@ -8,7 +8,7 @@
   "orderConfirmed": "Uw bestelling is bevestigd",
   "orderConfirmation": "Wij hebben uw orderbevestiging en factuur verzonden naar:",
   "continueShopping": "Doorgaan met winkelen",
-  "wentWrong": "Er is iets misgegaan tijdens de betaling, controleer uw betaalgegevens en probeer het opnieuw.",
+  "wentWrong": "Er is iets misgegaan tijdens de betaling. Controleer uw betalingsgegevens en probeer het opnieuw.",
   "yourOrderId": "Order ID:",
   "tryAgain": "Probeer het nog eens",
   "backToShop": "Terug naar winkel",
@@ -60,7 +60,7 @@
   "complete.purchase": "Voltooi aankoop",
   "address.delivery.add": "Nieuw afleveradres toevoegen",
   "address.billing.add": "Nieuw factuuradres toevoegen",
-  "continue.to.shipping": "Ga door naar levering",
+  "continue.to.shipping": "Doorgaan naar levering",
   "continue.to.billing.address": "Ga verder naar factuuradres",
   "continue.to.payment": "Ga verder naar betaling",
   "by.placing.order": "Door uw bestelling te plaatsen, gaat u akkoord met de",
@@ -82,5 +82,5 @@
   "quote.items": "Geciteerde artikelen",
   "submit.quote.request": "Offerteaanvraag indienen",
   "tax.rates.undefined": "Er zijn geen belastingtarieven gedefinieerd voor deze regio",
-  "your.token.has.expired": "Uw betaaltoken is verlopen. Log opnieuw in.."
+  "your.token.has.expired": "Je checkout token is verlopen. Log opnieuw in."
 }

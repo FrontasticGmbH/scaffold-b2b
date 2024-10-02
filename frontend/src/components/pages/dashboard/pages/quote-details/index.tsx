@@ -150,7 +150,7 @@ const QuoteDetailsPage = ({
                 <tr key={id} className="p-4 text-14 text-gray-600 shadow-[0px_-1px_0px_0px_#E4E4E7_inset]">
                   <td className="whitespace-pre p-4 text-left">
                     <div className="flex items-center gap-3">
-                      <span className="relative block h-[40px] w-[40px]">
+                      <span className="relative block size-[40px]">
                         <Image src={images?.[0]} fill alt={name ?? ''} />
                       </span>
                       <span>{name}</span>

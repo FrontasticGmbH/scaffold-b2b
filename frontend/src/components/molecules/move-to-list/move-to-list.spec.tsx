@@ -1,8 +1,7 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, act } from '@test/utils';
 import MoveToList from '@/components/molecules/move-to-list';
 import { MoveToListProps } from '@/components/molecules/move-to-list/types';
-import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 
 const mockLists = Array(10)

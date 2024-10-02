@@ -29,12 +29,12 @@ const TablePagination = ({
   const disablePrevious = useMemo(() => page === 1, [page]);
 
   const previousIconProps: SVGAttributes<SVGElement> = {
-    className: classnames('h-6 w-6', { 'cursor-pointer': !disablePrevious }),
+    className: classnames('size-6', { 'cursor-pointer': !disablePrevious }),
     stroke: disablePrevious ? '#D1D1D1' : '#212121',
   };
 
   const nextIconProps: SVGAttributes<SVGElement> = {
-    className: classnames('h-6 w-6', { 'cursor-pointer': !disableNext }),
+    className: classnames('size-6', { 'cursor-pointer': !disableNext }),
     stroke: disableNext ? '#D1D1D1' : '#212121',
   };
 

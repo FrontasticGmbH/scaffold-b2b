@@ -203,11 +203,14 @@
   "leave": "Leave",
   "preview": "Preview",
   "approval.flows": "Approval Flows",
+  "approval.flow": "Approval Flow",
   "is": "Is",
   "is.not": "Is not",
   "is.equal": "Is equal",
   "is.more.than": "Is more than",
   "is.more.than.or.equal": "Is more than or equal",
   "is.less.than": "Is less than",
-  "is.less.than.or.equal": "Is less than or equal"
+  "is.less.than.or.equal": "Is less than or equal",
+  "approve": "Approve",
+  "reject": "Reject"
 }

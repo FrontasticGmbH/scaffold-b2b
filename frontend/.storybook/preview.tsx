@@ -11,6 +11,7 @@ import theme from './theme';
 import ShipAndLanguageProvider from '@/providers/ship-and-language';
 import I18nProvider from '@/providers/I18n';
 import translations from './translations';
+import { projectSettings } from '@/mocks/projectSettings';
 
 const preview: Preview = {
   parameters: {
@@ -34,7 +35,7 @@ const preview: Preview = {
     (Story) => (
       <div className={inter.variable} data-theme="default">
         <I18nProvider translations={translations}>
-          <ShipAndLanguageProvider>
+          <ShipAndLanguageProvider projectSettings={projectSettings}>
             <Story />
             <Toaster />
           </ShipAndLanguageProvider>

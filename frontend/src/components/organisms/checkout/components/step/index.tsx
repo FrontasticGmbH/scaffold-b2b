@@ -29,7 +29,7 @@ const Step = ({ number, title, isActive, isCompleted, onNavigate, children }: Re
         <div className="flex items-center gap-3">
           <span
             className={classnames(
-              'flex h-[24px] w-[24px] items-center justify-center rounded-full md:h-[30px] md:w-[30px]',
+              'flex size-[24px] items-center justify-center rounded-full md:size-[30px]',
               isActive
                 ? 'bg-white font-medium text-primary lg:bg-primary lg:text-white'
                 : 'border border-gray-700 text-gray-700',

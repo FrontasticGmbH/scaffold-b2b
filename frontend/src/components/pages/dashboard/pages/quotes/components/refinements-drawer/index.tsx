@@ -82,7 +82,7 @@ const RefinementsDrawer = ({
       </button>
       <div className="hidden items-center gap-1 text-gray-600 md:flex">
         <span className="text-14">{translate('common.status')}</span>
-        <InfoIcon className="h-[24px] w-[24px] cursor-pointer" onClick={onInfoClick} />
+        <InfoIcon className="size-[24px] cursor-pointer" onClick={onInfoClick} />
       </div>
       <Drawer
         isOpen={isOpen}

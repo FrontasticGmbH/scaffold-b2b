@@ -28,7 +28,7 @@ const AuthForm = ({
   return (
     <>
       <div className="grid h-fit gap-5">
-        {includeCheckIcon && <CheckCircleIcon className="h-6 w-6 text-primary" />}
+        {includeCheckIcon && <CheckCircleIcon className="size-6 text-primary" />}
 
         <Typography as="h1" fontSize={18} fontWeight="bold" className="text-gray-700 md:text-20 lg:text-24">
           {title}

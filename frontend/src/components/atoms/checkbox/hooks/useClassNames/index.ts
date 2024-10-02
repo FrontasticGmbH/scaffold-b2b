@@ -25,8 +25,8 @@ const useClassNames = ({
       },
     },
     size: {
-      lg: 'h-[20px] w-[20px]',
-      sm: 'h-[16px] w-[16px]',
+      lg: 'size-[20px]',
+      sm: 'size-[16px]',
     },
   });
 

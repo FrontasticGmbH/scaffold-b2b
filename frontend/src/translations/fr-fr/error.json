@@ -1,6 +1,6 @@
 {
   "auth.wrong": "Email ou mot de passe invalide. S'il vous plaît, vérifiez et essayez à nouveau.",
-  "auth.action.verify": "Action requise : vérifiez votre adresse e-mail à l'aide de l'e-mail de vérification envoyé.",
+  "auth.action.verify": "Action requise : vérifiez votre adresse e-mail à l'aide de l'e-mail de vérification envoyé.",
   "wentWrong": "Désolé, quelque chose s'est mal passé..",
   "wentWrong.retry": "Désolé, quelque chose s'est mal passé. Veuillez réessayer dans 5 minutes.",
   "password.noMatch": "Les mots de passe ne correspondent pas.",
@@ -9,7 +9,7 @@
   "email.enter": "Veuillez entrer votre adresse e-mail",
   "email": "L'email n'est pas valide.",
   "email.exists": "L'adresse e-mail n'est pas valide ou existe déjà.",
-  "company.exists": "Le nom de l'entreprise est déjà enregistré. Veuillez utiliser un autre nom de société ou demander à un administrateur d'être invité dans une société existante.",
+  "company.exists": "Le nom de l'entreprise est déjà enregistré. Veuillez utiliser un autre nom d'entreprise ou demander à un administrateur d'être invité dans une entreprise existante.",
   "name": "Le nom doit comporter au moins deux caractères.",
   "verify.failed": "Échec de la vérification",
   "verify.failed.description": "Désolé, nous n'avons pas réussi à vérifier votre compte. Un nouveau lien de vérification a été envoyé à votre adresse e-mail."

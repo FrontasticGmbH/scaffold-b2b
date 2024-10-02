@@ -20,6 +20,9 @@ public/robots.txt
 public/sitemap.xml
 public/sitemap-*.xml
 
+# yarn
+.yarn
+
 # cache
 .swc/
 

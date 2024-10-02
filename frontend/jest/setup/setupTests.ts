@@ -3,8 +3,8 @@ import 'matchmedia-polyfill';
 import 'matchmedia-polyfill/matchMedia.addListener';
 import { TextDecoder, TextEncoder } from 'util';
 
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder as typeof global.TextDecoder;
+window.TextEncoder = TextEncoder;
+window.TextDecoder = TextDecoder as typeof window.TextDecoder;
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

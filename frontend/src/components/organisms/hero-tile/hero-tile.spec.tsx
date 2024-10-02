@@ -4,7 +4,7 @@ import HeroTile from '.';
 describe('HeroTile', () => {
   const mockProps = {
     image: {
-      src: '/test-image.jpg',
+      src: 'https://cdn.com/test-image.jpg',
       width: 1200,
       height: 800,
     },
@@ -21,7 +21,7 @@ describe('HeroTile', () => {
     // Check if the image is rendered
     const image = screen.getByRole('img', { name: 'Test Title' });
     expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute('src', '/test-image.jpg');
+    expect(image).toHaveAttribute('src', 'https://cdn.com/test-image.jpg');
     expect(image).toHaveAttribute('alt', 'Test Title');
 
     // Check if the title is rendered

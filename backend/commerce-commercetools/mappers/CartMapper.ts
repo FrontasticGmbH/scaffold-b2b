@@ -225,7 +225,6 @@ export default class CartMapper {
       shippingInfo: this.commercetoolsShippingInfoToShippingInfo(commercetoolsOrder.shippingInfo, locale),
       returnInfo: this.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
       shipmentState: this.commercetoolsShipmentStateToShipmentState(commercetoolsOrder.shipmentState),
-      // state: this.commercetoolsOrderStateToState(commercetoolsOrder.state, locale),
     };
   }
 
@@ -604,8 +603,8 @@ export default class CartMapper {
 
     // CoCo checkout uses custom fields to store the purchase order number
     const purchaseOrderNumber = commercetoolsOrder?.paymentInfo?.payments?.find(
-      (payment) => payment.obj?.custom?.fields?.purchaseOrderNumber !== undefined,
-    )?.obj?.custom?.fields?.purchaseOrderNumber;
+      (payment) => payment.obj?.custom?.fields?.launchpadPurchaseOrderNumber !== undefined,
+    )?.obj?.custom?.fields?.launchpadPurchaseOrderNumber;
 
     return purchaseOrderNumber;
   }

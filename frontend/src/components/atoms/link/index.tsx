@@ -27,6 +27,7 @@ const Link = ({
 
   return (
     <NextLink
+      role="link"
       href={constructLocalizedUrl(href.toString(), localeOverride ?? locale)}
       target={openInNewTab ? '_blank' : '_self'}
       className={linkClassName}

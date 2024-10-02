@@ -30,9 +30,7 @@ const Drawer = ({
     }
   }, [isOpen, blockScroll, blockScrolling]);
 
-  const { ref } = useOnClickOutside(() => {
-    !!isOpen && onClose?.();
-  });
+  const { ref } = useOnClickOutside(() => onClose?.());
 
   const { drawerClassName: drawerWrapperClassName, drawerTransition } = useClassNames(direction);
 

@@ -20,7 +20,7 @@
   "quote.summary": "Riepilogo preventivo",
   "quote.items": "Articoli citati",
   "quote.request.id": "ID della richiesta di preventivo",
-  "payment.purchase.order": "Numero dell'ordine d'acquisto {number}",
+  "payment.purchase.order": "Numero dell'ordine d'acquisto}",
   "quote.request.submitted": "La tua richiesta di preventivo è stata inviata",
   "quote.request.submitted.desc": "Un rappresentante di vendita ti fornirà un preventivo il prima possibile. Riceverai una notifica sugli aggiornamenti del preventivo all'indirizzo"
 }

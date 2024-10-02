@@ -57,7 +57,7 @@ const Select = ({
           <p className="px-3 py-2 text-14 text-gray-500">{translate('common.no.results.found')}</p>
         )}
         {filteredOptions.map(({ name, value }) => (
-          <Dropdown.Option key={value} value={value}>
+          <Dropdown.Option key={`${name}-${value}`} value={value}>
             {name}
           </Dropdown.Option>
         ))}

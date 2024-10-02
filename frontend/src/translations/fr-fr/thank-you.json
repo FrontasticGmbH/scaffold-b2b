@@ -10,7 +10,7 @@
   "delivery.address": "Adresse de livraison",
   "payment.method": "Mode de paiement",
   "billing.address": "Adresse de facturation",
-  "orders": "Commandes",
+  "orders": "Ordres",
   "quotes": "Citations",
   "manage.orders": "Gérer, consulter ou suivre vos commandes",
   "manage.quotes": "Gérez, révisez ou suivez vos devis",
@@ -20,7 +20,7 @@
   "quote.summary": "Résumé du devis",
   "quote.items": "Articles cités",
   "quote.request.id": "ID de demande de devis",
-  "payment.purchase.order": "Numéro de commande {number}",
+  "payment.purchase.order": "Numéro de commande}",
   "quote.request.submitted": "Votre demande de devis a été soumise",
   "quote.request.submitted.desc": "Un représentant commercial vous fournira un devis dans les plus brefs délais. Vous serez informé des mises à jour des devis à"
 }

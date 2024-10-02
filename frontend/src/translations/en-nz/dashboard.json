@@ -177,5 +177,8 @@
   "flow.rejected": "Flow rejected",
   "rules.setup.incomplete": "Rules setup is incomplete!",
   "tiers.setup.incomplete": "Tiers setup is incomplete!",
-  "purchase.order.number": "PO number"
+  "purchase.order.number": "PO number",
+  "approval.flow.required.approvers": "Required approvers",
+  "approval.flow.required.approvers.desc": "These tiers are the result of merging multiple rules that apply to the order.\nIf there are options marked in blue ( {preview} ), they indicate your role and areas of approval.",
+  "approval.flow.rejection.reason": "Reason for rejection"
 }

@@ -1,6 +1,6 @@
 export const blog = {
   image: {
-    src: '/car.png',
+    src: 'https://cdn.com/car.png',
   },
   title: 'mundial hybrid system',
   description:

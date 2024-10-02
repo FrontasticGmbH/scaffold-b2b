@@ -37,7 +37,7 @@ const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
                   <QuoteStatusTag status={status} />
                   {isNew && (
                     <div className="flex items-center gap-1">
-                      <span className="h-[6px] w-[6px] rounded-full bg-[#2A4DA8]" />
+                      <span className="size-[6px] rounded-full bg-[#2A4DA8]" />
                       <span className="text-12 text-gray-500 lg:block">{translate('common.reply')}</span>
                     </div>
                   )}

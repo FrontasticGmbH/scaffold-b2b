@@ -20,7 +20,7 @@ export const checkout: CheckoutProps = {
       currency: 'USD',
       price: 100,
       quantity: 1,
-      images: ['/sb-assets/bearing.png'],
+      images: ['https://cdn.com/sb-assets/bearing.png'],
     },
   ],
   discounts: [],

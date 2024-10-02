@@ -39,7 +39,7 @@ const Timeline = ({
               >
                 <div
                   className={classnames(
-                    'h-[16px] w-[16px] rounded-[999px]',
+                    'size-[16px] rounded-[999px]',
                     index <= activeIndex
                       ? (classNames.bulletActive ?? 'bg-primary')
                       : (classNames.bullet ?? 'bg-gray-300'),

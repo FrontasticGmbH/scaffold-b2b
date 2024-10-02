@@ -60,12 +60,11 @@ const ProductListViewModel = ({
       ]
     : [
         { name: translate('common.home'), link: '/' },
-        ...slug.split('/').map((chunk, index, arr) => ({
+        ...slug.map((chunk: string, index: number, arr: string[]) => ({
           name: chunk.replace(/[-_]/g, ' '),
           link: `/${arr.slice(0, index + 1).join('/')}`,
         })),
       ];
-
   if (displayIntermediaryPage) {
     const categoryConfig = categoryConfiguration[category?.slug ?? ''] ?? {};
 

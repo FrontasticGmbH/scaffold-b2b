@@ -15,11 +15,11 @@ const AuthLayout = ({ image, logo, logoLink, children }: PropsWithChildren<AuthL
           </div>
         </div>
 
-        <div className="flex h-full w-full flex-col gap-6 px-4 pt-9 md:mx-auto md:w-[372px] md:px-0 md:pt-16 lg:grid lg:w-[452px] lg:content-center lg:gap-0 lg:px-0 lg:py-20">
+        <div className="flex size-full flex-col gap-6 px-4 pt-9 md:mx-auto md:w-[372px] md:px-0 md:pt-16 lg:grid lg:w-[452px] lg:content-center lg:gap-0 lg:px-0 lg:py-20">
           {children}
         </div>
       </div>
-      <Image className="hidden h-full w-full object-cover lg:block" {...image} />
+      <Image className="hidden size-full object-cover lg:block" {...image} />
     </div>
   );
 };

@@ -25,7 +25,7 @@ const item = {
   maxQuantity: 10,
   price: 734.64,
   currency: 'USD',
-  images: ['/brake-disk.png'],
+  images: ['/sb-assets/brake-disk.png'],
 } as ProductType;
 
 export const GridItem = Template.bind({});

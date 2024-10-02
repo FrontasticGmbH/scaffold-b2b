@@ -3,7 +3,7 @@ import { classnames } from '@/utils/classnames/classnames';
 
 const ColoredVariant = ({ className, color, active, onClick }: ColoredVariantProps) => {
   const variantClassName = classnames(
-    'h-9 w-9 cursor-pointer rounded-sm',
+    'size-9 cursor-pointer rounded-sm',
     { 'border-[1.5px] border-primary': active },
     className,
   );

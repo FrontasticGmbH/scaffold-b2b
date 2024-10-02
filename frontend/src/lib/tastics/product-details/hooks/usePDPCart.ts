@@ -14,9 +14,9 @@ const usePDPCart = (product: Product) => {
 
   const getShippingPrice = useCallback(
     (rates: Array<ShippingRate>): number => {
-      const { countryCode } = getLocalizationInfo(selectedLocation?.value ?? 'sv');
+      const { countries } = getLocalizationInfo(selectedLocation?.languages?.[0]?.value ?? 'en-us');
 
-      const currentRate = rates?.find((rate) => rate.name === countryCode);
+      const currentRate = rates?.find((rate) => !!countries.find((c) => c.toLowerCase() === rate.name?.toLowerCase()));
       return (currentRate?.price?.centAmount ?? 1000) / 100;
     },
     [selectedLocation],

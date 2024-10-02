@@ -10,7 +10,6 @@ export const cartLineItems: LineItem[] = [
       currencyCode: 'EUR',
       fractionDigits: 2,
     },
-
     variant: {
       id: '1',
       sku: 'GRCG-01',

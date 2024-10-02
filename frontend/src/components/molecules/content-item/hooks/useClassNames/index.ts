@@ -6,13 +6,13 @@ const useClassNames = (variant: Variant) => {
   const resolveVariant = cva({
     default: {
       container: 'w-full flex-col items-center gap-2 py-5',
-      image: 'h-[75px] w-[75px] md:h-[148px] md:w-[148px]',
+      image: 'size-[75px] md:size-[148px]',
       title: 'text-14 md:text-16',
     },
     inline: {
       container:
         'h-[52px] w-full flex-row items-center justify-center gap-3 border border-neutral-400 py-6 md:h-[60px] lg:h-[64px]',
-      image: 'h-[20px] w-[20px] md:h-[24px] md:w-[24px]',
+      image: 'size-[20px] md:size-[24px]',
       title: 'text-14 leading-[16px] md:text-16 md:leading-[24px]',
     },
   });

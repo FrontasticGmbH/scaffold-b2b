@@ -20,7 +20,7 @@
   "quote.summary": "Zusammenfassung des Angebots",
   "quote.items": "Zitierte Artikel",
   "quote.request.id": "Angebotsanfrage-ID",
-  "payment.purchase.order": "Bestellnummer {number}",
+  "payment.purchase.order": "Bestellnummer}",
   "quote.request.submitted": "Ihre Angebotsanfrage wurde übermittelt",
   "quote.request.submitted.desc": "Ein Vertriebsmitarbeiter wird Ihnen so schnell wie möglich ein Angebot unterbreiten. Sie werden über Angebotsaktualisierungen unter benachrichtigt"
 }

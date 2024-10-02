@@ -4,7 +4,7 @@ import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { Product } from '@/types/entity/product';
 import { cartLineItems } from './cartLineItems';
 
-export const cart: Cart & { lineItems: Product[]; transaction: Transaction } = {
+export const cart: Omit<Cart, 'lineItems'> & { lineItems: Product[]; transaction: Transaction } = {
   cartId: '1',
   lineItems: cartLineItems.map(mapLineItem),
   transaction: {

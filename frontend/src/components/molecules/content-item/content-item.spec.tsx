@@ -33,7 +33,7 @@ describe('[Component] ContentItem', () => {
 
     const imageParent = screen.getByAltText('Engine').parentElement;
 
-    expect(imageParent).toHaveClass('h-[20px]');
+    expect(imageParent).toHaveClass('size-[20px]');
   });
 
   it('Handles missing title', () => {

@@ -10,10 +10,12 @@ import defaultLoader from './loaders/default';
 const Image = ({ media, ratio, gravity, suffix, src = '', width, height, alt = '', ...props }: ImageProps) => {
   const dimensions = useDimensions({ media, width, height, ...props });
 
+  const isStaticImage = src.startsWith('/');
+
   if (!media?.mediaId)
     return (
       <NextImage
-        unoptimized
+        unoptimized={!isStaticImage}
         src={defaultLoader({ src, suffix })}
         loader={({ src }) => src}
         alt={alt}

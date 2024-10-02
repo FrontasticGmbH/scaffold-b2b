@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Input from '@/components/atoms/input';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
@@ -55,6 +55,14 @@ const ApprovalRuleForm = ({
   const [addRule, setAddRule] = useState({ rules: !!initialData, approvers: !!initialData });
 
   const [isPreviewing, setIsPreviewing] = useState({ rules: !!initialData, approvers: !!initialData });
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    setData(initialData);
+    setAddRule({ rules: !!initialData, approvers: !!initialData });
+    setIsPreviewing({ rules: !!initialData, approvers: !!initialData });
+  }, [initialData]);
 
   const isValidGroup = (group?: Group) => {
     if (!group?.rules?.length) return false;

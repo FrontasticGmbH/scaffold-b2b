@@ -5,7 +5,7 @@
   "sign.out": "Cerrar sesión",
   "account": "Cuenta",
   "account.join.title": "Únase a {company}",
-  "account.join.subtitle": "El administrador de su empresa lo ha invitado a unirse a {company}. Para completar su registro, por favor proporcione su información personal.",
+  "account.join.subtitle": "El administrador de su company lo ha invitado a unirse a {empresa}. Para completar su registro, por favor proporcione su información personal.",
   "account.details": "Detalles de la cuenta",
   "account.desc": "Administre su cuenta y suscripciones.",
   "address.create.headline": "Nueva direccion",

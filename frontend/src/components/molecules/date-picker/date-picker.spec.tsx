@@ -33,7 +33,6 @@ describe('[Component] DatePicker', () => {
   it('Renders the month and year selector', () => {
     render(<DatePicker {...commonProps} />);
 
-    // Check if the month/year button is rendered with the correct content
     const currentMonth = new Date().toLocaleString('default', { month: 'long' });
     const currentYear = new Date().getFullYear().toString();
     const currentMonthYear = `${currentMonth} ${currentYear}`;

@@ -35,16 +35,16 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
         </Button>
       </div>
     );
-
+  console.log('CartItem -> item', item);
   return (
     <div className="pt-5 md:py-8 lg:gap-12">
       <CartItemHeader className="md:hidden" item={item} />
 
       <div className="mt-10 flex max-w-full items-stretch justify-start md:mt-0 md:gap-10">
         <Link href={item.url ?? '#'}>
-          <div className="md:h-[124px] md:w-[124px] lg:h-[132px] lg:w-[132px]">
+          <div className="md:size-[124px] lg:size-[132px]">
             <Image
-              className="h-full w-full"
+              className="size-full"
               src={item.images?.[0]}
               style={{ objectFit: 'contain' }}
               width={108}

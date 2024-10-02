@@ -2,24 +2,4 @@
 ignore = "$CACHED_COMMIT_REF == $COMMIT_REF"
 
 [[plugins]]
-package = "@netlify/plugin-lighthouse"
-
-[plugins.inputs.thresholds]
-performance = 0.9
-accessibility = 0.9
-seo = 0.9
-'best-practices' = 0.9
-
-[[plugins.inputs.audits]]
-path = "/en-us"
-
-[[plugins.inputs.audits]]
-path = "/en-us/high_capacity_front_end_loaders/"
-
-[[plugins.inputs.audits]]
-path = "/en-us/d234-wx/p/d234-wx-2015/"
-
-[[plugins.inputs.audits]]
-path = "en-us/cart"
-
-
+  package = "@netlify/plugin-nextjs"

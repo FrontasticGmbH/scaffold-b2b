@@ -18,7 +18,7 @@ const FeedbackIconLayer: FC<FeedbackIconLayerProps> = ({ loading, variant = 'pri
   const iconInWhite = variant == 'primary' || variant == 'warning';
 
   const layerClassName = classnames(
-    'absolute left-0 top-0 grid h-full w-full items-center justify-center',
+    'absolute left-0 top-0 grid size-full items-center justify-center',
     variantBackgroundRef[variant] ?? 'bg-white',
   );
 

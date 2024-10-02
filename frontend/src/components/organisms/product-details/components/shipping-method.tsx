@@ -17,8 +17,8 @@ const ShippingMethod = ({ className, label, price, estimatedDeliveryDays, curren
 
   return (
     <div className={methodClassName}>
-      <div className="grid h-7 w-7 place-content-center rounded-full border border-neutral-300">
-        <TruckIcon className="h-4 w-4" />
+      <div className="grid size-7 place-content-center rounded-full border border-neutral-300">
+        <TruckIcon className="size-4" />
       </div>
       <div className="grid gap-2">
         {/* Label & Price */}

@@ -106,7 +106,7 @@ const OrderSummary = ({
           <div className="hidden pb-6 pt-2 lg:block">
             <div className="flex items-center gap-4">
               {products.slice(0, 3).map(({ id, images, name }) => (
-                <div className="relative h-[88px] w-[88px]" key={id}>
+                <div className="relative size-[88px]" key={id}>
                   <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
                 </div>
               ))}

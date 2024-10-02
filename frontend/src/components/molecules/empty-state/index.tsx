@@ -12,7 +12,7 @@ const EmptyState = ({ children, header, image, className = '', isLoading }: Prop
         </div>
       ) : (
         <>
-          {image && <div className="mb-6 h-32 w-32">{image}</div>}
+          {image && <div className="mb-6 size-32">{image}</div>}
           {header && <h3 className="mb-6 text-2xl">{header}</h3>}
         </>
       )}

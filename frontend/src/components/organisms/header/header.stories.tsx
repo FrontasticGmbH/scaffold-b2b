@@ -1,6 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
 import { resolveReference } from '@/utils/lib/resolve-reference';
-import logoSrc from 'public/THE B2B STORE.svg';
 import Header from '.';
 import { ProductSuggestion } from '../search/types';
 
@@ -179,7 +178,7 @@ Primary.args = {
       ],
     },
   ],
-  logo: { src: logoSrc, width: 200, height: 100 },
+  logo: { src: '/sb-assets/THE B2B STORE.png', width: 1481, height: 84 },
   logoLink: resolveReference({ type: 'link', link: '/' }, 'Logo'),
   accountLink: resolveReference({ type: 'link', link: '/' }, 'Logo'),
   cartItems: 23,

@@ -27,7 +27,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
         ></div>
         <div
           className={classnames(
-            'absolute left-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-neutral-100 transition',
+            'absolute left-1 top-1 flex size-6 items-center justify-center rounded-full bg-neutral-100 transition',
             { 'translate-x-full': checked },
           )}
         >
@@ -47,12 +47,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
             </svg>
           </span>
           <span data-testid="unchecked-icon" className={checked ? 'hidden' : 'block'}>
-            <svg
-              className="h-4 w-4 stroke-[#415A77]"
-              fill="none"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+            <svg className="size-4 stroke-[#415A77]" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </span>

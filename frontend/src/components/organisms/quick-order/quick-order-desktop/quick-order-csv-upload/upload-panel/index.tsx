@@ -4,7 +4,6 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import { XMarkIcon as CloseIcon } from '@heroicons/react/24/outline';
 import Image from '@/components/atoms/Image';
 import Typography from '@/components/atoms/typography';
-import UploadImg from 'public/upload.svg';
 import { QuickOrderDesktopContext } from '../context';
 
 const UploadPanel = () => {
@@ -37,7 +36,6 @@ const UploadPanel = () => {
   };
 
   const loadingBarClassName = (file: File) => `w-[${loadingProgress[file.name]}%] bg-primary h-1`;
-
   const uploadDisable = files.length === 0 || Object.keys(fileError).length > 0;
   return (
     <div>
@@ -54,7 +52,7 @@ const UploadPanel = () => {
         className="mt-3 flex h-[160px] w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300"
       >
         <input type="file" multiple onChange={handleChange} ref={inputFile} className="invisible" />
-        <Image src={UploadImg} width={50} height={50} alt="Upload" />
+        <Image src={'/sb-assets/upload.svg'} width={50} height={50} alt="Upload" />
         <div className="mt-5">
           <Typography align="center" fontSize={14} fontWeight="medium" className="text-gray-700">
             {translate('quick-order.drag.csv')}

@@ -10,7 +10,7 @@ const SearchPanelItemsLarge = ({ sku, url, image, name }: ProductSuggestion) => 
       <Link href={url ?? sku}>
         <div className="flex items-center justify-start gap-x-5">
           {image && (
-            <div className="relative h-[48px] w-[48px]">
+            <div className="relative size-[48px]">
               <Image fill src={image} alt={name} style={{ objectFit: 'contain' }} />
             </div>
           )}

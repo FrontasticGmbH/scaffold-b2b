@@ -7,7 +7,7 @@ export default {
   tags: ['autodocs'],
   argTypes: {
     size: {
-      control: 'MultiSelect',
+      control: 'multi-select',
       options: ['sm', 'lg'],
     },
   },

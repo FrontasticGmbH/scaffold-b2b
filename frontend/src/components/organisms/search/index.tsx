@@ -35,7 +35,7 @@ const Search = ({
 
   const { blockScroll } = useScrollBlock();
   useEffect(() => {
-    scrollControl && blockScroll(focused);
+    if (scrollControl) blockScroll(focused);
   }, [blockScroll, focused, scrollControl]);
 
   return (

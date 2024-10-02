@@ -15,8 +15,8 @@ Primary.args = {
     name: 'All articles',
   },
   items: [
-    { title: 'Circular car seneors', link: { name: 'Read more' }, image: { src: '/car-sensor.png' } },
-    { title: 'Hybrid batter systems', link: { name: 'Read more' }, image: { src: '/car-front.png' } },
-    { title: 'Automotive trends in 2023', link: { name: 'Read more' }, image: { src: '/cars-trends.png' } },
+    { title: 'Circular car seneors', link: { name: 'Read more' }, image: { src: '/sb-assets/car-sensor.png' } },
+    { title: 'Hybrid batter systems', link: { name: 'Read more' }, image: { src: '/sb-assets/car-front.png' } },
+    { title: 'Automotive trends in 2023', link: { name: 'Read more' }, image: { src: '/sb-assets/cars-trends.png' } },
   ],
 };

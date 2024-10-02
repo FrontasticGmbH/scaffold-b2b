@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ItemDetails from '@/components/molecules/added-to-cart-modal/components/item-details';
 import { sliderItems } from '@/mocks/productSliderItems';
 
+sliderItems[0].images = ['https://cdn.com/sb-assets/brake-pad.png'];
 describe('ItemDetails', () => {
   it('renders item details correctly', () => {
     render(<ItemDetails item={sliderItems[0]} />);
@@ -11,7 +12,7 @@ describe('ItemDetails', () => {
     expect(screen.getByText('Castrol')).toBeInTheDocument();
     expect(screen.getByAltText('Brake Pad Set, disc brake DELPHI LP20')).toHaveAttribute(
       'src',
-      '/sb-assets/brake-pad.png',
+      'https://cdn.com/sb-assets/brake-pad.png',
     );
   });
 

@@ -80,9 +80,9 @@ const ProductTile = ({
 
       <Link href={url ?? '#'}>
         <div
-          className={classnames('relative mx-auto my-3 h-[124px] w-[124px] shrink-0 md:mb-9 md:mt-6', {
-            'md:mr-8 md:h-[140px] md:w-[140px]': variant === 'list-item',
-            'md:h-[160px] md:w-[160px]': variant === 'grid-item',
+          className={classnames('relative mx-auto my-3 size-[124px] shrink-0 md:mb-9 md:mt-6', {
+            'md:mr-8 md:size-[140px]': variant === 'list-item',
+            'md:size-[160px]': variant === 'grid-item',
           })}
         >
           <Image fill src={images?.[0]} alt={name} style={{ objectFit: 'contain' }} />

@@ -50,7 +50,7 @@ const Modal = ({
       {closeButton && (
         <CloseIcon
           data-testid="close-modal"
-          className="absolute right-4 top-4 h-6 w-6 cursor-pointer text-gray-700"
+          className="absolute right-4 top-4 size-6 cursor-pointer text-gray-700"
           onClick={props.onRequestClose}
         />
       )}

@@ -53,7 +53,7 @@ const ApprovalFlowsPage = ({
             </div>
           )}
         </div>
-        <InfoIcon className="h-[24px] w-[24px] cursor-pointer text-gray-600 md:hidden" onClick={onStatusModalOpen} />
+        <InfoIcon className="size-[24px] cursor-pointer text-gray-600 md:hidden" onClick={onStatusModalOpen} />
       </div>
 
       <div>

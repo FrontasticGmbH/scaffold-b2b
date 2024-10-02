@@ -40,7 +40,7 @@ const TableCell = ({
       return (
         <div className="flex gap-2">
           {asTypography}
-          <ChevronUpDownIcon onClick={onSorting} className="hidden h-5 w-5 stroke-gray-500 lg:block" />
+          <ChevronUpDownIcon onClick={onSorting} className="hidden size-5 stroke-gray-500 lg:block" />
         </div>
       );
     } else if (typeof children === 'string') return asTypography;

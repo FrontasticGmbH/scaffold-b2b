@@ -8,7 +8,7 @@
   "orderConfirmed": "Votre commande a été confirmée",
   "orderConfirmation": "Nous avons envoyé votre confirmation de commande et votre facture à :",
   "continueShopping": "Continuer vos achats",
-  "wentWrong": "Une erreur s'est produite lors du paiement, veuillez vérifier vos informations de paiement et réessayer.",
+  "wentWrong": "Une erreur s'est produite lors du paiement, veuillez vérifier vos détails de paiement et réessayer.",
   "yourOrderId": "Numéro de commande:",
   "tryAgain": "Essayer à nouveau",
   "backToShop": "Retour à la boutique",
@@ -60,7 +60,7 @@
   "complete.purchase": "Finaliser l'achat",
   "address.delivery.add": "Ajouter une nouvelle adresse de livraison",
   "address.billing.add": "Ajouter une nouvelle adresse de facturation",
-  "continue.to.shipping": "Continuer vers la livraison",
+  "continue.to.shipping": "Continuer la livraison",
   "continue.to.billing.address": "Continuer vers l'adresse de facturation",
   "continue.to.payment": "Continuer le paiement",
   "by.placing.order": "En passant votre commande, vous acceptez le",
@@ -70,7 +70,7 @@
   "purchase.order": "Bon de commande",
   "purchase.order.desc": "Veuillez saisir un seul numéro de bon de commande autorisé généré par votre organisation. Le numéro de bon de commande et les instructions de paiement apparaîtront sur la facture.",
   "credit.or.debit": "Carte de crédit ou de débit",
-  "review.quote": "Examiner le devis",
+  "review.quote": "Citation de révision",
   "review.order": "Vérifier la commande",
   "po.number": "Numéro de bon de commande",
   "invoice.memo": "Note de facture",
@@ -81,6 +81,6 @@
   "quote.summary": "Résumé du devis",
   "quote.items": "Articles cités",
   "submit.quote.request": "Soumettre une demande de devis",
-  "tax.rates.undefined": "Aucun taux d'imposition n'est défini pour cette région",
-  "your.token.has.expired": "Votre jeton de paiement a expiré. Veuillez vous reconnecter.."
+  "tax.rates.undefined": "Il n'y a pas de taux d'imposition défini pour cette région",
+  "your.token.has.expired": "Votre jeton de paiement a expiré. Veuillez vous reconnecter."
 }

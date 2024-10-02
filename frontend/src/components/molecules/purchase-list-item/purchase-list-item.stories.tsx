@@ -21,6 +21,7 @@ const Template: StoryFn<typeof PurchaseListItem> = (args) => {
 
 const item = {
   id: '0',
+  url: '#',
   name: 'Brake Pad Set, disc brake DELPHI LP20',
   sku: 'SHXM4AY55N',
   inStock: true,
@@ -30,7 +31,7 @@ const item = {
   weight: '563 gram',
   price: 734.64,
   currency: 'USD',
-  image: '/brake-disk.png',
+  image: '/sb-assets/brake-disk.png',
 } as PurchaseListItemType;
 
 export const Primary = Template.bind({});

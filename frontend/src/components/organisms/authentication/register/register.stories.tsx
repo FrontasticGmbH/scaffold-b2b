@@ -1,5 +1,4 @@
 import { Meta, StoryFn } from '@storybook/react';
-import logoSrc from 'public/THE B2B STORE.svg';
 import { image } from '@/mocks/image';
 import Register from '.';
 
@@ -13,7 +12,7 @@ const Template: StoryFn<typeof Register> = (args) => <Register {...args} />;
 export const Default = Template.bind({});
 Default.args = {
   logoLink: { href: '/' },
-  logo: { src: logoSrc },
+  logo: { src: '/sb-assets/THE B2B STORE.png', width: 1481, height: 84 },
   image: {
     src: image.url,
     width: 680,

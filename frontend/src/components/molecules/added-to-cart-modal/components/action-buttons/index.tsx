@@ -19,7 +19,7 @@ const ActionButtons = ({ onClose }: PropsType) => {
         {translate('cart.continue.shopping')}
       </Button>
       <Link href="/cart" underlineOnHover={false} className="row-start-1 h-10 w-full">
-        <Button className={'h-full w-full'} variant="primary">
+        <Button className={'size-full'} variant="primary">
           {translate('cart.go')}
         </Button>
       </Link>

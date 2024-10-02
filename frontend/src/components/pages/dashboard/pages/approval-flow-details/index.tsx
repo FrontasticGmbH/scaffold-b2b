@@ -1,12 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import InfoBanner from '@/components/molecules/info-banner';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Link from '@/components/atoms/link';
-import ActivityLog from '@/components/molecules/activity-log';
 import { Approver } from '@/types/entity/approval-flow';
 import { Group, Rule } from '@/components/organisms/rule-builder/types';
-import useFormat from '@/hooks/useFormat';
-import { ActivityLogProps } from '@/components/molecules/activity-log/types';
+import RulePreview from '@/components/organisms/rule-builder/components/rule-preview';
+import { classnames } from '@/utils/classnames/classnames';
+import { CheckIcon } from '@heroicons/react/24/outline';
+import Button from '@/components/atoms/button';
+import TextArea from '@/components/atoms/text-area';
 import { ApprovalFlowDetailsPageProps } from './types';
 import PreviousPageLink from '../../components/previous-page-link';
 import ApprovalFlowStatusTag from '../../components/approval-flow-status-tag';
@@ -17,12 +19,17 @@ const ApprovalFlowDetailsPage = ({
   approvalFlow,
   userRoles,
   viewOnly,
+  approversCriteria = [],
   onApprove,
   onReject,
 }: ApprovalFlowDetailsPageProps) => {
   const { translate } = useTranslation();
 
-  const { formatPosition } = useFormat();
+  const [processing, setProcessing] = useState(false);
+
+  const [rejectionReasonTextarea, setRejectionReasonTextarea] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const maxRejectionReasonCharacters = 160;
 
   const isInApproverTiers = useCallback((approver: Approver, tier: Group | Rule): boolean => {
     if (tier.type === 'rule') return approver.key === tier.key;
@@ -59,59 +66,16 @@ const ApprovalFlowDetailsPage = ({
   const currentUserPendingTierIndex = mergedApprovers.findIndex(
     (rule) =>
       userRoles.some((role) => isInApproverTiers(role, rule)) &&
-      userRoles.some((role) => (approvalFlow.currentPendingApproverTiers ?? []).some((r) => r.key === role.key)),
+      userRoles.some((role) => (approvalFlow.eligibleApprovers ?? []).some((r) => r.key === role.key)),
   );
 
-  const [rejectionReasonTextarea, setRejectionReasonTextarea] = useState<Record<number, boolean>>({});
+  //Whether the user can approve current pending tier?
+  const userCanApprovePendingTier = currentPendingTierIndex === currentUserPendingTierIndex;
 
-  const [orderCreationDateFromatted, setOrderCreationDateFormatted] = useState('');
-  const [approvalFlowRejectionDate, setApprovalFlowRejectionDate] = useState('');
-  const [approvalsDateFormatted, setApprovalsDateFormatted] = useState<Record<number, string>>({});
-
-  const dateFormattingOptions: Intl.DateTimeFormatOptions = useMemo(
-    () => ({
-      hour12: false,
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: undefined,
-    }),
-    [],
+  //Whether the user already approved the flow
+  const userHasApproved = approvalFlow.approvals.some((approval) =>
+    userRoles.every((role) => !!approval.approver.roles.find((r) => r.key === role.key)),
   );
-
-  useEffect(() => {
-    if (!approvalFlow.order?.creationDate) return;
-
-    setOrderCreationDateFormatted(
-      new Date(approvalFlow.order?.creationDate).toLocaleString(undefined, dateFormattingOptions),
-    );
-  }, [approvalFlow.order, dateFormattingOptions]);
-
-  useEffect(() => {
-    if (!approvalFlow.rejection?.rejectedAt) return;
-
-    setApprovalFlowRejectionDate(
-      new Date(approvalFlow.rejection?.rejectedAt).toLocaleString(undefined, dateFormattingOptions),
-    );
-  }, [approvalFlow.rejection, dateFormattingOptions]);
-
-  useEffect(() => {
-    if (!approvalFlow.approvals.length) return;
-
-    setApprovalsDateFormatted(
-      approvalFlow.approvals.reduce(
-        (acc, approval, index) => ({
-          ...acc,
-          [index]: approval.approvedAt
-            ? new Date(approval.approvedAt).toLocaleString(undefined, dateFormattingOptions)
-            : '',
-        }),
-        {},
-      ),
-    );
-  }, [approvalFlow.approvals, dateFormattingOptions]);
 
   return (
     <div>
@@ -139,91 +103,178 @@ const ApprovalFlowDetailsPage = ({
           <span>{translate('common.status')}:</span>
           <ApprovalFlowStatusTag status={approvalFlow.status} />
         </h3>
-
-        <h3 className="flex items-center gap-1 text-14 text-gray-600">
-          <span>{translate('dashboard.rules.applied')}:</span>
-          {(approvalFlow.rules ?? []).map((rule, index, arr) => (
-            <div key={rule.id}>
-              <Link
-                href={`${DashboardLinks.approvalRules}?subPath=edit-approval-rule&id=${rule.id}`}
-                className="text-primary underline"
-              >
-                {rule.name}
-              </Link>
-              {index < arr.length - 1 && <span>,</span>}
-            </div>
-          ))}
-        </h3>
       </div>
 
-      <div className="mt-[64px] border-t border-neutral-400 py-8">
-        <h5 className="pb-9 text-18 text-gray-700">{translate('common.activity')}</h5>
+      <div className="mt-9 border-t border-neutral-400 pt-10">
+        <h5 className="pb-9 text-20 font-bold text-gray-700">{translate('common.approval.flow')}</h5>
 
-        <div className="pl-8">
-          <ActivityLog
-            activities={[
-              {
-                title: translate('dashboard.order.created'),
-                summary: orderCreationDateFromatted,
-              },
-              ...(approvalFlow.status === 'rejected'
-                ? [
-                    {
-                      title: `${translate('dashboard.flow.rejected')} ${
-                        approvalFlow.rejection?.rejecter.name
-                          ? `${translate('common.by')} ${approvalFlow.rejection.rejecter.name}`
-                          : ''
-                      }`,
-                      summary: approvalFlowRejectionDate,
-                      comment: approvalFlow.rejection?.reason ?? '',
-                      commentDisabled: true,
-                    } as ActivityLogProps['activities'][0],
-                  ]
-                : mergedApprovers.map((rule, index) => {
-                    const flowApprovals = approvalFlow.approvals.filter((approval) =>
-                      approval.approver.roles.some((role) => isInApproverTiers(role, rule)),
-                    );
-
-                    return {
-                      title:
-                        approvalFlow.status === 'pending' && index >= currentPendingTierIndex
-                          ? `${translate('dashboard.await.reply.from.tier', {
-                              values: { tier: formatPosition(index + 1) },
-                            })}`
-                          : `${translate('dashboard.tier.approved', {
-                              values: { tier: formatPosition(index + 1) },
-                            })} ${flowApprovals.length > 0 ? `${translate('common.by')} ${flowApprovals.map((flowApproval) => flowApproval.approver.name).join(', ')}` : ''}`,
-                      summary:
-                        currentPendingTierIndex === -1 || index < currentPendingTierIndex
-                          ? approvalsDateFormatted[
-                              flowApprovals.reduce(
-                                (acc, flowApproval, i) =>
-                                  acc[1] > new Date(flowApproval.approvedAt)
-                                    ? acc
-                                    : [i, new Date(flowApproval.approvedAt)],
-                                [-1, new Date(flowApprovals[0].approvedAt)],
-                              )[0] as number
-                            ]
-                          : '',
-                      reply:
-                        approvalFlow.status === 'pending' &&
-                        index === currentUserPendingTierIndex &&
-                        !rejectionReasonTextarea[index],
-                      comment: rejectionReasonTextarea[index] ? ' ' : '',
-                      canAccept: !viewOnly,
-                      canReject: !viewOnly,
-                      onAccept: onApprove,
-                      onReject: () => setRejectionReasonTextarea({ ...rejectionReasonTextarea, [index]: true }),
-                      onCommentCancel: () => setRejectionReasonTextarea({ ...rejectionReasonTextarea, [index]: false }),
-                      onCommentUpdate: onReject,
-                    } as ActivityLogProps['activities'][0];
-                  })),
-            ]}
-          />
+        <div>
+          <h6 className="text-16 font-semibold text-gray-700">{translate('dashboard.rules.applied')}</h6>
+          <div className="mt-4 flex flex-wrap items-center gap-4 rounded-md border border-gray-300 p-6">
+            {(approvalFlow.rules ?? []).map((rule, index, arr) => (
+              <div key={rule.id}>
+                <Link
+                  href={`${DashboardLinks.approvalRules}?subPath=edit-approval-rule&id=${rule.id}`}
+                  className="text-16 text-blue-700 underline"
+                >
+                  {rule.name}
+                </Link>{' '}
+                {index < arr.length - 1 && <span>,</span>}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="mt-[64px] border-t border-neutral-400">
+      <div className="mt-6">
+        <div>
+          <h5 className="text-16 font-semibold text-gray-700">
+            {translate('dashboard.approval.flow.required.approvers')}
+          </h5>
+          <div
+            className="mt-1 text-16 font-normal text-gray-700"
+            dangerouslySetInnerHTML={{
+              __html: translate('dashboard.approval.flow.required.approvers.desc', {
+                values: {
+                  preview: `<div class="w-fit border border-blue-500 p-1 inline-flex items-center gap-1 rounded-sm text-xs text-blue-500">
+                    <span>${translate('common.name')}</span>
+                    <span class="w-[12px] h-[12px] border border-gray-500 rounded-full block" />
+                  </div>`,
+                },
+              }),
+            }}
+          />
+        </div>
+
+        <div className="mt-4 rounded-md border border-gray-300 px-7">
+          {mergedApprovers.map((approver, index, arr) => (
+            <div key={index} className={classnames('py-6', { 'border-b border-neutral-400': index < arr.length - 1 })}>
+              <div className="flex items-start gap-5">
+                <div className="shrink-0 rounded-full bg-neutral-200 px-6 py-1 text-16 font-medium text-gray-700">{`${translate('dashboard.tier')} ${index + 1}`}</div>
+                <RulePreview
+                  group={approver}
+                  criteria={approversCriteria}
+                  renderRule={({ key, name }) => {
+                    const isUserRole = userRoles.some((role) => role.key === key);
+                    const isRoleApproved = approvalFlow.approvals.some(
+                      (approval) => !!approval.approver.roles.find((r) => r.key === key),
+                    );
+
+                    return (
+                      <div
+                        className={classnames('flex w-fit items-center gap-2 rounded-sm border px-2 py-1', {
+                          'border-gray-300': !isUserRole,
+                          'border-blue-500': isUserRole,
+                        })}
+                      >
+                        <span
+                          className={classnames({
+                            'text-gray-600': !isUserRole,
+                            'text-blue-500': isUserRole,
+                          })}
+                        >
+                          {name}
+                        </span>
+                        <span
+                          className={classnames(
+                            'flex size-[20px] items-center justify-center rounded-full border-2 p-[3px]',
+                            {
+                              'border-green-600': isRoleApproved,
+                              'border-gray-300': !isRoleApproved,
+                            },
+                          )}
+                        >
+                          {isRoleApproved && <CheckIcon className="stroke-[5px] text-green-600" />}
+                        </span>
+                      </div>
+                    );
+                  }}
+                />
+              </div>
+              <div className="flex flex-wrap items-center pt-6">
+                {(approvalFlow.rules ?? []).map((rule, index, arr) => (
+                  <div key={rule.id} className="whitespace-pre text-gray-500">
+                    {rule.name} {index < arr.length - 1 && <span>,{'  '}</span>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-7 flex gap-3">
+          {rejectionReasonTextarea ? (
+            <form
+              className="w-full"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setProcessing(true);
+                await onReject?.(rejectionReason);
+                setProcessing(false);
+              }}
+            >
+              <h6 className="mb-3 text-12 font-medium uppercase text-gray-600">
+                {translate('dashboard.approval.flow.rejection.reason')}
+              </h6>
+              <TextArea
+                value={rejectionReason}
+                className="h-[150px] w-full md:h-[65px]"
+                fitContent={false}
+                error={
+                  rejectionReason.length > maxRejectionReasonCharacters
+                    ? translate('dashboard.message.too.long', {
+                        values: { maxCharacters: maxRejectionReasonCharacters.toString() },
+                      })
+                    : ''
+                }
+                onChange={(e) => setRejectionReason(e.target.value)}
+              />
+              <div className="mt-6 flex gap-3">
+                <Button variant="secondary" size="l" onClick={() => setRejectionReasonTextarea(false)}>
+                  {translate('common.cancel')}
+                </Button>
+                <Button type="submit" size="l" variant="primary" loading={processing}>
+                  {translate('common.reject')}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <Button
+                variant="secondary"
+                size="l"
+                className="leading-[16px]"
+                disabled={
+                  viewOnly || userHasApproved || !userCanApprovePendingTier || approvalFlow.status !== 'pending'
+                }
+                onClick={() => {
+                  setRejectionReasonTextarea(true);
+                }}
+              >
+                {translate('common.reject')}
+              </Button>
+              <Button
+                variant="primary"
+                size="l"
+                className="py-[12px] leading-[16px]"
+                loading={processing}
+                disabled={
+                  viewOnly || userHasApproved || !userCanApprovePendingTier || approvalFlow.status !== 'pending'
+                }
+                onClick={async () => {
+                  setProcessing(true);
+                  await onApprove?.();
+                  setProcessing(false);
+                }}
+              >
+                {translate('common.approve')}
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-10 border-t border-neutral-400">
         <OrderDetailsPage order={approvalFlow.order} showCtaButtons={false} showOrderStatusBar={false} />
       </div>
     </div>

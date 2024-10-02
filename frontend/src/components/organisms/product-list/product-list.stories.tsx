@@ -38,7 +38,8 @@ Primary.args = {
     maxQuantity: 10,
     price: 734.64,
     currency: 'USD',
-    image: '/brake-disk.png',
+    image: './sb-assets/brake-disk.png',
+    images: ['./sb-assets/brake-disk.png'],
   })),
   title: 'Brake System',
   breadcrumb: [

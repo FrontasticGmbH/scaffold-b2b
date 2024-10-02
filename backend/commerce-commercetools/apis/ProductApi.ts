@@ -6,6 +6,11 @@ import { Filter, TermFilter } from '@Types/query';
 import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
+import {
+  ProductSearchFacetResult,
+  ProductSearchFacetResultBucket,
+  ProductSearchRequest,
+} from '@commercetools/platform-sdk';
 import ProductMapper from '../mappers/ProductMapper';
 import { ProductSearchFactory } from '@Commerce-commercetools/utils/ProductSearchQueryFactory';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
@@ -123,9 +128,48 @@ export default class ProductApi extends BaseApi {
     return filterFields;
   };
 
-  queryCategories: (categoryQuery: CategoryQuery) => Promise<PaginatedResult<Category>> = async (
-    categoryQuery: CategoryQuery,
-  ) => {
+  queryFacetCategoriesForSubtree: (storeId?: string) => Promise<any> = async (storeId?: string) => {
+    const query: ProductSearchRequest = {
+      ...(storeId && {
+        query: {
+          exact: {
+            field: 'stores',
+            value: storeId,
+          },
+        },
+      }),
+      facets: [
+        {
+          distinct: {
+            name: 'categoriesSubTree',
+            field: 'categoriesSubTree',
+            level: 'products',
+            limit: 200,
+          },
+        },
+      ],
+    };
+
+    const result = await this.requestBuilder()
+      .products()
+      .search()
+      .post({
+        body: query,
+      })
+      .execute();
+
+    const res = (
+      result?.body.facets?.find(
+        (r: ProductSearchFacetResult) => r.name === 'categoriesSubTree',
+      ) as ProductSearchFacetResultBucket
+    )?.buckets
+      ?.filter((b) => b.count > 0)
+      ?.map((b) => b.key);
+
+    return res;
+  };
+
+  async queryCategories(categoryQuery: CategoryQuery, buckets?: string[]): Promise<PaginatedResult<Category>> {
     const locale = await this.getCommercetoolsLocal();
 
     // TODO: get default from constant
@@ -138,6 +182,10 @@ export default class ProductApi extends BaseApi {
 
     if (categoryQuery.parentId) {
       where.push(`parent(id="${categoryQuery.parentId}")`);
+    }
+
+    if (buckets?.length) {
+      where.push(`id in (${buckets.map((b) => `"${b}"`).join(',')})`);
     }
 
     const methodArgs = {
@@ -172,7 +220,7 @@ export default class ProductApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  };
+  }
 
   protected getOffsetFromCursor = (cursor: string): number | undefined => {
     if (cursor === undefined) {
