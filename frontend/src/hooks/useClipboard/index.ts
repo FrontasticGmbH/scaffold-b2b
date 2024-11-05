@@ -18,7 +18,7 @@ const useClipboard = () => {
       try {
         await navigator.clipboard.writeText(text);
         onSuccess();
-      } catch (e) {
+      } catch {
         onError();
       }
     },

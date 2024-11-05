@@ -201,7 +201,7 @@
   "unsaved.changes": "Alterações não salvas",
   "unsaved.changes.warning": "Tem certeza de que deseja abandonar seu trabalho atual? Quaisquer alterações não salvas serão perdidas.",
   "leave": "Deixar",
-  "preview": "Pré-visualização",
+  "preview": "Visualização",
   "approval.flows": "Fluxos de aprovação",
   "approval.flow": "Fluxo de aprovação",
   "is": "É",
@@ -209,8 +209,8 @@
   "is.equal": "É igual",
   "is.more.than": "É mais que",
   "is.more.than.or.equal": "É maior ou igual",
-  "is.less.than": "É menor que",
-  "is.less.than.or.equal": "É menor ou igual a",
+  "is.less.than": "É menos do que",
+  "is.less.than.or.equal": "É menor ou igual",
   "approve": "Aprovar",
   "reject": "Rejeitar"
 }

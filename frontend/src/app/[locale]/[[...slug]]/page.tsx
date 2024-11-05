@@ -100,7 +100,12 @@ export default async function Page({ params, searchParams }: PageProps) {
           projectSettings: projectSettings.isError ? undefined : projectSettings.data,
         }}
       >
-        <Renderer data={page.data} params={params} searchParams={searchParams} />
+        <Renderer
+          data={page.data}
+          params={params}
+          searchParams={searchParams}
+          projectSettings={projectSettings.isError ? undefined : projectSettings.data}
+        />
         <Toaster />
       </Providers>
 

@@ -11,6 +11,7 @@
   "email.exists": "The email address is invalid or already exists.",
   "company.exists": "Company name is already registered. Please use another company name or ask an administrator to be invited to an existing company.",
   "name": "Name has to be at least two characters.",
-  "verify.failed": "Verification failed",
-  "verify.failed.description": "Sorry, we failed to verify your account. A new verification link has been sent to your email address. "
+  "verify.failed": "Oops! Something went wrong",
+  "verify.failed.description": "We couldn’t verify your account this time, but we’ve sent a new link to your email. Please check your inbox to complete the process.",
+  "verify.failed.already.verified": "Don't worry, your email has already been verified. Just go back to the login page and try to login again."
 }

@@ -87,9 +87,9 @@ const useHeaderData = () => {
 
   const onLogoutClick = () => {
     logout().then(() => {
-      clearCache();
-      router.refresh();
       router.push('/login');
+      router.refresh();
+      clearCache();
     });
   };
 

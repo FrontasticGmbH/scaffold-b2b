@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Button from '@/components/atoms/button';
 import Confirmation from '@/components/organisms/confirmation';
@@ -21,6 +21,8 @@ const PurchaseListDetailPage = ({
 
   const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('purchaselist');
 
+  const [isOrderingList, setIsOrderingList] = useState(false);
+
   if (!purchaseList) return <></>;
 
   const itemsCount = purchaseList.items.length;
@@ -38,15 +40,19 @@ const PurchaseListDetailPage = ({
           <PreviousPageLink className="hidden md:block" />
           <div className="flex w-full flex-col items-stretch gap-4 md:w-fit md:flex-row md:items-center md:gap-3">
             <Button
-              className="w-full px-0 py-[8px] md:order-2 md:w-[75px]"
+              className="w-full px-0 py-[8px] md:order-2 md:min-w-[75px]"
               size="m"
-              disabled
-              onClick={() => onOrderPurchaseList?.(purchaseList.id)}
+              loading={isOrderingList}
+              onClick={async () => {
+                setIsOrderingList(true);
+                await onOrderPurchaseList?.();
+                setIsOrderingList(false);
+              }}
             >
               {translate('common.order')}
             </Button>
             <EditPurchaseListModal purchaseList={purchaseList} onUpdatePurchaseList={onUpdatePurchaseList}>
-              <Button className="w-full px-0 py-[8px] md:w-[75px]" size="m" variant="secondary">
+              <Button className="w-full px-0 py-[8px] md:min-w-[75px]" size="m" variant="secondary">
                 {translate('common.edit')}
               </Button>
             </EditPurchaseListModal>
@@ -64,7 +70,7 @@ const PurchaseListDetailPage = ({
                 else showDeletedFailedMessage();
               }}
             >
-              <Button className="w-full px-0 py-[8px] md:w-[75px]" size="m" variant="secondary">
+              <Button className="w-full px-0 py-[8px] md:min-w-[75px]" size="m" variant="secondary">
                 {translate('common.delete')}
               </Button>
             </Confirmation>

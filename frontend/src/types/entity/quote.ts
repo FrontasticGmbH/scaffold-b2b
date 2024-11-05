@@ -6,7 +6,7 @@ export type QuoteStatus =
   | 'inprogress'
   | 'withdrawn'
   | 'declined'
-  | 'renegotiating'
+  | 'renegotiated'
   | 'submitted'
   | 'cancelled'
   | 'rejected'

@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { classnames } from '@/utils/classnames/classnames';
 import { ChevronRightIcon as ChevronIcon } from '@heroicons/react/24/solid';
 import { constructLocalizedUrl } from '@/utils/links';
+import { Locale } from '@/project.config';
 import { LinkProps } from './types';
 
 const Link = ({
@@ -28,7 +29,7 @@ const Link = ({
   return (
     <NextLink
       role="link"
-      href={constructLocalizedUrl(href.toString(), localeOverride ?? locale)}
+      href={constructLocalizedUrl(href.toString(), (localeOverride ?? locale) as Locale)}
       target={openInNewTab ? '_blank' : '_self'}
       className={linkClassName}
       {...props}

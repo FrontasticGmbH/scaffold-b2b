@@ -20,7 +20,7 @@
   "quote.summary": "Offerte samenvatting",
   "quote.items": "Geciteerde artikelen",
   "quote.request.id": "ID van offerteaanvraag",
-  "payment.purchase.order": "Aankoop order nummer}",
+  "payment.purchase.order": "Aankoop order nummer {number}",
   "quote.request.submitted": "Uw offerteaanvraag is verzonden",
   "quote.request.submitted.desc": "Een verkoopvertegenwoordiger zal u zo snel mogelijk een offerte bezorgen. U wordt op de hoogte gehouden van offerte-updates op"
 }

@@ -11,6 +11,7 @@
   "email.exists": "O endereço de e-mail é inválido ou já existe.",
   "company.exists": "O nome da empresa já está registrado. Use outro nome de empresa ou peça a um administrador para ser convidado para uma empresa existente.",
   "name": "O nome deve ter pelo menos dois caracteres.",
-  "verify.failed": "Falha na verificação",
-  "verify.failed.description": "Desculpe, não conseguimos verificar sua conta. Um novo link de verificação foi enviado para seu endereço de e-mail."
+  "verify.failed": "Opa! Algo deu errado",
+  "verify.failed.description": "Não conseguimos verificar sua conta desta vez, mas enviamos um novo link para seu e-mail. Verifique sua caixa de entrada para concluir o processo.",
+  "verify.failed.already.verified": "Não se preocupe, seu e-mail já foi verificado. Basta voltar para a página de login e tentar fazer login novamente."
 }

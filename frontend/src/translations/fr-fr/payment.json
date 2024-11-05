@@ -12,7 +12,7 @@
   "save": "Sauvegarder",
   "cancel": "Annuler",
   "delete": "Supprimer",
-  "delete.question": "Supprimer le mode de paiement ?",
+  "delete.question": "Supprimer le mode de paiement ?",
   "delete.warning": "Cette action ne peut pas être annulée.",
   "card.number.error": "Veuillez entrer un numéro de carte de crédit valide",
   "card.holder.error": "Insérer le nom du titulaire de la carte"

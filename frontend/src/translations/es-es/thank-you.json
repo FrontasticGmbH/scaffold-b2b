@@ -20,7 +20,7 @@
   "quote.summary": "Resumen de cotización",
   "quote.items": "Artículos cotizados",
   "quote.request.id": "ID de solicitud de cotización",
-  "payment.purchase.order": "Número de orden de compra}",
+  "payment.purchase.order": "Número de orden de compra {number}",
   "quote.request.submitted": "Su solicitud de cotización ha sido enviada",
   "quote.request.submitted.desc": "Un representante de ventas le proporcionará una cotización lo antes posible. Se le notificará sobre las actualizaciones de cotizaciones en"
 }

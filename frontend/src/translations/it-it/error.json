@@ -9,8 +9,9 @@
   "email.enter": "Inserisci il tuo indirizzo email",
   "email": "L'email non è valida.",
   "email.exists": "L'indirizzo email non è valido o esiste già.",
-  "company.exists": "Il nome dell'azienda è già registrato. Si prega di utilizzare un altro nome aziendale o di chiedere a un amministratore di essere invitato in un'azienda esistente.",
+  "company.exists": "Il nome dell'azienda è già registrato. Utilizza un altro nome di azienda o chiedi a un amministratore di essere invitato in un'azienda esistente.",
   "name": "Il nome deve contenere almeno due caratteri.",
-  "verify.failed": "Verifica fallita",
-  "verify.failed.description": "Siamo spiacenti, non siamo riusciti a verificare il tuo account. Un nuovo link di verifica è stato inviato al tuo indirizzo email."
+  "verify.failed": "Oops! Qualcosa è andato storto",
+  "verify.failed.description": "Questa volta non siamo riusciti a verificare il tuo account, ma abbiamo inviato un nuovo link alla tua email. Controlla la tua posta in arrivo per completare la procedura.",
+  "verify.failed.already.verified": "Non preoccuparti, la tua email è già stata verificata. Torna alla pagina di login e prova ad effettuare nuovamente l'accesso."
 }

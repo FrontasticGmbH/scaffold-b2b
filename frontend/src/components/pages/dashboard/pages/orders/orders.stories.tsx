@@ -17,11 +17,6 @@ const Template: StoryFn<typeof OrdersPage> = ({ orders, statusOptions, ...args }
 
   const [limit, setLimit] = useState<number>(25);
 
-  const onStatusRefine = (status: string) => {
-    if (statuses.includes(status)) setStatuses(statuses.filter((s) => s !== status));
-    else setStatuses([...statuses, status]);
-  };
-
   const onCreationDateRefine = ({ from, to }: { from?: Date; to?: Date }) => {
     setDate({ from: from?.toISOString() ?? '', to: to?.toISOString() ?? '' });
   };

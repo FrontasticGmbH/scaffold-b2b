@@ -194,6 +194,7 @@ export default class ProductApi extends BaseApi {
         offset: this.getOffsetFromCursor(categoryQuery.cursor),
         where: where.length > 0 ? where : undefined,
         expand: ['ancestors[*]', 'parent'],
+        sort: 'orderHint',
       },
     };
 

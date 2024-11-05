@@ -85,7 +85,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
     );
   }
 
-  if (status === 'renegotiating') {
+  if (status === 'renegotiated') {
     activity.push(
       {
         title: 'dashboard.quote.accepted.by.seller',
@@ -169,7 +169,7 @@ export const mapQuote = (
 ): Quote => {
   const statusMapping = {
     DeclinedForRenegotiation: 'waiting',
-    RenegotiationAddressed: 'renegotiating',
+    RenegotiationAddressed: 'renegotiated',
     Pending: 'inprogress',
   } as Record<Required<CoCoQuote>['quoteState'], Quote['status']>;
 

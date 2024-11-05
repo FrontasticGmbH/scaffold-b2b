@@ -6,14 +6,14 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { desktop } from '@/constants/screensizes';
 import InfoBanner from '@/components/molecules/info-banner';
+import Button from '@/components/atoms/button';
+import useHeaderData from '@/lib/tastics/header/hooks/useHeaderData';
 import QuickOrderMobileButton from '../quick-order-mobile-button';
 import PageLinksSection from './page-links-section';
 import CategorySection from './category-section';
 import AccountSection from './account-section';
 import BackButton from './back-button';
 import { HeaderContext } from '../../context';
-import Button from '@/components/atoms/button';
-import useHeaderData from '@/lib/tastics/header/hooks/useHeaderData';
 
 const NavigationSections = () => {
   const { translate } = useTranslation();
@@ -37,7 +37,6 @@ const NavigationSections = () => {
   const showBackButton = showQuickOrder || navigationLevel.length > 0;
   const pageLinksOrMobileQuickOrderExist = !isDesktopSize || pageLinks.length > 0;
   const pageLinksAndMobileQuickOrderExist = !isDesktopSize && pageLinks.length > 0;
-  const showLogout = !navigationLevel.length || navigationLevel[0]?.name === 'My Account';
 
   const handleLogoutClick = () => {
     hideHeaderMenu();
@@ -63,7 +62,7 @@ const NavigationSections = () => {
           <div className="block lg:hidden">
             {navigationLevel && navigationLevel.length === 0 && <ShippingAndLanguageSection />}
           </div>
-          {showLogout && (
+          {!navigationLevel.length && (
             <Button className="mb-4 lg:hidden" variant="secondary" size="full" onClick={handleLogoutClick}>
               {translate('account.sign.out')}
             </Button>

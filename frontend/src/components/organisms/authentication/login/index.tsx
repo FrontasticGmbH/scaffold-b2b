@@ -10,6 +10,7 @@ import Link from '@/components/atoms/link';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import Typography from '@/components/atoms/typography';
 import useCustomRouter from '@/hooks/useCustomRouter';
+import useSwrClearCache from '@/hooks/useSwrClearCache';
 import AuthLayout from '../layouts/auth-layout';
 import useAuthProps from './hooks/useAuthProps';
 import { LoginProps } from './types';
@@ -17,6 +18,8 @@ import AuthForm from '../layouts/auth-form';
 
 const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
   const router = useCustomRouter();
+
+  const clearCache = useSwrClearCache();
 
   const { translate } = useTranslation();
 
@@ -47,8 +50,9 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
     if (data.email && data.password) {
       login(data.email, data.password, data.rememberMe)
         .then(() => {
-          router.refresh();
           router.push('/');
+          router.refresh();
+          clearCache();
         })
         .catch((err: Error) => {
           if (err.message.includes('unverified')) {

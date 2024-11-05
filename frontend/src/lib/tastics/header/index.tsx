@@ -56,25 +56,25 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     categoryId: data.accountLinkId,
     name: data.accountLinkLabel,
     path: resolveReference(data.accountLink).href ?? '/',
-    subCategories: data.accountPageLinks.map((link) => {
+    descendants: data.accountPageLinks.map((link) => {
       return {
         categoryId: link.linkId,
         name: link.name,
         path: resolveReference(link.href).href ?? '/',
-        subCategories: [],
+        descendants: [],
       };
     }),
   };
 
   const accountLinks: NavigationCategory[] = useMemo(() => {
     return isAdmin
-      ? myAccountMenu.subCategories
-      : myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin');
-  }, [isAdmin, myAccountMenu.subCategories]);
+      ? myAccountMenu.descendants
+      : myAccountMenu.descendants.filter((descendant) => descendant.categoryId != 'company-admin');
+  }, [isAdmin, myAccountMenu.descendants]);
 
   const accountMenuMobile: NavigationCategory = {
     ...myAccountMenu,
-    subCategories: myAccountMenu.subCategories.filter((subCategory) => subCategory.categoryId != 'company-admin'),
+    descendants: myAccountMenu.descendants.filter((descendant) => descendant.categoryId != 'company-admin'),
   };
 
   return (

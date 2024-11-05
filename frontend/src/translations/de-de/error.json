@@ -11,6 +11,7 @@
   "email.exists": "Die E-Mail-Adresse ist ungültig oder existiert bereits.",
   "company.exists": "Der Firmenname ist bereits registriert. Bitte verwenden Sie einen anderen Firmennamen oder bitten Sie einen Administrator, Sie zu einer bestehenden Firma einzuladen.",
   "name": "Der Name muss mindestens zwei Zeichen lang sein.",
-  "verify.failed": "Verifizierung fehlgeschlagen",
-  "verify.failed.description": "Leider konnten wir Ihr Konto nicht verifizieren. Ein neuer Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet."
+  "verify.failed": "Hoppla! Da ist etwas schiefgelaufen",
+  "verify.failed.description": "Wir konnten Ihr Konto dieses Mal nicht bestätigen, haben Ihnen aber einen neuen Link per E-Mail geschickt. Bitte überprüfen Sie Ihren Posteingang, um den Vorgang abzuschließen.",
+  "verify.failed.already.verified": "Keine Sorge, Ihre E-Mail wurde bereits bestätigt. Gehen Sie einfach zurück zur Anmeldeseite und versuchen Sie erneut, sich anzumelden."
 }

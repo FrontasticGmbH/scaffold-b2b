@@ -57,7 +57,7 @@ const CategorySection = () => {
                   </div>
                 </Link>
               )}
-              {navigationLevel[navigationLevel.length - 1].subCategories.map((nav) => (
+              {navigationLevel[navigationLevel.length - 1].descendants.map((nav) => (
                 <NavigationButton key={nav.categoryId} link={nav} onClick={() => insertCategory(nav)} />
               ))}
             </>

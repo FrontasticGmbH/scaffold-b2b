@@ -7,6 +7,7 @@ import { ContextShape, Location } from '@/components/organisms/shipping-and-lang
 import useCart from '@/lib/hooks/useCart';
 import { mapCountry } from '@/utils/mappers/map-country';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
+import { useCategories } from '@/lib/hooks/useCategories';
 
 const initialMarketState = {
   selectedLanguage: {} as Option,
@@ -25,6 +26,7 @@ const ShipAndLanguageProvider = ({
   const { path } = usePath();
 
   const { mutateAll: mutateAllCarts } = useCart();
+  const { mutate: mutateCategories } = useCategories();
 
   const locations = (projectSettings?.countries ?? []).map(mapCountry).map(
     ({ name, code, currencies, locales }) =>
@@ -41,7 +43,8 @@ const ShipAndLanguageProvider = ({
 
   useEffect(() => {
     mutateAllCarts();
-  }, [locale, mutateAllCarts]);
+    mutateCategories();
+  }, [locale, mutateAllCarts, mutateCategories]);
 
   const [selectedLocationValue, setSelectedLocationValue] = useState(locale?.split('-')[1]?.toLowerCase());
 

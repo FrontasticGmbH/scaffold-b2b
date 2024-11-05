@@ -16,8 +16,10 @@ const usePDPCart = (product: Product) => {
     (rates: Array<ShippingRate>): number => {
       const { countries } = getLocalizationInfo(selectedLocation?.languages?.[0]?.value ?? 'en-us');
 
-      const currentRate = rates?.find((rate) => !!countries.find((c) => c.toLowerCase() === rate.name?.toLowerCase()));
-      return (currentRate?.price?.centAmount ?? 1000) / 100;
+      const currentRate = rates?.find(
+        (rate) => !!countries.find((c) => !!rate.locations?.find((loc) => loc.country === c)),
+      );
+      return (currentRate?.price?.centAmount ?? 0) / 100;
     },
     [selectedLocation],
   );

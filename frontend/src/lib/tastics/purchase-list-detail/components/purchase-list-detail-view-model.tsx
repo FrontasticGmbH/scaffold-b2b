@@ -1,5 +1,4 @@
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import PurchaseListDetailPage from '@/components/pages/dashboard/pages/purchase-list-detail';
 import Dashboard from '@/components/pages/dashboard';
 import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
@@ -9,9 +8,10 @@ import useAccount from '@/lib/hooks/useAccount';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useCart from '@/lib/hooks/useCart';
 import usePurchaseList from '@/lib/hooks/usePurchaseList';
+import useCustomRouter from '@/hooks/useCustomRouter';
 
 const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => {
-  const router = useRouter();
+  const router = useCustomRouter();
 
   const { account } = useAccount();
 
@@ -29,6 +29,20 @@ const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => 
     <Dashboard href={DashboardLinks.shoppingLists} userName={account?.firstName}>
       <PurchaseListDetailPage
         purchaseList={mapPurchaseList(wishlist)}
+        onOrderPurchaseList={async () => {
+          if (!wishlist.lineItems?.length) return false;
+
+          const res = await addItemToCart(
+            wishlist.lineItems.map((lineItem) => ({
+              sku: lineItem.variant?.sku as string,
+              count: lineItem.count ?? 1,
+            })),
+          );
+
+          router.push('/cart');
+
+          return res.success;
+        }}
         onUpdatePurchaseList={async ({ id, name, description }) => {
           const res = await updatePurchaseList({ wishlistId: id, name, description });
 

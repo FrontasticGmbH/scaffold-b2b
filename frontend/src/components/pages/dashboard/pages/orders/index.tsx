@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import EmptyState from '@/components/molecules/empty-state';
+import LoadingIcon from '@/components/atoms/loading-icon';
 import { OrdersPageProps } from './types';
 import RefinementsDrawer from './components/refinements-drawer';
 import Refinements from './components/refinements';
@@ -64,13 +65,22 @@ const OrdersPage = ({
         <RefinementsDrawer {...refinementProps} />
         <Refinements {...refinementProps} />
         <CurrentRefinements {...currentRefinementsProps} />
-        {orders.length > 0 ? (
-          <OrdersTable orders={orders} pagination={tablePaginationProps} />
-        ) : (
-          <EmptyState header={translate('common.no.results.found')} />
-        )}
+
+        <div>
+          <OrdersTable orders={orders} pagination={loading ? undefined : tablePaginationProps} />
+
+          {orders.length === 0 &&
+            (loading ? (
+              <div className="flex w-full justify-center border-x border-b border-neutral-400 py-8">
+                <LoadingIcon svgWidth={20} svgHeight={20} className="fill-gray-700" />
+              </div>
+            ) : (
+              <EmptyState header={translate('common.no.results.found')} />
+            ))}
+        </div>
       </div>
     </div>
   );
 };
+
 export default OrdersPage;

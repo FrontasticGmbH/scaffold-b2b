@@ -22,9 +22,9 @@ const ShippingMethod = ({ className, label, price, estimatedDeliveryDays, curren
       </div>
       <div className="grid gap-2">
         {/* Label & Price */}
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap gap-4">
           <Typography className="text-gray-700" fontSize={14} fontWeight="medium" lineHeight="tight">
-            {`${label} - `}
+            {`${label}`}
           </Typography>
           <Typography className="text-gray-800" fontWeight="semibold" fontSize={14} lineHeight="tight">
             {formatCurrency(price, currency)}

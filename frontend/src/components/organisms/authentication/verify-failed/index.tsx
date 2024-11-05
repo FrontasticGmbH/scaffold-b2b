@@ -5,7 +5,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import AuthLayout from '../layouts/auth-layout';
 import { AuthLayoutProps } from '../types';
 
-const VerifyFailed = (props: AuthLayoutProps) => {
+const VerifyFailed = (props: AuthLayoutProps & { isAlreadyVerified?: boolean }) => {
   const { translate } = useTranslation();
 
   return (
@@ -15,7 +15,9 @@ const VerifyFailed = (props: AuthLayoutProps) => {
           {translate('error.verify.failed')}
         </Typography>
         <Typography fontSize={14} className="text-gray-600" lineHeight="loose">
-          {translate('error.verify.failed.description')}
+          {props.isAlreadyVerified
+            ? translate('error.verify.failed.already.verified')
+            : translate('error.verify.failed.description')}
         </Typography>
       </div>
     </AuthLayout>

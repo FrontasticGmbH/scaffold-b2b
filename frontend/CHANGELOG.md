@@ -1,4 +1,16 @@
 
+## Version 1.12.0 (2024-10-02)
+
+** New Features and Improvements **
+
+- Upgrades to support version Next.js version 14.2.9, React v18.3.1, Yarn4 .4.1 and Typescript version 5.5.4
+- Updates to approval flows UI to support multiple rules on an order 
+- Modify conditions for showing logout button
+
+** Bug fixes **
+- Modify conditions for showing logout button
+- Fix toaster empty box rendering bug
+
 ## Version 1.11.0 (2024-08-30)
 
 ** New Features and Improvements **

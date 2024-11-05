@@ -82,5 +82,5 @@
   "checkout.request.disabled": "Para crear un pedido o una cotización, solicite al administrador de su empresa que le otorgue los permisos necesarios.",
   "checkout.unavailable": "Pagar no disponible",
   "invalid.addresses.requirements": "No se agregan direcciones de envío y facturación. Pídale al administrador de su empresa que agregue uno",
-  "cart.amount": "Monto del carrito"
+  "cart.amount": "Cantidad del carrito"
 }

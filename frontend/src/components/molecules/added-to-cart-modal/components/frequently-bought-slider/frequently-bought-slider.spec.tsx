@@ -1,9 +1,30 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import FrequentlyBoughtSlider from '@/components/molecules/added-to-cart-modal/components/frequently-bought-slider';
-import { sliderItems } from '@/mocks/productSliderItems';
+import { Product } from '@/types/entity/product';
 
 describe('FrequentlyBoughtSlider', () => {
+  const sliderItems: Product[] = [
+    {
+      id: '1',
+      name: 'Brake Pad Set, disc brake DELPHI LP20',
+      sku: 'Castrol',
+      price: 9.64,
+      priceRange: [9.64, 12.46],
+      images: ['https://cdn.com/break-pad.png'],
+      currency: 'USD',
+    },
+    {
+      id: '2',
+      name: 'Brake Disk Set, disc brake DELPHI LP20',
+      sku: 'Castrol',
+      price: 9.64,
+      discountedPrice: 3.64,
+      images: ['https://cdn.com/break-disk.png'],
+      currency: 'USD',
+    },
+  ];
+
   it('renders headline when provided', () => {
     render(<FrequentlyBoughtSlider headline="Frequently Bought Together" products={sliderItems} />);
 

@@ -39,11 +39,18 @@ const nextConfig = {
       },
     ];
   },
+
   async rewrites() {
     return [
       { source: '/__preview/:path*', destination: '/preview/:path*' },
       { source: '/:locale/__preview/:path*', destination: '/:locale/preview/:path*' },
     ];
+  },
+
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
   },
 };
 

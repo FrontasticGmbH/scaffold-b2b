@@ -37,7 +37,7 @@ export default class CategoryRouter {
       const categoryQueryResult = await productApi.queryCategories(categoryQuery);
 
       if (categoryQueryResult.items.length == 0) return null;
-      request.query.category = (categoryQueryResult.items[0] as Category).categoryId;
+      request.query.category = (categoryQueryResult.items[0] as Category).categoryRef;
 
       const productQuery = ProductQueryFactory.queryFromParams({
         ...request,

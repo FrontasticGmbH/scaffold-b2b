@@ -7,6 +7,7 @@ import { InputProps } from '@/components/atoms/input/types';
 import { Account } from '@shared/types/account/Account';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Typography from '@/components/atoms/typography';
+import { namePattern, passwordPattern } from '@/constants/regex';
 import AuthLayout from '../layouts/auth-layout';
 import { RegisterProps } from './types';
 import AuthForm from '../layouts/auth-form';
@@ -20,7 +21,7 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const [data, setData] = useState<Account>({});
   const [errors, setErrors] = useState<Account>({});
   const [confirmed, setConfirmed] = useState(false);
-  const nameValidation = { pattern: '[A-Za-z]+', title: translate('common.name.validation') };
+  const nameValidation = { pattern: namePattern, title: translate('common.name.validation') };
 
   const inputArray: Array<InputProps> = [
     {
@@ -114,8 +115,10 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
             <PasswordInput
               name="password"
               value={data.password ?? ''}
-              label={`${translate('account.password')} *`}
+              label={translate('account.password')}
               onChange={handleChange}
+              required
+              pattern={passwordPattern}
               {...commonProps}
             />
           </>

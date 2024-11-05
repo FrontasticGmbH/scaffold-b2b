@@ -67,13 +67,15 @@ const ApprovalRulesTastic = () => {
       operators: config.operators.map((operator) => ({ name: translate(operator.name), value: operator.value })),
       values: (config.values ?? []).map((value) => ({ name: translate(value.name), value: value.value })),
     })),
-    approversCriteria: rolesData.map(({ key, name }) => ({
-      key,
-      name: name ?? key,
-      type: 'text',
-      operators: [],
-      values: [],
-    })),
+    approversCriteria: rolesData
+      .filter((role) => role.permissions?.includes('UpdateApprovalFlows'))
+      .map(({ key, name }) => ({
+        key,
+        name: name ?? key,
+        type: 'text',
+        operators: [],
+        values: [],
+      })),
     pagination: {
       page,
       totalItems,

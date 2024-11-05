@@ -10,11 +10,13 @@ import Toggle from '@/components/atoms/toggle';
 import Confirmation from '@/components/organisms/confirmation';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import { Group } from '@/components/organisms/rule-builder/types';
+import InfoBanner from '@/components/molecules/info-banner';
 import { ApprovalRulesPageProps } from '../../types';
 import RuleBuilderSection from './components/rule-builder-section';
 
 const ApprovalRuleForm = ({
   approvalRules,
+  viewOnly,
   roles,
   rulesCriteria,
   approversCriteria,
@@ -91,6 +93,16 @@ const ApprovalRuleForm = ({
 
   return (
     <div className="pb-12">
+      {viewOnly && (
+        <InfoBanner className="mt-3">
+          <b>{translate('common.view.only')}</b> {translate('dashboard.rule.view.only.desc')}
+        </InfoBanner>
+      )}
+
+      <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
+        {id ? translate('dashboard.approval.rule.edit') : translate('dashboard.approval.rule.add')}
+      </h1>
+
       <div className="flex flex-col gap-4">
         <Input
           name="name"
@@ -239,7 +251,7 @@ const ApprovalRuleForm = ({
           <Button
             className="w-full"
             variant="primary"
-            disabled={isInvalid}
+            disabled={isInvalid || viewOnly}
             onClick={handleSubmit}
             loading={isProcessing}
           >

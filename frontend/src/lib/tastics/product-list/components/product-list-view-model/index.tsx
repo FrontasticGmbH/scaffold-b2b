@@ -74,7 +74,7 @@ const ProductListViewModel = ({
         link={{ name: translate('common.shop.all'), href: `${category?._url}?view=1` }}
         breadcrumb={categoriesBreadcrumb}
         items={[
-          ...(category?.subCategories ?? []).map(({ name, slug, _url }) => ({
+          ...(category?.descendants ?? []).map(({ name, slug, _url }) => ({
             name: name ?? '',
             image: categoryConfiguration[slug ?? '']?.image,
             url: _url,

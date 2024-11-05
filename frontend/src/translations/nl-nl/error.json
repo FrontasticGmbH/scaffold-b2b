@@ -11,6 +11,7 @@
   "email.exists": "Het e-mailadres is ongeldig of bestaat al.",
   "company.exists": "Bedrijfsnaam is al geregistreerd. Gebruik een andere bedrijfsnaam of vraag een beheerder om uitgenodigd te worden voor een bestaand bedrijf.",
   "name": "De naam moet minimaal twee tekens bevatten.",
-  "verify.failed": "Verificatie mislukt",
-  "verify.failed.description": "Sorry, we hebben uw account niet kunnen verifiëren. Er is een nieuwe verificatielink naar uw e-mailadres verzonden."
+  "verify.failed": "Oeps! Er is iets fout gegaan",
+  "verify.failed.description": "We konden uw account deze keer niet verifiëren, maar we hebben een nieuwe link naar uw e-mail gestuurd. Controleer uw inbox om het proces te voltooien.",
+  "verify.failed.already.verified": "Maak je geen zorgen, je e-mail is al geverifieerd. Ga gewoon terug naar de inlogpagina en probeer opnieuw in te loggen."
 }

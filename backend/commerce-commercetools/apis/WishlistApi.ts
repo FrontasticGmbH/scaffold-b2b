@@ -47,7 +47,7 @@ export default class WishlistApi extends BaseApi {
       .execute()
       .then((response) => {
         return response.body.results.map((shoppingList) =>
-          WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale),
+          WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale, this.supplyChannelId),
         );
       })
       .catch((error) => {
@@ -68,7 +68,7 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -157,7 +157,7 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -186,7 +186,8 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
+        console.log('CLIENT RESPONSE', response.body);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -216,7 +217,7 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });

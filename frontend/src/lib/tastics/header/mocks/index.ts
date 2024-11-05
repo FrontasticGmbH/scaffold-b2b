@@ -9,48 +9,48 @@ export const myAccountMenu = {
   categoryId: 'my-account',
   name: 'My Account',
   path: '/dashboard',
-  subCategories: [
+  descendants: [
     {
       categoryId: 'dashboard',
       name: 'Dashboard',
       path: '/dashboard',
-      subCategories: [],
+      descendants: [],
     },
     {
       categoryId: 'orders',
       name: 'Orders',
       path: '/orders',
-      subCategories: [],
+      descendants: [],
     },
     {
       categoryId: 'quotes',
       name: 'Quotes',
       path: '/quotes',
-      subCategories: [],
+      descendants: [],
     },
     {
       categoryId: 'company-admin',
       name: 'Company Admin',
       path: '/company-admin',
-      subCategories: [],
+      descendants: [],
     },
     {
       categoryId: 'shopping-lists',
       name: 'Purchase Lists',
       path: '/shopping-lists',
-      subCategories: [],
+      descendants: [],
     },
     {
       categoryId: 'settings-and-security',
       name: 'Settings & Security',
       path: '/settings',
-      subCategories: [],
+      descendants: [],
     },
     {
       categoryId: 'addresses',
       name: 'Addresses',
       path: '/addresses',
-      subCategories: [],
+      descendants: [],
     },
   ],
 };

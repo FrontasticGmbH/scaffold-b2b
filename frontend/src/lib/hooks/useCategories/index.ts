@@ -3,13 +3,11 @@ import { Category } from '@shared/types/product/Category';
 import useSWR from 'swr';
 
 export const useCategories = () => {
-  const { data } = useSWR('/action/product/queryCategories', () =>
+  const { data, mutate } = useSWR('/action/product/queryCategories', () =>
     sdk.composableCommerce.product.queryCategories({ format: 'tree', limit: 99 }),
   );
 
-  if (data?.isError) return { categories: [] };
+  const categories = data?.isError ? [] : ((data?.data.items as Category[]) ?? []);
 
-  const categories = (data?.data.items as Category[]) ?? [];
-
-  return { categories };
+  return { categories, mutate };
 };

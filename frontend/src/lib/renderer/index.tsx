@@ -13,6 +13,7 @@ const Renderer = ({
   currentHighlight,
   gridClassName = '',
   wrapperClassName = '',
+  projectSettings,
 }: RendererProps) => {
   const { page, data } = pageData;
 
@@ -51,6 +52,7 @@ const Renderer = ({
                   searchParams={searchParams}
                   dataSources={data.dataSources}
                   isHighlighted={currentHighlight === tastic.tasticId}
+                  projectSettings={projectSettings}
                 />
               ))}
             </Cell>

@@ -33,7 +33,7 @@ const ProductListTastic = async ({ data, searchParams }: TasticProps<DataSource<
     data.useIntermediaryCategoryPage &&
     isRootCategory &&
     !searchParams.view &&
-    (treeCategory?.subCategories.length ?? 0) >= 3;
+    (treeCategory?.descendants?.length ?? 0) >= 3;
 
   return (
     <ProductListClientWrapper

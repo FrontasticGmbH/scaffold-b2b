@@ -7,7 +7,7 @@ import { QuoteStatus } from '@/types/entity/quote';
 const QuotesStatusModal = (props: React.ComponentProps<typeof ResponsiveModal>) => {
   const { translate } = useTranslation();
 
-  const statuses = ['inprogress', 'declined', 'renegotiating', 'accepted', 'withdrawn'] as Array<QuoteStatus>;
+  const statuses = ['inprogress', 'declined', 'renegotiated', 'accepted', 'withdrawn'] as Array<QuoteStatus>;
 
   return (
     <ResponsiveModal {...props} closeButton className="md:max-w-[400px] lg:max-w-[800px]">

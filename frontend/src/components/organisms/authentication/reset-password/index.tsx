@@ -6,6 +6,7 @@ import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Typography from '@/components/atoms/typography';
+import { passwordPattern } from '@/constants/regex';
 import AuthLayout from '../layouts/auth-layout';
 import { ResetPasswordData, ResetPasswordProps } from './types';
 import AuthForm from '../layouts/auth-form';
@@ -22,6 +23,7 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
     password: '',
     confirmPassword: '',
   });
+  const [validationError, setValidationError] = useState<string>();
 
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = target;
@@ -39,6 +41,8 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
       resetPassword(token, data.password).then(() => {
         setReset(true);
       });
+    } else {
+      setValidationError(translate('dashboard.password.not.match'));
     }
   };
 
@@ -67,14 +71,18 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
               label={translate('account.password')}
               value={data.password}
               onChange={handleChange}
+              required
+              pattern={passwordPattern}
             />
             <PasswordInput
               containerClassName="w-full"
+              error={validationError}
               className="w-full"
               name="confirmPassword"
               label={translate('account.password.confirm')}
               value={data.confirmPassword}
               onChange={handleChange}
+              required
             />
           </>
         )}

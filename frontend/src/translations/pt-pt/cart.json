@@ -50,7 +50,7 @@
   "codeNotValid": "O código de desconto não é válido",
   "codeAdded": "Código de desconto adicionado",
   "add": "Adicionar ao carrinho",
-  "move.to.wishlist": "Mover para a lista de compras",
+  "move.to.wishlist": "Mover para lista de compras",
   "checkout.go": "Vá para a finalização da compra",
   "go": "Vá para o carrinho",
   "delivery.time": "Prazo de entrega",
@@ -82,5 +82,5 @@
   "checkout.request.disabled": "Para criar um pedido ou cotação, solicite ao administrador da sua empresa que lhe conceda as permissões necessárias",
   "checkout.unavailable": "Check-out indisponível",
   "invalid.addresses.requirements": "Nenhum endereço de envio e cobrança é adicionado. Por favor, peça ao administrador da sua empresa para adicionar um",
-  "cart.amount": "Quantidade do carrinho"
+  "cart.amount": "Valor do carrinho"
 }

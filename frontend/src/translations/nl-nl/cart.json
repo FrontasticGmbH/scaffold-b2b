@@ -50,7 +50,7 @@
   "codeNotValid": "De kortingscode is niet geldig",
   "codeAdded": "Kortingscode toegevoegd",
   "add": "Voeg toe aan winkelkar",
-  "move.to.wishlist": "Verplaatsen naar aankooplijst",
+  "move.to.wishlist": "Ga naar de aankooplijst",
   "checkout.go": "Ga naar afrekenen",
   "go": "Ga naar winkelwagen",
   "delivery.time": "Aflevertijd",
@@ -82,5 +82,5 @@
   "checkout.request.disabled": "Om een bestelling of offerte aan te maken, vraagt u uw bedrijfsbeheerder om u de benodigde toestemmingen te verlenen",
   "checkout.unavailable": "Afrekenen niet beschikbaar",
   "invalid.addresses.requirements": "Er zijn geen verzend- en factuuradressen toegevoegd. Vraag uw bedrijfsbeheerder om er een toe te voegen",
-  "cart.amount": "Winkelwagen bedrag"
+  "cart.amount": "Aantal winkelwagen"
 }

@@ -340,7 +340,7 @@ const parseLocale = (locale: string, currency?: string): ParsedLocale => {
   };
 };
 
-const cacheTtlMilliseconds = 10 * 60 * 1000;
+const cacheTtlMilliseconds = 60 * 1000;
 const projectCache: {
   [projectKey: string]: { project: CommercetoolsProject; expiryTime: number };
 } = {};
@@ -525,7 +525,7 @@ export default abstract class BaseApi {
 
         productTypesCache[this.projectKey] = {
           productTypes,
-          expiryTime: cacheTtlMilliseconds * 1000 + now,
+          expiryTime: cacheTtlMilliseconds + now,
         };
 
         return productTypes;
@@ -556,16 +556,16 @@ export default abstract class BaseApi {
 
     projectCache[this.projectKey] = {
       project,
-      expiryTime: cacheTtlMilliseconds * 1000 + now,
+      expiryTime: cacheTtlMilliseconds + now,
     };
 
     return project;
   }
 
-  protected async getCommercetoolsAssociatesRoles() {
+  protected async getCommercetoolsAssociatesRoles(refreshCache = false) {
     const now = Date.now();
 
-    if (this.projectKey in associateRolesCache) {
+    if (!refreshCache && this.projectKey in associateRolesCache) {
       const cacheEntry = associateRolesCache[this.projectKey];
 
       if (now < cacheEntry.expiryTime) {
@@ -582,7 +582,7 @@ export default abstract class BaseApi {
 
         associateRolesCache[this.projectKey] = {
           associateRoles,
-          expiryTime: cacheTtlMilliseconds * 1000 + now,
+          expiryTime: cacheTtlMilliseconds + now,
         };
 
         return associateRoles;
@@ -789,7 +789,7 @@ export default abstract class BaseApi {
       refreshToken,
     );
 
-    this.apiRoot = createApiBuilderFromCtpClient(client);
+    this.apiRoot = createApiBuilderFromCtpClient(client, this.clientSettings.hostUrl);
 
     return this.apiRoot;
   }

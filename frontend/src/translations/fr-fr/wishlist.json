@@ -1,15 +1,15 @@
 {
   "my.wishlist": "Ma liste d'achats",
   "wishlist": "Liste d'achat",
-  "items": "Liste d'achat Articles",
-  "items.in.view": "articles dans la liste d'achat, voir la liste d'achat",
+  "items": "Articles de la liste d'achat",
+  "items.in.view": "articles dans la liste d'achat, afficher la liste d'achat",
   "oops": "Oops...",
-  "empty": "Votre liste d'achat est vide",
+  "empty": "Votre liste d'achats est vide",
   "add.items": "Ajouter des articles",
   "add.to.cart": "Passer au panier",
   "clear.list": "Effacer la liste",
   "move": "Se déplacer",
   "move.to.list": "Déplacer vers la liste",
-  "select.list": "Sélectionner la liste d'achat",
+  "select.list": "Sélectionnez la liste d'achat",
   "item.added": "L'article a été ajouté à"
 }

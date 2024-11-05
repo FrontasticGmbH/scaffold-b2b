@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PasswordInput from '@/components/atoms/password-input';
+import { passwordPattern } from '@/constants/regex';
 import { Props } from './types';
 
 const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
@@ -55,6 +56,7 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
           required
           value={data.newPassword}
           onChange={handleChange}
+          pattern={passwordPattern}
         />
 
         <PasswordInput

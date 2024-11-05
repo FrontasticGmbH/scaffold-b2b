@@ -5,6 +5,7 @@ import toast from '@/components/atoms/toaster/helpers/toast';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import Input from '@/components/atoms/input';
+import { passwordPattern } from '@/constants/regex';
 import AuthForm from '../layouts/auth-form';
 import AuthLayout from '../layouts/auth-layout';
 import { VerifyAssociateInput, VerifyAssociateProps } from './types';
@@ -75,6 +76,7 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
           value={data.password}
           required
           label={translate('account.password')}
+          pattern={passwordPattern}
           {...commonProps}
         />
       </AuthForm>

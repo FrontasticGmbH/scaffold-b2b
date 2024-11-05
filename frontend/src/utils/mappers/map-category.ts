@@ -6,6 +6,6 @@ export const mapCategory = (category: Category): EntityCategory => {
     categoryId: category.categoryId ?? '',
     name: category.name ?? '',
     path: category._url ?? '',
-    subCategories: category.subCategories.map(mapCategory),
+    descendants: category.descendants?.map(mapCategory) ?? [],
   };
 };

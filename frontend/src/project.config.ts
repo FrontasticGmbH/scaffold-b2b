@@ -68,21 +68,17 @@ const localizationMapper = {
     currency: 'EUR',
     countries: ['IT'],
   },
-} as Record<string, LocalizationMapping>;
+} satisfies Record<string, LocalizationMapping>;
 
-const locales = Object.keys(localizationMapper);
-const defaultLocale = locales[0];
+export type Locale = keyof typeof localizationMapper;
+
+const locales = Object.keys(localizationMapper) as Locale[];
+const defaultLocale = locales[0] as Locale;
 
 export const i18nConfig = {
-  defaultLocale: locales[0] as LocaleCode,
-  locales: locales as LocaleCode[],
+  locales: locales,
+  defaultLocale: locales[0],
 };
-
-export const i18n = i18nConfig;
-
-export type LocaleCode = keyof typeof localizationMapper;
-
-export type Locale = (typeof i18nConfig)['locales'][number];
 
 export const getLocalizationInfo = (locale: string) => {
   if (!(locale in localizationMapper)) {

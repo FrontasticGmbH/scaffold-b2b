@@ -994,7 +994,7 @@ export class ProductSearchFactory {
         case 'boolean':
         case 'text':
         case 'number':
-        case 'set_reference':
+        case 'reference':
           facet = {
             distinct: {
               ...facetValue,
@@ -1085,7 +1085,7 @@ export class ProductSearchFactory {
           fieldType: facetDefinition.attributeType,
         };
 
-      case 'set_reference':
+      case 'reference':
         return {
           name: facetDefinition.attributeId,
           field: `${facetDefinition.attributeId}.id`,

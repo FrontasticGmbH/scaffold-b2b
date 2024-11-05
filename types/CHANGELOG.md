@@ -1,4 +1,11 @@
 
+## Version 1.12.0 (2024-10-02)
+
+** New Features and Improvements **
+
+- Add region to project type
+ 
+
 ## Version 1.11.0 (2024-08-30)
 
 ## Version 1.10.0 (2024-08-15)

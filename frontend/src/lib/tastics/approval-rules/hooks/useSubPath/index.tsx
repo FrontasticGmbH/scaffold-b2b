@@ -11,11 +11,11 @@ const useSubPath = (props: ApprovalRulesPageProps) => {
   const ActiveSubPath = useMemo(() => {
     const components = {
       'add-approval-rule': {
-        title: 'dashboard.approval.rule.add',
+        title: '',
         Component: <ApprovalRuleForm {...props} />,
       },
       'edit-approval-rule': {
-        title: 'dashboard.approval.rule.edit',
+        title: '',
         Component: <ApprovalRuleForm {...props} />,
       },
     };

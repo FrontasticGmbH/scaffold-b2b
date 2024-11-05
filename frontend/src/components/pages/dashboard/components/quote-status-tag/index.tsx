@@ -11,7 +11,8 @@ const QuoteStatusTag = ({ status }: Props) => {
   const statusVariant = {
     accepted: 'success',
     inprogress: 'primary',
-    renegotiating: 'warning',
+    waiting: 'warning',
+    renegotiated: 'primary',
     declined: 'danger',
     withdrawn: 'danger',
     submitted: 'warning',

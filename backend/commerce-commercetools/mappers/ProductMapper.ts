@@ -1,7 +1,6 @@
 import { Category } from '@Types/product/Category';
 import { ProductDiscount, ProductDiscountType, Variant } from '@Types/product/Variant';
 import {
-  AttributeGroup,
   Category as CommercetoolsCategory,
   CategoryReference,
   ProductVariant as CommercetoolsProductVariant,
@@ -11,11 +10,7 @@ import {
   ProductSearchFacetRangesExpression,
   ProductSearchFacetDistinctExpression,
   ProductSearchFacetCountExpression,
-  SearchNumberRangeExpression,
-  SearchExactExpression,
   ProductSearchFacetResultBucket,
-  _SearchQuery,
-  SearchAndExpression,
   ProductSearchFacetResultCount,
   ProductSearchFacetResult,
   ProductSearchMatchingVariants as CommercetoolsProductSearchMatchingVariants,
@@ -137,7 +132,9 @@ export default class ProductMapper {
       price: price,
       discountedPrice: discountedPrice,
       discounts: discounts,
-      isMatchingVariant: matchingVariants?.matchedVariants.some((variant) => variant.id === commercetoolsVariant.id),
+      isMatchingVariant:
+        matchingVariants?.allMatched ||
+        matchingVariants?.matchedVariants.some((variant) => variant.id === commercetoolsVariant.id),
       isOnStock: supplyChannelId
         ? commercetoolsVariant.availability?.channels?.[supplyChannelId]?.isOnStock
         : commercetoolsVariant.availability?.isOnStock || undefined,
@@ -379,10 +376,9 @@ export default class ProductMapper {
         }
 
         const facetDefinition: FacetDefinition = {
-          attributeType:
-            attribute.type.name !== 'set'
-              ? attribute.type.name
-              : `set_${(attribute.type as AttributeSetType).elementType.name}`,
+          attributeType: attribute.type?.hasOwnProperty('elementType')
+            ? (attribute.type as AttributeSetType)?.elementType.name
+            : attribute.type.name,
           attributeId: `variants.attributes.${attribute.name}`,
           attributeLabel:
             attribute.label[locale.language] !== undefined && attribute.label[locale.language].length > 0
@@ -552,65 +548,6 @@ export default class ProductMapper {
       | undefined;
   };
 
-  static getSelectedFilterFromFacetSearchQuery = (
-    facetQuery:
-      | ProductSearchFacetRangesExpression
-      | ProductSearchFacetCountExpression
-      | ProductSearchFacetDistinctExpression,
-    facetResultName: string,
-    type: 'ranges' | 'count' | 'distinct',
-  ): _SearchQuery[] | undefined => {
-    if (facetQuery) {
-      let filterExpression: _SearchQuery;
-      let fieldType: string;
-      switch (type) {
-        case 'ranges':
-          filterExpression = (facetQuery as ProductSearchFacetRangesExpression).ranges.filter;
-          fieldType = (facetQuery as ProductSearchFacetRangesExpression).ranges.fieldType;
-          break;
-        case 'count':
-          filterExpression = (facetQuery as ProductSearchFacetCountExpression).count.filter;
-          break;
-        case 'distinct':
-          filterExpression = (facetQuery as ProductSearchFacetDistinctExpression).distinct.filter;
-          fieldType = (facetQuery as ProductSearchFacetDistinctExpression).distinct.fieldType;
-          break;
-      }
-
-      const facetResultIdentifier = this.getfacetIdentifier(facetResultName, fieldType);
-
-      if (filterExpression) {
-        if ('and' in filterExpression) {
-          return (filterExpression as SearchAndExpression).and.filter((andQuery) => {
-            return (
-              (andQuery as SearchNumberRangeExpression).range?.field === facetResultIdentifier ||
-              (andQuery as SearchExactExpression).exact?.field === facetResultIdentifier
-            );
-          });
-        }
-        return (filterExpression as SearchExactExpression).exact?.field === facetResultIdentifier
-          ? [filterExpression]
-          : (filterExpression as SearchNumberRangeExpression).range?.field === facetResultIdentifier
-            ? [filterExpression]
-            : undefined;
-      }
-    }
-    return undefined;
-  };
-
-  private static getfacetIdentifier(facetResultName: string, fieldType: string) {
-    switch (fieldType) {
-      case 'enum':
-        return `${facetResultName}.label`;
-      default:
-        return facetResultName;
-    }
-  }
-
-  static commercetoolsAttributeGroupToString(body: AttributeGroup): string[] {
-    return body.attributes.map((attribute) => attribute.key);
-  }
-
   static calculatePreviousCursor(offset: number, count: number) {
     return offset - count >= 0 ? `offset:${offset - count}` : undefined;
   }
@@ -619,55 +556,63 @@ export default class ProductMapper {
     return offset + count < total ? `offset:${offset + count}` : undefined;
   }
 
-  static commercetoolsCategoryToCategory: (
+  static commercetoolsCategoryToCategory(
     commercetoolsCategory: CommercetoolsCategory,
     categoryIdField: string,
     locale: Locale,
-  ) => Category = (commercetoolsCategory: CommercetoolsCategory, categoryIdField: string, locale: Locale) => {
+  ): Category {
     return {
-      categoryId: commercetoolsCategory?.[categoryIdField] ?? commercetoolsCategory.id,
-      parentId: commercetoolsCategory.parent?.obj?.[categoryIdField],
+      categoryId: commercetoolsCategory?.id,
+      categoryKey: commercetoolsCategory?.key,
+      categoryRef: commercetoolsCategory?.[categoryIdField as keyof CommercetoolsCategory] as string | undefined,
+      parentId: commercetoolsCategory.parent?.id,
+      parentKey: commercetoolsCategory.parent?.obj?.key,
+      parentRef: commercetoolsCategory.parent?.obj?.[categoryIdField as keyof CommercetoolsCategory] as
+        | string
+        | undefined,
       name: commercetoolsCategory.name?.[locale.language] ?? undefined,
       slug: commercetoolsCategory.slug?.[locale.language] ?? undefined,
       depth: commercetoolsCategory.ancestors.length,
-      subCategories:
-        (
-          commercetoolsCategory as CommercetoolsCategory & { subCategories: CommercetoolsCategory[] }
-        ).subCategories?.map((subCategory) =>
-          this.commercetoolsCategoryToCategory(subCategory, categoryIdField, locale),
-        ) ?? [],
       _url:
         commercetoolsCategory.ancestors.length > 0
           ? `/${commercetoolsCategory.ancestors
-              .map((ancestor) => {
-                return ancestor?.obj?.slug?.[locale.language];
+              ?.map((ancestor) => {
+                return ancestor.obj?.slug?.[locale.language] ?? ancestor.id;
               })
-              .join('/')}/${commercetoolsCategory?.slug?.[locale.language]}`
-          : `/${commercetoolsCategory?.slug?.[locale.language]}`,
+              .join('/')}/${commercetoolsCategory.slug?.[locale.language] ?? commercetoolsCategory.id}`
+          : `/${commercetoolsCategory.slug?.[locale.language] ?? commercetoolsCategory.id}`,
     };
-  };
+  }
 
   static commercetoolsCategoriesToTreeCategory(
     commercetoolsCategories: CommercetoolsCategory[],
     categoryIdField: string,
     locale: Locale,
-  ) {
-    const nodes = {};
+  ): Category[] {
+    const nodes: { [key: string]: Category } = {};
 
-    for (const category of commercetoolsCategories) {
-      (category as CommercetoolsCategory & { subCategories: CommercetoolsCategory[] }).subCategories = [];
-      nodes[category.id] = category;
+    for (const commercetoolsCategory of commercetoolsCategories) {
+      nodes[commercetoolsCategory.id] = this.commercetoolsCategoryToCategory(
+        commercetoolsCategory,
+        categoryIdField,
+        locale,
+      );
     }
 
-    for (const category of commercetoolsCategories) {
-      if (!category.parent?.id) continue;
+    // Move descentans to their parent category if exists
+    for (const commercetoolsCategory of commercetoolsCategories) {
+      if (!commercetoolsCategory.parent?.id || !(commercetoolsCategory.parent.id in nodes)) continue;
 
-      nodes[category.parent.id].subCategories.push(category);
+      // Ensure the descendants array is initialized
+      if (!nodes[commercetoolsCategory.parent.id].descendants) {
+        nodes[commercetoolsCategory.parent.id].descendants = [];
+      }
+
+      nodes[commercetoolsCategory.parent.id].descendants.push(nodes[commercetoolsCategory.id]);
     }
 
-    return commercetoolsCategories
-      .filter((category) => category.ancestors.length === 0)
-      .map((category) => this.commercetoolsCategoryToCategory(category, categoryIdField, locale));
+    // Return only the root categories
+    return Object.values(nodes).filter((node) => !node.parentId || (node.parentId && !(node.parentId in nodes)));
   }
 
   static extractAttributeValue(commercetoolsAttributeValue: unknown, locale: Locale): unknown {

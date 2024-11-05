@@ -203,7 +203,8 @@ export default class BusinessUnitApi extends BaseApi {
   }
 
   async getAssociateRoles(): Promise<AssociateRole[]> {
-    return this.getCommercetoolsAssociatesRoles()
+    // Get associate roles refreshing the cache to ensure we have the latest data
+    return this.getCommercetoolsAssociatesRoles(true)
       .then((associateRoles) => {
         return associateRoles
           .filter((associateRole) => associateRole.buyerAssignable)

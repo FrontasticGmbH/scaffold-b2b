@@ -13,14 +13,14 @@ const NavigationButton = ({ lastIndex, link, onClick }: NavigationButtonProps) =
     'flex h-[48px] cursor-pointer items-center justify-between underline-offset-4 hover:underline lg:h-fit',
     lastIndex ? 'pb-0' : 'pb-2 lg:pb-7',
   );
-  const subCategoryClassNames = classnames(
+  const descendantClassNames = classnames(
     'flex h-[48px] w-full items-center pb-2 lg:h-fit lg:pb-7',
     link.categoryId === 'quotes' ? 'justify-between' : 'justify-start',
   );
 
   return (
     <div key={link.categoryId}>
-      {link?.subCategories?.length > 0 ? (
+      {link?.descendants?.length > 0 ? (
         <div onClick={onClick} className={categoryClassNames}>
           <Typography fontSize={16} fontWeight="normal" className="text-gray-700">
             {link.name}
@@ -28,7 +28,7 @@ const NavigationButton = ({ lastIndex, link, onClick }: NavigationButtonProps) =
           <ChevronRightIcon className="w-5 text-gray-700" />
         </div>
       ) : (
-        <div className={subCategoryClassNames}>
+        <div className={descendantClassNames}>
           <Link href={link?.path ?? '/'} className="w-full">
             <div className="w-full" onClick={hideHeaderMenu}>
               <Typography fontSize={16} className="text-gray-700">

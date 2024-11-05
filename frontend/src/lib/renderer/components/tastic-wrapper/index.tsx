@@ -6,7 +6,14 @@ import { deviceVisibility } from '../../utils/device-visibility';
 import { injectDataSources } from '../../utils/inject-datasources';
 import MissingTastic from '../missing-tastic';
 
-const TasticWrapper = ({ data, params, searchParams, dataSources, isHighlighted }: TasticWrapperProps) => {
+const TasticWrapper = ({
+  data,
+  params,
+  searchParams,
+  dataSources,
+  isHighlighted,
+  projectSettings,
+}: TasticWrapperProps) => {
   const Tastic = tastics[data.tasticType];
 
   const resolvedTasticData = dataSources ? injectDataSources(data.configuration, dataSources) : data.configuration;
@@ -14,7 +21,12 @@ const TasticWrapper = ({ data, params, searchParams, dataSources, isHighlighted 
   return (
     <div id={data.tasticId} className={`${highlight(isHighlighted)} ${deviceVisibility(data.configuration)}`}>
       {Tastic ? (
-        <Tastic data={resolvedTasticData} params={params} searchParams={searchParams} />
+        <Tastic
+          data={resolvedTasticData}
+          params={params}
+          searchParams={searchParams}
+          projectSettings={projectSettings}
+        />
       ) : (
         <MissingTastic data={data} />
       )}
