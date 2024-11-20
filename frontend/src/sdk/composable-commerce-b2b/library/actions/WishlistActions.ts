@@ -53,7 +53,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       payload: CreateWishlistPayload,
       query?: CreateWishlistQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -62,7 +62,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
         actionName: 'wishlist/createWishlist',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -71,7 +71,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     getWishlist: async (
       query?: GetWishlistQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -79,7 +79,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       const response = await sdk.callAction<Wishlist>({
         actionName: 'wishlist/getWishlist',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -88,7 +88,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     queryWishlists: async (
       query: QueryWishlistsQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -96,7 +96,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       const response = await sdk.callAction<PaginatedResult<Wishlist>>({
         actionName: 'wishlist/queryWishlists',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -106,7 +106,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       payload: UpdateWishlistPayload,
       query?: UpdateWishlistQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -115,7 +115,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
         actionName: 'wishlist/updateWishlist',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -124,7 +124,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     deleteWishlist: async (
       query?: DeleteWishlistQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -132,7 +132,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       const response = await sdk.callAction<void>({
         actionName: 'wishlist/deleteWishlist',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -142,7 +142,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       payload: AddToWishlistPayload,
       query?: AddToWishlistQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -151,7 +151,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
         actionName: 'wishlist/addToWishlist',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -160,7 +160,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     addToWishlists: async (
       payload: AddToWishlistsPayload,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -168,7 +168,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       const response = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/addToWishlists',
         payload,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -178,7 +178,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       payload: UpdateWishlistItemPayload,
       query?: UpdateWishlistItemQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -187,7 +187,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
         actionName: 'wishlist/updateLineItemCount',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -197,7 +197,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       payload: RemoveFromWishlistPayload,
       query?: RemoveFromWishlistQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -206,7 +206,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
         actionName: 'wishlist/removeLineItem',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -216,7 +216,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
     removeItems: async (
       payload: RemoveFromWishlistsPayload,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -224,7 +224,7 @@ export const getWishlistActions = (sdk: SDK<ComposableCommerceEventsB2B>): Wishl
       const response = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/removeLineItems',
         payload,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });

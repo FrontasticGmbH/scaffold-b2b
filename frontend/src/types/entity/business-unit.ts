@@ -1,4 +1,5 @@
 import { Address } from './address';
+import { Associate } from './associate';
 
 export interface Store {
   id: string;
@@ -15,4 +16,5 @@ export interface BusinessUnit {
   addresses: Address[];
   topLevelUnit?: BusinessUnit;
   parentUnit?: BusinessUnit;
+  associates: Associate[];
 }

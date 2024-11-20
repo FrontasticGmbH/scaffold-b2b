@@ -5,7 +5,7 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import Confirmation from '@/components/organisms/confirmation';
-import useBusinessUnit from '@/lib/tastics/company-admin/hooks/useBusinessUnit';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { Props } from './types';
 
 const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
@@ -17,8 +17,8 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { activeBusinessUnit } = useBusinessUnit();
-  const isLastAssociate = activeBusinessUnit?.associates?.length === 1;
+  const { selectedBusinessUnit } = useStoreAndBusinessUnits();
+  const isLastAssociate = selectedBusinessUnit?.associates?.length === 1;
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

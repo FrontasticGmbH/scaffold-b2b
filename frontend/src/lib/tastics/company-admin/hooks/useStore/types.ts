@@ -1,4 +1,4 @@
-import { BusinessUnit } from '@shared/types/business-unit/BusinessUnit';
+import { BusinessUnit } from '@/types/entity/business-unit';
 
 export interface Props {
   activeBusinessUnit?: BusinessUnit;

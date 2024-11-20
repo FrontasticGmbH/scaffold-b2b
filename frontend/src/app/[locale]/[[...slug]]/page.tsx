@@ -11,8 +11,8 @@ import { Providers } from '@/providers';
 import fetchPageData from '@/utils/server/fetch-page-data';
 import fetchBusinessUnits from '@/utils/server/fetchBusinessUnits';
 import fetchAssociate from '@/utils/server/fetch-associate';
-import { RedirectResponse } from '@/types/lib/response';
 import fetchProjectSettings from '@/utils/server/fetch-project-settings';
+import { isRedirectResponse } from '@/lib/utils/is-redirect-response';
 
 /* Start of Route Segments */
 
@@ -27,16 +27,18 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
   const response = await fetchPageData(params, searchParams);
 
-  if (response.isError || !response.data.pageFolder) return {};
+  if (response.isError || isRedirectResponse(response.data)) {
+    return {};
+  }
 
-  const { seoTitle, seoDescription, seoKeywords } = response.data.pageFolder.configuration;
+  const { seoTitle, seoDescription, seoKeywords } = response.data.pageFolder?.configuration ?? {};
 
   const { locale } = getLocalizationInfo(nextLocale);
 
   return {
-    title: seoTitle?.[locale],
-    description: seoDescription?.[locale],
-    keywords: seoKeywords?.[locale],
+    title: seoTitle?.[locale] ?? '',
+    description: seoDescription?.[locale] ?? '',
+    keywords: seoKeywords?.[locale] ?? '',
   };
 }
 
@@ -49,9 +51,13 @@ export default async function Page({ params, searchParams }: PageProps) {
 
   //If target page is not found skip authentication logic
   if (slug?.[0] !== '404') {
-    if (!loggedIn && !attemptingToAuth) return redirect(`/${locale}/login/`);
+    if (!loggedIn && !attemptingToAuth) {
+      return redirect(`/${locale}/login/`);
+    }
 
-    if (loggedIn && attemptingToAuth) return redirect(`/${locale}/`);
+    if (loggedIn && attemptingToAuth) {
+      return redirect(`/${locale}/`);
+    }
   }
 
   const [page, businessUnits, associate, projectSettings] = await Promise.all([
@@ -61,10 +67,13 @@ export default async function Page({ params, searchParams }: PageProps) {
     fetchProjectSettings(),
   ]);
 
-  if (page.isError) return redirect(`/${locale}/404`);
+  if (page.isError) {
+    return redirect(`/${locale}/404`);
+  }
 
-  const redirectResponse = page.data as unknown as RedirectResponse;
-  if (typeof redirectResponse.target === 'string') redirect(redirectResponse.target);
+  if (isRedirectResponse(page.data)) {
+    redirect(page.data.target);
+  }
 
   const translations = await getTranslations(
     [locale],
@@ -90,7 +99,7 @@ export default async function Page({ params, searchParams }: PageProps) {
   return (
     <div data-theme={(!page.isError && page.data.pageFolder.configuration.displayTheme) ?? 'default'}>
       <Providers
-        page={page}
+        page={{ ...page, data: page.data }}
         translations={translations}
         locale={locale}
         initialData={{

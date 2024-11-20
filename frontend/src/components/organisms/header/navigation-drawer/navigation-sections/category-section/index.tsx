@@ -47,7 +47,9 @@ const CategorySection = () => {
               {navigationLevel[navigationLevel.length - 1].categoryId !== 'my-account' && (
                 <Link
                   href={
-                    `${navigationLevel[navigationLevel.length - 1]?.path}?sortAttributes[0][price]=asc&view=1` ?? '/'
+                    navigationLevel[navigationLevel.length - 1]?.path
+                      ? `${navigationLevel[navigationLevel.length - 1]?.path}?sortAttributes[0][price]=asc&view=1`
+                      : '/'
                   }
                 >
                   <div className="flex h-[48px] items-center pb-2 lg:h-fit lg:pb-7" onClick={hideHeaderMenu}>

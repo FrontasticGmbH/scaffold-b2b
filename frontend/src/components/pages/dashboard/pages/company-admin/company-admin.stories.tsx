@@ -34,6 +34,7 @@ Primary.args = {
       name: 'commercetools',
       email: '123@commercetools.com',
       addresses: [],
+      associates: [],
     },
   ],
   addresses: Array.from({ length: 3 }, (_, index) => ({
@@ -79,5 +80,6 @@ Primary.args = {
     key: `ct-region-${index + 1}`,
     email: '123@commercetools.com',
     addresses: [],
+    associates: [],
   })),
 };

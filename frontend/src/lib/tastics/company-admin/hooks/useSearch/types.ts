@@ -1,6 +1,6 @@
-import { Address } from '@shared/types/account/Address';
-import { Associate } from '@shared/types/business-unit/Associate';
-import { BusinessUnit } from '@shared/types/business-unit/BusinessUnit';
+import { Address } from '@/types/entity/address';
+import { Associate } from '@/types/entity/associate';
+import { BusinessUnit } from '@/types/entity/business-unit';
 
 export interface Props {
   addresses: Address[];

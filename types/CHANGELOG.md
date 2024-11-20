@@ -1,4 +1,14 @@
 
+## Version 1.13.0 (2024-11-05)
+
+** New Features and Improvements **
+
+- Handled multi level category and included categoryId and categoryRef fields
+
+** Bug fixes **
+
+- Set descendant category as optiona
+
 ## Version 1.12.0 (2024-10-02)
 
 ** New Features and Improvements **

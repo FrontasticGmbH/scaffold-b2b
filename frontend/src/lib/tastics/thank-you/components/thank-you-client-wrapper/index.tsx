@@ -40,6 +40,7 @@ const ThankYouClientWrapper = ({ data }: TasticProps<DataSource<{ order: Order }
       }}
       lineItems={(order.lineItems ?? []).map(mapLineItem)}
       onReviewOrderClick={() => router.push(DashboardLinks.orderDetail(order.orderId ?? ''))}
+      purchaseOrderNumber={order.purchaseOrderNumber}
     />
   );
 };

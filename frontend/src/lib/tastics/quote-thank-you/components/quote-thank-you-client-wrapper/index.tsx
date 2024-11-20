@@ -59,6 +59,7 @@ const QuoteThankYouClientWrapper = () => {
       }}
       lineItems={(quoteRequest.lineItems ?? []).map(mapLineItem)}
       onReviewQuoteClick={() => router.push(DashboardLinks.quoteRequestDetail(quoteRequestId ?? ''))}
+      purchaseOrderNumber={quoteRequest.purchaseOrderNumber}
     />
   );
 };

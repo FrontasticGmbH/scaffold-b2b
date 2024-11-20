@@ -9,6 +9,7 @@ import { classnames } from '@/utils/classnames/classnames';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import Button from '@/components/atoms/button';
 import TextArea from '@/components/atoms/text-area';
+import toast from '@/components/atoms/toaster/helpers/toast';
 import { ApprovalFlowDetailsPageProps } from './types';
 import PreviousPageLink from '../../components/previous-page-link';
 import ApprovalFlowStatusTag from '../../components/approval-flow-status-tag';
@@ -63,19 +64,33 @@ const ApprovalFlowDetailsPage = ({
   );
 
   //Next tier the current user can approve
-  const currentUserPendingTierIndex = mergedApprovers.findIndex(
-    (rule) =>
-      userRoles.some((role) => isInApproverTiers(role, rule)) &&
-      userRoles.some((role) => (approvalFlow.eligibleApprovers ?? []).some((r) => r.key === role.key)),
+  const currentUserPendingTierIndex = mergedApprovers.findIndex((rule) =>
+    userRoles
+      .filter(
+        (role) => !approvalFlow.approvals.some((approval) => !!approval.approver.roles.find((r) => r.key === role.key)),
+      )
+      .some(
+        (role) =>
+          isInApproverTiers(role, rule) && (approvalFlow.eligibleApprovers ?? []).some((r) => r.key === role.key),
+      ),
   );
 
   //Whether the user can approve current pending tier?
   const userCanApprovePendingTier = currentPendingTierIndex === currentUserPendingTierIndex;
 
   //Whether the user already approved the flow
-  const userHasApproved = approvalFlow.approvals.some((approval) =>
-    userRoles.every((role) => !!approval.approver.roles.find((r) => r.key === role.key)),
+  const userHasApproved = userRoles.every((role) =>
+    approvalFlow.approvals.some((approval) => !!approval.approver.roles.find((r) => r.key === role.key)),
   );
+
+  const handleRejection = useCallback(async () => {
+    setProcessing(true);
+    await onReject?.(rejectionReason);
+    setRejectionReasonTextarea(false);
+    setProcessing(false);
+
+    toast.success(translate('dashboard.approval.flow.rejected'), { position: 'top-right' });
+  }, [onReject, rejectionReason, translate]);
 
   return (
     <div>
@@ -208,9 +223,7 @@ const ApprovalFlowDetailsPage = ({
               className="w-full"
               onSubmit={async (e) => {
                 e.preventDefault();
-                setProcessing(true);
-                await onReject?.(rejectionReason);
-                setProcessing(false);
+                handleRejection();
               }}
             >
               <h6 className="mb-3 text-12 font-medium uppercase text-gray-600">

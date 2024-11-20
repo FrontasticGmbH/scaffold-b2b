@@ -181,5 +181,6 @@
   "purchase.order.number": "Numero di ordine di acquisto",
   "approval.flow.required.approvers": "Approvatori richiesti",
   "approval.flow.required.approvers.desc": "Questi livelli sono il risultato dell'unione di più regole che si applicano all'ordine. Se ci sono opzioni contrassegnate in blu ( {preview} ), indicano il tuo ruolo e le aree di approvazione.",
-  "approval.flow.rejection.reason": "Motivo del rifiuto"
+  "approval.flow.rejection.reason": "Motivo del rifiuto",
+  "approval.flow.rejected": "Flusso di approvazione rifiutato con successo!"
 }

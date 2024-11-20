@@ -38,7 +38,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       payload: CreateQuotePayload,
       query: CreateQuoteQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -47,7 +47,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
         actionName: 'quote/createQuoteRequest',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -56,7 +56,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
     query: async (
       query: QuoteQueryQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -64,7 +64,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       const response = await sdk.callAction<PaginatedResult<Quote>>({
         actionName: 'quote/query',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -73,7 +73,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
     queryRequests: async (
       query: QuoteRequestsQueryQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -81,7 +81,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       const response = await sdk.callAction<PaginatedResult<QuoteRequest>>({
         actionName: 'quote/queryQuoteRequests',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -90,7 +90,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
     acceptQuote: async (
       query: AcceptQuoteQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -98,7 +98,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       const response = await sdk.callAction<Quote>({
         actionName: 'quote/acceptQuote',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -107,7 +107,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
     declineQuote: async (
       query: DeclineQuoteQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -115,7 +115,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       const response = await sdk.callAction<Quote>({
         actionName: 'quote/declineQuote',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -125,7 +125,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       payload: RenegotiateQuotePayload,
       query: RenegotiateQuoteQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -134,7 +134,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
         actionName: 'quote/renegotiateQuote',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -143,7 +143,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
     cancelQuote: async (
       query: CancelQuoteQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -151,7 +151,7 @@ export const getQuoteActions = (sdk: SDK<ComposableCommerceEventsB2B>): QuoteAct
       const response = await sdk.callAction<QuoteRequest>({
         actionName: 'quote/cancelQuoteRequest',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });

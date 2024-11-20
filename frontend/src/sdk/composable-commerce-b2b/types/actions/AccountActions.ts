@@ -35,9 +35,9 @@ type GetAccountActionReturn =
 
 type GetAccountAction = (options?: {
   /**
-   * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+   * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
    */
-  skipQueue?: boolean;
+  parallel?: boolean;
   /**
    * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
    */
@@ -53,9 +53,9 @@ type LoginAccountAction = (
   query?: LoginAccountQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -74,9 +74,9 @@ type RegisterAccountAction = (
   query?: RegisterAccountQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -92,9 +92,9 @@ type ConfirmAccountAction = (
   payload: ConfirmAccountPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -111,9 +111,9 @@ type RequestAccountConfirmationEmailAction = (
   query?: RequestAccountConfirmationEmailQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -129,9 +129,9 @@ type ChangeAccountPasswordAction = (
   payload: ChangeAccountPasswordPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -147,9 +147,9 @@ type RequestAccountPasswordResetAction = (
   payload: RequestAccountPasswordResetPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -165,9 +165,9 @@ type ResetAccountPasswordAction = (
   payload: ResetAccountPasswordPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -183,9 +183,9 @@ type UpdateAccountAction = (
   payload: UpdateAccountPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -201,9 +201,9 @@ type AddAccountAddressAction = (
   payload: AddAccountAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -219,9 +219,9 @@ type UpdateAccountAddressAction = (
   payload: UpdateAccountAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -237,9 +237,9 @@ type AddAccountBillingAddressAction = (
   payload: AddAccountBillingAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -255,9 +255,9 @@ type AddAccountShippingAddressAction = (
   payload: AddAccountShippingAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -273,9 +273,9 @@ type RemoveAccountAddressAction = (
   payload: RemoveAccountAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -291,9 +291,9 @@ type SetDefaultAccountBillingAddressAction = (
   payload: SetDefaultAccountBillingAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -309,9 +309,9 @@ type SetDefaultAccountShippingAddressAction = (
   payload: SetDefaultAccountShippingAddressPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -327,9 +327,9 @@ type DeleteAccountAction = (
   payload: DeleteAccountPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */

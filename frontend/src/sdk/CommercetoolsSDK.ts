@@ -22,6 +22,17 @@ class CommercetoolsSDK extends SDK<ComposableCommerceEventsB2B & CustomEvents> {
       console.log('SDK error: ', event.data);
     });
 
+    this.on('fetchCalled', (event) => {
+      console.log(`${event.data.type === 'action' ? event.data.actionName : event.data.method} called: `, event.data);
+    });
+
+    this.on('fetchSuccessful', (event) => {
+      console.log(
+        `${event.data.type === 'action' ? event.data.actionName : event.data.method}  successful: `,
+        event.data,
+      );
+    });
+
     // Set up any other custom global event handlers here.
     // Ensure types are created and added to the SDK generic type
     // if specific to your project.

@@ -10,17 +10,14 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes
   const quotesResponse = useSWR(
     !businessUnitKey ? null : ['/action/quote/query', limit, cursor, ids, states, businessUnitKey, sortAttributes],
     () =>
-      sdk.composableCommerce.quote.query(
-        {
-          businessUnitKey: businessUnitKey as string,
-          ...(limit ? { limit } : {}),
-          ...(cursor ? { cursor } : {}),
-          ...(ids ? { quoteIds: ids } : {}),
-          ...(states ? { quoteStates: states as QuoteState[] } : {}),
-          ...(sortAttributes ? { sortAttributes } : ''),
-        },
-        { skipQueue: true },
-      ),
+      sdk.composableCommerce.quote.query({
+        businessUnitKey: businessUnitKey as string,
+        ...(limit ? { limit } : {}),
+        ...(cursor ? { cursor } : {}),
+        ...(ids ? { quoteIds: ids } : {}),
+        ...(states ? { quoteStates: states as QuoteState[] } : {}),
+        ...(sortAttributes ? { sortAttributes } : ''),
+      }),
   );
 
   const quoteRequestsResponse = useSWR(
@@ -28,17 +25,14 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes
       ? null
       : ['/action/quote/queryQuoteRequests', limit, cursor, ids, states, businessUnitKey, sortAttributes],
     () =>
-      sdk.composableCommerce.quote.queryRequests(
-        {
-          businessUnitKey: businessUnitKey as string,
-          ...(limit ? { limit } : {}),
-          ...(cursor ? { cursor } : {}),
-          ...(ids ? { quoteIds: ids } : {}),
-          ...(states ? { quoteStates: states as QuoteState[] } : {}),
-          ...(sortAttributes ? { sortAttributes } : ''),
-        },
-        { skipQueue: true },
-      ),
+      sdk.composableCommerce.quote.queryRequests({
+        businessUnitKey: businessUnitKey as string,
+        ...(limit ? { limit } : {}),
+        ...(cursor ? { cursor } : {}),
+        ...(ids ? { quoteIds: ids } : {}),
+        ...(states ? { quoteStates: states as QuoteState[] } : {}),
+        ...(sortAttributes ? { sortAttributes } : ''),
+      }),
   );
 
   const quotes = quotesResponse.data?.isError

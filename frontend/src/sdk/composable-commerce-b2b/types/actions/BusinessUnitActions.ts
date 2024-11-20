@@ -41,9 +41,9 @@ type GetBusinessUnitAction = (
   query: GetBusinessUnitQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -59,9 +59,9 @@ type GetBusinessUnitsAction = (
   query?: GetBusinessUnitsQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -77,9 +77,9 @@ type CreateBusinessUnitAction = (
   payload: CreateBusinessUnitPayload,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -96,9 +96,9 @@ type UpdateBusinessUnitAction = (
   query: UpdateBusinessUnitQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -110,15 +110,28 @@ type UpdateBusinessUnitAction = (
   },
 ) => Promise<SDKResponse<BusinessUnit>>;
 
-type GetAssociateRolesAction = (options?: { serverOptions?: ServerOptions }) => Promise<SDKResponse<AssociateRole[]>>;
+type GetAssociateRolesAction = (options?: {
+  /**
+   * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
+   */
+  parallel?: boolean;
+  /**
+   * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
+   */
+  customHeaderValue?: string;
+  /**
+   * @param {Object} [options.serverOptions] - An optional object containing the res and req objects for ServerResponse and IncomingMessage with cookies respectively. Required for server-side rendering session management.
+   */
+  serverOptions?: ServerOptions;
+}) => Promise<SDKResponse<AssociateRole[]>>;
 
 type GetAssociateAction = (
   query: GetAssociateQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -135,9 +148,9 @@ type AddAssociateAction = (
   query: AddAssociateQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -154,9 +167,9 @@ type UpdateAssociateAction = (
   query: UpdateAssociateQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -173,9 +186,9 @@ type RemoveAssociateAction = (
   query: RemoveAssociateQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -193,9 +206,9 @@ type GetBusinessUnitOrdersAction = (
   query: GetBusinessUnitOrdersQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -212,9 +225,9 @@ type AddBusinessUnitAddressAction = (
   query: AddBusinessUnitAddressQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -231,9 +244,9 @@ type UpdateBusinessUnitAddressAction = (
   query: UpdateBusinessUnitAddressQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -250,9 +263,9 @@ type RemoveBusinessUnitAddressAction = (
   query: RemoveBusinessUnitAddressQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -268,9 +281,9 @@ type SetBusinessUnitAndStoreKeysAction = (
   query: SetBusinessUnitAndStoreKeysQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -287,9 +300,9 @@ type CreateApprovalRuleAction = (
   query: CreateApprovalRuleQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -305,9 +318,9 @@ type QueryApprovalRulesAction = (
   query: QueryApprovalRulesQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -324,9 +337,9 @@ type UpdateApprovalRuleAction = (
   query: UpdateApprovalRuleQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -342,9 +355,9 @@ type QueryApprovalFlowsAction = (
   query: QueryApprovalFlowsQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -361,9 +374,9 @@ type ApproveApprovalFlowAction = (
   query: ApproveApprovalFlowQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */
@@ -380,9 +393,9 @@ type RejectApprovalFlowAction = (
   query: RejectApprovalFlowQuery,
   options?: {
     /**
-     * @param {boolean} [options.skipQueue] - An optional boolean, default false. Indicates whether or not to skip the action queue on the coFE base SDK and execute fully asyncronously. May cause race conditions if used incorrectly.
+     * @param {boolean} [options.parallel] - An optional boolean, default true indicating whether the action should executed asyncronously or be added to a queue and executed in sequence. Useful to supply false on actions you may think have race conditions.
      */
-    skipQueue?: boolean;
+    parallel?: boolean;
     /**
      * @param {boolean} [options.customHeaderValue] - An optional string, the value to assign to a "coFE-Custom-Configuration" header value. Overrides customHeaderValue passed in coFE base SDK configure.
      */

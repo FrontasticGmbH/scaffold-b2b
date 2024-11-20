@@ -181,5 +181,6 @@
   "purchase.order.number": "Bestellnummer",
   "approval.flow.required.approvers": "Erforderliche Genehmiger",
   "approval.flow.required.approvers.desc": "Diese Stufen sind das Ergebnis der Zusammenführung mehrerer Regeln, die für die Bestellung gelten.\nWenn Optionen blau markiert sind ( {preview} ), geben diese Ihre Rolle und Genehmigungsbereiche an.",
-  "approval.flow.rejection.reason": "Grund für die Ablehnung"
+  "approval.flow.rejection.reason": "Grund für die Ablehnung",
+  "approval.flow.rejected": "Genehmigungsablauf erfolgreich abgelehnt!"
 }

@@ -32,19 +32,16 @@ const useOrders = ({
           sortAttributes,
         ],
     () =>
-      sdk.composableCommerce.cart.queryOrders(
-        {
-          ...(limit ? { limit } : {}),
-          ...(cursor ? { cursor } : {}),
-          ...(ids ? { orderNumbers: ids } : {}),
-          ...(states ? { orderStates: states } : {}),
-          ...(createdFrom ? { createdFrom } : {}),
-          ...(createdTo ? { createdTo } : {}),
-          ...(businessUnitKey ? { businessUnitKey } : {}),
-          ...(sortAttributes ? { sortAttributes } : ''),
-        },
-        { skipQueue: true },
-      ),
+      sdk.composableCommerce.cart.queryOrders({
+        ...(limit ? { limit } : {}),
+        ...(cursor ? { cursor } : {}),
+        ...(ids ? { orderNumbers: ids } : {}),
+        ...(states ? { orderStates: states } : {}),
+        ...(createdFrom ? { createdFrom } : {}),
+        ...(createdTo ? { createdTo } : {}),
+        ...(businessUnitKey ? { businessUnitKey } : {}),
+        ...(sortAttributes ? { sortAttributes } : ''),
+      }),
     { revalidateIfStale: true },
   );
 

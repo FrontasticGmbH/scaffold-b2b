@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
-import { Address } from '@shared/types/account/Address';
-import { Associate } from '@shared/types/business-unit/Associate';
-import { BusinessUnit } from '@shared/types/business-unit/BusinessUnit';
+import { Address } from '@/types/entity/address';
+import { Associate } from '@/types/entity/associate';
+import { BusinessUnit } from '@/types/entity/business-unit';
 import { Props } from './types';
 
 const useSearch = ({ addresses, associates, businessUnits }: Props) => {
@@ -14,21 +14,16 @@ const useSearch = ({ addresses, associates, businessUnits }: Props) => {
     [search],
   );
 
-  const searchAddresses = (
-    { firstName, lastName, streetName, streetNumber, city, country, state }: Address,
-    searchValue: string,
-  ) => {
-    return [firstName, lastName, streetName, streetNumber, city, country, state].some(
-      (e) => e && e.includes(searchValue),
-    );
+  const searchAddresses = ({ name, line1, line2, city, country, state }: Address, searchValue: string) => {
+    return [name, line1, line2, city, country, state].some((e) => e && e.includes(searchValue));
   };
 
   const searchAssociates = ({ firstName, lastName, email }: Associate) => {
     return [firstName, lastName, email].some((e) => e && e.includes(search.associates));
   };
 
-  const searchBusinessUnits = ({ name, key, contactEmail }: BusinessUnit) => {
-    return [name, key, contactEmail].some((e) => e && e.includes(search.businessUnits));
+  const searchBusinessUnits = ({ name, key, email }: BusinessUnit) => {
+    return [name, key, email].some((e) => e && e.includes(search.businessUnits));
   };
 
   return {

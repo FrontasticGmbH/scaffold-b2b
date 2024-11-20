@@ -181,5 +181,6 @@
   "purchase.order.number": "Numéro de bon de commande",
   "approval.flow.required.approvers": "Approbateurs requis",
   "approval.flow.required.approvers.desc": "Ces niveaux sont le résultat de la fusion de plusieurs règles qui s'appliquent à la commande.\nSi des options sont marquées en bleu ( {preview} ), elles indiquent votre rôle et vos domaines d'approbation.",
-  "approval.flow.rejection.reason": "Motif du rejet"
+  "approval.flow.rejection.reason": "Motif du rejet",
+  "approval.flow.rejected": "Flux d'approbation rejeté avec succès !"
 }

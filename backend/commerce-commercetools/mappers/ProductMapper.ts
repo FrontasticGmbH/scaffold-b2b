@@ -22,11 +22,14 @@ import { ProductDiscount as CommercetoolsProductDiscount } from '@commercetools/
 import {
   Money as CommercetoolsMoney,
   Price as CommercetoolsPrice,
+  LocalizedString as CommercetolsLocalizedString,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import {
   AttributeDefinition as CommercetoolsAttributeDefinition,
   AttributeEnumType,
+  AttributePlainEnumValue,
   AttributeLocalizedEnumType,
+  AttributeLocalizedEnumValue,
   AttributeSetType,
   ProductType as CommercetoolsProductType,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-type';
@@ -342,8 +345,23 @@ export default class ProductMapper {
     const filterFieldValues: FilterFieldValue[] = [];
 
     for (const value of commercetoolsAttributeValues) {
-      const attributeValueLabel =
-        commercetoolsAttributeTypeName === 'enum' ? value.label : value.label?.[locale.language] ?? value.key;
+      let attributeValueLabel: string;
+
+      switch (commercetoolsAttributeTypeName) {
+        case 'enum': {
+          const enumValue = value as AttributePlainEnumValue;
+          attributeValueLabel = typeof enumValue.label === 'string' ? enumValue.label : value.key;
+          break;
+        }
+        case 'lenum': {
+          const lenumValue = value as AttributeLocalizedEnumValue;
+          const label = lenumValue.label?.[locale.language];
+          attributeValueLabel = typeof label === 'string' ? label : value.key;
+          break;
+        }
+        default:
+          attributeValueLabel = value.key;
+      }
 
       filterFieldValues.push({
         value: attributeValueLabel,

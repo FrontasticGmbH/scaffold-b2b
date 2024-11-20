@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccount from '@/lib/hooks/useAccount';
@@ -13,11 +13,7 @@ import { Option } from '@/components/atoms/select/types';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { useDebounce } from '@/hooks/useDebounce';
 import useProductSearch from '@/lib/hooks/useProductSearch';
-import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
-import { mapStore } from '@/utils/mappers/map-store';
 import { mapCsvProduct } from '@/utils/mappers/map-csv-product';
-import { BusinessUnit } from '@shared/types/business-unit';
-import { Store } from '@shared/types/store';
 import useSwrClearCache from '@/hooks/useSwrClearCache';
 
 const useHeaderData = () => {
@@ -30,50 +26,19 @@ const useHeaderData = () => {
 
   const { defaultBusinessUnit, businessUnits } = useBusinessUnits();
 
-  const { defaultStore, stores } = useStores();
+  const { stores } = useStores();
 
   const mappedStores = (stores ?? []).map((st) => {
     return { name: st.name ?? st.key, value: st.key };
   });
 
-  const { selectedBusinessUnit, selectedStore, setSelectedBusinessUnit, setSelectedStore } = useStoreAndBusinessUnits();
-
-  const onBusinessUnitSelect = useCallback(
-    (businessUnitKey: string) => {
-      const bu = businessUnits.find((bu) => bu.key === businessUnitKey) as BusinessUnit;
-
-      setSelectedBusinessUnit(mapBusinessUnit(bu));
-      localStorage.setItem('business-unit', bu.key as string);
-    },
-    [setSelectedBusinessUnit, businessUnits],
-  );
-
-  const onStoreSelect = useCallback(
-    (storeKey: string) => {
-      const st = stores.find((st) => st.key === storeKey) as Store;
-
-      setSelectedStore(mapStore(st));
-      localStorage.setItem('store', st.key ?? '');
-    },
-    [setSelectedStore, stores],
-  );
-
-  useEffect(() => {
-    const bu = businessUnits.find((bu) => bu.key === localStorage.getItem('business-unit')) ?? defaultBusinessUnit;
-    const st = stores.find((st) => st.key === localStorage.getItem('store')) ?? defaultStore;
-
-    if (!selectedBusinessUnit && bu) onBusinessUnitSelect(bu.key as string);
-    if (!selectedStore && st) onStoreSelect(st.key as string);
-  }, [
-    onStoreSelect,
-    onBusinessUnitSelect,
-    defaultBusinessUnit,
-    defaultStore,
-    businessUnits,
-    stores,
+  const {
     selectedBusinessUnit,
     selectedStore,
-  ]);
+    setSelectedBusinessUnitKey,
+    setSelectedStoreKey,
+    clearBusinessUnitAndStoreFromStorage,
+  } = useStoreAndBusinessUnits();
 
   const { totalItems: totalCartItems, addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
@@ -90,6 +55,7 @@ const useHeaderData = () => {
       router.push('/login');
       router.refresh();
       clearCache();
+      clearBusinessUnitAndStoreFromStorage();
     });
   };
 
@@ -153,9 +119,8 @@ const useHeaderData = () => {
     csvShowProducts: csvShowProducts.map((product) => product.variants.map(mapCsvProduct)).flat(),
     csvShowProductsLoading,
     addToCart: addItem,
-    onBusinessUnitSelect,
-    onStoreSelect,
-    setSelectedStore,
+    onBusinessUnitSelect: setSelectedBusinessUnitKey,
+    onStoreSelect: setSelectedStoreKey,
     onHeaderSearch,
     onQuickOrderSearch,
     onLogoutClick,

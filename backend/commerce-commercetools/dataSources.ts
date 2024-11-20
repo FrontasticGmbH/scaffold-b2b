@@ -317,7 +317,7 @@ const dataSources: DataSourceRegistry = {
     }
   },
 
-  'frontastic/approval-ruless': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+  'frontastic/approval-rules': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
       const account = assertIsAuthenticated(context.request);
       const businessUnitKey = getBusinessUnitKey(context.request);

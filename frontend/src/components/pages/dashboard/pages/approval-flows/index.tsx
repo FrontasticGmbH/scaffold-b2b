@@ -12,7 +12,7 @@ import StatusModal from './components/status-modal';
 import ApprovalFlowsTable from './components/approval-flows-table';
 
 const ApprovalFlowsPage = ({
-  initialBusinessUnit,
+  selectedBusinessUnit,
   businessUnitOptions,
   onBusinessUnitChange,
   onSearch,
@@ -63,7 +63,7 @@ const ApprovalFlowsPage = ({
           placeholder={translate('common.select')}
           enableSearch
           options={businessUnitOptions}
-          defaultValue={initialBusinessUnit}
+          value={selectedBusinessUnit?.key}
           onChange={onBusinessUnitChange}
         />
       </div>

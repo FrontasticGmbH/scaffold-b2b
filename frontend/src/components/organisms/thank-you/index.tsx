@@ -15,6 +15,7 @@ const ThankYou = ({
   onReviewOrderClick,
   transaction,
   lineItems = [],
+  purchaseOrderNumber,
 }: ThankYouProps) => {
   return (
     <div className="min-h-screen items-start gap-6 px-4 md:px-5 lg:flex lg:bg-neutral-200 lg:px-12 lg:py-9">
@@ -26,6 +27,7 @@ const ThankYou = ({
           deliveryAddress={deliveryAddress}
           paymentMethod={paymentMethod}
           billingAddress={billingAddress}
+          purchaseOrderNumber={purchaseOrderNumber}
         />
         <ReviewOrder onReviewOrderClick={onReviewOrderClick} />
       </div>

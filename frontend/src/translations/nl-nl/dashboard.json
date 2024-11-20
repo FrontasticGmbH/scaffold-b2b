@@ -181,5 +181,6 @@
   "purchase.order.number": "PO-nummer",
   "approval.flow.required.approvers": "Vereiste goedkeurders",
   "approval.flow.required.approvers.desc": "Deze niveaus zijn het resultaat van het samenvoegen van meerdere regels die van toepassing zijn op de order.\nAls er opties in het blauw zijn gemarkeerd ( {preview} ), geven ze uw rol en goedkeuringsgebieden aan.",
-  "approval.flow.rejection.reason": "Reden voor afwijzing"
+  "approval.flow.rejection.reason": "Reden voor afwijzing",
+  "approval.flow.rejected": "Goedkeuringsstroom succesvol afgewezen!"
 }

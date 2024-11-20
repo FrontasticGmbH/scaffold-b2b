@@ -5,7 +5,7 @@ import toast from '@/components/atoms/toaster/helpers/toast';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import Input from '@/components/atoms/input';
-import { passwordPattern } from '@/constants/regex';
+import useValidate from '@/hooks/useValidate/useValidate';
 import AuthForm from '../layouts/auth-form';
 import AuthLayout from '../layouts/auth-layout';
 import { VerifyAssociateInput, VerifyAssociateProps } from './types';
@@ -14,6 +14,9 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
   const { translate } = useTranslation();
   const router = useCustomRouter();
 
+  const { validatePassword } = useValidate();
+
+  const [passwordError, setPasswordError] = useState('');
   const [data, setData] = useState({
     firstName: '',
     lastName: '',
@@ -27,6 +30,7 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
 
   const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = target;
+    if (name === 'password' && passwordError) setPasswordError('');
     setData({ ...data, [name]: value });
   };
 
@@ -37,6 +41,12 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
   };
 
   const handleOnSubmit = () => {
+    const isValidPassword = validatePassword(data.password);
+    if (!isValidPassword) {
+      setPasswordError(translate('error.password.not.valid'));
+      return;
+    }
+
     onSubmit(data)
       .then(() => {
         router.refresh();
@@ -74,9 +84,9 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
         <PasswordInput
           name="password"
           value={data.password}
+          error={passwordError}
           required
           label={translate('account.password')}
-          pattern={passwordPattern}
           {...commonProps}
         />
       </AuthForm>

@@ -90,7 +90,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     getBusinessUnit: async (
       query: GetBusinessUnitQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -98,7 +98,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<BusinessUnit>({
         actionName: 'business-unit/getBusinessUnit',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -107,7 +107,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     getBusinessUnits: async (
       query?: GetBusinessUnitsQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -115,7 +115,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<BusinessUnit[]>({
         actionName: 'business-unit/getBusinessUnits',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -124,7 +124,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     createBusinessUnit: async (
       payload: CreateBusinessUnitPayload,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -132,7 +132,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<BusinessUnit>({
         actionName: 'business-unit/create',
         payload,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -142,7 +142,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: UpdateBusinessUnitPayload,
       query: UpdateBusinessUnitQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -151,7 +151,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/updateBusinessUnit',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -159,14 +159,14 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     },
     getAssociateRoles: async (
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
     ) => {
       const response = await sdk.callAction<AssociateRole[]>({
         actionName: 'business-unit/getAssociateRoles',
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -175,7 +175,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     getAssociate: async (
       query: GetAssociateQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -183,7 +183,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<Associate>({
         actionName: 'business-unit/getAssociate',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -193,7 +193,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: AddAssociatePayload,
       query: AddAssociateQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -202,7 +202,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/addAssociate',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -212,7 +212,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: UpdateAssociatePayload,
       query: UpdateAssociateQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -221,7 +221,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/updateAssociate',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -231,7 +231,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: RemoveAssociatePayload,
       query: RemoveAssociateQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -240,7 +240,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/removeAssociate',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -248,14 +248,14 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     },
     getCompanies: async (
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
     ) => {
       const response = await sdk.callAction<BusinessUnit[]>({
         actionName: 'business-unit/getCompanies',
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -264,7 +264,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     getOrders: async (
       query: GetBusinessUnitOrdersQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -272,7 +272,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<Order[]>({
         actionName: 'business-unit/getBusinessUnitOrders',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -282,7 +282,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: AddBusinessUnitAddressPayload,
       query: AddBusinessUnitAddressQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -291,7 +291,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/addBusinessUnitAddress',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -301,7 +301,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: UpdateBusinessUnitAddressPayload,
       query: UpdateBusinessUnitAddressQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -310,7 +310,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/updateBusinessUnitAddress',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -320,7 +320,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: RemoveBusinessUnitAddressPayload,
       query: RemoveBusinessUnitAddressQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -329,7 +329,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/removeBusinessUnitAddress',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -338,7 +338,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     setBusinessUnitAndStoreKeys: async (
       query: SetBusinessUnitAndStoreKeysQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -346,7 +346,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<void>({
         actionName: 'business-unit/setBusinessUnitAndStoreKeys',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -356,7 +356,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: CreateApprovalRulePayload,
       query: CreateApprovalRuleQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -365,7 +365,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/createApprovalRule',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -374,7 +374,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     queryApprovalRules: async (
       query: QueryApprovalRulesQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -382,7 +382,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<PaginatedResult<ApprovalRule>>({
         actionName: 'business-unit/queryApprovalRules',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -392,7 +392,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: UpdateApprovalRulePayload,
       query: UpdateApprovalRuleQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -401,7 +401,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/updateApprovalRule',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -410,7 +410,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
     queryApprovalFlows: async (
       query: QueryApprovalFlowsQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -418,7 +418,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       const response = await sdk.callAction<PaginatedResult<ApprovalFlow>>({
         actionName: 'business-unit/queryApprovalFlows',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -428,7 +428,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: ApproveApprovalFlowPayload,
       query: ApproveApprovalFlowQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -437,7 +437,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/approveApprovalFlow',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -447,7 +447,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
       payload: RejectApprovalFlowPayload,
       query: RejectApprovalFlowQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -456,7 +456,7 @@ export const getBusinessUnitActions = (sdk: SDK<ComposableCommerceEventsB2B>): B
         actionName: 'business-unit/rejectApprovalFlow',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });

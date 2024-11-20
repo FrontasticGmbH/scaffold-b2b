@@ -1,4 +1,19 @@
 
+## Version 1.13.0 (2024-11-05)
+
+** New Features and Improvements **
+
+- Enhance error messages for account verification 
+- Make password reset fields required
+- Added password pattern validation
+- Handled multi level category and included categoryId and categoryRef fields
+
+** Bug fixes **
+
+- Purchase list buttons ui bug
+- Refresh categories on locale change
+- Adjust shipping price default in pdp
+
 ## Version 1.12.0 (2024-10-02)
 
 ** New Features and Improvements **

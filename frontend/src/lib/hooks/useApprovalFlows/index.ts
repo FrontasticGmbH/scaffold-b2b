@@ -10,16 +10,13 @@ const useApprovalFlows = ({
   const { data, ...response } = useSWR(
     !businessUnitKey ? null : ['/action/business-unit/queryApprovalFlows', businessUnitKey, searchQuery, status],
     () =>
-      sdk.composableCommerce.businessUnit.queryApprovalFlows(
-        {
-          businessUnitKey: businessUnitKey as string,
-          approvalFlowIds: [...(searchQuery ? [searchQuery] : [])],
-          approvalFlowStatus: [...(status ? [status] : [])],
-          cursor,
-          sortAttributes: [{ createdAt: 'desc' }],
-        },
-        { skipQueue: true },
-      ),
+      sdk.composableCommerce.businessUnit.queryApprovalFlows({
+        businessUnitKey: businessUnitKey as string,
+        approvalFlowIds: [...(searchQuery ? [searchQuery] : [])],
+        approvalFlowStatus: [...(status ? [status] : [])],
+        cursor,
+        sortAttributes: [{ createdAt: 'desc' }],
+      }),
   );
 
   const isLoading = !businessUnitKey || response.isLoading;

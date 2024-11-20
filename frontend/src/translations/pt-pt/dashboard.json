@@ -181,5 +181,6 @@
   "purchase.order.number": "Número do pedido",
   "approval.flow.required.approvers": "Aprovadores necessários",
   "approval.flow.required.approvers.desc": "Essas camadas são o resultado da fusão de várias regras que se aplicam ao pedido.\nSe houver opções marcadas em azul ( {preview} ), elas indicam sua função e áreas de aprovação.",
-  "approval.flow.rejection.reason": "Motivo da rejeição"
+  "approval.flow.rejection.reason": "Motivo da rejeição",
+  "approval.flow.rejected": "Fluxo de aprovação rejeitado com sucesso!"
 }

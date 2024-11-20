@@ -6,7 +6,7 @@ import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Typography from '@/components/atoms/typography';
-import { passwordPattern } from '@/constants/regex';
+import useValidate from '@/hooks/useValidate/useValidate';
 import AuthLayout from '../layouts/auth-layout';
 import { ResetPasswordData, ResetPasswordProps } from './types';
 import AuthForm from '../layouts/auth-form';
@@ -15,6 +15,8 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
   const router = useCustomRouter();
 
   const searchParams = useSearchParams();
+
+  const { validatePassword } = useValidate();
 
   const { translate } = useTranslation();
 
@@ -38,6 +40,12 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
     }
 
     if (token && data.password == data.confirmPassword) {
+      const isValidPassword = validatePassword(data.password);
+
+      if (!isValidPassword) {
+        setValidationError(translate('error.password.not.valid'));
+        return;
+      }
       resetPassword(token, data.password).then(() => {
         setReset(true);
       });
@@ -72,7 +80,6 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
               value={data.password}
               onChange={handleChange}
               required
-              pattern={passwordPattern}
             />
             <PasswordInput
               containerClassName="w-full"

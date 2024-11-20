@@ -181,5 +181,6 @@
   "purchase.order.number": "PO number",
   "approval.flow.required.approvers": "Required approvers",
   "approval.flow.required.approvers.desc": "These tiers are the result of merging multiple rules that apply to the order.\nIf there are options marked in blue ( {preview} ), they indicate your role and areas of approval.",
-  "approval.flow.rejection.reason": "Reason for rejection"
+  "approval.flow.rejection.reason": "Reason for rejection",
+  "approval.flow.rejected": "Successfully rejected approval flow!"
 }

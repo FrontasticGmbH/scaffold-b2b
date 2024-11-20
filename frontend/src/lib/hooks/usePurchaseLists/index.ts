@@ -10,13 +10,10 @@ const usePurchaseLists = (storeKey?: string) => {
   const account = useAccount();
 
   const response = useSWR(storeKey && account.account?.accountId ? ['/action/wishlist/', storeKey] : null, () =>
-    sdk.composableCommerce.wishlist.queryWishlists(
-      {
-        accountId: account.account?.accountId ?? '',
-        storeKey: storeKey ?? '',
-      },
-      { skipQueue: true },
-    ),
+    sdk.composableCommerce.wishlist.queryWishlists({
+      accountId: account.account?.accountId ?? '',
+      storeKey: storeKey ?? '',
+    }),
   );
 
   const { mutate } = response;
@@ -96,7 +93,7 @@ const usePurchaseLists = (storeKey?: string) => {
     ) => {
       const result = await sdk.callAction<Wishlist[]>({
         actionName: 'wishlist/removeLineItems',
-        payload: wishlists,
+        payload: { wishlists },
       });
 
       mutate();

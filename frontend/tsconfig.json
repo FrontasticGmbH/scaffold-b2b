@@ -37,14 +37,6 @@
     "plugins": [{ "name": "next" }],
     "types": ["jest", "@testing-library/jest-dom"]
   },
-  "include": [
-    "next-env.d.ts",
-    "./.storybook/**/*.ts",
-    "./.storybook/**/*.tsx",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".storybook/theme.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }

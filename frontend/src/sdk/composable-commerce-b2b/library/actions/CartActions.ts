@@ -93,14 +93,14 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
   return {
     clearCart: async (
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
     ) => {
       const response = await sdk.callAction<void>({
         actionName: 'cart/clearCart',
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -109,7 +109,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
     getCart: async (
       query?: GetCartQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -117,7 +117,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       const response = await sdk.callAction<Cart>({
         actionName: 'cart/getCart',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -127,7 +127,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: UpdateCartPayload,
       query?: UpdateCartQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -136,7 +136,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/updateCart',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -146,7 +146,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: ReassignCartPayload,
       query?: ReassignCartQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -155,7 +155,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/reassignCart',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -165,7 +165,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: ReplicateOrderPayload,
       query?: ReplicateOrderQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -174,7 +174,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/replicateOrder',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -184,7 +184,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: AddCartItemPayload,
       query?: AddCartItemQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -193,7 +193,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/addToCart',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -203,7 +203,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: UpdateCartItemPayload,
       query?: UpdateCartItemQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -212,7 +212,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/updateLineItem',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -222,7 +222,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: SplitCartItemPayload,
       query?: SplitCartItemQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -231,7 +231,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/splitLineItem',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -241,7 +241,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: RemoveCartItemPayload,
       query?: RemoveCartItemQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -250,7 +250,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/removeLineItem',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -259,7 +259,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
     getShippingMethods: async (
       query?: GetCartShippingMethodsQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -267,7 +267,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       const response = await sdk.callAction<ShippingMethod[]>({
         actionName: 'cart/getShippingMethods',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -276,7 +276,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
     getAvailableShippingMethods: async (
       query?: GetAvailableCartShippingMethodsQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -284,7 +284,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       const response = await sdk.callAction<ShippingMethod[]>({
         actionName: 'cart/getAvailableShippingMethods',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -294,7 +294,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: SetCartShippingMethodPayload,
       query?: SetCartShippingMethodQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -303,7 +303,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/setShippingMethod',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -313,7 +313,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: RedeemDiscountCodePayload,
       query?: RedeemDiscountCodeQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -322,7 +322,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/redeemDiscount',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -332,7 +332,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: RemoveDiscountCodePayload,
       query?: RemoveDiscountCodeQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -341,7 +341,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/removeDiscount',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -351,7 +351,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: UpdatePaymentPayload,
       query?: UpdatePaymentQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -360,7 +360,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/updatePayment',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -370,7 +370,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: AddPaymentByInvoicePayload,
       query?: AddPaymentByInvoiceQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -379,7 +379,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/addPaymentByInvoice',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -389,7 +389,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: CheckoutCartPayload,
       query?: CheckoutCartQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -398,7 +398,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/checkout',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -408,7 +408,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: ReturnOrderItemsPayload,
       query?: ReturnOrderItemsQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -417,7 +417,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/returnItems',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -427,7 +427,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       payload: CancelOrderPayload,
       query?: CancelOrderQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -436,7 +436,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
         actionName: 'cart/cancelOrder',
         payload,
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -445,7 +445,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
     queryOrders: async (
       query?: QueryOrdersQuery,
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
@@ -453,7 +453,7 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
       const response = await sdk.callAction<PaginatedResult<Order>>({
         actionName: 'cart/queryOrders',
         query,
-        skipQueue: options.skipQueue,
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });
@@ -461,14 +461,14 @@ export const getCartActions = (sdk: SDK<ComposableCommerceEventsB2B>): CartActio
     },
     getCheckoutSessionToken: async (
       options: {
-        skipQueue?: boolean;
+        parallel?: boolean;
         customHeaderValue?: string;
         serverOptions?: ServerOptions;
       } = {},
     ) => {
       const response = await sdk.callAction<Token>({
-        actionName: "cart/getCheckoutSessionToken",
-        skipQueue: options.skipQueue,
+        actionName: 'cart/getCheckoutSessionToken',
+        parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,
       });

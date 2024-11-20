@@ -30,6 +30,7 @@ const Gallery = ({ className, images }: GalleryProps) => {
   const commonSliderProps: SliderProps = {
     spaceBetween: 12,
     slidesToScroll: 1,
+    initialSlide: 0,
     swipeToSlide: true,
     focusOnSelect: true,
   };
@@ -50,12 +51,13 @@ const Gallery = ({ className, images }: GalleryProps) => {
             className={verticalSliderClassName}
             {...commonSliderProps}
           >
-            {images.map((src) => (
+            {images.map((src, index) => (
               <Image
                 key={src}
                 className="mx-auto mb-3 size-[100px] cursor-pointer rounded-md object-contain p-1"
                 alt=""
                 src={src}
+                loading={index === 0 ? 'eager' : 'lazy'}
               />
             ))}
           </VerticalSlider>
@@ -69,8 +71,14 @@ const Gallery = ({ className, images }: GalleryProps) => {
           dots={!isTablet}
           {...commonSliderProps}
         >
-          {images.map((src) => (
-            <Image key={src} className="h-[486px] w-full object-contain" alt="" src={src} />
+          {images.map((src, index) => (
+            <Image
+              key={src}
+              className="h-[486px] w-full object-contain"
+              alt=""
+              src={src}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
           ))}
         </Slider>
       </div>
@@ -86,8 +94,14 @@ const Gallery = ({ className, images }: GalleryProps) => {
           containerClassName="mt-3 px-7 navigation-slider"
           {...commonSliderProps}
         >
-          {images.map((src) => (
-            <Image key={src} className="size-[73px] rounded-md object-contain p-1" alt="" src={src} />
+          {images.map((src, index) => (
+            <Image
+              key={src}
+              className="size-[73px] rounded-md object-contain p-1"
+              alt=""
+              src={src}
+              loading={index === 0 ? 'eager' : 'lazy'}
+            />
           ))}
         </Slider>
       )}

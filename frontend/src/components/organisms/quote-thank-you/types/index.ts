@@ -22,4 +22,5 @@ export interface QuoteThankYouProps {
   onReviewQuoteClick?: () => void;
   lineItems: Product[];
   transaction: Transaction;
+  purchaseOrderNumber?: string;
 }

@@ -33,7 +33,6 @@ Primary.args = {
     { name: 'West Coast', value: '0' },
     { name: 'East Coast', value: '1' },
   ],
-  initialBusinessUnit: '0',
   approvalFlows: [
     {
       id: '2353 2245 6632',

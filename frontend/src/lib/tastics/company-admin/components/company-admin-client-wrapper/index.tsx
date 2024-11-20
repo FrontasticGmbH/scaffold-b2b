@@ -6,23 +6,23 @@ import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import Dashboard from '@/components/pages/dashboard';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useAccount from '@/lib/hooks/useAccount';
-import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
-import { mapAssociate } from '@/utils/mappers/map-associate';
+import { mapCoCoAddress } from '@/utils/mappers/map-address';
 import { mapBusinessUnit } from '@/utils/mappers/map-business-unit';
 import { CompanyAdminPageProps } from '@/components/pages/dashboard/pages/company-admin/types';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import useProjectSettings from '@/lib/hooks/useProjectSettings';
 import { mapCountry } from '@/utils/mappers/map-country';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useSearch from '../../hooks/useSearch';
 import useRole from '../../hooks/useRole';
 import useStore from '../../hooks/useStore';
-import useBusinessUnit from '../../hooks/useBusinessUnit';
 import useSubPath from '../../hooks/useSubPath';
 
 const CompanyAdminClientWrapper = () => {
   const { projectSettings } = useProjectSettings();
 
-  const { activeBusinessUnit, onBusinessUnitSelected, businessUnits } = useBusinessUnit();
+  const { businessUnits } = useBusinessUnits();
+  const { selectedBusinessUnit, setSelectedBusinessUnitKey } = useStoreAndBusinessUnits();
 
   const {
     addBusinessUnit,
@@ -35,30 +35,30 @@ const CompanyAdminClientWrapper = () => {
     removeAddress,
   } = useBusinessUnits();
 
-  const { selectedStore } = useStore({ activeBusinessUnit });
+  const { selectedStore } = useStore({ activeBusinessUnit: selectedBusinessUnit });
 
   const { roleOptions } = useRole();
 
   const { account } = useAccount();
 
-  const { permissions } = useAccountRoles(activeBusinessUnit?.key);
+  const { permissions } = useAccountRoles(selectedBusinessUnit?.key);
 
   const addressesAreViewOnly = !permissions.UpdateBusinessUnitDetails;
   const businessUnitsAreViewOnly = !permissions.UpdateBusinessUnitDetails;
   const associatesAreViewOnly = !permissions.UpdateAssociates;
 
   const { searchedAddresses, searchedAssociates, searchedBusinessUnits, handleSearch } = useSearch({
-    addresses: activeBusinessUnit?.addresses ?? [],
-    associates: activeBusinessUnit?.associates ?? [],
-    businessUnits: businessUnits ?? [],
+    addresses: selectedBusinessUnit?.addresses ?? [],
+    associates: selectedBusinessUnit?.associates ?? [],
+    businessUnits: (businessUnits ?? []).map(mapBusinessUnit),
   });
 
   const companyAdminProps = {
     companyName: account?.companyName,
-    storeName: activeBusinessUnit?.name ?? activeBusinessUnit?.key,
+    storeName: selectedBusinessUnit?.name ?? selectedBusinessUnit?.key,
     businessUnitOptions: businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' })),
-    initialBusinessUnit: activeBusinessUnit?.key,
-    onBusinessUnitChange: onBusinessUnitSelected,
+    initialBusinessUnit: selectedBusinessUnit?.key,
+    onBusinessUnitChange: setSelectedBusinessUnitKey,
     countryOptions: (projectSettings?.countries ?? []).map(mapCountry).map(({ name, code, states }) => ({
       name,
       value: code,
@@ -68,40 +68,43 @@ const CompanyAdminClientWrapper = () => {
     businessUnitsAreViewOnly,
     associatesAreViewOnly,
     addressesAreViewOnly,
-    generalInformation: activeBusinessUnit
+    generalInformation: selectedBusinessUnit
       ? [
           {
-            id: activeBusinessUnit.businessUnitId ?? '',
-            key: activeBusinessUnit.key ?? '',
-            name: activeBusinessUnit.name ?? '',
-            email: activeBusinessUnit.contactEmail ?? '',
+            id: selectedBusinessUnit.id ?? '',
+            key: selectedBusinessUnit.key ?? '',
+            name: selectedBusinessUnit.name ?? '',
+            email: selectedBusinessUnit.email ?? '',
           },
         ]
       : [],
-    addresses: searchedAddresses.map(mapAddress),
+    addresses: searchedAddresses,
     onSearchAddresses: handleSearch('addresses'),
-    associates: searchedAssociates.map(mapAssociate),
+    associates: searchedAssociates,
     onSearchAssociates: handleSearch('associates'),
     onAddAssociate: async (associate) => {
-      const associateRes = await addAssociate({ ...associate, businessUnitKey: activeBusinessUnit?.key as string });
+      const associateRes = await addAssociate({ ...associate, businessUnitKey: selectedBusinessUnit?.key as string });
       return !!associateRes.businessUnitId;
     },
     onUpdateAssociate: async (associate) => {
-      const associateRes = await updateAssociate({ ...associate, businessUnitKey: activeBusinessUnit?.key as string });
+      const associateRes = await updateAssociate({
+        ...associate,
+        businessUnitKey: selectedBusinessUnit?.key as string,
+      });
       return !!associateRes.businessUnitId;
     },
     onDeleteAssociate: async (id) => {
-      const associate = await removeAssociate({ id, businessUnitKey: activeBusinessUnit?.key as string });
+      const associate = await removeAssociate({ id, businessUnitKey: selectedBusinessUnit?.key as string });
       return !!associate.businessUnitId;
     },
-    businessUnits: searchedBusinessUnits.map(mapBusinessUnit),
+    businessUnits: searchedBusinessUnits,
     onSearchBusinessUnits: handleSearch('businessUnits'),
     onAddBusinessUnit: async ({ email, name }) => {
       if (!selectedStore || !account?.accountId) return false;
 
       const businessUnit = await addBusinessUnit({
         account: { accountId: account.accountId, companyName: name, email },
-        storeId: selectedStore.storeId ?? '',
+        storeId: selectedStore.id ?? '',
       });
       return !!businessUnit.businessUnitId;
     },
@@ -123,21 +126,24 @@ const CompanyAdminClientWrapper = () => {
     },
     canAddBusinessUnit: !!selectedStore,
     onAddAddress: async (address) => {
-      if (!activeBusinessUnit.key) return;
+      if (!selectedBusinessUnit?.key) return;
 
-      const businessUnit = await addAddress({ ...mapCoCoAddress(address), businessUnitKey: activeBusinessUnit.key });
+      const businessUnit = await addAddress({ ...mapCoCoAddress(address), businessUnitKey: selectedBusinessUnit.key });
       return !!businessUnit.businessUnitId;
     },
     onUpdateAddress: async (address) => {
-      if (!activeBusinessUnit.key) return;
+      if (!selectedBusinessUnit?.key) return;
 
-      const businessUnit = await updateAddress({ ...mapCoCoAddress(address), businessUnitKey: activeBusinessUnit.key });
+      const businessUnit = await updateAddress({
+        ...mapCoCoAddress(address),
+        businessUnitKey: selectedBusinessUnit.key,
+      });
       return !!businessUnit.businessUnitId;
     },
     onDeleteAddress: async (id) => {
-      if (!activeBusinessUnit.key) return;
+      if (!selectedBusinessUnit?.key) return;
 
-      const businessUnit = await removeAddress({ addressId: id, businessUnitKey: activeBusinessUnit.key });
+      const businessUnit = await removeAddress({ addressId: id, businessUnitKey: selectedBusinessUnit.key });
       return !!businessUnit.businessUnitId;
     },
   } as CompanyAdminPageProps;

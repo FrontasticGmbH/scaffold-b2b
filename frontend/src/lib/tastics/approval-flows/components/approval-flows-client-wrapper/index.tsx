@@ -13,8 +13,9 @@ import { mapApprovalFlow, mapCoCoApprovalFlowStatus } from '@/utils/mappers/map-
 import useProjectSettings from '@/lib/hooks/useProjectSettings';
 import { generateApprovalRulesConfig } from '@/lib/tastics/approval-rules/config/approval-rules';
 import { mapCountry } from '@/utils/mappers/map-country';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import useRefinements from '../../hooks/useRefinements';
-import useBusinessUnit from '../../hooks/useBusinessUnit';
 
 const ApprovalFlowsClientWrapper = () => {
   const router = useCustomRouter();
@@ -31,7 +32,9 @@ const ApprovalFlowsClientWrapper = () => {
 
   const [selectedStatus, setSelectedStatus] = useState<ApprovalFlowStatus>(defaultStatus as ApprovalFlowStatus);
 
-  const { activeBusinessUnit, onBusinessUnitSelected, businessUnits } = useBusinessUnit();
+  const { businessUnits } = useBusinessUnits();
+
+  const { selectedBusinessUnit, setSelectedBusinessUnitKey } = useStoreAndBusinessUnits();
 
   const { account } = useAccount();
 
@@ -42,7 +45,7 @@ const ApprovalFlowsClientWrapper = () => {
   } as Record<ApprovalFlowStatus, ReturnType<typeof useRefinements>>;
 
   const { approvalFlows, isLoading, totalItems, previousCursor, nextCursor } = useApprovalFlows({
-    businessUnitKey: activeBusinessUnit?.key,
+    businessUnitKey: selectedBusinessUnit?.key,
     filters: {
       searchQuery: refinements[selectedStatus].debouncedSearch,
       status: mapCoCoApprovalFlowStatus(selectedStatus),
@@ -53,9 +56,9 @@ const ApprovalFlowsClientWrapper = () => {
   return (
     <Dashboard href={DashboardLinks.approvalFlows} userName={account?.firstName}>
       <ApprovalFlowsPage
-        initialBusinessUnit={activeBusinessUnit?.key}
+        selectedBusinessUnit={selectedBusinessUnit}
         businessUnitOptions={businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' }))}
-        onBusinessUnitChange={onBusinessUnitSelected}
+        onBusinessUnitChange={setSelectedBusinessUnitKey}
         onSearch={(val) => refinements[selectedStatus].setSearch(val)}
         selectedStatus={selectedStatus}
         onStatusSelectedChange={(status) => {

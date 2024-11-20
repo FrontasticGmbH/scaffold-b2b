@@ -16,6 +16,7 @@ const QuoteThankYou = ({
   onReviewQuoteClick,
   transaction,
   lineItems = [],
+  purchaseOrderNumber,
 }: QuoteThankYouProps) => {
   return (
     <div className="min-h-screen items-start gap-6 px-4 md:px-5 lg:flex lg:bg-neutral-200 lg:px-12 lg:py-9">
@@ -28,6 +29,7 @@ const QuoteThankYou = ({
           paymentMethod={paymentMethod}
           billingAddress={billingAddress}
           comment={comment}
+          purchaseOrderNumber={purchaseOrderNumber}
         />
         <ReviewOrder onReviewQuoteClick={onReviewQuoteClick} />
       </div>

@@ -1,4 +1,19 @@
 
+## Version 1.14.0 (2024-11-05)
+
+** New Features and Improvements **
+
+- Added hostURl to the CoCo SDK client to see that url into the dev logs 
+- Handled multi level category and included categoryId and categoryRef fields
+- Used all matched variants when checking if anything match
+- Reduced cache time to 60 seconds
+- Include supplyChannelId when mapping shopping list items to not make items out of stock
+- Set order number if missing when query orders
+
+** Bug fixes **
+
+- Used only the attribute name for set product types 
+
 ## Version 1.13.0 (2024-10-02)
 
 ** New Features and Improvements **

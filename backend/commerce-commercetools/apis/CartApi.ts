@@ -368,7 +368,7 @@ export default class CartApi extends BaseApi {
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
-      .withOrderNumber({ orderNumber: orderId })
+      .withId({ ID: orderId })
       .get({
         queryArgs: {
           expand: ORDER_EXPANDS,
@@ -421,7 +421,7 @@ export default class CartApi extends BaseApi {
     return await this.getOrder(orderId).then(async (order) => {
       return this.associateEndpoints(this.accountId, this.businessUnitKey)
         .orders()
-        .withOrderNumber({ orderNumber: orderId })
+        .withId({ ID: orderId })
         .post({
           body: {
             version: +order.orderVersion,

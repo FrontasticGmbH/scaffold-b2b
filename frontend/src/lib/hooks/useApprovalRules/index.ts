@@ -8,17 +8,14 @@ const useApprovalRules = ({ businessUnitKey, storeKey, filters: { cursor, limit 
   const { data, mutate, ...response } = useSWR(
     !businessUnitKey ? null : ['/action/business-unit/queryApprovalRules', businessUnitKey, cursor, limit],
     () =>
-      sdk.composableCommerce.businessUnit.queryApprovalRules(
-        {
-          businessUnitKey: businessUnitKey as string,
-          approvalRuleIds: [],
-          approvalRuleStatus: [],
-          cursor,
-          limit,
-          sortAttributes: [{ createdAt: 'desc' }],
-        },
-        { skipQueue: true },
-      ),
+      sdk.composableCommerce.businessUnit.queryApprovalRules({
+        businessUnitKey: businessUnitKey as string,
+        approvalRuleIds: [],
+        approvalRuleStatus: [],
+        cursor,
+        limit,
+        sortAttributes: [{ createdAt: 'desc' }],
+      }),
   );
 
   const isLoading = !businessUnitKey || response.isLoading;

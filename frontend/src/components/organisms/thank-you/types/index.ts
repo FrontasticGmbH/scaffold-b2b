@@ -21,4 +21,5 @@ export interface ThankYouProps {
   onReviewOrderClick?: () => void;
   lineItems: Product[];
   transaction: Transaction;
+  purchaseOrderNumber?: string;
 }

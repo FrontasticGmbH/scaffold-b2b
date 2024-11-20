@@ -2,33 +2,43 @@ import React, { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PasswordInput from '@/components/atoms/password-input';
-import { passwordPattern } from '@/constants/regex';
+import useValidate from '@/hooks/useValidate/useValidate';
 import { Props } from './types';
 
 const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
   const { translate } = useTranslation();
 
-  const [data, setData] = useState({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
+  const { validatePassword } = useValidate();
 
+  const [data, setData] = useState({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
+  const [passwordError, setPasswordError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.name === 'newPassword' && passwordError) setPasswordError('');
       setData({ ...data, [e.target.name]: e.target.value });
     },
-    [data],
+    [data, passwordError],
   );
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-
       setIsLoading(true);
+
+      const isValidPassword = validatePassword(data.newPassword);
+      if (!isValidPassword) {
+        setPasswordError(translate('error.password.not.valid'));
+        setIsLoading(false);
+        return;
+      }
+
       await onChangePassword?.(data.oldPassword, data.newPassword);
       setData({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
       setIsLoading(false);
     },
-    [onChangePassword, data],
+    [validatePassword, data.newPassword, data.oldPassword, onChangePassword, translate],
   );
 
   const isDisabled =
@@ -55,8 +65,8 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
           label={translate('dashboard.new.password')}
           required
           value={data.newPassword}
+          error={passwordError}
           onChange={handleChange}
-          pattern={passwordPattern}
         />
 
         <PasswordInput

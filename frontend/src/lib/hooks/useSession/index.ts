@@ -7,7 +7,7 @@ const useSession = () => {
   const [isExpired, setIsExpired] = useState(false);
 
   useEffect(() => {
-    sdk.composableCommerce.cart.getCheckoutSessionToken({ skipQueue: true }).then((res) => {
+    sdk.composableCommerce.cart.getCheckoutSessionToken().then((res) => {
       if (!res.isError) setSession(res.data);
       else setIsExpired(true);
     });

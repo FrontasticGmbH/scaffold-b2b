@@ -7,7 +7,8 @@ import { InputProps } from '@/components/atoms/input/types';
 import { Account } from '@shared/types/account/Account';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Typography from '@/components/atoms/typography';
-import { namePattern, passwordPattern } from '@/constants/regex';
+import { namePattern } from '@/constants/regex';
+import useValidate from '@/hooks/useValidate/useValidate';
 import AuthLayout from '../layouts/auth-layout';
 import { RegisterProps } from './types';
 import AuthForm from '../layouts/auth-form';
@@ -17,6 +18,8 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const { translate } = useTranslation();
 
   const router = useCustomRouter();
+
+  const { validatePassword } = useValidate();
 
   const [data, setData] = useState<Account>({});
   const [errors, setErrors] = useState<Account>({});
@@ -48,7 +51,16 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   };
 
   const handleSubmit = () => {
-    if (data.email && data.password && data.companyName) {
+    const noEmptyFields = data.email && data.password && data.companyName;
+
+    if (noEmptyFields) {
+      const isValidPassword = data.password && validatePassword(data.password);
+
+      if (!isValidPassword) {
+        setErrors({ password: translate('error.password.not.valid') });
+        return;
+      }
+
       register(data)
         .then(() => {
           setConfirmed(true);
@@ -115,10 +127,10 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
             <PasswordInput
               name="password"
               value={data.password ?? ''}
+              error={errors['password']}
               label={translate('account.password')}
               onChange={handleChange}
               required
-              pattern={passwordPattern}
               {...commonProps}
             />
           </>

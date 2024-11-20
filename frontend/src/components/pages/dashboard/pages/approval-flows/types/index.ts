@@ -1,5 +1,6 @@
 import { Option } from '@/components/atoms/select/types';
 import { ApprovalFlow, ApprovalFlowStatus } from '@/types/entity/approval-flow';
+import { BusinessUnit } from '@/types/entity/business-unit';
 
 interface Pagination {
   page: number;
@@ -11,7 +12,7 @@ interface Pagination {
 }
 
 export interface ApprovalFlowsPageProps {
-  initialBusinessUnit?: string;
+  selectedBusinessUnit?: BusinessUnit;
   businessUnitOptions: Option[];
   onBusinessUnitChange?: (businessUnit: string) => void;
   onSearch: (val: string) => void;

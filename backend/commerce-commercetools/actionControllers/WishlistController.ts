@@ -275,16 +275,16 @@ export const removeLineItems: ActionHook = async (request, actionContext) => {
   try {
     const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
-    const requestBody = parseRequestBody<
-      {
+    const requestBody = parseRequestBody<{
+      wishlists: {
         lineItemId: string;
         wishlistId: string;
-      }[]
-    >(request.body);
+      }[];
+    }>(request.body);
 
     const wishlistQuery: WishlistQuery = {
       accountId: request.sessionData.account.accountId,
-      wishlistIds: requestBody.map((item) => item.wishlistId),
+      wishlistIds: requestBody.wishlists.map((item) => item.wishlistId),
     };
 
     const wishlists = await wishlistApi.queryWishlists(wishlistQuery);
@@ -298,7 +298,7 @@ export const removeLineItems: ActionHook = async (request, actionContext) => {
     }
 
     const removeLineItemsPromises = wishlists.items.flatMap((wishlist) => {
-      return requestBody
+      return requestBody.wishlists
         .filter((body) => body.wishlistId === wishlist.wishlistId)
         .map(async (body) => {
           return await wishlistApi.removeLineItem(wishlist, body.lineItemId);
