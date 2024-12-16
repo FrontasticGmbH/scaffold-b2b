@@ -1,11 +1,15 @@
 import { Product, Variant } from '@shared/types/product';
 import { Attribute, Product as EntityProduct } from '@/types/entity/product';
 import { Currency } from '@/types/currency';
+import { Cart } from '@shared/types/cart';
 import { mapMasterAttributes } from './map-master-attributes';
 import { mapCategory } from './map-category';
 import { mapAttribute } from './map-attribute';
 
-export const mapProduct = (product: Product, { variantIndex = -1 }: { variantIndex?: number } = {}): EntityProduct => {
+export const mapProduct = (
+  product: Product,
+  { variantIndex = -1, cart }: { variantIndex?: number; cart?: Cart } = {},
+): EntityProduct => {
   const variant =
     product.variants[variantIndex] ??
     product.variants.find(
@@ -46,6 +50,8 @@ export const mapProduct = (product: Product, { variantIndex = -1 }: { variantInd
         ] as [number, number])
       : undefined;
 
+  const inCartQuantity = cart?.lineItems?.find((lineItem) => lineItem.variant?.sku === variant.sku)?.count ?? 0;
+
   return {
     id: product.productId ?? '',
     key: product.productKey,
@@ -61,7 +67,7 @@ export const mapProduct = (product: Product, { variantIndex = -1 }: { variantInd
     discountedPrice: (variant.discountedPrice?.centAmount ?? 0) / Math.pow(10, variant.price?.fractionDigits ?? 2),
     currency: (variant.price?.currencyCode ?? 'USD') as Currency,
     inStock: variant.isOnStock,
-    maxQuantity: variant.isOnStock ? variant.availableQuantity : 0,
+    maxQuantity: variant.isOnStock ? Math.max(0, (variant.availableQuantity ?? Number.MAX_VALUE) - inCartQuantity) : 0,
     ...(priceRange ? { priceRange } : {}),
     url: product._url,
     categories: product.categories?.map(mapCategory) ?? [],

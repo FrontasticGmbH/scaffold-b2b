@@ -24,6 +24,7 @@ const ItemPricing = ({ item, quantity, onQuantityChange }: ItemPricingProps) => 
         <QuantityWidget
           onChange={handleQuantityChange}
           value={quantity}
+          minValue={Math.min(1, item.maxQuantity ?? Infinity)}
           maxValue={item.maxQuantity}
           showLabel={false}
         />

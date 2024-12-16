@@ -263,13 +263,13 @@ export default class BusinessUnitApi extends BaseApi {
       ? { addressKey: commercetoolsAddress.key }
       : { addressId: commercetoolsAddress.id };
 
-    address.isDefaultBillingAddress
-      ? businessUnitUpdateAction.push({ action: 'setDefaultBillingAddress', ...addressIdentifiers })
-      : businessUnitUpdateAction.push({ action: 'removeBillingAddressId', ...addressIdentifiers });
+    if (address.isDefaultBillingAddress) {
+      businessUnitUpdateAction.push({ action: 'setDefaultBillingAddress', ...addressIdentifiers });
+    }
 
-    address.isDefaultShippingAddress
-      ? businessUnitUpdateAction.push({ action: 'setDefaultShippingAddress', ...addressIdentifiers })
-      : businessUnitUpdateAction.push({ action: 'removeShippingAddressId', ...addressIdentifiers });
+    if (address.isDefaultShippingAddress) {
+      businessUnitUpdateAction.push({ action: 'setDefaultShippingAddress', ...addressIdentifiers });
+    }
 
     return await this.update(businessUnitKey, accountId, businessUnitUpdateAction);
   }

@@ -1,4 +1,5 @@
 import { PurchaseList } from '@/types/entity/purchase-list';
+import { Wishlist as SharedWishlist } from '@shared/types/wishlist/Wishlist';
 
 export type Wishlist = { label: string; id: string };
 export type ListWishListsProps = {
@@ -15,7 +16,7 @@ export type AddToNewWishlistProps = {
     list: Pick<PurchaseList, 'name' | 'description' | 'store'>,
     count?: number,
     sku?: string,
-  ) => Promise<void>;
+  ) => Promise<SharedWishlist | null>;
   onClose: () => void;
 };
 

@@ -5,6 +5,7 @@ export type Variant = 'default' | 'inline';
 
 export interface ContentItemProps {
   image: Image;
+  imageSizes?: string;
   title?: string;
   variant?: Variant;
   link?: Link;

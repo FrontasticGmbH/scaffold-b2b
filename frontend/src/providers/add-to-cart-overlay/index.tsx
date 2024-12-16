@@ -45,7 +45,7 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
           onQuantityChange={handleOnQuantityChange}
           sliderProducts={relatedProducts
             .filter((item) => item.productId !== product.id)
-            .map((product) => mapProduct(product))}
+            .map((product) => mapProduct(product, { cart }))}
         />
       )}
       <AddToCartOverlayContext.Provider value={{ showModal }}>{children}</AddToCartOverlayContext.Provider>

@@ -14,8 +14,8 @@ const useClassNames = (variant: InputVariant, isFocused: boolean, unStyled: bool
     valid: 'border-green-500 bg-white text-gray-600 focus:border-green-500 active:border-green-500',
   });
 
-  const inputClassName = classnames('w-full border-none bg-transparent pr-0 text-14 focus:outline-none focus:ring-0', {
-    'py-[10px] pl-3': !unStyled,
+  const inputClassName = classnames('w-full border-none bg-transparent text-14 focus:outline-none focus:ring-0', {
+    'px-3 py-[10px]': !unStyled,
   });
 
   const containerClassName = classnames({

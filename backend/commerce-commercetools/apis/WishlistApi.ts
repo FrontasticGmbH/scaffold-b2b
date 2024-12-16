@@ -186,7 +186,6 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        console.log('CLIENT RESPONSE', response.body);
         return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
       })
       .catch((error) => {

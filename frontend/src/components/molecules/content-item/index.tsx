@@ -6,7 +6,7 @@ import Link from '@/components/atoms/link';
 import { ContentItemProps } from './types';
 import useClassNames from './hooks/useClassNames';
 
-const ContentItem = ({ image, title, variant = 'default', link }: ContentItemProps) => {
+const ContentItem = ({ image, imageSizes, title, variant = 'default', link }: ContentItemProps) => {
   const { containerClassName, imageClassName, titleClassName } = useClassNames(variant);
 
   return (
@@ -17,7 +17,7 @@ const ContentItem = ({ image, title, variant = 'default', link }: ContentItemPro
       underlineOnHover={false}
     >
       <div className={imageClassName}>
-        <Image {...image} fill style={{ objectFit: 'contain' }} alt={title ?? ''} />
+        <Image {...image} fill sizes={imageSizes} style={{ objectFit: 'contain' }} alt={title ?? ''} />
       </div>
       <h5 className={titleClassName}>{title}</h5>
     </Link>

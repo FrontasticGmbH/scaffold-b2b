@@ -101,7 +101,12 @@ const PurchaseListItem = ({
 
         <div className="flex flex-col gap-3 md:items-end">
           <div className="hidden lg:block">
-            <QuantityWidget value={quantity} onChange={onQuantityChange} maxValue={maxQuantity} />
+            <QuantityWidget
+              value={quantity}
+              onChange={onQuantityChange}
+              minValue={Math.min(1, maxQuantity ?? Infinity)}
+              maxValue={maxQuantity}
+            />
           </div>
 
           {price > 0 && <span className="text-18 font-bold text-gray-800">{formatCurrency(price, currency)}</span>}

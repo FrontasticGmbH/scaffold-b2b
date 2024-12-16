@@ -23,7 +23,7 @@ const ProductTile = ({
     discountedPrice,
     currency,
     images,
-    maxQuantity,
+    maxQuantity = Number.MAX_VALUE,
     restockableInDays,
     url,
   },
@@ -85,7 +85,7 @@ const ProductTile = ({
             'md:size-[160px]': variant === 'grid-item',
           })}
         >
-          <Image fill src={images?.[0]} alt={name} style={{ objectFit: 'contain' }} />
+          <Image fill src={images?.[0]} suffix="small" alt={name} style={{ objectFit: 'contain' }} />
         </div>
       </Link>
 
@@ -142,6 +142,7 @@ const ProductTile = ({
             <QuantityWidget
               value={quantity}
               onChange={setQuantity}
+              minValue={Math.min(1, maxQuantity ?? Infinity)}
               maxValue={maxQuantity}
               disabled={!inStock || addToCartDisabled}
             />
@@ -183,6 +184,7 @@ const ProductTile = ({
               <QuantityWidget
                 value={quantity}
                 onChange={setQuantity}
+                minValue={Math.min(1, maxQuantity ?? Infinity)}
                 maxValue={maxQuantity}
                 showLabel={false}
                 disabled={!inStock || addToCartDisabled}
@@ -195,7 +197,7 @@ const ProductTile = ({
               className="grow truncate"
               onClick={handleAddToCart}
               loading={addingToCart}
-              disabled={!inStock || addToCartDisabled}
+              disabled={!inStock || addToCartDisabled || maxQuantity === 0}
             >
               {translate('cart.add')}
             </Button>

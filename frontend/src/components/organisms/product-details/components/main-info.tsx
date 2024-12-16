@@ -88,9 +88,10 @@ const MainInfo = ({
           </Typography>
         )}
         <CartCTA
+          product={product}
           countChange={handleQuantityChange}
           addToCart={handleOnAddToCart}
-          addToCartDisabled={addToCartDisabled}
+          addToCartDisabled={addToCartDisabled || product.maxQuantity === 0}
         />
 
         <ShoppingListCTA

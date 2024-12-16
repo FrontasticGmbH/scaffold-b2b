@@ -1,4 +1,56 @@
 
+## Version 2.0.0 (2024-11-20)
+
+
+** New Features & Improvements **
+
+misc: [B2B][B2C] Update translations bundle
+feat: restored yarn 4 dependency
+feat(FP-7985): Change quote text
+Revert "fix(B2B/B2C): FP-7881 removes yarn 4 requirement and general package manager lockin"
+feat(FP-8027): [B2B] Persistent business unit bugs in session
+Revert "feat(FP-7380): Added duplication validation for rule name"
+feat(FP-7085): update quote thank you page
+feat: Updated @commercetools/frontend-sdk package to version 2.0.0 stable
+misc: [B2B] Update lockfile
+misc: [B2B] Fix build
+feat(FP-7985): Add purchase order to normal checkout
+refactor(FP-8115): [B2C][B2B] Address SDK V2 changes
+feat(FP-8027): [B2B] Remove parallel call on homepage
+feat(FP-7380): Added duplication validation for rule name
+Removed erronously autognerated yarn 4.5 config
+misc: Tagged release 1.13.0 for components-nextjs-b2b
+feat(FP-7085): update quote thank you page
+Added additional event logging to CommercetoolsSDK template
+Fixed merge conflicts
+feat: Updated to latest alpha version of the coFE SDK v2
+feat: updated to use alpha v2 of the coFE SDK
+
+
+** Bug Fixes **
+
+fix(b2b/b2c): adds postbuild to npm build script
+fix(b2b): removes redundant and problematic includes from tsconfig
+fix: approval flows rejection bugs
+fix(FP-8066): [B2B] Eager load LCP in homepage
+fix: readability
+fix(b2b): cleans up package.json, removes package manager lockin, storybook deps
+fix(b2b): fixes storybook env vars & next.js mocks
+fix: adds crossenv
+fix: adds crossenv
+fix: readability
+fix(b2b): cleans up package.json, removes package manager lockin, storybook deps
+fix(b2b): fixes storybook env vars & next.js mocks
+fix(FP-8132): [B2B][B2C] Run API calls in parallel
+fix: Stopped redaction handling changing reponse returned
+fix: Fixed issue where redaction handling was redacting returned data
+fix: Fixed issue where redaction handling was redacting returned data
+fix: changed skipQueue to parallel in SDk integration actions
+fix: changed skipQueue to parallel in SDk integration actions
+fix(FP-8027): [B2B] Potential fix for wrong session bu
+fix(FP-6678): Password error handling
+fix: regenerated yarn.lock for v4 wth new sdk version
+
 ## Version 1.13.0 (2024-11-05)
 
 ** New Features and Improvements **

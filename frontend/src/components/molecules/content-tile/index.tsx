@@ -6,11 +6,18 @@ import { ArrowLongRightIcon as ArrowIcon } from '@heroicons/react/24/solid';
 import Link from '@/components/atoms/link';
 import { ContentTileProps } from './types';
 
-const ContentTile = ({ title, link, image }: ContentTileProps) => {
+const ContentTile = ({ title, link, image, imageSizes }: ContentTileProps) => {
   return (
     <div>
       <Link href={link?.href ?? '#'} openInNewTab={link?.openInNewTab} className="relative block w-full pb-[85%]">
-        <Image {...image} fill style={{ objectFit: 'cover' }} alt={title ?? ''} className="rounded-md" />
+        <Image
+          {...image}
+          fill
+          style={{ objectFit: 'cover' }}
+          sizes={imageSizes}
+          alt={title ?? ''}
+          className="rounded-md"
+        />
       </Link>
       <Link
         href={link?.href ?? '#'}

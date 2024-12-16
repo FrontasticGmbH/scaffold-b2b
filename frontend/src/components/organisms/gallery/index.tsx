@@ -51,13 +51,13 @@ const Gallery = ({ className, images }: GalleryProps) => {
             className={verticalSliderClassName}
             {...commonSliderProps}
           >
-            {images.map((src, index) => (
+            {images.map((src) => (
               <Image
                 key={src}
                 className="mx-auto mb-3 size-[100px] cursor-pointer rounded-md object-contain p-1"
                 alt=""
                 src={src}
-                loading={index === 0 ? 'eager' : 'lazy'}
+                suffix="small"
               />
             ))}
           </VerticalSlider>

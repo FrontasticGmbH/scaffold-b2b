@@ -72,7 +72,7 @@ describe('[Component] Purhcase List Item', () => {
           image: ' ',
           sku: '',
           url: '',
-          quantity: 1,
+          quantity: 2,
           price: 100,
           inStock: true,
           currency: 'USD',
@@ -84,8 +84,8 @@ describe('[Component] Purhcase List Item', () => {
     await act(async () => userEvent.click(screen.getByText('-')));
 
     //Note that quantity is controlled by the `quantity` prop value
-    expect(onQuantityChange).toHaveBeenNthCalledWith(1, 2);
-    expect(onQuantityChange).toHaveBeenNthCalledWith(2, 0);
+    expect(onQuantityChange).toHaveBeenNthCalledWith(1, 3);
+    expect(onQuantityChange).toHaveBeenNthCalledWith(2, 1);
   });
 
   test('It cannot go above the max quantity when increasing the quantity', async () => {

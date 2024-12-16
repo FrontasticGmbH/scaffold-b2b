@@ -5,7 +5,7 @@ import { Wishlist as SharedWishlist } from '@shared/types/wishlist/Wishlist';
 export type Wishlist = {
   label: string;
   id: string;
-  lineItemId: string;
+  lineItemId?: string;
   productIsInWishlist?: boolean;
 };
 
@@ -36,7 +36,10 @@ export type ShoppingListCTAProps = {
   getWishlists: () => Promise<Array<Wishlist> | undefined>;
   addToWishlists: (wishlistIds: string[], count?: number) => Promise<Wishlist[]>;
   removeFromWishlists: (wishlists: { wishlistId: string; lineItemId: string }[]) => Promise<Wishlist[]>;
-  addToNewWishlist: (list: Pick<SharedWishlist, 'name' | 'description' | 'store'>, count?: number) => Promise<void>;
+  addToNewWishlist: (
+    list: Pick<SharedWishlist, 'name' | 'description' | 'store'>,
+    count?: number,
+  ) => Promise<SharedWishlist | null>;
 };
 
 export type ShippingMethod = {
@@ -56,6 +59,7 @@ export type ShippingProps = {
 };
 
 export type CartCTAProps = {
+  product: Product;
   addToCartDisabled?: boolean;
   addToCart: (count: number) => Promise<void>;
   countChange: (count: number) => void;

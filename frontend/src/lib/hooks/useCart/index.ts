@@ -15,9 +15,6 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
       businessUnitKey: businessUnitKey as string,
       storeKey: storeKey as string,
     });
-    console.log('************');
-    console.log(result);
-    console.log('************');
 
     return result.isError ? ({} as Cart) : result.data;
   }, [businessUnitKey, storeKey]);

@@ -40,6 +40,7 @@ const CartClientWrapper = ({}: TasticProps<Props>) => {
         sku: sku ?? '',
         count: qty ?? 1,
       });
+      return result;
     },
     [addToWishlists, createPurchaseList],
   );

@@ -1,5 +1,7 @@
+import { ProjectSettings } from '@shared/types/ProjectSettings';
+
 type ComposableCommerceEventsB2B = {
-  projectSettingsFetched: { projectSettings: unknown };
+  projectSettingsFetched: { projectSettings: ProjectSettings };
 };
 
 export { type ComposableCommerceEventsB2B };

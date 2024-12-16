@@ -66,7 +66,7 @@ const ProductTile = ({
       <Link href={product.url ?? '#'}>
         <div className="rounded-sm bg-white p-4 md:p-5 lg:p-6">
           <div className="relative pb-[70%]">
-            <Image src={product.images?.[0]} alt={product.name} style={{ objectFit: 'contain' }} fill />
+            <Image src={product.images?.[0]} suffix="medium" alt={product.name} style={{ objectFit: 'contain' }} fill />
           </div>
         </div>
       </Link>

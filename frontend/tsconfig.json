@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -27,16 +31,42 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@": ["./src"],
-      "@/*": ["./src/*"],
-      "@test/utils": ["./__test__/utils"],
-      "@test/utils/*": ["./__test__/utils/*"],
-      "@shared/types": ["../types"],
-      "@shared/types/*": ["../types/*"]
+      "@": [
+        "./src"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+      "@test/utils": [
+        "./__test__/utils"
+      ],
+      "@test/utils/*": [
+        "./__test__/utils/*"
+      ],
+      "@shared/types": [
+        "../types"
+      ],
+      "@shared/types/*": [
+        "../types/*"
+      ]
     },
-    "plugins": [{ "name": "next" }],
-    "types": ["jest", "@testing-library/jest-dom"]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "types": [
+      "jest",
+      "@testing-library/jest-dom"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

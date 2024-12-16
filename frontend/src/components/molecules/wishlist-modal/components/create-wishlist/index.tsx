@@ -8,6 +8,8 @@ import TextArea from '@/components/atoms/text-area';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import Typography from '@/components/atoms/typography';
 import { AddToNewWishlistProps } from '@/components/molecules/wishlist-modal/types';
+import toast from '@/components/atoms/toaster/helpers/toast';
+import WishlistToast from '@/components/organisms/product-details/components/wishlist-toast';
 
 const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
   const { translate } = useTranslation();
@@ -25,7 +27,15 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
 
   const handleSubmit = useCallback(async () => {
     try {
-      await onAddToNewList?.({ ...(data as PurchaseList), store: selectedStore });
+      const listItem = await onAddToNewList?.({ ...(data as PurchaseList), store: selectedStore });
+
+      const wishlist = {
+        label: listItem?.name as string,
+        id: listItem?.wishlistId as string,
+      };
+
+      toast.render(<WishlistToast wishlist={wishlist} />, 'success', { position: 'top-right' });
+
       onClose();
     } catch {
       showFailedMessage();

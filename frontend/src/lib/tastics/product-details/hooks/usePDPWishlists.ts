@@ -47,6 +47,7 @@ const usePDPWishlists = (product: Product) => {
     async (wishlist: Pick<SharedWishlist, 'name' | 'description' | 'store'>, count?: number) => {
       const result = await createPurchaseList(wishlist);
       addToWishlists([result?.wishlistId ?? ''], count);
+      return result;
     },
     [addToWishlists, createPurchaseList],
   );

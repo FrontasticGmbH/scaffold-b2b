@@ -5,4 +5,5 @@ export interface ContentTileProps {
   title?: string;
   link?: Link;
   image?: Image;
+  imageSizes?: string;
 }

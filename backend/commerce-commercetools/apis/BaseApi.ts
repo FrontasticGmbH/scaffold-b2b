@@ -620,7 +620,7 @@ export default abstract class BaseApi {
     }
 
     this.checkoutHashKey = crypto
-      .createHash('md5')
+      .createHash('sha256')
       .update(this.clientSettings.checkoutApplicationKey + cartId)
       .digest('hex');
 
@@ -764,7 +764,7 @@ export default abstract class BaseApi {
     }
 
     this.clientHashKey = crypto
-      .createHash('md5')
+      .createHash('sha256')
       .update(this.clientSettings.clientId + this.clientSettings.clientSecret + this.clientSettings.projectKey)
       .digest('hex');
 

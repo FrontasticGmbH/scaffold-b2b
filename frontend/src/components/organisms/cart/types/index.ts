@@ -3,6 +3,7 @@ import { Discount } from '@/types/entity/discount';
 import { Product } from '@/types/entity/product';
 import { PurchaseList } from '@/types/entity/purchase-list';
 import { Transaction } from '@/types/transaction';
+import { Wishlist } from '@shared/types/wishlist';
 
 export type PaymentMethodType =
   | 'scheme'
@@ -73,7 +74,7 @@ export interface CartItemProps {
     list: Pick<PurchaseList, 'name' | 'description' | 'store'>,
     sku?: string,
     qty?: number,
-  ) => Promise<void>;
+  ) => Promise<Wishlist | null>;
 }
 
 export type CartItemsListProps = Pick<CartContentProps, 'lineItems'> &

@@ -4,10 +4,16 @@ import { Product as SharedProduct } from '@shared/types/product';
 import { mapAttribute } from '@/utils/mappers/map-attribute';
 import usePath from '@/hooks/usePath';
 import useCustomRouter from '@/hooks/useCustomRouter';
+import useCart from '@/lib/hooks/useCart';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 
 const usePDPProduct = (product: SharedProduct) => {
   const router = useCustomRouter();
   const { path } = usePath();
+
+  const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
+
+  const { cart } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
   //   Update the currentVariantIndex to use the sku from the path
   const currentVariantIndex = product.variants.findIndex((v) => v.sku === path.split('/')[3]);
@@ -24,8 +30,8 @@ const usePDPProduct = (product: SharedProduct) => {
   );
 
   const mappedProduct = useMemo(
-    () => mapProduct(product, { variantIndex: currentVariantIndex }),
-    [product, currentVariantIndex],
+    () => mapProduct(product, { variantIndex: currentVariantIndex, cart }),
+    [product, currentVariantIndex, cart],
   );
 
   const currentColor = useMemo(() => {

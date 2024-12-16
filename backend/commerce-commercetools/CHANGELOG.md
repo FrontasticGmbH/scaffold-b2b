@@ -1,4 +1,13 @@
 
+## Version 1.15.0 (2024-11-21)
+
+
+** New Features & Improvements **
+
+* Modify attribute values to test CI lint
+* Updated to use alpha v2 of the coFE SDK
+* Fix weak cryptographic algorithm
+
 ## Version 1.14.0 (2024-11-05)
 
 ** New Features and Improvements **

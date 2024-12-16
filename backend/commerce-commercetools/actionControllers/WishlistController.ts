@@ -1,7 +1,6 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { Wishlist, WishlistQuery } from '@Types/wishlist';
 import { Account } from '@Types/account';
-
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { WishlistFetcher } from '@Commerce-commercetools/utils/WishlistFetcher';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
@@ -10,6 +9,7 @@ import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/quer
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
 import WishlistApi from '@Commerce-commercetools/apis/WishlistApi';
+import { getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -39,7 +39,9 @@ async function fetchWishlist(request: Request, wishlistApi: WishlistApi): Promis
     return accountWishlists[0];
   }
 
-  return await wishlistApi.create({ accountId: account.accountId, name: 'Wishlist' });
+  const storeKey = getStoreKey(request);
+
+  return await wishlistApi.create({ accountId: account.accountId, name: 'Wishlist', store: { key: storeKey } });
 }
 
 export const getWishlist: ActionHook = async (request, actionContext) => {

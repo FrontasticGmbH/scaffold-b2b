@@ -35,7 +35,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
         </Button>
       </div>
     );
-  console.log('CartItem -> item', item);
+
   return (
     <div className="pt-5 md:py-8 lg:gap-12">
       <CartItemHeader className="md:hidden" item={item} />
@@ -73,7 +73,14 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
               </Typography>
             )}
 
-            <QuantityWidget showLabel={false} defaultValue={1} value={item.quantity} onChange={onUpdateQuantity} />
+            <QuantityWidget
+              showLabel={false}
+              defaultValue={1}
+              value={item.quantity}
+              minValue={Math.min(1, item.maxQuantity ?? Infinity)}
+              maxValue={item.maxQuantity}
+              onChange={onUpdateQuantity}
+            />
 
             <div>
               {item.discountedPrice ? (

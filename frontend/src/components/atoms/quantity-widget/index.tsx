@@ -16,22 +16,22 @@ const QuantityWidget = ({
 }: Props) => {
   const { translate } = useTranslation();
 
-  const [value, setValue] = useControllableState(valueProp, defaultValue);
+  const [value, setValue] = useControllableState(valueProp, Math.min(defaultValue, maxValue));
   const [rawValue, setRawValue] = useState(value.toString());
 
   const handleDecrement = useCallback(() => {
-    const newValue = value - 1;
+    const newValue = Math.max(minValue, value - 1);
 
     setValue(newValue);
     onChange?.(newValue);
-  }, [value, setValue, onChange]);
+  }, [value, minValue, setValue, onChange]);
 
   const handleIncrement = useCallback(() => {
-    const newValue = value + 1;
+    const newValue = Math.min(maxValue, value + 1);
 
     setValue(newValue);
     onChange?.(newValue);
-  }, [value, setValue, onChange]);
+  }, [value, maxValue, setValue, onChange]);
 
   useEffect(() => {
     setRawValue(value.toString());
@@ -48,6 +48,7 @@ const QuantityWidget = ({
 
     setValue(number);
     onChange?.(number);
+    setRawValue(number.toString());
   }, [rawValue, minValue, maxValue, onChange, setValue]);
 
   const boxClassName = classnames('flex size-[40px] items-center justify-center p-0');

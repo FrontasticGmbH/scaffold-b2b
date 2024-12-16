@@ -23,7 +23,7 @@ export const mapLineItem = (lineItem: LineItem): Product => {
     ...(discountedPrice ? { discountedPrice: discountedPrice / Math.pow(10, fractionDigits) } : {}),
     currency,
     inStock: variant?.isOnStock,
-    maxQuantity: variant?.isOnStock ? Infinity : 0,
+    maxQuantity: variant?.isOnStock ? variant.availableQuantity : 0,
     model: variant?.sku,
   } as Product;
 };

@@ -21,7 +21,7 @@ const ProductSliderClientWrapper = ({
 
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
-  const { isQuotationCart, addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
+  const { isQuotationCart, addItem, cart } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
   const { permissions } = useAccountRoles(selectedBusinessUnit?.key);
 
@@ -37,7 +37,7 @@ const ProductSliderClientWrapper = ({
     <ProductSlider
       headline={data.headline}
       products={items
-        .map((product) => mapProduct(product))
+        .map((product) => mapProduct(product, { cart }))
         .filter((item) => item.inStock)
         .slice(0, 12)}
       addToCartDisabled={!permissions.UpdateMyCarts}
