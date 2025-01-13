@@ -1,4 +1,19 @@
 
+## Version 2.1.0 (2024-12-16)
+
+** New Features & Improvements **
+
+- Added unit tests for useValidate and Redirect components
+- Added domain types to composable commerce events
+- Size images properly
+
+
+** Bug Fixes **
+
+- Added toast message to create new wishlist
+- Added toast to create new wishlist
+- Consider max quantity to be added to cart
+
 ## Version 2.0.0 (2024-11-20)
 
 

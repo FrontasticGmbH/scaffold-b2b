@@ -63,12 +63,17 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
         <Accordion.Panel defaultSpacing={false}>
           <form className="pt-6" onSubmit={handleSubmit}>
             <Input
+              aria-label={translate('cart.discount.code')}
               className={inputClassName}
               value={code ?? ''}
               placeholder={translate('cart.discount.enter')}
               onChange={handleChange}
               disabled={processing}
-              icon={codeIsInvalid ? <XMarkIcon className="size-[20px] cursor-pointer" onClick={onClearForm} /> : null}
+              icon={
+                codeIsInvalid ? (
+                  <XMarkIcon className="size-[20px] cursor-pointer" onClick={onClearForm} data-testid="clear-input" />
+                ) : null
+              }
               error={codeIsInvalid ? customError || translate('cart.codeNotValid') : undefined}
             />
           </form>

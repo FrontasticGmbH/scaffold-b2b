@@ -30,6 +30,7 @@ const RangeFacet = (facet: RangeFacetType) => {
       <div className="flex grow items-center gap-2">
         <Input
           type="number"
+          aria-label={translate('common.min')}
           containerClassName="p-0 flex-1"
           className="py-3 pr-3 text-center text-14 placeholder:text-gray-600"
           placeholder={focused.min ? '' : translate('common.min')}
@@ -41,6 +42,7 @@ const RangeFacet = (facet: RangeFacetType) => {
         <span className="text-12 text-gray-500 lg:text-14">{translate('common.to')}</span>
         <Input
           type="number"
+          aria-label={translate('common.max')}
           containerClassName="p-0 flex-1"
           className="py-3 pr-3 text-center text-14 placeholder:text-gray-600"
           placeholder={focused.max ? '' : translate('common.max')}

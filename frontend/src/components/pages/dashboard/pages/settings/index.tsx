@@ -33,12 +33,16 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
         <div className="flex flex-col gap-6">
           {personalInfo.map(({ name, value }, index) => (
             <div className="text-14 text-gray-700" key={index}>
-              <h6 className="text-14 font-medium leading-normal">{name}</h6>
+              <p className="text-14 font-medium leading-normal">{name}</p>
               <span className="mt-3 block text-14 leading-normal">{value}</span>
             </div>
           ))}
         </div>
-        <Link href="?subPath=edit-personal-info" className="absolute right-4 top-4">
+        <Link
+          aria-label={translate('account.personal.info.edit')}
+          href="?subPath=edit-personal-info"
+          className="absolute right-4 top-4"
+        >
           <EditIcon width={20} height={20} />
         </Link>
       </div>
@@ -47,7 +51,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
         <div className="flex flex-col gap-6">
           {restrictedPersonalInfo.map(({ name, value }, index) => (
             <div className="text-14 text-gray-700" key={index}>
-              <h6 className="text-14 font-medium leading-normal">{name}</h6>
+              <p className="text-14 font-medium leading-normal">{name}</p>
               <span className="mt-3 block text-14 leading-normal">{value}</span>
             </div>
           ))}

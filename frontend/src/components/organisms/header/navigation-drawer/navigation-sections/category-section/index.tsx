@@ -46,6 +46,7 @@ const CategorySection = () => {
             <>
               {navigationLevel[navigationLevel.length - 1].categoryId !== 'my-account' && (
                 <Link
+                  tabIndex={0}
                   href={
                     navigationLevel[navigationLevel.length - 1]?.path
                       ? `${navigationLevel[navigationLevel.length - 1]?.path}?sortAttributes[0][price]=asc&view=1`

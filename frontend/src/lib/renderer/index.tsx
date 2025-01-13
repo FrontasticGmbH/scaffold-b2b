@@ -14,6 +14,8 @@ const Renderer = ({
   gridClassName = '',
   wrapperClassName = '',
   projectSettings,
+  flatCategories,
+  treeCategories,
 }: RendererProps) => {
   const { page, data } = pageData;
 
@@ -53,6 +55,8 @@ const Renderer = ({
                   dataSources={data.dataSources}
                   isHighlighted={currentHighlight === tastic.tasticId}
                   projectSettings={projectSettings}
+                  flatCategories={flatCategories}
+                  treeCategories={treeCategories}
                 />
               ))}
             </Cell>

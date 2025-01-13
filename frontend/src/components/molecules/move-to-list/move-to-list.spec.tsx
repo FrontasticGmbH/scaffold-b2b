@@ -81,7 +81,7 @@ describe('MoveToList', () => {
 
     fireEvent.click(screen.getByText('wishlist.move.to.list'));
 
-    const nameInput = screen.getByRole('textbox', { name: /common.name/i });
+    const nameInput = screen.getByRole('textbox', { name: /name/i });
     fireEvent.change(nameInput, { target: { value: 'New Wishlist' } });
 
     fireEvent.click(screen.getByText('product.save.and.add'));

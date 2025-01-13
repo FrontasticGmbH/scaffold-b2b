@@ -2,13 +2,14 @@ import { Product, Variant } from '@shared/types/product';
 import { Attribute, Product as EntityProduct } from '@/types/entity/product';
 import { Currency } from '@/types/currency';
 import { Cart } from '@shared/types/cart';
+import { Locale } from '@/project.config';
 import { mapMasterAttributes } from './map-master-attributes';
 import { mapCategory } from './map-category';
 import { mapAttribute } from './map-attribute';
 
 export const mapProduct = (
   product: Product,
-  { variantIndex = -1, cart }: { variantIndex?: number; cart?: Cart } = {},
+  { variantIndex = -1, cart, locale = 'en-us' }: { variantIndex?: number; cart?: Cart; locale?: Locale } = {},
 ): EntityProduct => {
   const variant =
     product.variants[variantIndex] ??
@@ -70,6 +71,6 @@ export const mapProduct = (
     maxQuantity: variant.isOnStock ? Math.max(0, (variant.availableQuantity ?? Number.MAX_VALUE) - inCartQuantity) : 0,
     ...(priceRange ? { priceRange } : {}),
     url: product._url,
-    categories: product.categories?.map(mapCategory) ?? [],
+    categories: product.categories?.map((c) => mapCategory(c, { locale })) ?? [],
   };
 };

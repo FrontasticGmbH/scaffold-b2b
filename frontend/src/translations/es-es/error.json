@@ -13,5 +13,6 @@
   "name": "El nombre debe tener al menos dos caracteres.",
   "verify.failed": "¡Ups! Algo salió mal",
   "verify.failed.description": "No pudimos verificar tu cuenta esta vez, pero te enviamos un nuevo enlace a tu correo electrónico. Revisa tu bandeja de entrada para completar el proceso.",
-  "verify.failed.already.verified": "No te preocupes, tu correo electrónico ya ha sido verificado. Solo tienes que volver a la página de inicio de sesión e intentar iniciar sesión nuevamente."
+  "verify.failed.already.verified": "No te preocupes, tu correo electrónico ya ha sido verificado. Solo tienes que volver a la página de inicio de sesión e intentar iniciar sesión nuevamente.",
+  "email.not.found": "Correo electrónico no encontrado"
 }

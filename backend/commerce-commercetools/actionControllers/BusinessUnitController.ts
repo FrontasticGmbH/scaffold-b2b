@@ -22,7 +22,6 @@ import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/ge
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
-import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -112,35 +111,38 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
 
     const account = fetchAccountFromSession(request);
 
+    const businessUnitKey = request.query['businessUnitKey'];
     const locale = getLocale(request);
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
-
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
-
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
-    const addUserBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
 
-    let accountAssociate = await accountApi.getAccountByEmail(addUserBody.email);
-    const password = crypto.randomBytes(6).toString('base64').slice(0, 8);
+    let businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId);
+
+    if (!businessUnit) {
+      throw new ResourceNotFoundError({ message: `Business unit "${businessUnitKey}" not found.` });
+    }
+
+    const addAssociateBody: { email: string; roleKeys: string[] } = JSON.parse(request.body);
+    let accountAssociate = await accountApi.getAccountByEmail(addAssociateBody.email);
 
     if (!accountAssociate) {
       const accountData = {
-        email: addUserBody.email,
-        password,
+        email: addAssociateBody.email,
+        password: crypto.randomBytes(6).toString('base64').slice(0, 8),
+        companyName: businessUnit.name,
       };
-      accountAssociate = await accountApi.create(accountData);
 
+      accountAssociate = await accountApi.create(accountData);
       const passwordResetToken = await accountApi.generatePasswordResetToken(accountAssociate.email);
       emailApi.sendAssociateVerificationAndPasswordResetEmail(accountAssociate, passwordResetToken);
     }
 
-    const businessUnitKey = request.query['businessUnitKey'];
-
-    const businessUnit = await businessUnitApi.addAssociate(
+    businessUnit = await businessUnitApi.addAssociate(
       businessUnitKey,
       account.accountId,
       accountAssociate.accountId,
-      addUserBody.roleKeys,
+      addAssociateBody.roleKeys,
     );
 
     emailApi.sendWelcomeAssociateEmail(accountAssociate, businessUnit);

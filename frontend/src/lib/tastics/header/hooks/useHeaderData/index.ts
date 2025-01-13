@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccount from '@/lib/hooks/useAccount';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
@@ -18,6 +18,8 @@ import useSwrClearCache from '@/hooks/useSwrClearCache';
 
 const useHeaderData = () => {
   const router = useCustomRouter();
+
+  const { locale } = useParams();
 
   const clearCache = useSwrClearCache();
 
@@ -43,7 +45,10 @@ const useHeaderData = () => {
   const { totalItems: totalCartItems, addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
 
   const { categories } = useCategories();
-  const navigationCategories = categories.map(mapCategory).filter((category) => !!category.name || !!category.path);
+
+  const navigationCategories = categories
+    .map((c) => mapCategory(c, { locale }))
+    .filter((category) => !!category.name || !!category.path);
 
   const { quotes } = useQuotes({ businessUnitKey: selectedBusinessUnit?.key ?? '' });
   const quotesMapped = quotes?.items?.filter((quote: Quote) => quote?.quoteState === 'Pending');

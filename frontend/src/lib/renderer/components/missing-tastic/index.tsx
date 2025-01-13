@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import * as levenshtein from 'fastest-levenshtein';
 import tastics from '@/lib/tastics';

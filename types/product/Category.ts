@@ -1,3 +1,5 @@
+import { LocalizedString } from '../query';
+
 export interface Category {
   categoryId?: string;
   categoryKey?: string;
@@ -7,7 +9,7 @@ export interface Category {
   parentRef?: string;
   name?: string;
   depth?: number;
-  _url?: string;
+  _url?: LocalizedString;
   slug?: string;
   descendants?: Category[];
 }

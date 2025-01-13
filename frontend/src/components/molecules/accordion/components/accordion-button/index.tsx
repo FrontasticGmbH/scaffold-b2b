@@ -20,7 +20,7 @@ const AccordionButton = ({
       onClick={toggle}
     >
       <div className="grow">{children}</div>
-      {withArrow && <ArrowIcon width={24} className={arrowClassName} />}
+      {withArrow && <ArrowIcon data-testid="arrow-icon" width={24} className={arrowClassName} />}
     </div>
   );
 };

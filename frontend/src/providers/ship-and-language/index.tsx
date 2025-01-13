@@ -26,7 +26,7 @@ const ShipAndLanguageProvider = ({
   const { path } = usePath();
 
   const { mutateAll: mutateAllCarts } = useCart();
-  const { mutate: mutateCategories } = useCategories();
+  const { flatCategories, mutate: mutateCategories } = useCategories();
 
   const locations = (projectSettings?.countries ?? []).map(mapCountry).map(
     ({ name, code, currencies, locales }) =>
@@ -53,7 +53,16 @@ const ShipAndLanguageProvider = ({
     selectedLocation?.languages.find((language) => language.value === locale) ?? selectedLocation?.languages[0];
 
   const onLanguageSelect = (language: string) => {
-    router.push(path, { locale: language });
+    let pathToGo = path;
+
+    // Check whether the localized url for this plp is correct (Only for PLP pages)
+    const correctPath = flatCategories.find((c) => Object.values(c._url ?? {}).includes(path.slice(0, -1)))?._url?.[
+      `${language.split('-')[0]}-${language.split('-')[1].toUpperCase()}`
+    ];
+
+    if (correctPath && path !== correctPath) pathToGo = correctPath;
+
+    router.push(pathToGo, { locale: language });
   };
 
   const onLocationSelect = (location: string) => {

@@ -1,4 +1,10 @@
 
+## Version 1.15.1 (2024-12-16)
+
+** Bug Fixes **
+
+- Added storeKey on wishlist creation
+
 ## Version 1.15.0 (2024-11-21)
 
 

@@ -2,7 +2,6 @@ import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { sdk } from '@/sdk';
 import { PageProps } from '@/types/next';
-import { getLocalizationInfo } from '@/project.config';
 import Renderer from '@/lib/renderer';
 import { getTranslations } from '@/utils/I18n/get-translations';
 import Toaster from '@/components/atoms/toaster';
@@ -13,6 +12,7 @@ import fetchBusinessUnits from '@/utils/server/fetchBusinessUnits';
 import fetchAssociate from '@/utils/server/fetch-associate';
 import fetchProjectSettings from '@/utils/server/fetch-project-settings';
 import { isRedirectResponse } from '@/lib/utils/is-redirect-response';
+import fetchCategories from '@/utils/server/fetch-categories';
 
 /* Start of Route Segments */
 
@@ -33,12 +33,10 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
   const { seoTitle, seoDescription, seoKeywords } = response.data.pageFolder?.configuration ?? {};
 
-  const { locale } = getLocalizationInfo(nextLocale);
-
   return {
-    title: seoTitle?.[locale] ?? '',
-    description: seoDescription?.[locale] ?? '',
-    keywords: seoKeywords?.[locale] ?? '',
+    title: seoTitle ?? '',
+    description: seoDescription ?? '',
+    keywords: seoKeywords ?? '',
   };
 }
 
@@ -60,11 +58,14 @@ export default async function Page({ params, searchParams }: PageProps) {
     }
   }
 
-  const [page, businessUnits, associate, projectSettings] = await Promise.all([
+  // Fetch page data
+  const [page, businessUnits, associate, projectSettings, flatCategories, treeCategories] = await Promise.all([
     fetchPageData(params, searchParams),
     fetchBusinessUnits(loggedIn),
     fetchAssociate(loggedIn),
     fetchProjectSettings(),
+    fetchCategories('flat'),
+    fetchCategories('tree'),
   ]);
 
   if (page.isError) {
@@ -107,6 +108,8 @@ export default async function Page({ params, searchParams }: PageProps) {
           associate: associate.isError ? undefined : associate.data,
           businessUnits: businessUnits.isError ? [] : businessUnits.data,
           projectSettings: projectSettings.isError ? undefined : projectSettings.data,
+          flatCategories: flatCategories.isError ? [] : flatCategories.data.items,
+          treeCategories: treeCategories.isError ? [] : treeCategories.data.items,
         }}
       >
         <Renderer
@@ -114,6 +117,8 @@ export default async function Page({ params, searchParams }: PageProps) {
           params={params}
           searchParams={searchParams}
           projectSettings={projectSettings.isError ? undefined : projectSettings.data}
+          flatCategories={flatCategories.isError ? [] : flatCategories.data.items}
+          treeCategories={treeCategories.isError ? [] : treeCategories.data.items}
         />
         <Toaster />
       </Providers>

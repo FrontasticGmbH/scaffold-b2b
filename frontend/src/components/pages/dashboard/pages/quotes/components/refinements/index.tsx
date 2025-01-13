@@ -48,7 +48,7 @@ const Refinements = ({
       <div className="flex gap-3">
         {refinements.map(({ title, Component }, index) => (
           <div key={index}>
-            <h5 className="text-14 text-gray-700">{translate(title)}</h5>
+            <p className="text-14 text-gray-700">{translate(title)}</p>
             <div className="mt-2">{Component}</div>
           </div>
         ))}

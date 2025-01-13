@@ -29,6 +29,8 @@ export const Providers = ({
               '/action/business-unit/getBusinessUnits': { data: initialData.businessUnits },
               '/action/business-unit/getAssociate': { data: initialData.associate },
               '/action/project/getProjectSettings': { data: initialData.projectSettings },
+              '/action/product/queryCategories?format=flat': { data: initialData.flatCategories },
+              '/action/product/queryCategories?format=tree': { data: initialData.treeCategories },
             },
           }}
         >

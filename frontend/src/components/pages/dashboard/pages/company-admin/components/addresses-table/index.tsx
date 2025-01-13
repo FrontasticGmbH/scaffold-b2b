@@ -75,7 +75,7 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
                     >
                       <DeleteIcon className="cursor-pointer" width={20} />
                     </Confirmation>
-                    <Link href={`?subPath=edit-address&id=${id}`}>
+                    <Link aria-label={translate('dashboard.address.edit')} href={`?subPath=edit-address&id=${id}`}>
                       <EditIcon className="cursor-pointer" width={20} />
                     </Link>
                   </div>

@@ -56,11 +56,13 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
     categoryId: data.accountLinkId,
     name: data.accountLinkLabel,
     path: resolveReference(data.accountLink).href ?? '/',
+    paths: {},
     descendants: data.accountPageLinks.map((link) => {
       return {
         categoryId: link.linkId,
         name: link.name,
         path: resolveReference(link.href).href ?? '/',
+        paths: {},
         descendants: [],
       };
     }),

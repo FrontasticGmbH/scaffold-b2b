@@ -10,7 +10,7 @@ const Overlay = ({ onClick, zIndex, className = '' }: OverlayProps) => {
     zIndex ?? 'z-[305]',
     'fixed left-0 top-0 h-screen w-screen bg-[#051036]/20',
   );
-  return <div data-testid={'overlay'} className={overlayClassNames} onClick={onClick} />;
+  return <div data-testid="overlay" className={overlayClassNames} onClick={onClick} />;
 };
 
 export default Overlay;

@@ -85,7 +85,11 @@ const useAccount = () => {
   }, []);
 
   const requestPasswordReset = useCallback(async (email: string): Promise<void> => {
-    await sdk.composableCommerce.account.requestPasswordReset({ email });
+    const res = await sdk.composableCommerce.account.requestPasswordReset({ email });
+    if (res.isError) {
+      if (res.error.message.includes('not found')) throw new Error('not found');
+      else throw new Error(res.error.message);
+    }
   }, []);
 
   const resetPassword = useCallback(async (token: string, newPassword: string): Promise<Account> => {

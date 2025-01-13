@@ -4,6 +4,7 @@ import { Associate, BusinessUnit } from '@shared/types/business-unit';
 import { SDKResponse } from '@commercetools/frontend-sdk';
 import { PageResponse } from '@commercetools/frontend-sdk/lib/types/api/page';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
+import { Category } from '@shared/types/product';
 import { I18nProviderProps } from '../I18n/types';
 
 export interface ProvidersProps extends I18nProviderProps, Pick<Params, 'locale'> {
@@ -12,6 +13,8 @@ export interface ProvidersProps extends I18nProviderProps, Pick<Params, 'locale'
     associate?: Associate;
     businessUnits?: BusinessUnit[];
     projectSettings?: ProjectSettings;
+    flatCategories?: Category[];
+    treeCategories?: Category[];
   };
   page: SDKResponse<PageResponse>;
 }

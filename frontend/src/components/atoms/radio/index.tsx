@@ -19,7 +19,7 @@ const Radio = ({ label, checked: checkedProp, onSelected, disabled, className, s
   }, [setChecked, onSelected, disabled]);
 
   return (
-    <label className="flex w-fit items-center gap-2">
+    <label aria-label={props['aria-label']} className="flex w-fit items-center gap-2">
       <div className="relative w-fit">
         <input
           type="radio"

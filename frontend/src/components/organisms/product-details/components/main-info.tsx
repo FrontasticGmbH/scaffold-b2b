@@ -52,12 +52,13 @@ const MainInfo = ({
             >
               {formatCurrency(product.discountedPrice, product.currency)}
             </Typography>
-            <Typography className="text-gray-600 line-through md:text-14" fontSize={12} lineHeight="loose">
+            <Typography as="h2" className="text-gray-600 line-through md:text-14" fontSize={12} lineHeight="loose">
               {formatCurrency(product.price, product.currency)}
             </Typography>
           </div>
         ) : (
           <Typography
+            as="h2"
             className="text-gray-700 md:text-20 lg:text-24"
             fontSize={18}
             lineHeight="loose"

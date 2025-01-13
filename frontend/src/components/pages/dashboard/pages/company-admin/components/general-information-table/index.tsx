@@ -27,7 +27,7 @@ const GeneralInformationTable = ({
               <Table.Cell>
                 {!businessUnitsAreViewOnly && (
                   <div className="flex justify-end">
-                    <Link href={`?subPath=edit-general-info&id=${id}`}>
+                    <Link aria-label={translate('common.edit')} href={`?subPath=edit-general-info&id=${id}`}>
                       <EditIcon className="cursor-pointer text-primary" width={20} />
                     </Link>
                   </div>

@@ -16,6 +16,7 @@ const BackButton = () => {
   return (
     <div className="py-5 lg:py-6">
       <Button
+        tabIndex={0}
         onClick={handleBackPress}
         iconPosition="left"
         icon={<ChevronLeftIcon className="w-5 text-primary" />}

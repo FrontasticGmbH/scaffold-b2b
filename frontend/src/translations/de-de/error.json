@@ -13,5 +13,6 @@
   "name": "Der Name muss mindestens zwei Zeichen lang sein.",
   "verify.failed": "Hoppla! Da ist etwas schiefgelaufen",
   "verify.failed.description": "Wir konnten Ihr Konto dieses Mal nicht bestätigen, haben Ihnen aber einen neuen Link per E-Mail geschickt. Bitte überprüfen Sie Ihren Posteingang, um den Vorgang abzuschließen.",
-  "verify.failed.already.verified": "Keine Sorge, Ihre E-Mail wurde bereits bestätigt. Gehen Sie einfach zurück zur Anmeldeseite und versuchen Sie erneut, sich anzumelden."
+  "verify.failed.already.verified": "Keine Sorge, Ihre E-Mail wurde bereits bestätigt. Gehen Sie einfach zurück zur Anmeldeseite und versuchen Sie erneut, sich anzumelden.",
+  "email.not.found": "E-Mail nicht gefunden"
 }

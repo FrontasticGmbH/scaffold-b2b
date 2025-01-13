@@ -43,7 +43,7 @@ const AccordionProvider = ({
 
   const handleToggle = useCallback(() => {
     toggle();
-    (isExpandedProp ? onCollapse : onExpand)?.();
+    (isExpanded ? onCollapse : onExpand)?.();
   }, [isExpandedProp, onCollapse, onExpand, toggle]);
 
   return (

@@ -11,6 +11,7 @@ import useCurrency from '@/hooks/useCurrency';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import toast from '@/components/atoms/toaster/helpers/toast';
+import { mapCategory } from '@/utils/mappers/map-category';
 import { DataSourceProps, ViewModelProps } from '../../types';
 import useMappedProducts from '../../hooks/useMappedProducts';
 import useMappedFacets from '../../hooks/useMappedFacets';
@@ -27,7 +28,7 @@ const ProductListViewModel = ({
 }: Omit<DataSourceProps, 'category'> & ViewModelProps) => {
   const { translate } = useTranslation();
 
-  const { slug } = useParams();
+  const { slug, locale } = useParams();
 
   const searchParams = useSearchParams();
 
@@ -40,6 +41,8 @@ const ProductListViewModel = ({
   const mappedProducts = useMappedProducts({ items });
 
   const mappedFacets = useMappedFacets({ facets, categories });
+
+  const rootCategory = category ? mapCategory(category, { locale }) : undefined;
 
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
@@ -65,20 +68,23 @@ const ProductListViewModel = ({
           link: `/${arr.slice(0, index + 1).join('/')}`,
         })),
       ];
+
   if (displayIntermediaryPage) {
     const categoryConfig = categoryConfiguration[category?.slug ?? ''] ?? {};
 
     return (
       <IntermediaryProductList
-        title={category?.name ?? ''}
+        title={rootCategory?.name ?? ''}
         link={{ name: translate('common.shop.all'), href: `${category?._url}?view=1` }}
         breadcrumb={categoriesBreadcrumb}
         items={[
-          ...(category?.descendants ?? []).map(({ name, slug, _url }) => ({
-            name: name ?? '',
-            image: categoryConfiguration[slug ?? '']?.image,
-            url: _url,
-          })),
+          ...(rootCategory?.descendants ?? []).map(({ name, path, categoryKey }) => {
+            return {
+              name: name ?? '',
+              image: categoryConfiguration[categoryKey as keyof typeof categoryConfiguration]?.image,
+              url: path,
+            };
+          }),
           {
             name: translate('common.view.all'),
             image: categoryConfig?.image,

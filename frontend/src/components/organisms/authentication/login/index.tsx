@@ -7,7 +7,6 @@ import { Account } from '@shared/types/account/Account';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Checkbox from '@/components/atoms/checkbox';
 import Link from '@/components/atoms/link';
-import toast from '@/components/atoms/toaster/helpers/toast';
 import Typography from '@/components/atoms/typography';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import useSwrClearCache from '@/hooks/useSwrClearCache';
@@ -73,10 +72,8 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
           setRequested(true);
         })
         .catch(() => {
-          toast.error(translate('error.email'));
+          setError(translate('error.email.not.found'));
         });
-    } else {
-      toast.error(translate('error.email'));
     }
   };
 

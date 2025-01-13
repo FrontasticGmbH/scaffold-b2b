@@ -22,7 +22,6 @@ import { ProductDiscount as CommercetoolsProductDiscount } from '@commercetools/
 import {
   Money as CommercetoolsMoney,
   Price as CommercetoolsPrice,
-  LocalizedString as CommercetolsLocalizedString,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/common';
 import {
   AttributeDefinition as CommercetoolsAttributeDefinition,
@@ -36,7 +35,7 @@ import {
 import { FilterField, FilterFieldTypes, FilterFieldValue } from '@Types/product/FilterField';
 import { RangeFacet, Term, TermFacet } from '@Types/result';
 import { Facet, FacetTypes } from '@Types/result/Facet';
-import { ProductQuery } from '@Types/query';
+import { LocalizedString, ProductQuery } from '@Types/query';
 import { TermFacet as QueryTermFacet } from '@Types/query/TermFacet';
 import { RangeFacet as QueryRangeFacet } from '@Types/query/RangeFacet';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
@@ -591,16 +590,26 @@ export default class ProductMapper {
       name: commercetoolsCategory.name?.[locale.language] ?? undefined,
       slug: commercetoolsCategory.slug?.[locale.language] ?? undefined,
       depth: commercetoolsCategory.ancestors.length,
-      _url:
-        commercetoolsCategory.ancestors.length > 0
-          ? `/${commercetoolsCategory.ancestors
-              ?.map((ancestor) => {
-                return ancestor.obj?.slug?.[locale.language] ?? ancestor.id;
-              })
-              .join('/')}/${commercetoolsCategory.slug?.[locale.language] ?? commercetoolsCategory.id}`
-          : `/${commercetoolsCategory.slug?.[locale.language] ?? commercetoolsCategory.id}`,
+      _url: this.generateLocalizedUrl(commercetoolsCategory),
     };
   }
+
+  static generateLocalizedUrl = (commercetoolsCategory: CommercetoolsCategory): LocalizedString => {
+    const localizedUrl: LocalizedString = {};
+
+    if (commercetoolsCategory.slug) {
+      Object.keys(commercetoolsCategory.slug).forEach((localeKey) => {
+        localizedUrl[localeKey] =
+          commercetoolsCategory.ancestors.length > 0
+            ? `/${commercetoolsCategory.ancestors
+                .map((ancestor) => ancestor.obj?.slug?.[localeKey] ?? ancestor.id)
+                .join('/')}/${commercetoolsCategory.slug[localeKey] ?? commercetoolsCategory.id}`
+            : `/${commercetoolsCategory.slug[localeKey] ?? commercetoolsCategory.id}`;
+      });
+    }
+
+    return localizedUrl;
+  };
 
   static commercetoolsCategoriesToTreeCategory(
     commercetoolsCategories: CommercetoolsCategory[],

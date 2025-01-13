@@ -27,6 +27,7 @@ const PurchaseOrderForm = ({
   return (
     <form className="flex flex-col items-stretch gap-4 md:items-start">
       <Input
+        aria-label={translate('checkout.po.number')}
         name="purchaseOrderNumber"
         className="md:w-[280px]"
         label={translate('checkout.po.number')}

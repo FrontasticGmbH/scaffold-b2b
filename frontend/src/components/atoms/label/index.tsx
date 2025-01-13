@@ -17,7 +17,7 @@ const Label = ({
   return (
     <div className="mb-2 flex items-center justify-between">
       {children && (
-        <label data-testid="label" htmlFor={htmlFor} className="block text-14">
+        <label aria-label={htmlFor} data-testid="label" htmlFor={htmlFor} className="block text-14">
           <span className="text-gray-700">{children}</span>{' '}
           {!required && showOptionalLabel && (
             <span className="lowercase text-gray-600">({optionalLabel ?? translate('common.optional')})</span>

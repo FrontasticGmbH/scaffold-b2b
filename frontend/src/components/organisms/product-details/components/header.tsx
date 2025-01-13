@@ -26,7 +26,13 @@ const Header = ({ className, product }: PDPHeaderProps) => {
         </Breadcrumb>
       )}
 
-      <Typography className="text-gray-700 md:text-18 lg:text-20" fontSize={16} lineHeight="loose" fontWeight="bold">
+      <Typography
+        as="h1"
+        className="text-gray-700 md:text-18 lg:text-20"
+        fontSize={16}
+        lineHeight="loose"
+        fontWeight="bold"
+      >
         {product.name}
       </Typography>
       <Typography className="text-gray-600" fontSize={14} lineHeight="loose">

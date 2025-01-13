@@ -22,6 +22,7 @@ const Timeline = ({
                   'h-[8px] flex-1',
                   index < activeIndex ? (classNames.trackActive ?? 'bg-primary') : (classNames.track ?? 'bg-gray-300'),
                 )}
+                data-testid="timeline-track"
               />
             )),
           )}
@@ -36,6 +37,7 @@ const Timeline = ({
                   'justify-center': index > 0 && index < arr.length - 1,
                   'justify-end': index === arr.length - 1,
                 })}
+                role="presentation"
               >
                 <div
                   className={classnames(

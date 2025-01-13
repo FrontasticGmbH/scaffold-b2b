@@ -1,5 +1,6 @@
 import { Params, SearchParams } from '@/types/next';
 import { TasticConfiguration } from '@frontastic/extension-types';
+import { Category } from '@shared/types/product';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
 
 export interface TasticProps<T = object> {
@@ -7,6 +8,8 @@ export interface TasticProps<T = object> {
   params: Params;
   searchParams: SearchParams;
   projectSettings?: ProjectSettings;
+  flatCategories?: Category[];
+  treeCategories?: Category[];
 }
 
 export interface TasticRegistry {

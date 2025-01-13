@@ -13,5 +13,6 @@
   "name": "Name has to be at least two characters.",
   "verify.failed": "Oops! Something went wrong",
   "verify.failed.description": "We couldn’t verify your account this time, but we’ve sent a new link to your email. Please check your inbox to complete the process.",
-  "verify.failed.already.verified": "Don't worry, your email has already been verified. Just go back to the login page and try to login again."
+  "verify.failed.already.verified": "Don't worry, your email has already been verified. Just go back to the login page and try to login again.",
+  "email.not.found": "Email not found"
 }

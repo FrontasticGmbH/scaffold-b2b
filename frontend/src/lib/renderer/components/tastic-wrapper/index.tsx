@@ -13,6 +13,8 @@ const TasticWrapper = ({
   dataSources,
   isHighlighted,
   projectSettings,
+  flatCategories,
+  treeCategories,
 }: TasticWrapperProps) => {
   const Tastic = tastics[data.tasticType];
 
@@ -26,6 +28,8 @@ const TasticWrapper = ({
           params={params}
           searchParams={searchParams}
           projectSettings={projectSettings}
+          flatCategories={flatCategories}
+          treeCategories={treeCategories}
         />
       ) : (
         <MissingTastic data={data} />

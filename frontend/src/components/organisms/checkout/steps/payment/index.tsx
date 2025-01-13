@@ -74,7 +74,10 @@ const PaymentStep = ({
                 <Accordion.Button defaultSpacing={false} withArrow={false}>
                   <div className="flex items-center justify-between md:justify-start md:gap-[64px]">
                     <div className="flex items-center gap-4">
-                      <Radio checked={id === selectedPaymentMethodId} />
+                      <Radio
+                        aria-label={translate('checkout.paymentMethod')}
+                        checked={id === selectedPaymentMethodId}
+                      />
                       <h5 className="text-14 font-medium text-gray-700">{name}</h5>
                     </div>
                     {image.src && (
