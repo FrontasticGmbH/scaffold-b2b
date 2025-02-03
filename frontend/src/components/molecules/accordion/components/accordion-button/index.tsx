@@ -15,13 +15,17 @@ const AccordionButton = ({
   const arrowClassName = classnames('shrink-0 text-gray-700', isExpanded ? 'rotate-180' : '');
 
   return (
-    <div
-      className={classnames('flex cursor-pointer items-center gap-2', { 'px-4 py-[18px]': defaultSpacing }, className)}
+    <button
+      className={classnames(
+        'flex w-full cursor-pointer items-center gap-2',
+        { 'px-4 py-[18px]': defaultSpacing },
+        className,
+      )}
       onClick={toggle}
     >
-      <div className="grow">{children}</div>
+      <div className="grow text-start">{children}</div>
       {withArrow && <ArrowIcon data-testid="arrow-icon" width={24} className={arrowClassName} />}
-    </div>
+    </button>
   );
 };
 

@@ -20,10 +20,7 @@ const Costs = ({
   const totalAmountClassNames = classnames('mt-6 flex items-center justify-between font-medium', totalAmountClassName);
 
   const subCostsContainerClassNames = classnames('grid gap-2', subCostsContainerClassName);
-  const subCostsClassNames = classnames(
-    'flex items-center justify-between capitalize text-neutral-900',
-    subCostClassName,
-  );
+  const subCostsClassNames = classnames('flex items-center justify-between capitalize text-gray-600', subCostClassName);
 
   return (
     <div className={className}>

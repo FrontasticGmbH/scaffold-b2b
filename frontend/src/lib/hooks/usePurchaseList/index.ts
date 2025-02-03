@@ -3,17 +3,22 @@ import { sdk } from '@/sdk';
 import useSWR, { useSWRConfig } from 'swr';
 import { Wishlist } from '@shared/types/wishlist';
 import usePurchaseLists from '../usePurchaseLists';
+import useAccount from '../useAccount';
 
 const usePurchaseList = (id?: string) => {
+  const { account } = useAccount();
+
   const response = useSWR(['/action/wishlist/getWishlist', id], () =>
-    sdk.composableCommerce.wishlist.getWishlist({ wishlistId: id }),
+    id && account?.accountId
+      ? sdk.composableCommerce.wishlist.queryWishlists({ accountId: account.accountId, wishlistIds: [id] })
+      : null,
   );
 
   const { mutate } = useSWRConfig();
 
   const { mutateAll } = usePurchaseLists();
 
-  const purchaseList = response.data?.isError ? undefined : response.data?.data;
+  const purchaseList = response.data?.isError ? undefined : response.data?.data.items[0];
 
   const addItem = useCallback(
     async ({ wishlistId, sku, count }: Partial<Wishlist> & { sku: string; count: number }) => {
@@ -27,7 +32,7 @@ const usePurchaseList = (id?: string) => {
 
       mutateAll();
 
-      if (!res.isError) mutate(['/action/wishlist/getWishlist', wishlistId], res, { revalidate: false });
+      if (!res.isError) mutate(['/action/wishlist/getWishlist', wishlistId]);
 
       if (!res.isError) {
         return { data: res?.data };
@@ -50,7 +55,7 @@ const usePurchaseList = (id?: string) => {
 
       mutateAll();
 
-      if (!res.isError) mutate(['/action/wishlist/getWishlist', wishlistId], res, { revalidate: false });
+      if (!res.isError) mutate(['/action/wishlist/getWishlist', wishlistId]);
 
       if (!res.isError) {
         return { data: res?.data };
@@ -70,7 +75,7 @@ const usePurchaseList = (id?: string) => {
 
       mutateAll();
 
-      if (!res.isError) mutate(['/action/wishlist/getWishlist', wishlistId], res, { revalidate: false });
+      if (!res.isError) mutate(['/action/wishlist/getWishlist', wishlistId]);
 
       return res.isError ? null : res.data;
     },

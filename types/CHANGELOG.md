@@ -1,4 +1,10 @@
 
+## Version 1.14.0 (2025-01-13)
+
+** New Features & Improvements **
+
+* Used url as localized strings
+
 ## Version 1.13.0 (2024-11-05)
 
 ** New Features and Improvements **

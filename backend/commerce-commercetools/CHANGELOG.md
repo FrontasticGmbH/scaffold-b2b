@@ -1,4 +1,12 @@
 
+## Version 1.16.0 (2025-01-13)
+
+
+** New Features & Improvements **
+
+* Use same BU variable and simplify password setting
+* Set company name on new associates added to existing BU
+
 ## Version 1.15.1 (2024-12-16)
 
 ** Bug Fixes **

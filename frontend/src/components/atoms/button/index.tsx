@@ -7,23 +7,24 @@ import useClassNames from './hooks/useClassNames';
 import { ButtonProps } from './types';
 
 const Button: FC<ButtonProps> = ({
-  icon,
+  Icon,
   added,
   loading,
   children,
   className,
   disabled,
   asSkeleton = false,
-  variant = 'primary',
   iconPosition = 'right',
-  size = children ? 's' : 'icon',
+  variant = 'primary',
+  size = variant === 'underlined' ? 'fit' : 's',
   ...props
 }) => {
-  const buttonClassName = useClassNames({
+  const { buttonClassName, iconClassName } = useClassNames({
     variant,
     size,
     className,
-    includesIcon: !!icon && !!children,
+    includesIcon: !!Icon && !!children,
+    isIconOnly: !!Icon && !children,
     iconPosition,
     loading,
     asSkeleton,
@@ -33,7 +34,7 @@ const Button: FC<ButtonProps> = ({
     <button {...props} className={buttonClassName} disabled={disabled || loading}>
       {(loading || added) && <FeedbackIconLayer loading={loading} variant={variant} />}
       {children}
-      {icon}
+      {Icon && <Icon className={iconClassName} />}
       {asSkeleton && <Skeleton data-testid="skeleton" />}
     </button>
   );

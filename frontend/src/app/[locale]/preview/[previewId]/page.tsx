@@ -7,7 +7,9 @@ import Toaster from '@/components/atoms/toaster';
 
 export const fetchCache = 'force-no-store';
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { locale, previewId } = params;
 
   sdk.defaultConfigure(locale);

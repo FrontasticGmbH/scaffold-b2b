@@ -59,7 +59,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
             })}
           >
             <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/4 rounded-full bg-white p-2">
-              <div className="size-[20px] rounded-full bg-[#778DA9]" />
+              <div className="size-[20px] rounded-full bg-accent-blue" />
             </div>
 
             <h5 className="leading-tight text-gray-700">{title}</h5>
@@ -180,7 +180,7 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
 
             {ctaLink && !ctaLinkIsDisabled && (
               <span
-                className="mt-5 block cursor-pointer text-14 text-[#274082] underline underline-offset-2"
+                className="mt-5 block cursor-pointer text-14 text-blue-700 underline underline-offset-2"
                 onClick={onCtaLinkClick}
               >
                 {ctaLink}

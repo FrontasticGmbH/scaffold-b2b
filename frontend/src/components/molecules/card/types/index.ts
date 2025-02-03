@@ -1,5 +1,7 @@
+import { ReactElement } from 'react';
+
 export interface CardProps {
-  icon: React.ReactNode;
+  icon: ReactElement<Record<string, any>>;
   title?: string;
   summary?: string;
 }

@@ -38,15 +38,15 @@ const TablePagination = ({
     stroke: disableNext ? '#D1D1D1' : '#212121',
   };
 
-  const paginationClassName = classnames('flex w-full justify-between py-6 md:gap-0', className);
+  const paginationClassName = classnames(
+    'flex flex-col-reverse md:flex-row w-full justify-between py-2 md:py-6 md:gap-0',
+    className,
+  );
 
   return (
     <div className={paginationClassName}>
-      <div className="flex items-center gap-2">
-        <Typography fontSize={14} className="text-gray-700 md:hidden">
-          {translate('common.rows')}
-        </Typography>
-        <Typography fontSize={14} className="hidden text-gray-700 md:block">
+      <div className="mt-2 flex items-center justify-center gap-2 md:mt-0 md:justify-start">
+        <Typography fontSize={14} className="text-gray-700 md:block">
           {translate('common.rows.per.page')}
         </Typography>
         <Select
@@ -61,7 +61,7 @@ const TablePagination = ({
         />
       </div>
       <div className="flex items-center gap-3 md:gap-9">
-        <Typography fontSize={14} className="text-gray-700">
+        <Typography fontSize={14} className="hidden text-gray-700 md:flex">
           {translate('common.from.to', {
             values: {
               from,
@@ -70,21 +70,22 @@ const TablePagination = ({
             },
           })}
         </Typography>
-        <div className="flex gap-4">
-          <ChevronLeftIcon
-            data-testid="previous-arrow"
-            data-disabled={disablePrevious}
-            stroke="#212121"
-            {...previousIconProps}
-            onClick={onPrevious}
-          />
-          <ChevronRightIcon
-            data-testid="next-arrow"
-            data-disabled={disableNext}
-            stroke="#212121"
-            {...nextIconProps}
-            onClick={onNext}
-          />
+        <div className="mt-3 flex w-full justify-between gap-4 md:mt-0">
+          <button data-testid="previous-arrow" disabled={disablePrevious} onClick={onPrevious}>
+            <ChevronLeftIcon data-disabled={disablePrevious} stroke="#212121" {...previousIconProps} />
+          </button>
+          <Typography fontSize={14} className="text-gray-700 md:hidden">
+            {translate('common.from.to', {
+              values: {
+                from,
+                to,
+                totalItems: totalItems.toString(),
+              },
+            })}
+          </Typography>
+          <button data-testid="next-arrow" onClick={onNext} disabled={disableNext}>
+            <ChevronRightIcon data-disabled={disableNext} stroke="#212121" {...nextIconProps} />
+          </button>
         </div>
       </div>
     </div>

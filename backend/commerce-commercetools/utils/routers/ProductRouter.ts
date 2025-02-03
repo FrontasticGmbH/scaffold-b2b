@@ -3,7 +3,13 @@ import { Context, Request } from '@frontastic/extension-types';
 import { ProductQuery } from '@Types/query/ProductQuery';
 import { LineItem } from '@Types/cart/LineItem';
 import { LineItem as WishlistItem } from '@Types/wishlist/LineItem';
-import { getDistributionChannelId, getPath, getStoreKey, getSupplyChannelId } from '../requestHandlers/Request';
+import {
+  getDistributionChannelId,
+  getPath,
+  getStoreId,
+  getStoreKey,
+  getSupplyChannelId,
+} from '../requestHandlers/Request';
 import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 
 export default class ProductRouter {
@@ -40,6 +46,7 @@ export default class ProductRouter {
         storeKey: getStoreKey(request),
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
+        storeId: getStoreId(request),
       };
 
       return productApi.getProduct(productQuery);

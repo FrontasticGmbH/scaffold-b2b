@@ -2,13 +2,13 @@ import React, { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import PasswordInput from '@/components/atoms/password-input';
-import useValidate from '@/hooks/useValidate/useValidate';
+// import useValidate from '@/hooks/useValidate/useValidate';
 import { Props } from './types';
 
 const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
   const { translate } = useTranslation();
 
-  const { validatePassword } = useValidate();
+  // const { validatePassword } = useValidate();
 
   const [data, setData] = useState({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
   const [passwordError, setPasswordError] = useState('');
@@ -27,18 +27,19 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
       e.preventDefault();
       setIsLoading(true);
 
-      const isValidPassword = validatePassword(data.newPassword);
-      if (!isValidPassword) {
-        setPasswordError(translate('error.password.not.valid'));
-        setIsLoading(false);
-        return;
-      }
+      //TODO: Need to discuss, there are no restrictions on signup
+      // const isValidPassword = validatePassword(data.newPassword);
+      // if (!isValidPassword) {
+      //   setPasswordError(translate('error.password.not.valid'));
+      //   setIsLoading(false);
+      //   return;
+      // }
 
       await onChangePassword?.(data.oldPassword, data.newPassword);
       setData({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
       setIsLoading(false);
     },
-    [validatePassword, data.newPassword, data.oldPassword, onChangePassword, translate],
+    [data.newPassword, data.oldPassword, onChangePassword],
   );
 
   const isDisabled =

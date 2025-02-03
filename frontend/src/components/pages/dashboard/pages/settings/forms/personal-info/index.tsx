@@ -25,7 +25,9 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
 
     router.back();
   }, [onUpdateAccount, data, router]);
-  const nameValidationProps = { pattern: '[A-Za-z]+', title: translate('common.name.validation') };
+
+  const nameValidationProps = { pattern: '[A-Za-z\\s\\.]+', title: translate('common.name.validation') };
+
   return (
     <EntityForm
       translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}

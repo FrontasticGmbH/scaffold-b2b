@@ -47,6 +47,7 @@ import {
 import { Payment as CommercetoolsPayment } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import ProductRouter from '../utils/routers/ProductRouter';
 import ProductMapper from './ProductMapper';
+import AccountMapper from './AccountMapper';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 export default class CartMapper {
@@ -72,6 +73,7 @@ export default class CartMapper {
       cartState: this.commercetoolsCartStateToCartState(commercetoolsCart.cartState),
       businessUnitKey: commercetoolsCart.businessUnit?.key,
       storeKey: commercetoolsCart.store?.key,
+      accountGroup: AccountMapper.commercetoolsCustomerGroupToAccountGroup(commercetoolsCart.customerGroup?.obj),
     };
   }
 
@@ -225,6 +227,7 @@ export default class CartMapper {
       shippingInfo: this.commercetoolsShippingInfoToShippingInfo(commercetoolsOrder.shippingInfo, locale),
       returnInfo: this.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
       shipmentState: this.commercetoolsShipmentStateToShipmentState(commercetoolsOrder.shipmentState),
+      accountGroup: AccountMapper.commercetoolsCustomerGroupToAccountGroup(commercetoolsOrder.customerGroup?.obj),
     };
   }
 

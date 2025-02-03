@@ -32,9 +32,9 @@ const AssociatesTable = ({
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Cell>{translate('common.name')}</Table.Cell>
-          <Table.Cell>{translate('common.email')}</Table.Cell>
-          <Table.Cell>{translate('common.role')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.email')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.role')}</Table.Cell>
           <Table.Cell />
         </Table.Head>
         <Table.Body>

@@ -15,6 +15,7 @@ const DropdownButton = ({ children, className }: Props) => {
 
   return (
     <Listbox.Button
+      data-testid="multi-dropdown-button"
       aria-label={translate('common.select')}
       className={classnames(className, buttonClassName)}
       onClick={onToggle}

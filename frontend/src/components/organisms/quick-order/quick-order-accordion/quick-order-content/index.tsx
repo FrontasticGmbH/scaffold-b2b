@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '@/components/atoms/button';
 import { PlusIcon as AddItemIcon } from '@heroicons/react/24/outline';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
@@ -16,6 +16,8 @@ const QuickOrderContent = ({
   addItemDisabled,
   closeMenu,
 }: QuickOrderContentProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const { translate } = useTranslation();
   const [showSearch, setShowSearch] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
@@ -25,6 +27,10 @@ const QuickOrderContent = ({
   const handleShowSearch = () => {
     setShowSearch(true);
   };
+
+  useEffect(() => {
+    if (showSearch && products.length > 0) inputRef.current?.focus();
+  }, [showSearch, products]);
 
   const handleProductSearchClick = (product: ProductSuggestion) => {
     if (!products.find((prod) => prod.sku === product.sku)) {
@@ -77,6 +83,7 @@ const QuickOrderContent = ({
 
       {(showSearch || products.length === 0) && (
         <Search
+          ref={inputRef}
           scrollControl={false}
           variant="sm"
           filterSearch={false}
@@ -90,9 +97,14 @@ const QuickOrderContent = ({
       )}
       <div className="mt-5 flex items-center justify-start gap-x-2">
         {!showSearch && (
-          <Button onClick={handleShowSearch} variant="secondary" size="icon" disabled={addItemDisabled}>
-            <AddItemIcon className="w-5" />
-          </Button>
+          <Button
+            data-testid="quick-order-add-item-button"
+            onClick={handleShowSearch}
+            variant="secondary"
+            size="l"
+            Icon={AddItemIcon}
+            disabled={addItemDisabled}
+          />
         )}
         <Button
           loading={addingToCart}

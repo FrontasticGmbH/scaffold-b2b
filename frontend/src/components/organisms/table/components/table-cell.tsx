@@ -9,16 +9,17 @@ const TableCell = ({
   sortable,
   isButtonsCell = false,
   isButtonsHead = false,
+  isHeadCell = false,
   onSorting,
-  children,
+  children = ' ',
   ...props
 }: TableCellProps) => {
   const cellClassName = classnames(
     'p-4',
     { 'cursor-pointer': !!sortable },
     { 'bg-white': isButtonsCell },
-    { 'bg-[#FCFCFD]': isButtonsHead },
-    { 'shadow-[0px_-1px_0px_0px_#E4E4E7_inset] lg:shadow-none': isButtonsCell || isButtonsHead },
+    { 'whitespace-pre bg-gray-100 ': isButtonsHead },
+    { 'text-gray-500 ': isHeadCell },
     {
       'sticky right-0 z-10 lg:block lg:bg-transparent': isButtonsCell || isButtonsHead,
     },
@@ -28,7 +29,11 @@ const TableCell = ({
 
   const asTypography = useMemo(
     () => (
-      <Typography fontSize={14} className="leading-[20px]">
+      <Typography
+        fontSize={isHeadCell ? 12 : 14}
+        className="leading-[20px]"
+        fontWeight={isHeadCell ? 'semibold' : 'normal'}
+      >
         {children as string}
       </Typography>
     ),

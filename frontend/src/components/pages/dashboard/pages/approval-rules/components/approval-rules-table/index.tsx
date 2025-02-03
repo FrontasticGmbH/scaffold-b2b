@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Table from '@/components/organisms/table';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Tag from '@/components/atoms/tag';
-import { PencilSquareIcon as EditIcon, DocumentDuplicateIcon as DuplicateIcon } from '@heroicons/react/24/outline';
+import { DocumentDuplicateIcon as DuplicateIcon, PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
 import { Tooltip } from 'react-tooltip';
 import LoadingIcon from '@/components/atoms/loading-icon';
@@ -26,12 +26,14 @@ const ApprovalRulesTable = ({ approvalRules, onDuplicate, pagination, viewOnly }
 
   return (
     <Table>
-      <Table.Container>
+      <Table.Container className="table">
         <Table.Head>
-          <Table.Cell>{translate('common.name')}</Table.Cell>
-          <Table.Cell>{translate('common.requesters')}</Table.Cell>
-          <Table.Cell>{translate('common.status')}</Table.Cell>
-          <Table.Cell />
+          <Table.Row>
+            <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
+            <Table.Cell isHeadCell>{translate('common.requesters')}</Table.Cell>
+            <Table.Cell isHeadCell>{translate('common.status')}</Table.Cell>
+            <Table.Cell isButtonsHead />
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {approvalRules.map((approvalRule, index) => (

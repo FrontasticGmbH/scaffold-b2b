@@ -102,7 +102,7 @@ const AccountButton = ({
               {translate('account.mon.fri')}
             </Typography>
           </div>
-          <Button variant="secondary" size="full" onClick={handleLogoutClick}>
+          <Button variant="secondary" size="full" data-testid="logout-button" onClick={handleLogoutClick}>
             {translate('account.sign.out')}
           </Button>
         </div>

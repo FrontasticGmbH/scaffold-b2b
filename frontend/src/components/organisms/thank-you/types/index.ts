@@ -13,6 +13,7 @@ interface Transaction {
 
 export interface ThankYouProps {
   account: { email: string };
+  orderId?: string;
   orderNumber?: string;
   deliveryMethod?: string;
   deliveryAddress?: Address;

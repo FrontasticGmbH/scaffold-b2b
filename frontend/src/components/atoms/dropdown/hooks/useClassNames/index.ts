@@ -7,7 +7,7 @@ const useClassNames = ({ disabled, size }: Partial<DropdownProps>) => {
 
   const resolveButtonVariant = cva({
     intent: {
-      active: 'cursor-default border-gray-300 bg-white text-gray-700 focus:shadow-200 active:border-neutral-800',
+      active: 'cursor-default border-gray-300 bg-white text-gray-700 active:border-neutral-800',
       disabled: 'cursor-not-allowed border-neutral-200 bg-neutral-200 text-neutral-800',
     },
     size: {
@@ -17,7 +17,7 @@ const useClassNames = ({ disabled, size }: Partial<DropdownProps>) => {
   });
 
   const buttonClassName = classnames(
-    'relative w-full rounded-md border pl-3 pr-10 text-left text-14 focus:outline-none',
+    'relative w-full rounded-md border pl-3 pr-10 text-left text-14 focus:outline focus:outline-[3px] focus:outline-blue-300',
     resolveButtonVariant(`intent.${intent}`) as string,
     resolveButtonVariant(`size.${size}`) as string,
   );

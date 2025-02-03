@@ -51,6 +51,7 @@ const CART_EXPANDS = [
   'lineItems[*].discountedPrice.includedDiscounts[*].discount',
   'discountCodes[*].discountCode',
   'paymentInfo.payments[*]',
+  'customerGroup',
 ];
 const ORDER_EXPANDS = [...CART_EXPANDS, 'orderState'];
 const SHIPPING_METHOD_EXPANDS = ['zoneRates[*].zone'];

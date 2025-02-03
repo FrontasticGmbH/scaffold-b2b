@@ -26,7 +26,7 @@ const Costs = ({
 
   const subCostsContainerClassNames = classnames('grid gap-2', classNames.subCostsContainer);
   const subCostsClassNames = classnames(
-    'flex items-center justify-between capitalize text-neutral-900',
+    'flex items-center justify-between capitalize text-gray-600',
     classNames.subCosts,
   );
 

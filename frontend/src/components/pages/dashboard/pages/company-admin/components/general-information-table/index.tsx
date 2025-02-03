@@ -15,8 +15,8 @@ const GeneralInformationTable = ({
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Cell>{translate('common.name')}</Table.Cell>
-          <Table.Cell>{translate('common.email')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.email')}</Table.Cell>
           <Table.Cell />
         </Table.Head>
         <Table.Body>

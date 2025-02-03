@@ -8,7 +8,7 @@ const FlagButton = ({ selectedShip, selectedLanguage, onOpen }: FlagButtonProps)
   return (
     <>
       {selectedShip && selectedLanguage && (
-        <div
+        <button
           className="flex cursor-pointer items-center justify-center text-14 font-normal text-white"
           onClick={onOpen}
         >
@@ -21,7 +21,7 @@ const FlagButton = ({ selectedShip, selectedLanguage, onOpen }: FlagButtonProps)
                   ?.name.split(' ')[0]
           }`}</Typography>
           <ChevronDownIcon className="ml-1 w-4 text-white" />
-        </div>
+        </button>
       )}
     </>
   );

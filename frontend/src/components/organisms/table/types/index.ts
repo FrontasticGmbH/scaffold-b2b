@@ -5,6 +5,7 @@ export type TableCellProps = TableHTMLAttributes<HTMLTableCellElement> & {
   sortable?: boolean;
   isButtonsHead?: boolean;
   isButtonsCell?: boolean;
+  isHeadCell?: boolean;
   onSorting?: () => void;
 };
 

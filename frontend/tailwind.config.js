@@ -30,7 +30,7 @@ module.exports = {
         500: '-1px 8px 24px 0px rgba(0, 0, 0, 0.15)',
         '500-reverse': '1px -8px 24px 0px rgba(0, 0, 0, 0.15)',
         dark: '0px 1px 6px rgba(0, 0, 0, 0.25)',
-        button: '1px 1px 1px rgba(0, 0, 0, 0.15), -1px -1px 1px rgba(25, 40, 81, 0.15)',
+        button: '0px 1px 1px 0px rgba(0, 0, 0, 0.25)',
       },
       fontFamily: {
         body: 'var(--font-inter)',
@@ -53,7 +53,10 @@ module.exports = {
           blue: 'rgb(var(--color-accent-blue) / <alpha-value>)',
         },
         gray: {
+          100: 'rgb(var(--color-gray-100) / <alpha-value>)',
+          200: 'rgb(var(--color-gray-200) / <alpha-value>)',
           300: 'rgb(var(--color-gray-300) / <alpha-value>)',
+          400: 'rgb(var(--color-gray-400) / <alpha-value>)',
           500: 'rgb(var(--color-gray-500) / <alpha-value>)',
           600: 'rgb(var(--color-gray-600) / <alpha-value>)',
           700: 'rgb(var(--color-gray-700) / <alpha-value>)',
@@ -65,6 +68,7 @@ module.exports = {
           200: 'rgb(var(--color-neutral-200) / <alpha-value>)',
           300: 'rgb(var(--color-neutral-300) / <alpha-value>)',
           400: 'rgb(var(--color-neutral-400) / <alpha-value>)',
+          500: 'rgb(var(--color-neutral-500) / <alpha-value>)',
           800: 'rgb(var(--color-neutral-800) / <alpha-value>)',
           900: 'rgb(var(--color-neutral-900) / <alpha-value>)',
         },

@@ -45,7 +45,7 @@ const Step = ({ number, title, isActive, isCompleted, onNavigate, children }: Re
         </div>
 
         {isCompleted && (
-          <span className="text-14 text-neutral-900 underline underline-offset-2">{translate('common.edit')}</span>
+          <span className="text-14 text-gray-600 underline underline-offset-2">{translate('common.edit')}</span>
         )}
       </div>
 

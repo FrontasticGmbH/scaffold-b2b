@@ -1,9 +1,9 @@
 import React from 'react';
-import Typography from '@/components/atoms/typography';
 import useDisclosure from '@/hooks/useDisclosure';
 import Drawer from '@/components/organisms/drawer';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import InfoBanner from '@/components/molecules/info-banner';
+import Link from '@/components/atoms/link';
 import QuickOrderAccordion from '../quick-order-accordion';
 import QuickOrderCSVUpload from './quick-order-csv-upload';
 import { QuickOrderDesktopProps } from '../types';
@@ -32,13 +32,9 @@ const QuickOrderDesktop = ({
       handleSKUsUpdate={handleSKUsUpdate}
       onClose={onClose}
     >
-      <div className="cursor-pointer underline-offset-4 hover:underline">
-        <div onClick={onOpen}>
-          <Typography fontSize={16} className="whitespace-nowrap text-gray-700">
-            {translate('quick-order.quick.order')}
-          </Typography>
-        </div>
-      </div>
+      <Link className="whitespace-nowrap text-gray-700" href="#" onClick={onOpen}>
+        {translate('quick-order.quick.order')}
+      </Link>
       <Drawer direction="right" isOpen={isOpen} headline="Quick add to cart" onClose={onClose}>
         <div className="h-full overflow-y-scroll">
           <div className="px-4 lg:px-5">

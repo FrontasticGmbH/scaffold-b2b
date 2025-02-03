@@ -51,3 +51,8 @@ local
 
 #tsconfig build
 **/tsconfig.tsbuildinfo
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/e2e/setup/state.json

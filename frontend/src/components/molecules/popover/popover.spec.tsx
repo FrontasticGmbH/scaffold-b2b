@@ -33,13 +33,13 @@ describe('PopoverButton Component', () => {
 
   it('applies correct class names for left direction', () => {
     render(<PopoverButton {...defaultProps} isOpen={true} direction="left" />);
-    const popoverPanel = screen.getByText('Popover Content').parentElement?.parentElement?.parentElement;
+    const popoverPanel = screen.getByText('Popover Content').parentElement;
     expect(popoverPanel).toHaveClass('absolute top-10 z-[999] left-0');
   });
 
   it('applies correct class names for right direction', () => {
     render(<PopoverButton {...defaultProps} isOpen={true} direction="right" />);
-    const popoverPanel = screen.getByText('Popover Content').parentElement?.parentElement?.parentElement;
+    const popoverPanel = screen.getByText('Popover Content').parentElement;
     expect(popoverPanel).toHaveClass('absolute top-10 z-[999] right-0');
   });
 

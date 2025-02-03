@@ -38,38 +38,40 @@ const QuoteDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSourcePro
   const mappedQuote = mapQuote(quote, { businessUnits, account });
 
   return (
-    <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
-      <QuoteDetailsPage
-        quote={mappedQuote}
-        permissions={{
-          canAccept:
-            (!mappedQuote.ownedByOtherUser && permissions.AcceptMyQuotes) ||
-            (mappedQuote.ownedByOtherUser && permissions.AcceptOthersQuotes),
-          canDecline:
-            (!mappedQuote.ownedByOtherUser && permissions.DeclineMyQuotes) ||
-            (mappedQuote.ownedByOtherUser && permissions.DeclineOthersQuotes),
-          canRenegotiate:
-            (!mappedQuote.ownedByOtherUser && permissions.RenegotiateMyQuotes) ||
-            (mappedQuote.ownedByOtherUser && permissions.RenegotiateOthersQuotes),
-          canRevoke: false,
-        }}
-        onReject={async () => {
-          await declineQuote(quote.quoteId as string);
-          router.refresh();
-        }}
-        onRenegotiate={async (comment: string) => {
-          await renegotiateQuote({ id: quote.quoteId as string, comment });
-          router.refresh();
-        }}
-        onAccept={async () => {
-          await acceptQuote(quote.quoteId as string);
-          router.refresh();
-        }}
-        onViewOrder={async () => {
-          if (quote.orderNumber) router.push(DashboardLinks.orderDetail(quote.orderNumber.replace(/\s/g, '-')));
-        }}
-      />
-    </Dashboard>
+    <div data-testid={`quote-${quote.quoteId}`}>
+      <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
+        <QuoteDetailsPage
+          quote={mappedQuote}
+          permissions={{
+            canAccept:
+              (!mappedQuote.ownedByOtherUser && permissions.AcceptMyQuotes) ||
+              (mappedQuote.ownedByOtherUser && permissions.AcceptOthersQuotes),
+            canDecline:
+              (!mappedQuote.ownedByOtherUser && permissions.DeclineMyQuotes) ||
+              (mappedQuote.ownedByOtherUser && permissions.DeclineOthersQuotes),
+            canRenegotiate:
+              (!mappedQuote.ownedByOtherUser && permissions.RenegotiateMyQuotes) ||
+              (mappedQuote.ownedByOtherUser && permissions.RenegotiateOthersQuotes),
+            canRevoke: false,
+          }}
+          onReject={async () => {
+            await declineQuote(quote.quoteId as string);
+            router.refresh();
+          }}
+          onRenegotiate={async (comment: string) => {
+            await renegotiateQuote({ id: quote.quoteId as string, comment });
+            router.refresh();
+          }}
+          onAccept={async () => {
+            await acceptQuote(quote.quoteId as string);
+            router.refresh();
+          }}
+          onViewOrder={async () => {
+            if (quote.orderNumber) router.push(DashboardLinks.orderDetail(quote.orderNumber.replace(/\s/g, '-')));
+          }}
+        />
+      </Dashboard>
+    </div>
   );
 };
 

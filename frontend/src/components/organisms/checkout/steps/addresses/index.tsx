@@ -272,12 +272,12 @@ const AddressesStep = ({
               <h5 className="text-14 font-medium uppercase text-gray-700">
                 {translate(`common.address.${keyToTitle[key as keyof typeof keyToTitle]}`)}
               </h5>
-              <p
-                className="hidden cursor-pointer text-14 text-gray-600 underline underline-offset-2 lg:block"
+              <button
+                className="hidden text-left text-14 text-gray-600 underline underline-offset-2 lg:block"
                 onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
               >
                 {translate(`checkout.address.${keyToTitle[key as keyof typeof keyToTitle]}.add`)} +
-              </p>
+              </button>
             </div>
             <h6 className="mt-4 text-14 text-gray-700"></h6>
             <Select
@@ -304,12 +304,12 @@ const AddressesStep = ({
             />
             {extra?.()}
           </div>
-          <p
-            className="cursor-pointer text-14 text-gray-600 underline underline-offset-2 lg:hidden"
+          <button
+            className="text-left text-14 text-gray-600 underline underline-offset-2 lg:hidden"
             onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
           >
-            {translate(`checkout.address.${keyToTitle[key as keyof typeof keyToTitle]}.add`)}+
-          </p>
+            {translate(`checkout.address.${keyToTitle[key as keyof typeof keyToTitle]}.add`)} +
+          </button>
         </div>
       ))}
 

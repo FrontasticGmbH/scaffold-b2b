@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { toast as ReactToast, ToastOptions } from 'react-hot-toast';
 import { getToast } from './getToast';
 import { ToastVariant } from '../types';

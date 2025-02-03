@@ -94,7 +94,7 @@ const useHeaderData = () => {
     selectedStore?.key,
   );
 
-  const headerSearchAction = () => router.push(`/search/?query=${debouncedHeaderSearch}`);
+  const headerSearchAction = () => router.push(`/search/?query=${headerSearch}`);
 
   const [skus, setSKUs] = useState<string[] | undefined>([]);
 

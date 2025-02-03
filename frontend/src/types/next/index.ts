@@ -9,8 +9,8 @@ export type Params<T extends Record<string, unknown> = Record<string, unknown>> 
 export type SearchParams = Record<string, string>;
 
 export interface PageProps<T extends Record<string, unknown> = Record<string, unknown>> {
-  params: Params<T>;
-  searchParams: SearchParams;
+  params: Promise<Params<T>>;
+  searchParams: Promise<SearchParams>;
 }
 
 export type LayoutProps = React.PropsWithChildren<Pick<PageProps, 'params'>>;

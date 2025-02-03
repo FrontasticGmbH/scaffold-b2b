@@ -2,4 +2,4 @@
 ignore = "$CACHED_COMMIT_REF == $COMMIT_REF"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+package = "@netlify/plugin-nextjs"

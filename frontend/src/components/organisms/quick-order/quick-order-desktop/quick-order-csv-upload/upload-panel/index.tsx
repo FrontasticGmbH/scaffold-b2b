@@ -40,15 +40,17 @@ const UploadPanel = () => {
   return (
     <div>
       <a href={downloadLink} download="template" target="_blank" rel="noopener noreferrer">
-        <Button variant="underlined" size="fit" className="text-14 font-normal">
+        <Button tabIndex={-1} variant="underlined" size="fit" className="text-14 font-normal">
           {translate('quick-order.download.csv')}
         </Button>
       </a>
       <div
+        tabIndex={0}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         onClick={() => inputFile?.current?.click()}
+        onKeyDown={(e) => e.code === 'Enter' && inputFile?.current?.click()}
         className="mt-3 flex h-[160px] w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-gray-300"
       >
         <input type="file" multiple onChange={handleChange} ref={inputFile} className="invisible" />

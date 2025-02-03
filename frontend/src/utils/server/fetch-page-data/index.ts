@@ -6,11 +6,11 @@ import { Params, SearchParams } from '@/types/next';
 import getServerOptions from '@/utils/server/getServerOptions';
 
 //Memoized function call
-const memoizedFetchPageData = cache((slug: string, qs: string) => {
+const memoizedFetchPageData = cache(async (slug: string, qs: string) => {
   return sdk.page.getPage({
     path: slug,
     query: Object.fromEntries(new URLSearchParams(qs).entries()),
-    ...getServerOptions(),
+    ...(await getServerOptions()),
   });
 });
 

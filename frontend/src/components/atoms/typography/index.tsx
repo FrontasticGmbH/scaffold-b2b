@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createElement, Fragment, ReactElement } from 'react';
+import React, { createElement, Fragment } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import Skeleton from '../skeleton';
 import { TypographyProps } from './types';
@@ -29,14 +29,14 @@ const Typography: React.FC<TypographyProps> = ({
   );
 
   // Constructing default props of the element
-  const elementProps: ReactElement['props'] = {
+  const elementProps: React.HTMLAttributes<HTMLElement> & React.Attributes = {
     className: elementClassName,
     ...props,
   };
 
   const TypographyElement = createElement(
-    as == 'fragment' ? Fragment : as,
-    as !== 'fragment' && elementProps,
+    as === 'fragment' ? Fragment : as,
+    as !== 'fragment' ? elementProps : undefined,
     <>
       {asSkeleton && <Skeleton fillMode />}
       {children}

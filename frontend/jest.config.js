@@ -7,6 +7,7 @@ const config = {
     '^.+\\.(css|less|sass|scss)$': '<rootDir>/jest/config/styleTransform.js',
   },
   coveragePathIgnorePatterns: ['<rootDir>/src/sdk/', '<rootDir>/src/lib/hooks/', '<rootDir>/src/project.config.ts'],
+  testPathIgnorePatterns: ['<rootDir>/e2e/'],
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
   moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {

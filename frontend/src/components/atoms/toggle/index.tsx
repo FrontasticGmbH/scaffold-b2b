@@ -22,7 +22,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
         <div
           className={classnames(
             'block h-8 w-14 rounded-full border border-neutral-400',
-            checked ? 'bg-[#415A77]' : 'bg-white',
+            checked ? 'bg-secondary' : 'bg-white',
           )}
         ></div>
         <div
@@ -33,7 +33,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
         >
           <span data-testid="checked-icon" className={!checked ? 'hidden' : 'block'}>
             <svg
-              className="stroke-[#415A77]"
+              className="stroke-secondary"
               width="11"
               height="8"
               viewBox="0 0 11 8"
@@ -47,7 +47,7 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
             </svg>
           </span>
           <span data-testid="unchecked-icon" className={checked ? 'hidden' : 'block'}>
-            <svg className="size-4 stroke-[#415A77]" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="size-4 stroke-secondary" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
           </span>

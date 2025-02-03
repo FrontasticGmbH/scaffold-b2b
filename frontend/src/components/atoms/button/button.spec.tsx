@@ -9,13 +9,6 @@ describe('[Component] Button', () => {
     expect(screen.getByText('Click Me')).toBeDefined();
   });
 
-  it('Renders icon correctly', () => {
-    const Icon = <svg data-testid="test-icon"></svg>;
-    render(<Button icon={Icon}>Click Me</Button>);
-
-    expect(screen.getByTestId('test-icon')).toBeDefined();
-  });
-
   it('Renders as skeleton when asSkeleton is true', () => {
     render(<Button asSkeleton>Click Me</Button>);
 

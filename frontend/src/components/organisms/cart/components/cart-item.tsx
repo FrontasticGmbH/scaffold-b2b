@@ -25,12 +25,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
           </Link>{' '}
           {translate('cart.item.was.removed')}
         </p>
-        <Button
-          variant="secondary"
-          size="s"
-          icon={<UndoIcon className="thick-svg text-gray-700" width={16} height={16} />}
-          onClick={onUndoRemove}
-        >
+        <Button variant="secondary" size="m" Icon={UndoIcon} onClick={onUndoRemove}>
           {translate('common.undo')}
         </Button>
       </div>

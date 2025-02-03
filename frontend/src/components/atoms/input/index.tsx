@@ -76,14 +76,9 @@ const Input = ({
         {label}
       </Label>
 
-      <div
-        className={classnames(containerClassName, defaultContainerClassName)}
-        tabIndex={0}
-        onFocus={() => ref.current?.focus()}
-      >
+      <div className={classnames(containerClassName, defaultContainerClassName)}>
         <input
           ref={ref}
-          tabIndex={-1}
           className={classnames(inputClassName, className)}
           value={value}
           readOnly={readOnly}

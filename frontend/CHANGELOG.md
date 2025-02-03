@@ -1,4 +1,19 @@
 
+## Version 2.2.0 (2025-01-13)
+
+** New Features & Improvements **
+
+* Improve unit test coverage.
+* Enable keyboard navigation for sidebar keyboard navigation
+* Use translation for aria labels
+* Handle locale changes when on PLP
+
+** Bug Fixes **
+
+* Handle email not found errors in password reset flow.
+* Fetch categories correctly on server
+* Fixed heading alerts
+
 ## Version 2.1.0 (2024-12-16)
 
 ** New Features & Improvements **

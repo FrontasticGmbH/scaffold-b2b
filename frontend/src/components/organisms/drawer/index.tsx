@@ -64,12 +64,7 @@ const Drawer = ({
               >
                 {headline}
               </Typography>
-              <Button
-                variant="ghost"
-                size="icon"
-                icon={<XMarkIcon className="w-6 text-gray-700 lg:w-7" />}
-                onClick={onClose}
-              />
+              <Button variant="ghost" size="l" Icon={XMarkIcon} onClick={onClose} />
             </div>
           </div>
           <div className="grow overflow-y-auto">{children}</div>

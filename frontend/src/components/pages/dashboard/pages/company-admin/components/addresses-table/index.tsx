@@ -26,12 +26,12 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Cell>{translate('common.name')}</Table.Cell>
-          <Table.Cell>{translate('common.use')}</Table.Cell>
-          <Table.Cell>{translate('common.address')}</Table.Cell>
-          <Table.Cell>{`${translate('common.city')}, ${translate('common.state')}`}</Table.Cell>
-          <Table.Cell>{translate('common.zipCode')}</Table.Cell>
-          <Table.Cell>{translate('common.country')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.use')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.address')}</Table.Cell>
+          <Table.Cell isHeadCell>{`${translate('common.city')}, ${translate('common.state')}`}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.zipCode')}</Table.Cell>
+          <Table.Cell isHeadCell>{translate('common.country')}</Table.Cell>
           <Table.Cell />
         </Table.Head>
         <Table.Body>

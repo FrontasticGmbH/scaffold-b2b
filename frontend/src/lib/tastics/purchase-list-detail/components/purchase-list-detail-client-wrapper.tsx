@@ -18,7 +18,7 @@ const PurchaseListDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSo
         fallback: {
           [unstable_serialize(['/action/wishlist/getWishlist', wishlist.wishlistId])]: {
             isError: false,
-            data: wishlist,
+            data: { items: [wishlist] },
           },
         },
       }}

@@ -142,7 +142,7 @@ const ProductTile = ({
             <QuantityWidget
               value={quantity}
               onChange={setQuantity}
-              minValue={Math.min(1, maxQuantity ?? Infinity)}
+              minValue={1}
               maxValue={maxQuantity}
               disabled={!inStock || addToCartDisabled}
             />

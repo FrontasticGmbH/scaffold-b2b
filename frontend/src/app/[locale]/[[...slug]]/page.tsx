@@ -20,7 +20,9 @@ export const dynamic = 'force-dynamic';
 
 /* End of Route Segments */
 
-export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
+export async function generateMetadata(props: PageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { locale: nextLocale } = params;
 
   sdk.defaultConfigure(nextLocale);
@@ -40,7 +42,9 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   };
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const { locale, slug } = params;
 
   sdk.defaultConfigure(locale);

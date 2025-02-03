@@ -80,6 +80,7 @@ Disabled.args = {
 export const Underlined = Template.bind({});
 Underlined.args = {
   variant: 'underlined',
+  children: 'Button text',
 };
 
 export const Ghost = Template.bind({});
@@ -91,19 +92,18 @@ export const RightIcon = Template.bind({});
 RightIcon.args = {
   size: 'l',
   iconPosition: 'right',
-  icon: <TrashIcon className="w-4" />,
+  Icon: TrashIcon,
 };
 
 export const LeftIcon = Template.bind({});
 LeftIcon.args = {
   size: 'l',
   iconPosition: 'left',
-  icon: <TrashIcon className="w-4" />,
+  Icon: TrashIcon,
 };
 
 export const OnlyIcon = Template.bind({});
 OnlyIcon.args = {
-  size: 'icon',
-  icon: <TrashIcon className="w-4" />,
+  Icon: TrashIcon,
   children: '',
 };

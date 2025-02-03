@@ -11,7 +11,7 @@ const EntitiesNotFound = ({ search, entity }: Props) => {
     <div className={classnames('border-x border-b border-neutral-400 text-center', search ? 'py-8' : 'py-[52px]')}>
       {search ? (
         <div className="flex flex-col items-center">
-          <span className="block rounded-lg bg-[#ECF0FB] p-3">
+          <span className="block rounded-lg bg-blue-100 p-3">
             <SearchIcon className="text-primary" width={24} height={24} />
           </span>
           <span className="mt-4 font-semibold text-gray-700">{translate('dashboard.no.search.results')}</span>

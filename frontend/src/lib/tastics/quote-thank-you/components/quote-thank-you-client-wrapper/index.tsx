@@ -40,27 +40,29 @@ const QuoteThankYouClientWrapper = () => {
   const transaction = calculateTransaction(quoteRequest);
 
   return (
-    <QuoteThankYou
-      account={{ email: account?.email ?? '' }}
-      quoteRequestId={quoteRequestId ?? ''}
-      deliveryAddress={mapAddress(quoteRequest.shippingAddress as Address)}
-      billingAddress={mapAddress(quoteRequest.billingAddress as Address)}
-      comment={quoteRequest.buyerComment}
-      paymentMethod={translate('thank-you.payment.purchase.order', {
-        values: { number: quoteRequest.purchaseOrderNumber ?? '' },
-      })}
-      transaction={{
-        subtotal: transaction.subtotal.centAmount,
-        shipping: transaction.shipping.centAmount,
-        discounts: transaction.discount.centAmount,
-        taxes: transaction.tax.centAmount,
-        total: transaction.total.centAmount,
-        currency: transaction.total.currencyCode,
-      }}
-      lineItems={(quoteRequest.lineItems ?? []).map(mapLineItem)}
-      onReviewQuoteClick={() => router.push(DashboardLinks.quoteRequestDetail(quoteRequestId ?? ''))}
-      purchaseOrderNumber={quoteRequest.purchaseOrderNumber}
-    />
+    <div data-testid={`quote_request-${quoteRequestId}`}>
+      <QuoteThankYou
+        account={{ email: account?.email ?? '' }}
+        quoteRequestId={quoteRequestId ?? ''}
+        deliveryAddress={mapAddress(quoteRequest.shippingAddress as Address)}
+        billingAddress={mapAddress(quoteRequest.billingAddress as Address)}
+        comment={quoteRequest.buyerComment}
+        paymentMethod={translate('thank-you.payment.purchase.order', {
+          values: { number: quoteRequest.purchaseOrderNumber ?? '' },
+        })}
+        transaction={{
+          subtotal: transaction.subtotal.centAmount,
+          shipping: transaction.shipping.centAmount,
+          discounts: transaction.discount.centAmount,
+          taxes: transaction.tax.centAmount,
+          total: transaction.total.centAmount,
+          currency: transaction.total.currencyCode,
+        }}
+        lineItems={(quoteRequest.lineItems ?? []).map(mapLineItem)}
+        onReviewQuoteClick={() => router.push(DashboardLinks.quoteRequestDetail(quoteRequestId ?? ''))}
+        purchaseOrderNumber={quoteRequest.purchaseOrderNumber}
+      />
+    </div>
   );
 };
 

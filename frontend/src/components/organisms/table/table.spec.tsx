@@ -15,9 +15,9 @@ describe('[Component] Table', () => {
       <Table.Container>
         <Table.Head>
           <Table.Row>
-            <Table.Cell>H1</Table.Cell>
-            <Table.Cell>H2</Table.Cell>
-            <Table.Cell>H3</Table.Cell>
+            <Table.Cell isHeadCell>H1</Table.Cell>
+            <Table.Cell isHeadCell>H2</Table.Cell>
+            <Table.Cell isHeadCell>H3</Table.Cell>
           </Table.Row>
         </Table.Head>
       </Table.Container>,
@@ -86,23 +86,23 @@ describe('[Component] Table', () => {
       ),
     });
 
-    expect(screen.getByText('1 - 25 / 100')).toBeDefined();
+    expect(screen.getAllByText('1 - 25 / 100')[0]).toBeDefined();
 
     rerender(<Table.Pagination page={2} limit={25} totalItems={200} />);
 
-    expect(screen.getByText('26 - 50 / 200')).toBeDefined();
+    expect(screen.getAllByText('26 - 50 / 200')[0]).toBeDefined();
   });
 
   it('Disables next and previous buttons correctly', () => {
     const { rerender } = render(<Table.Pagination page={1} limit={25} totalItems={100} />);
 
-    expect(screen.getByTestId('previous-arrow')).toHaveAttribute('data-disabled', 'true');
-    expect(screen.getByTestId('next-arrow')).toHaveAttribute('data-disabled', 'false');
+    expect(screen.getByTestId('previous-arrow')).toBeDisabled();
+    expect(screen.getByTestId('next-arrow')).not.toBeDisabled();
 
     rerender(<Table.Pagination page={4} limit={25} totalItems={100} />);
 
-    expect(screen.getByTestId('previous-arrow')).toHaveAttribute('data-disabled', 'false');
-    expect(screen.getByTestId('next-arrow')).toHaveAttribute('data-disabled', 'true');
+    expect(screen.getByTestId('previous-arrow')).not.toBeDisabled();
+    expect(screen.getByTestId('next-arrow')).toBeDisabled();
   });
 
   it('Handles all of the events correctly', async () => {
@@ -121,7 +121,7 @@ describe('[Component] Table', () => {
       />,
     );
 
-    await act(async () => userEvent.click(screen.getByRole('button')));
+    await act(async () => userEvent.click(screen.getByTestId('dropdown-button')));
     await act(async () => userEvent.click(screen.getByText('50')));
 
     expect(onRowsPerPageChange).toHaveBeenCalledWith('50');

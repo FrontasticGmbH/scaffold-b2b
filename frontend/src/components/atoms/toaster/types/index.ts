@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { toast as ReactToast, ToastOptions } from 'react-hot-toast';
 

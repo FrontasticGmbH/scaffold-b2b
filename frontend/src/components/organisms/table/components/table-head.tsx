@@ -2,7 +2,7 @@ import { TableHTMLAttributes } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 
 const TableHead = ({ className, children, ...props }: TableHTMLAttributes<HTMLTableSectionElement>) => {
-  const headClassName = classnames('bg-[#FCFCFD] uppercase shadow-[0px_-1px_0px_0px_#E4E4E7_inset]', className);
+  const headClassName = classnames('bg-gray-100 uppercase', className);
   return (
     <thead className={headClassName} {...props}>
       {children}

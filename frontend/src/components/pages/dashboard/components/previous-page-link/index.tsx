@@ -12,7 +12,7 @@ const PreviousPageLink = ({ className }: Props) => {
 
   return (
     <Link
-      className={classnames('text-14 leading-normal text-[#274082]', className)}
+      className={classnames('text-14 leading-normal text-blue-700', className)}
       href="#"
       onClick={() => router.back()}
     >

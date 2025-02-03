@@ -2,9 +2,12 @@ import { useCallback } from 'react';
 import { sdk } from '@/sdk';
 import useSWR, { useSWRConfig } from 'swr';
 import { Wishlist } from '@shared/types/wishlist/Wishlist';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccount from '../useAccount';
 
 const usePurchaseLists = (storeKey?: string) => {
+  const router = useCustomRouter();
+
   const { mutate: globalMutate } = useSWRConfig();
 
   const account = useAccount();
@@ -13,6 +16,7 @@ const usePurchaseLists = (storeKey?: string) => {
     sdk.composableCommerce.wishlist.queryWishlists({
       accountId: account.account?.accountId ?? '',
       storeKey: storeKey ?? '',
+      limit: 500,
     }),
   );
 
@@ -43,10 +47,12 @@ const usePurchaseLists = (storeKey?: string) => {
       const res = await sdk.composableCommerce.wishlist.updateWishlist({ name, description }, { id: wishlistId });
 
       mutate();
+      globalMutate(['/action/wishlist/getWishlist', wishlistId]);
+      router.refresh();
 
       return res.isError ? null : res.data;
     },
-    [mutate],
+    [mutate, globalMutate, router],
   );
 
   const deletePurchaseList = useCallback(
@@ -74,6 +80,8 @@ const usePurchaseLists = (storeKey?: string) => {
       });
 
       mutate();
+      wishlistIds.forEach((wishlistId) => globalMutate(['/action/wishlist/getWishlist', wishlistId]));
+      router.refresh();
 
       if (!result.isError) {
         return { data: result?.data };
@@ -81,7 +89,7 @@ const usePurchaseLists = (storeKey?: string) => {
 
       return {};
     },
-    [mutate],
+    [mutate, globalMutate, router],
   );
 
   const removeFromWishlists = useCallback(
@@ -97,6 +105,8 @@ const usePurchaseLists = (storeKey?: string) => {
       });
 
       mutate();
+      wishlists.forEach(({ wishlistId }) => globalMutate(['/action/wishlist/getWishlist', wishlistId]));
+      router.refresh();
 
       if (!result.isError) {
         return { data: result?.data };
@@ -104,7 +114,7 @@ const usePurchaseLists = (storeKey?: string) => {
 
       return {};
     },
-    [mutate],
+    [mutate, globalMutate, router],
   );
 
   return {

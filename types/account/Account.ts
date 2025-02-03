@@ -17,3 +17,9 @@ export interface Account {
   vatNumber?: string;
   version?: number;
 }
+
+export interface AccountGroup {
+  accountGroupId?: string;
+  key?: string;
+  name?: string;
+}

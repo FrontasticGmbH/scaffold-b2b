@@ -26,7 +26,7 @@ const nextConfig = {
   },
 
   compiler: {
-    reactRemoveProperties: { properties: ['^data-test'] },
+    reactRemoveProperties: process.env.NODE_ENV === 'production' ? { properties: ['^data-test'] } : false,
   },
 
   webpack(config) {

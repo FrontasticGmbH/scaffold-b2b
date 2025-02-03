@@ -13,8 +13,8 @@ export const useCategories = () => {
     () => sdk.composableCommerce.product.queryCategories({ format: 'flat', limit: 99 }),
   );
 
-  const categories = categoriesData?.isError ? [] : ((categoriesData?.data.items as Category[]) ?? []);
-  const flatCategories = flatCategoriesData?.isError ? [] : ((flatCategoriesData?.data.items as Category[]) ?? []);
+  const categories = categoriesData?.isError ? [] : ((categoriesData?.data?.items as Category[]) ?? []);
+  const flatCategories = flatCategoriesData?.isError ? [] : ((flatCategoriesData?.data?.items as Category[]) ?? []);
 
   const mutate = useCallback(() => {
     mutateCategories();

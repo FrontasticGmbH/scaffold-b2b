@@ -1,20 +1,11 @@
 import React, { Fragment } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { classnames } from '@/utils/classnames/classnames';
-import { useDropdown } from '../../context';
 import { Props } from './types';
 
 const DropdownOptions = ({ children, className }: React.PropsWithChildren<Props>) => {
-  const { isExpanded } = useDropdown();
-
   return (
-    <Transition
-      show={isExpanded}
-      as={Fragment}
-      leave="transition ease-in duration-100"
-      leaveFrom="opacity-100"
-      leaveTo="opacity-0"
-    >
+    <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
       <Listbox.Options
         static
         className={classnames(

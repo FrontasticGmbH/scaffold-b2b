@@ -35,30 +35,32 @@ const QuoteRequestDetailsClientWrapper = ({ data }: TasticProps<DataSource<DataS
   const mappedQuoteRequest = mapQuoteRequest(quoteRequest, { businessUnits, account });
 
   return (
-    <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
-      <QuoteDetailsPage
-        quote={mappedQuoteRequest}
-        permissions={{
-          canAccept:
-            (!mappedQuoteRequest.ownedByOtherUser && permissions.AcceptMyQuotes) ||
-            (mappedQuoteRequest.ownedByOtherUser && permissions.AcceptOthersQuotes),
-          canDecline:
-            (!mappedQuoteRequest.ownedByOtherUser && permissions.DeclineMyQuotes) ||
-            (mappedQuoteRequest.ownedByOtherUser && permissions.DeclineOthersQuotes),
-          canRenegotiate:
-            (!mappedQuoteRequest.ownedByOtherUser && permissions.RenegotiateMyQuotes) ||
-            (mappedQuoteRequest.ownedByOtherUser && permissions.RenegotiateOthersQuotes),
-          canRevoke:
-            (!mappedQuoteRequest.ownedByOtherUser && permissions.UpdateMyQuoteRequests) ||
-            (mappedQuoteRequest.ownedByOtherUser && permissions.UpdateOthersQuoteRequests),
-        }}
-        isQuoteRequest
-        onRevoke={async () => {
-          await cancelQuoteRequest(quoteRequest.quoteRequestId as string);
-          router.refresh();
-        }}
-      />
-    </Dashboard>
+    <div data-testid={`quote_request-${quoteRequest.quoteRequestId}`}>
+      <Dashboard href={DashboardLinks.quotes} userName={account?.firstName}>
+        <QuoteDetailsPage
+          quote={mappedQuoteRequest}
+          permissions={{
+            canAccept:
+              (!mappedQuoteRequest.ownedByOtherUser && permissions.AcceptMyQuotes) ||
+              (mappedQuoteRequest.ownedByOtherUser && permissions.AcceptOthersQuotes),
+            canDecline:
+              (!mappedQuoteRequest.ownedByOtherUser && permissions.DeclineMyQuotes) ||
+              (mappedQuoteRequest.ownedByOtherUser && permissions.DeclineOthersQuotes),
+            canRenegotiate:
+              (!mappedQuoteRequest.ownedByOtherUser && permissions.RenegotiateMyQuotes) ||
+              (mappedQuoteRequest.ownedByOtherUser && permissions.RenegotiateOthersQuotes),
+            canRevoke:
+              (!mappedQuoteRequest.ownedByOtherUser && permissions.UpdateMyQuoteRequests) ||
+              (mappedQuoteRequest.ownedByOtherUser && permissions.UpdateOthersQuoteRequests),
+          }}
+          isQuoteRequest
+          onRevoke={async () => {
+            await cancelQuoteRequest(quoteRequest.quoteRequestId as string);
+            router.refresh();
+          }}
+        />
+      </Dashboard>
+    </div>
   );
 };
 

@@ -51,7 +51,7 @@ const AuthForm = ({
         )}
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form data-testid="auth-form" onSubmit={handleSubmit}>
         {children && (
           <div className="mt-6 grid gap-3 md:mt-9">
             {error && (

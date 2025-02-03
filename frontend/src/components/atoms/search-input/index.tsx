@@ -11,21 +11,24 @@ import useClassNames from './hooks/useClassNames';
 import { SearchInputProps } from './types';
 import Label from '../label';
 
-const SearchInput = ({
-  label,
-  className = '',
-  containerClassName = '',
-  variant = 'xs',
-  disabled = false,
-  placeholder,
-  searchValue,
-  mobile,
-  onFocus: onFocusProp,
-  onBlur: onBlurProp,
-  onBackClick,
-  handleOnChange,
-  handleSearchAction,
-}: SearchInputProps) => {
+const SearchInput = (
+  {
+    label,
+    className = '',
+    containerClassName = '',
+    variant = 'xs',
+    disabled = false,
+    placeholder,
+    searchValue,
+    mobile,
+    onFocus: onFocusProp,
+    onBlur: onBlurProp,
+    onBackClick,
+    handleOnChange,
+    handleSearchAction,
+  }: SearchInputProps,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) => {
   const { translate } = useTranslation();
   const [value, setValue] = useControllableState(searchValue, '');
 
@@ -76,6 +79,7 @@ const SearchInput = ({
           </button>
         )}
         <input
+          ref={ref}
           aria-label={translate('product.search.results.for')}
           disabled={disabled}
           value={value}
@@ -101,12 +105,12 @@ const SearchInput = ({
           </button>
         )}
         {variant !== 'lg' && value ? (
-          <button aria-label={translate('common.search')} onClick={handleClear} className={searchButtonClassNames}>
+          <button aria-label={translate('common.clear')} onClick={handleClear} className={searchButtonClassNames}>
             <CloseIcon className={searchIconClassNames} />
           </button>
         ) : (
           <button
-            aria-label={translate('common.submit')}
+            aria-label={translate('common.search')}
             disabled={disabled}
             type="submit"
             className={searchButtonClassNames}
@@ -120,4 +124,4 @@ const SearchInput = ({
   );
 };
 
-export default SearchInput;
+export default React.forwardRef(SearchInput);

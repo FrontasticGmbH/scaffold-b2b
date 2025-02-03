@@ -1,5 +1,8 @@
-import { Account } from '@Types/account/Account';
-import { Customer as commercetoolsCustomer } from '@commercetools/platform-sdk';
+import { Account, AccountGroup } from '@Types/account/Account';
+import {
+  Customer as commercetoolsCustomer,
+  CustomerGroup as CommercetoolsCustomerGroup,
+} from '@commercetools/platform-sdk';
 import { Request } from '@frontastic/extension-types';
 import { Address } from '@Types/account';
 import {
@@ -125,5 +128,15 @@ export default class AccountMapper {
     }
 
     return account;
+  }
+
+  static commercetoolsCustomerGroupToAccountGroup(
+    commercetoolsCustomerGroup: CommercetoolsCustomerGroup,
+  ): AccountGroup {
+    return {
+      accountGroupId: commercetoolsCustomerGroup?.id,
+      name: commercetoolsCustomerGroup?.name,
+      key: commercetoolsCustomerGroup?.key,
+    };
   }
 }

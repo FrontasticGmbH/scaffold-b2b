@@ -19,9 +19,9 @@ const BackButton = () => {
         tabIndex={0}
         onClick={handleBackPress}
         iconPosition="left"
-        icon={<ChevronLeftIcon className="w-5 text-primary" />}
+        Icon={ChevronLeftIcon}
         variant="ghost"
-        size="fit"
+        size="l"
         className="hover:underline"
       >
         <Typography fontSize={14} fontWeight="medium" className="text-primary">

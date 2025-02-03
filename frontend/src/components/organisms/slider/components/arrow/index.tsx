@@ -1,9 +1,9 @@
 import React from 'react';
 import {
-  ChevronRightIcon as NextIcon,
-  ChevronLeftIcon as PrevIcon,
-  ChevronUpIcon as UpIcon,
   ChevronDownIcon as DownIcon,
+  ChevronLeftIcon as PrevIcon,
+  ChevronRightIcon as NextIcon,
+  ChevronUpIcon as UpIcon,
 } from '@heroicons/react/24/solid';
 import { classnames } from '@/utils/classnames/classnames';
 import { cva } from '@/utils/classnames/cva';
@@ -39,7 +39,7 @@ const Arrow = ({
     'absolute z-[49] cursor-pointer',
     arrowVa(`align.${align}`) as string,
     arrowVa(`position.${position}`) as string,
-    { 'p-4 transition lg:hover:bg-[#778DA9]': variant === 'overlay' },
+    { 'p-4 transition lg:hover:bg-accent-blue': variant === 'overlay' },
   );
 
   const IconRef = {

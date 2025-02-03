@@ -1,3 +1,5 @@
+import type { JSX } from 'react';
+
 import { Params, SearchParams } from '@/types/next';
 import { TasticConfiguration } from '@frontastic/extension-types';
 import { Category } from '@shared/types/product';

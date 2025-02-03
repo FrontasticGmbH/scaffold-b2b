@@ -39,7 +39,7 @@ export type OrderSummaryProps = {
   includeSummaryAccordion?: boolean;
   paymentMethods?: Array<PaymentMethod>;
   dataReference?: 'order' | 'cart';
-  button?: ReactElement;
+  button?: ReactElement<unknown>;
   transaction?: Transaction;
   discounts?: Array<Discount & { onRemove?: () => Promise<boolean> }>;
   onDiscountRedeem?: (code: string) => Promise<boolean>;

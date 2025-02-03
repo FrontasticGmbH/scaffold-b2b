@@ -5,14 +5,14 @@ import { InfoBannerProps } from '../../types';
 const useClassNames = ({ variant }: Partial<InfoBannerProps>) => {
   const resolveBannerVariant = cva({
     intent: {
-      primary: 'bg-[#ECF0FB]',
+      primary: 'bg-blue-100',
       warning: 'bg-yellow-100',
     },
   });
 
   const resolveSidebarVariant = cva({
     intent: {
-      primary: 'bg-[#416BD8]',
+      primary: 'bg-blue-500',
       warning: 'bg-yellow-500',
     },
   });

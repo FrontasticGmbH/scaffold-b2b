@@ -57,7 +57,7 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
   return (
     <div className={containerClassName}>
       <Accordion className="border-0">
-        <Accordion.Button defaultSpacing={false} className="text-neutral-900">
+        <Accordion.Button defaultSpacing={false} className="text-gray-600">
           {translate('cart.discount.apply')}
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false}>
@@ -87,7 +87,7 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
                 >
                   <label className="text-12 uppercase leading-[16px] text-secondary">{discount.code}</label>
                   <button type="button" className="shrink-0" onClick={discount.onRemove}>
-                    <XMarkIcon className="size-4 text-secondary" />
+                    <XMarkIcon data-testid="remove-discount-code" className="size-4 text-secondary" />
                   </button>
                 </div>
               ))}

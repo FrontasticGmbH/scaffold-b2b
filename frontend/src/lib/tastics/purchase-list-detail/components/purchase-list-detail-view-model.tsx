@@ -14,7 +14,6 @@ const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => 
   const router = useCustomRouter();
 
   const { account } = useAccount();
-
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
   const { addItem: addItemToCart } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
@@ -23,7 +22,7 @@ const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => 
 
   const { purchaseList: wishlist, removeItem, updateItem } = usePurchaseList(wishlistId);
 
-  if (!wishlist) return;
+  if (!wishlist) return <></>;
 
   return (
     <Dashboard href={DashboardLinks.shoppingLists} userName={account?.firstName}>

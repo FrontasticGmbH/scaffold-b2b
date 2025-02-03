@@ -68,7 +68,7 @@ describe('DiscountsForm', () => {
     expect(screen.getByText('SAVE10')).toBeInTheDocument();
     expect(screen.getByText('WELCOME5')).toBeInTheDocument();
 
-    const removeButtons = screen.getAllByRole('button');
+    const removeButtons = screen.getAllByTestId('remove-discount-code');
     expect(removeButtons).toHaveLength(2);
 
     await userEvent.click(removeButtons[0]);

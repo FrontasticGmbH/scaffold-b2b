@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
-import useClassNames from './';
 import { cva } from '@/utils/classnames/cva';
 import { classnames } from '@/utils/classnames/classnames';
+import useClassNames from './';
 
 // Mock the utilities
 jest.mock('@/utils/classnames/cva', () => ({
@@ -32,13 +32,13 @@ describe('useClassNames Hook', () => {
     expect(mockCva).toHaveBeenCalledTimes(2);
     expect(mockCva).toHaveBeenCalledWith({
       intent: {
-        primary: 'bg-[#ECF0FB]',
+        primary: 'bg-blue-100',
         warning: 'bg-yellow-100',
       },
     });
     expect(mockCva).toHaveBeenCalledWith({
       intent: {
-        primary: 'bg-[#416BD8]',
+        primary: 'bg-blue-500',
         warning: 'bg-yellow-500',
       },
     });
@@ -46,9 +46,9 @@ describe('useClassNames Hook', () => {
     expect(result.current.bannerClassName).toContain(
       'flex items-stretch gap-3 overflow-hidden rounded-md md:gap-4 lg:gap-5',
     );
-    expect(result.current.bannerClassName).toContain('bg-[#ECF0FB]');
+    expect(result.current.bannerClassName).toContain('bg-blue-100');
     expect(result.current.sidebarClassName).toContain('block w-[8px] shrink-0');
-    expect(result.current.sidebarClassName).toContain('bg-[#416BD8]');
+    expect(result.current.sidebarClassName).toContain('bg-blue-500');
   });
 
   it('returns correct class names for the "warning" variant', () => {
@@ -76,9 +76,9 @@ describe('useClassNames Hook', () => {
 
     expect(mockClassnames).toHaveBeenCalledWith(
       'flex items-stretch gap-3 overflow-hidden rounded-md md:gap-4 lg:gap-5',
-      'bg-[#ECF0FB]',
+      'bg-blue-100',
     );
 
-    expect(mockClassnames).toHaveBeenCalledWith('block w-[8px] shrink-0', 'bg-[#416BD8]');
+    expect(mockClassnames).toHaveBeenCalledWith('block w-[8px] shrink-0', 'bg-blue-500');
   });
 });

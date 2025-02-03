@@ -1,9 +1,13 @@
-import { PropsWithChildren, ReactElement } from 'react';
+import { ReactElement } from 'react';
 import Typography from '../../typography';
 
-const ToastMessage = ({ children }: PropsWithChildren) => (
+type ToastMessageProps = {
+  children: ReactElement<any, any> | string; // explicitly allows any React element or a string
+};
+
+const ToastMessage = ({ children }: ToastMessageProps) => (
   <Typography className="text-gray-700" fontSize={14}>
-    {(children as ReactElement).props ? (children as ReactElement).props.children : (children as string)}
+    {typeof children === 'string' ? children : children.props?.children}
   </Typography>
 );
 

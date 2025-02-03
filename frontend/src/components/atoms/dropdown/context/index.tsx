@@ -1,6 +1,5 @@
 import React, { useCallback, useContext } from 'react';
 import useControllableState from '@/hooks/useControllableState';
-import useDisclosure from '@/hooks/useDisclosure';
 import { DropdownContextShape, Props } from './types';
 import { Option } from '../types';
 
@@ -10,17 +9,14 @@ const DropdownProvider = ({
   children,
   value: { size, disabled, onChange, value: valueProp, className, defaultValue },
 }: React.PropsWithChildren<Props>) => {
-  const { isOpen: isExpanded, onOpen: onExpand, onClose: onCollapse, onToggle } = useDisclosure();
-
   const [value, setValue] = useControllableState(valueProp);
 
   const handleChange = useCallback(
     ({ value }: Option) => {
       onChange?.(value);
       setValue(value);
-      onCollapse();
     },
-    [onChange, setValue, onCollapse],
+    [onChange, setValue],
   );
 
   return (
@@ -32,10 +28,6 @@ const DropdownProvider = ({
         value,
         className,
         defaultValue,
-        isExpanded,
-        onExpand,
-        onCollapse,
-        onToggle,
       }}
     >
       {children}

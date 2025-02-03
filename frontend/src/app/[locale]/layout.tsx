@@ -6,7 +6,11 @@ import 'flag-icons/css/flag-icons.min.css';
 import '@/styles/global/index.css';
 import { CookiesProvider } from 'next-client-cookies/server';
 
-export default function RootLayout({ children, params }: LayoutProps) {
+export default async function RootLayout(props: LayoutProps) {
+  const params = await props.params;
+
+  const { children } = props;
+
   const { locale } = params;
 
   return (

@@ -42,10 +42,10 @@ const Rule = ({ rule, singleMode, criteria, addButtonIsDisabled, onUpdate, onRem
       )}
 
       <div className={classnames('flex gap-2', singleMode ? 'col-span-8' : 'col-span-2')}>
-        <Button size="icon" variant="secondary" icon={<RemoveIcon width={20} height={20} />} onClick={onRemove} />
+        <Button variant="secondary" size="l" Icon={RemoveIcon} onClick={onRemove} />
         <Button
-          size="icon"
-          icon={<AddIcon width={20} height={20} />}
+          size="l"
+          Icon={AddIcon}
           disabled={
             (!singleMode && (!rule.key || !rule.operator || !rule.value)) ||
             (singleMode && !rule.key) ||

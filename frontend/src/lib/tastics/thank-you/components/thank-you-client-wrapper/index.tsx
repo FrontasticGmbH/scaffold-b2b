@@ -25,23 +25,26 @@ const ThankYouClientWrapper = ({ data }: TasticProps<DataSource<{ order: Order }
   const transaction = calculateTransaction(order);
 
   return (
-    <ThankYou
-      account={{ email: account?.email ?? '' }}
-      orderNumber={(order.orderNumber ?? '').replace(/-/g, ' ')}
-      deliveryAddress={mapAddress(order.shippingAddress as Address)}
-      billingAddress={mapAddress(order.billingAddress as Address)}
-      transaction={{
-        subtotal: transaction.subtotal.centAmount,
-        shipping: transaction.shipping.centAmount,
-        discounts: transaction.discount.centAmount,
-        taxes: transaction.tax.centAmount,
-        total: transaction.total.centAmount,
-        currency: transaction.total.currencyCode,
-      }}
-      lineItems={(order.lineItems ?? []).map(mapLineItem)}
-      onReviewOrderClick={() => router.push(DashboardLinks.orderDetail(order.orderId ?? ''))}
-      purchaseOrderNumber={order.purchaseOrderNumber}
-    />
+    <div data-testid={`order-${order.orderId}`}>
+      <ThankYou
+        orderId={order.orderId}
+        account={{ email: account?.email ?? '' }}
+        orderNumber={(order.orderNumber ?? '').replace(/-/g, ' ')}
+        deliveryAddress={mapAddress(order.shippingAddress as Address)}
+        billingAddress={mapAddress(order.billingAddress as Address)}
+        transaction={{
+          subtotal: transaction.subtotal.centAmount,
+          shipping: transaction.shipping.centAmount,
+          discounts: transaction.discount.centAmount,
+          taxes: transaction.tax.centAmount,
+          total: transaction.total.centAmount,
+          currency: transaction.total.currencyCode,
+        }}
+        lineItems={(order.lineItems ?? []).map(mapLineItem)}
+        onReviewOrderClick={() => router.push(DashboardLinks.orderDetail(order.orderId ?? ''))}
+        purchaseOrderNumber={order.purchaseOrderNumber}
+      />
+    </div>
   );
 };
 

@@ -6,6 +6,7 @@ import { Discount } from './Discount';
 import { Tax } from './Tax';
 import { ShippingInfo } from './ShippingInfo';
 import { Money } from '../product/Money';
+import { AccountGroup } from '../account';
 
 export enum CartOrigin {
   Customer = 'Customer',
@@ -40,4 +41,5 @@ export interface Cart {
   accountId?: string;
   businessUnitKey?: string;
   storeKey?: string;
+  accountGroup?: AccountGroup;
 }

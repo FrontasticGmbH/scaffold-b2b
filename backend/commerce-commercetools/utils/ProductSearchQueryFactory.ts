@@ -250,7 +250,7 @@ export class ProductSearchFactory {
       }
 
       return {
-        or: [intermediateValues.andList[0], intermediateValues.orList[0]] as SearchQuery,
+        and: [intermediateValues.andList[0], intermediateValues.orList[0]] as SearchQuery,
       };
     }
 

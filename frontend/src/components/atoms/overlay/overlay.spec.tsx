@@ -9,7 +9,7 @@ describe('[Component] Overlay', () => {
     const overlayElement = screen.getByTestId('overlay');
     expect(overlayElement).toBeDefined();
     expect(overlayElement.className).toContain('z-[305]');
-    expect(overlayElement.className).toContain('fixed left-0 top-0 h-screen w-screen bg-[#051036]/20');
+    expect(overlayElement.className).toContain('fixed left-0 top-0 h-screen w-screen bg-gray-800/45');
   });
 
   it('Renders with provided zIndex', () => {

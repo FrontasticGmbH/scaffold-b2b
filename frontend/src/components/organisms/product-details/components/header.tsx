@@ -27,6 +27,7 @@ const Header = ({ className, product }: PDPHeaderProps) => {
       )}
 
       <Typography
+        data-testid="product-name"
         as="h1"
         className="text-gray-700 md:text-18 lg:text-20"
         fontSize={16}

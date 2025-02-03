@@ -4,26 +4,32 @@ import SearchInput from '@/components/atoms/search-input';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { tablet } from '@/constants/screensizes';
 import useScrollBlock from '@/hooks/useScrollBlock';
+import { useFocusOutside } from '@/hooks/useFocusOutside';
 import useClassNames from './hooks/useClassNames';
 import { SearchProps } from './types';
 import SearchPanel from './search-suggestions-panel';
 
-const Search = ({
-  disabled,
-  searchValue,
-  suggestions,
-  variant = 'sm',
-  placeholder,
-  onProductClick,
-  handleOnChange,
-  scrollControl,
-  handleSearchAction,
-}: SearchProps) => {
+const Search = (
+  {
+    disabled,
+    searchValue,
+    suggestions,
+    variant = 'sm',
+    placeholder,
+    onProductClick,
+    handleOnChange,
+    scrollControl,
+    handleSearchAction,
+  }: SearchProps,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) => {
   const [focused, setFocused] = useState(false);
   const onFocus = useCallback(() => setFocused(true), []);
   const onBlur = useCallback(() => {
     setTimeout(() => setFocused(false), 200);
   }, []);
+
+  const { ref: containerRef } = useFocusOutside(onBlur);
 
   const { SearchWrapperClassNames, searchPanelClassNames } = useClassNames(variant, focused);
 
@@ -40,14 +46,14 @@ const Search = ({
 
   return (
     <>
-      {width >= tablet && focused && variant === 'lg' && <Overlay />}
-      <div className={SearchWrapperClassNames}>
+      {width >= tablet && focused && variant === 'lg' && <Overlay onClick={onBlur} />}
+      <div className={SearchWrapperClassNames} ref={containerRef}>
         <SearchInput
+          ref={ref}
           mobile={!isLargerThanTablet && focused}
           disabled={disabled}
           searchValue={searchValue}
           onFocus={onFocus}
-          onBlur={onBlur}
           variant={variant}
           placeholder={placeholder}
           handleOnChange={handleOnChange}
@@ -66,4 +72,4 @@ const Search = ({
     </>
   );
 };
-export default Search;
+export default React.forwardRef(Search);
