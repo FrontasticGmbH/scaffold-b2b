@@ -15,9 +15,11 @@ const GeneralInformationTable = ({
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.email')}</Table.Cell>
-          <Table.Cell />
+          <Table.Row>
+            <Table.HeaderCell>{translate('common.name')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.email')}</Table.HeaderCell>
+            <Table.HeaderCell />
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {generalInformation.map(({ id, name, email }) => (

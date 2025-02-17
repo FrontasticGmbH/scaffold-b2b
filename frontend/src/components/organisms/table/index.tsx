@@ -9,6 +9,7 @@ import TableCell from './components/table-cell';
 import TablePagination from './components/table-pagination';
 import TableContainer from './components/table-container';
 import './styles/index.css';
+import TableHeaderCell from './components/table-header-cell';
 
 const Table: FC<HTMLAttributes<HTMLDivElement>> & {
   Container: typeof TableContainer;
@@ -17,6 +18,7 @@ const Table: FC<HTMLAttributes<HTMLDivElement>> & {
   Row: typeof TableRow;
   Cell: typeof TableCell;
   Pagination: typeof TablePagination;
+  HeaderCell: typeof TableHeaderCell;
 } = ({ className = '', ...props }) => {
   return <div className={classnames('whitespace-pre scrollbar-hide lg:scrollbar-default', className)} {...props} />;
 };
@@ -27,5 +29,6 @@ Table.Body = TableBody;
 Table.Row = TableRow;
 Table.Cell = TableCell;
 Table.Pagination = TablePagination;
+Table.HeaderCell = TableHeaderCell;
 
 export default Table;

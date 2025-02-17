@@ -2,6 +2,7 @@ import React from 'react';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useFormat from '@/hooks/useFormat';
 import Image from '@/components/atoms/Image';
+import Link from '@/components/atoms/link';
 import Costs from '@/components/molecules/costs';
 import Accordion from '@/components/molecules/accordion';
 import { QuoteThankYouProps } from '../../types';
@@ -17,14 +18,21 @@ const OrderSummary = ({ lineItems, transaction }: Pick<QuoteThankYouProps, 'line
       <h5 className="hidden lg:block lg:text-18">{translate('thank-you.quote.items')}</h5>
 
       <div className="lg:hidden">
-        {lineItems.map(({ id, name, price, currency, quantity, images }) => (
+        {lineItems.map(({ id, name, price, currency, quantity, images, url }) => (
           <div key={id} className="flex items-center gap-4 border-b border-neutral-400 py-4 md:gap-8">
             <div className="relative h-[104px] w-[89px] shrink-0">
-              <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+              <Link href={url ?? '#'}>
+                <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+              </Link>
             </div>
             <div className="flex grow items-center justify-between overflow-hidden">
               <div className="max-w-full grow">
-                <p className="truncate text-12 text-gray-700 md:text-14">{name}</p>
+                <Link
+                  href={url ?? '#'}
+                  className="mt-1 block max-w-full truncate py-1 text-16 font-semibold leading-loose text-gray-700"
+                >
+                  <p className="truncate text-12 text-gray-700 md:text-14">{name}</p>
+                </Link>
                 <p className="mt-2 text-12 font-medium text-gray-700 md:hidden">{formatCurrency(price, currency)}</p>
                 <span className="mt-3 block text-14 text-gray-600 md:mt-2">x {quantity}</span>
               </div>
@@ -41,9 +49,11 @@ const OrderSummary = ({ lineItems, transaction }: Pick<QuoteThankYouProps, 'line
         <Accordion.Panel defaultSpacing={false} className="py-4">
           <div className="hidden pt-2 lg:block">
             <div className="flex items-center gap-4">
-              {lineItems.slice(0, 3).map(({ id, images, name }) => (
+              {lineItems.slice(0, 3).map(({ id, images, name, url }) => (
                 <div className="relative size-[88px]" key={id}>
-                  <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+                  <Link href={url ?? '#'}>
+                    <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+                  </Link>
                 </div>
               ))}
               {lineItems.length > 3 && <div className="pl-1 text-14 text-gray-600">+{lineItems.length - 3}</div>}

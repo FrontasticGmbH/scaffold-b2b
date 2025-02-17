@@ -39,7 +39,7 @@ describe('[Component] ContentItem', () => {
   it('Handles missing title', () => {
     render(<ContentItem {...defaultProps} title={undefined} />);
 
-    const title = screen.queryByRole('heading');
+    const title = screen.getByTestId('title-text');
 
     expect(title).toBeInTheDocument();
     expect(title).toHaveTextContent('');

@@ -24,14 +24,14 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders, pagination }) => {
     <Table>
       <Table.Container className="hidden table-fixed rounded-md md:table">
         <Table.Head className="border-b text-12 font-bold">
-          <Table.Cell isHeadCell>{translate('common.status')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.id')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.date')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.business.unit')}</Table.Cell>
-          <Table.Cell isHeadCell className="text-right">
-            {translate('common.total')}
-          </Table.Cell>
-          <Table.Cell isButtonsHead />
+          <Table.Row>
+            <Table.HeaderCell>{translate('common.status')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.date')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.business.unit')}</Table.HeaderCell>
+            <Table.HeaderCell className="text-right">{translate('common.total')}</Table.HeaderCell>
+            <Table.HeaderCell />
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {(orders ?? []).map(({ id, number, status, creationDate, businessUnit, total, currency }) => (
@@ -64,7 +64,7 @@ const OrdersTable: React.FC<OrdersTableProps> = ({ orders, pagination }) => {
       <Table.Container className="table rounded-md md:hidden">
         <Table.Head className="border-b text-12 font-bold">
           <Table.Row>
-            <Table.Cell isHeadCell>{translate('common.id')}</Table.Cell>
+            <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
           </Table.Row>
         </Table.Head>
         <Table.Body>

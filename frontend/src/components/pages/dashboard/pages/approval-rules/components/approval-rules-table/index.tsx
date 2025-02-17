@@ -29,10 +29,10 @@ const ApprovalRulesTable = ({ approvalRules, onDuplicate, pagination, viewOnly }
       <Table.Container className="table">
         <Table.Head>
           <Table.Row>
-            <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
-            <Table.Cell isHeadCell>{translate('common.requesters')}</Table.Cell>
-            <Table.Cell isHeadCell>{translate('common.status')}</Table.Cell>
-            <Table.Cell isButtonsHead />
+            <Table.HeaderCell>{translate('common.name')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.requesters')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.status')}</Table.HeaderCell>
+            <Table.HeaderCell />
           </Table.Row>
         </Table.Head>
         <Table.Body>

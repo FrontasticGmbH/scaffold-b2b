@@ -89,9 +89,12 @@ const ProductTile = ({
         </div>
       </Link>
 
-      <div className={classnames('overflow-hidden', { 'md:grow': variant === 'list-item' })}>
+      <div className={classnames('overflow-hidden px-1', { 'md:grow': variant === 'list-item' })}>
         <div>
-          <Link href={url ?? '#'} className="max-w-full truncate text-16 font-semibold leading-loose text-gray-700">
+          <Link
+            href={url ?? '#'}
+            className="mt-1 block max-w-full truncate py-1 text-16 font-semibold leading-loose text-gray-700"
+          >
             {name}
           </Link>
           {sku && (

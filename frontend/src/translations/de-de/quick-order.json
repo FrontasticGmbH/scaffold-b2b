@@ -7,7 +7,7 @@
   "drag.csv": "Ziehen Sie CSV-Dateien per Drag & Drop",
   "click.csv": " oder klicken Sie zum Durchsuchen",
   "click.upload": "Hochladen",
-  "click.clear": "Klar",
+  "click.clear": "Zurücksetzen",
   "error.format.file": "Dateiformat wird nicht unterstützt (CSV)",
   "error.format": "Das Dateiformat wird nicht unterstützt. Bitte überprüfen Sie die Vorlagendatei",
   "error.upload.fail": "Beim Hochladen der Datei ist ein Fehler aufgetreten",

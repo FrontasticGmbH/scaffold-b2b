@@ -18,14 +18,14 @@ const ApprovalFlowsTable = ({ approvalFlows, pagination }: Props) => {
     <Table className="mt-5 rounded-md lg:mt-8">
       <Table.Container className="hidden text-gray-600 md:table">
         <Table.Head>
-          <Table.Cell isHeadCell>{translate('common.status')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.id')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.date')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.business.unit')}</Table.Cell>
-          <Table.Cell isHeadCell className="text-right">
-            {translate('common.total')}
-          </Table.Cell>
-          <Table.Cell isHeadCell isButtonsHead />
+          <Table.Row>
+            <Table.HeaderCell>{translate('common.status')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.date')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.business.unit')}</Table.HeaderCell>
+            <Table.HeaderCell className="text-right">{translate('common.total')}</Table.HeaderCell>
+            <Table.HeaderCell />
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {approvalFlows.map(({ id, status, date, businessUnit, order }) => (
@@ -57,7 +57,9 @@ const ApprovalFlowsTable = ({ approvalFlows, pagination }: Props) => {
 
       <Table.Container className="table md:hidden">
         <Table.Head>
-          <Table.Cell>{translate('common.id')}</Table.Cell>
+          <Table.Row>
+            <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {approvalFlows.map(({ id, status, date, businessUnit, order }) => (

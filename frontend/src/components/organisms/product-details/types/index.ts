@@ -44,6 +44,7 @@ export type ShoppingListCTAProps = {
 
 export type ShippingMethod = {
   label: string;
+  description: string;
   price: number;
   estimatedDeliveryDays: number;
 };

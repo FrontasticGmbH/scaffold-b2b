@@ -43,7 +43,7 @@ export interface CheckoutProps {
   buyerCanAddComment?: boolean;
   addresses: Address[];
   onAddAddress?: (address: Address) => Promise<boolean>;
-  products: Array<Pick<Product, 'id' | 'name' | 'currency' | 'price' | 'quantity' | 'images'>>;
+  products: Array<Pick<Product, 'id' | 'name' | 'currency' | 'price' | 'quantity' | 'images' | 'url'>>;
   transaction: Transaction;
   discounts: Array<Discount & { onRemove?: () => Promise<boolean> }>;
   onApplyDiscount?: (code: string) => Promise<boolean>;

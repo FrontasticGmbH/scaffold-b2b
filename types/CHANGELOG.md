@@ -1,4 +1,11 @@
 
+## Version 1.15.0 (2025-02-03)
+
+** New Features & Improvements **
+
+* Map customer groups
+* Add mapping for customer groups
+
 ## Version 1.14.0 (2025-01-13)
 
 ** New Features & Improvements **

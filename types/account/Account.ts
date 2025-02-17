@@ -16,6 +16,7 @@ export interface Account {
   apiToken?: string;
   vatNumber?: string;
   version?: number;
+  accountGroupId?: string;
 }
 
 export interface AccountGroup {

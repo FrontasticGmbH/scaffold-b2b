@@ -9,7 +9,7 @@ const AccountLink = () => {
   const { accountLink } = useContext(HeaderContext);
   return (
     <Link aria-label={translate('account.my.account')} href={accountLink.href ?? '/'}>
-      <UserCircleIcon className="w-6 text-gray-700 lg:w-5" />
+      <UserCircleIcon className="w-8 p-1 text-gray-700 lg:w-5" />
     </Link>
   );
 };

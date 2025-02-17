@@ -13,7 +13,7 @@ const Footer = ({ links = [], copyrightStatement = '', variant = 'default' }: Fo
       {variant !== 'simple' && (
         <div className="mx-auto flex w-fit flex-col items-center gap-4 py-6 text-14 text-white md:flex-row md:gap-10 md:text-16">
           {links.map(({ name, href, openInNewTab }, index) => (
-            <Link key={index} href={href ?? '#'} openInNewTab={openInNewTab}>
+            <Link key={index} className="p-0.5" href={href ?? '#'} openInNewTab={openInNewTab}>
               {name}
             </Link>
           ))}

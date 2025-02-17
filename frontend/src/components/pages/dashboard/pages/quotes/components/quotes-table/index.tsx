@@ -24,12 +24,12 @@ const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
       <Table.Container className="hidden text-gray-600 md:table">
         <Table.Head>
           <Table.Row>
-            <Table.Cell>{translate('common.status')}</Table.Cell>
-            <Table.Cell>{translate('common.id')}</Table.Cell>
-            <Table.Cell>{translate('common.date')}</Table.Cell>
-            <Table.Cell>{translate('common.business.unit')}</Table.Cell>
-            <Table.Cell className="text-right">{translate('common.total')}</Table.Cell>
-            <Table.Cell isButtonsHead />
+            <Table.HeaderCell>{translate('common.status')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.date')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.business.unit')}</Table.HeaderCell>
+            <Table.HeaderCell className="text-right">{translate('common.total')}</Table.HeaderCell>
+            <Table.HeaderCell />
           </Table.Row>
         </Table.Head>
         <Table.Body>
@@ -72,7 +72,9 @@ const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
 
       <Table.Container className="table md:hidden">
         <Table.Head>
-          <Table.Cell>{translate('common.id')}</Table.Cell>
+          <Table.Row>
+            <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
+          </Table.Row>
         </Table.Head>
 
         <Table.Body>

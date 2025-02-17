@@ -1,4 +1,19 @@
 
+## Version 2.0.0 (2025-02-03)
+
+** New Features & Improvements **
+
+* Added customer group to orders
+* Implement PR feedback - update customerGroup to accountGroup, move mapper to account
+* Map customer groups
+* Add mapping for customer groups
+* Upgraded extension-types version in B2B and used new preloadedValue field
+
+
+** Bug Fixes **
+
+* modify PDP validation
+
 ## Version 1.16.0 (2025-01-13)
 
 

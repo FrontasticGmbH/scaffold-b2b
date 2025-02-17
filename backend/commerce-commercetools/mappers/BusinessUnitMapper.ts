@@ -309,11 +309,12 @@ export default class BusinessUnitMapper {
   static commercetoolsApprovalFlowToApprovalFlow(
     commercetoolsApprovalFlow: CommercetoolsApprovalFlow,
     locale: Locale,
+    defaultLocale: string,
   ): ApprovalFlow {
     return {
       approvalFlowId: commercetoolsApprovalFlow.id,
       approvalFlowVersion: commercetoolsApprovalFlow.version,
-      order: this.commercetoolsOrderReferenceToOrder(commercetoolsApprovalFlow.order, locale),
+      order: this.commercetoolsOrderReferenceToOrder(commercetoolsApprovalFlow.order, locale, defaultLocale),
       businessUnitKey: commercetoolsApprovalFlow.businessUnit.key,
       approvalRules: commercetoolsApprovalFlow.rules.map((commercetoolsRule) => {
         return this.commercetoolsApprovalRuleToApprovalRule(commercetoolsRule);
@@ -350,10 +351,14 @@ export default class BusinessUnitMapper {
     };
   }
 
-  static commercetoolsOrderReferenceToOrder(order: CommercetoolsOrderReference, locale: Locale): Order {
+  static commercetoolsOrderReferenceToOrder(
+    order: CommercetoolsOrderReference,
+    locale: Locale,
+    defaultLocale: string,
+  ): Order {
     return {
       cartId: order?.id,
-      ...(order?.obj ? CartMapper.commercetoolsOrderToOrder(order.obj, locale) : {}),
+      ...(order?.obj ? CartMapper.commercetoolsOrderToOrder(order.obj, locale, defaultLocale) : {}),
     };
   }
 

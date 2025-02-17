@@ -61,11 +61,12 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
         shippingMethodId: cart?.shippingInfo?.shippingMethodId,
       }}
       paymentMethods={paymentMethods}
-      discounts={(cart?.discountCodes ?? []).map(({ discountId, name, code }) => ({
+      discounts={(cart?.discountCodes ?? []).map(({ discountCodeId, name, code }) => ({
+        discountCodeId: discountCodeId ?? '',
         name: name ?? '',
         code: code ?? '',
         onRemove: async () => {
-          const res = await removeDiscount(discountId ?? '');
+          const res = await removeDiscount(discountCodeId ?? '');
           return !!res.cartId;
         },
       }))}

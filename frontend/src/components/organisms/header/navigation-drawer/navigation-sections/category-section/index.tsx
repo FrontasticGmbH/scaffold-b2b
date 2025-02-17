@@ -53,11 +53,11 @@ const CategorySection = () => {
                       : '/'
                   }
                 >
-                  <div className="flex h-[48px] items-center pb-2 lg:h-fit lg:pb-7" onClick={hideHeaderMenu}>
+                  <button className="flex h-[48px] items-center pb-2 lg:h-fit lg:pb-7" onClick={hideHeaderMenu}>
                     <Typography fontSize={16} className="text-gray-700">
                       {translate('common.view.all')}
                     </Typography>
-                  </div>
+                  </button>
                 </Link>
               )}
               {navigationLevel[navigationLevel.length - 1].descendants.map((nav) => (

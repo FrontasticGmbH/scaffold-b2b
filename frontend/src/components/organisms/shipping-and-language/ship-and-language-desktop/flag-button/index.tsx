@@ -9,7 +9,7 @@ const FlagButton = ({ selectedShip, selectedLanguage, onOpen }: FlagButtonProps)
     <>
       {selectedShip && selectedLanguage && (
         <button
-          className="flex cursor-pointer items-center justify-center text-14 font-normal text-white"
+          className="flex cursor-pointer items-center justify-center p-1 text-14 font-normal text-white"
           onClick={onOpen}
         >
           <FlagIcons name={selectedShip.flagName} className="mr-1 rounded-full border border-white" />

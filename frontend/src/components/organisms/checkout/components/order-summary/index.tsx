@@ -3,6 +3,7 @@ import Accordion from '@/components/molecules/accordion';
 import useFormat from '@/hooks/useFormat';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Image from '@/components/atoms/Image';
+import Link from '@/components/atoms/link';
 import Costs from '@/components/molecules/costs';
 import DiscountsForm from '@/components/molecules/discounts-form';
 import Button from '@/components/atoms/button';
@@ -72,14 +73,21 @@ const OrderSummary = ({
         <Accordion.Panel defaultSpacing={false}>
           <div className="lg:hidden">
             <div className="flex flex-col">
-              {products.map(({ id, name, price, currency, quantity, images }) => (
+              {products.map(({ id, name, price, currency, quantity, images, url }) => (
                 <div key={id} className="flex items-center gap-4 border-t border-neutral-400 py-4 md:gap-8">
                   <div className="relative h-[104px] w-[89px] shrink-0">
-                    <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+                    <Link href={url ?? '#'}>
+                      <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+                    </Link>
                   </div>
                   <div className="flex grow items-center justify-between overflow-hidden">
                     <div className="max-w-full grow">
-                      <p className="truncate text-12 text-gray-700 md:text-14">{name}</p>
+                      <Link
+                        href={url ?? '#'}
+                        className="mt-1 block max-w-full truncate py-1 text-16 font-semibold leading-loose text-gray-700"
+                      >
+                        <p className="truncate text-12 text-gray-700 md:text-14">{name}</p>
+                      </Link>
                       <p className="mt-2 text-12 font-medium text-gray-700 md:hidden">
                         {formatCurrency(price, currency)}
                       </p>
@@ -105,9 +113,11 @@ const OrderSummary = ({
           </div>
           <div className="hidden pb-6 pt-2 lg:block">
             <div className="flex items-center gap-4">
-              {products.slice(0, 3).map(({ id, images, name }) => (
+              {products.slice(0, 3).map(({ id, images, name, url }) => (
                 <div className="relative size-[88px]" key={id}>
-                  <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+                  <Link href={url ?? '#'}>
+                    <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
+                  </Link>
                 </div>
               ))}
               {products.length > 3 && <div className="pl-1 text-14 text-gray-600">+{products.length - 3}</div>}

@@ -627,7 +627,7 @@ export default class BusinessUnitApi extends BaseApi {
       .execute()
       .then((response) => {
         const commercetoolsApprovalFlows = response.body.results.map((approvalFlow) =>
-          BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(approvalFlow, locale),
+          BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(approvalFlow, locale, this.defaultLocale),
         );
 
         const result: PaginatedResult<ApprovalFlow> = {
@@ -658,7 +658,7 @@ export default class BusinessUnitApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale);
+        return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -689,7 +689,7 @@ export default class BusinessUnitApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale);
+          return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });

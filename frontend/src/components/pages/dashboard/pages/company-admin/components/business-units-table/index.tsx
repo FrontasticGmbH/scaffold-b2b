@@ -11,12 +11,14 @@ const BusinessUnitsTable = ({ businessUnitsAreViewOnly, businessUnits = [] }: Pa
     <Table>
       <Table.Container>
         <Table.Head>
-          <Table.Cell isHeadCell>{translate('common.name')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.key')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('dashboard.toplevel.unit')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('dashboard.parent.unit')}</Table.Cell>
-          <Table.Cell isHeadCell>{translate('common.email')}</Table.Cell>
-          <Table.Cell />
+          <Table.Row>
+            <Table.HeaderCell>{translate('common.name')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.key')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('dashboard.toplevel.unit')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('dashboard.parent.unit')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.email')}</Table.HeaderCell>
+            <Table.HeaderCell />
+          </Table.Row>
         </Table.Head>
         <Table.Body>
           {businessUnits.map(({ id, name, key, email, topLevelUnit, parentUnit }) => (

@@ -4,6 +4,7 @@ import { ProductQuery } from '@Types/query/ProductQuery';
 import { LineItem } from '@Types/cart/LineItem';
 import { LineItem as WishlistItem } from '@Types/wishlist/LineItem';
 import {
+  getAccountGroupId,
   getDistributionChannelId,
   getPath,
   getStoreId,
@@ -47,6 +48,7 @@ export default class ProductRouter {
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
         storeId: getStoreId(request),
+        accountGroupId: getAccountGroupId(request),
       };
 
       return productApi.getProduct(productQuery);
@@ -65,6 +67,7 @@ export default class ProductRouter {
         storeKey: getStoreKey(request),
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
+        accountGroupId: getAccountGroupId(request),
       };
 
       return productApi.getProduct(productQuery);

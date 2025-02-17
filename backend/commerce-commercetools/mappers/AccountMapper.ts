@@ -16,6 +16,7 @@ export default class AccountMapper {
   static commercetoolsCustomerToAccount(commercetoolsCustomer: commercetoolsCustomer): Account {
     return {
       accountId: commercetoolsCustomer.id,
+      accountGroupId: commercetoolsCustomer?.customerGroup?.id,
       email: commercetoolsCustomer.email,
       salutation: commercetoolsCustomer?.salutation,
       firstName: commercetoolsCustomer?.firstName,

@@ -3,7 +3,7 @@ import { LineItem } from '@Types/cart/LineItem';
 import { OrderState, ReturnLineItem } from '@Types/cart/Order';
 import { Cart } from '@Types/cart/Cart';
 import { Address } from '@Types/account/Address';
-import { Discount, ShippingMethod } from '@Types/cart';
+import { DiscountCode, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
 import { Token } from '@Types/Token';
 import { EmailApiFactory } from '../utils/EmailApiFactory';
@@ -49,7 +49,7 @@ async function updateCartFromRequest(request: Request, actionContext: ActionCont
 
 export const getCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const cart = await CartFetcher.fetchCart(request, actionContext);
+    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
 
     return {
       statusCode: 200,
@@ -513,10 +513,10 @@ export const removeDiscount: ActionHook = async (request: Request, actionContext
     const cartApi = getCartApi(request, actionContext.frontasticContext);
     let cart = await CartFetcher.fetchCart(request, actionContext);
 
-    const body = parseRequestBody<{ discountId?: string }>(request.body);
+    const body = parseRequestBody<{ discountCodeId?: string }>(request.body);
 
-    const discount: Discount = {
-      discountId: body?.discountId,
+    const discount: DiscountCode = {
+      discountCodeId: body?.discountCodeId,
     };
 
     cart = await cartApi.removeDiscountCode(cart, discount);
@@ -553,7 +553,6 @@ export const getCheckoutSessionToken: ActionHook = async (request: Request, acti
       body: checkoutSessionToken ? JSON.stringify(checkoutSessionToken) : '',
       sessionData: {
         ...request.sessionData,
-        cartId: cartId,
       },
     };
 

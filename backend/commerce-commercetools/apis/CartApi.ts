@@ -28,7 +28,7 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/cart';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { PaginatedResult } from '@Types/result';
-import { Discount, Payment, ShippingMethod } from '@Types/cart';
+import { DiscountCode, Payment, ShippingMethod } from '@Types/cart';
 import {
   PaymentDraft,
   PaymentUpdateAction,
@@ -46,11 +46,15 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPaymentNotFoundError';
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 const CART_EXPANDS = [
-  'lineItems[*].discountedPrice.includedDiscounts[*].discount',
+  'lineItems[*].discountedPricePerQuantity[*].discountedPrice.includedDiscounts[*].discount',
+  'lineItems[*].price.discounted.discount',
   'discountCodes[*].discountCode',
+  'discountOnTotalPrice.includedDiscounts[*].discount',
   'paymentInfo.payments[*]',
+  'shippingInfo.discountedPrice.includedDiscounts[*].discount',
   'customerGroup',
 ];
 const ORDER_EXPANDS = [...CART_EXPANDS, 'orderState'];
@@ -99,16 +103,21 @@ export default class CartApi extends BaseApi {
         return this.buildCartWithAvailableShippingMethods(response.body, locale);
       })
       .catch((error) => {
+        if (error.code === 404) {
+          throw new ResourceNotFoundError({ message: error.message });
+        }
+
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
-  async getInStore(storeKey: string): Promise<Cart> {
+  async getActiveCartInStore(storeKey: string): Promise<Cart | undefined> {
     this.invalidateSessionCheckoutData();
 
     const locale = await this.getCommercetoolsLocal();
 
-    const allCarts = await this.getAllCartsInStore(storeKey);
+    const allCarts = await this.getAllActiveCartsInStore(storeKey);
+
     if (allCarts.length >= 1) {
       const cart = await this.buildCartWithAvailableShippingMethods(allCarts[0], locale);
       if (this.assertCartForBusinessUnitAndStore(cart, this.businessUnitKey, storeKey)) {
@@ -116,10 +125,10 @@ export default class CartApi extends BaseApi {
       }
     }
 
-    return await this.createCartInStore(storeKey);
+    return undefined;
   }
 
-  async getAllCartsInStore(storeKey: string): Promise<CommercetoolsCart[]> {
+  async getAllActiveCartsInStore(storeKey: string): Promise<CommercetoolsCart[]> {
     const where = [`cartState="Active"`, `store(key="${storeKey}")`, `customerId="${this.accountId}"`];
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
@@ -145,6 +154,8 @@ export default class CartApi extends BaseApi {
   }
 
   async createCartInStore(storeKey: string): Promise<Cart> {
+    this.invalidateSessionCheckoutData();
+
     const locale = await this.getCommercetoolsLocal();
 
     const cartDraft: CartDraft = {
@@ -176,7 +187,6 @@ export default class CartApi extends BaseApi {
 
   async addToCart(cart: Cart, lineItems: LineItem[]): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
-
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
       actions: [],
@@ -195,7 +205,6 @@ export default class CartApi extends BaseApi {
         quantity: +lineItem.count,
       });
     });
-
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
     return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
@@ -358,7 +367,7 @@ export default class CartApi extends BaseApi {
         body: orderFromCartDraft,
       })
       .execute()
-      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale))
+      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
@@ -376,7 +385,7 @@ export default class CartApi extends BaseApi {
         },
       })
       .execute()
-      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale))
+      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
@@ -408,7 +417,7 @@ export default class CartApi extends BaseApi {
           },
         })
         .execute()
-        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale))
+        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
@@ -440,7 +449,7 @@ export default class CartApi extends BaseApi {
           },
         })
         .execute()
-        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale))
+        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         });
@@ -468,7 +477,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         return response.body.results.map((shippingMethod) =>
-          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale),
+          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale, this.defaultLocale),
         );
       })
       .catch((error) => {
@@ -491,7 +500,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         return response.body.results.map((shippingMethod) =>
-          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale),
+          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale, this.defaultLocale),
         );
       })
       .catch((error) => {
@@ -686,7 +695,7 @@ export default class CartApi extends BaseApi {
     return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
   }
 
-  async removeDiscountCode(cart: Cart, discount: Discount): Promise<Cart> {
+  async removeDiscountCode(cart: Cart, discount: DiscountCode): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
     const cartUpdate: CartUpdate = {
@@ -696,7 +705,7 @@ export default class CartApi extends BaseApi {
           action: 'removeDiscountCode',
           discountCode: {
             typeId: 'discount-code',
-            id: discount.discountId,
+            id: discount.discountCodeId,
           },
         } as CartRemoveDiscountCodeAction,
       ],
@@ -879,7 +888,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         const orders = response.body.results.map((commercetoolsOrder) => {
-          return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale);
+          return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, this.defaultLocale);
         });
 
         return {
@@ -931,7 +940,7 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsOrder = await this.updateOrder(order.orderId, orderUpdate);
 
-    return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale);
+    return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, this.defaultLocale);
   }
 
   protected async assertCorrectLocale(commercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {
@@ -955,11 +964,14 @@ export default class CartApi extends BaseApi {
       };
 
       commercetoolsCart = await this.updateCart(commercetoolsCart.id, cartUpdate);
-
-      return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, this.supplyChannelId) as Cart;
     }
 
-    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, this.supplyChannelId) as Cart;
+    return CartMapper.commercetoolsCartToCart(
+      commercetoolsCart,
+      locale,
+      this.defaultLocale,
+      this.supplyChannelId,
+    ) as Cart;
   }
 
   protected async recreate(primaryCommercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {
@@ -980,7 +992,6 @@ export default class CartApi extends BaseApi {
 
     const propertyList = [
       'customerEmail',
-      'customerGroup',
       'store',
       'inventoryMode',
       'taxMode',
@@ -1049,7 +1060,12 @@ export default class CartApi extends BaseApi {
     // Delete previous cart
     await this.deleteCart(primaryCart);
 
-    return CartMapper.commercetoolsCartToCart(replicatedCommercetoolsCart, locale, this.supplyChannelId);
+    return CartMapper.commercetoolsCartToCart(
+      replicatedCommercetoolsCart,
+      locale,
+      this.defaultLocale,
+      this.supplyChannelId,
+    );
   }
 
   protected async updateCart(cartId: string, cartUpdate: CartUpdate): Promise<CommercetoolsCart> {

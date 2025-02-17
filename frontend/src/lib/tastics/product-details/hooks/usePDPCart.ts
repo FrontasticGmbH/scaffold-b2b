@@ -28,6 +28,7 @@ const usePDPCart = (product: Product) => {
     const mappedShippingMethods =
       (shippingMethods?.map((method) => ({
         label: method.name ?? '',
+        description: method.description ?? '',
         price: getShippingPrice(method.rates ?? []),
         estimatedDeliveryDays: parseInt(method.description ?? '3'),
       })) as Array<ShippingMethod>) ?? [];

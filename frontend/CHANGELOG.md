@@ -1,4 +1,33 @@
 
+## Version 3.0.0 (2025-02-03)
+
+** New Features & Improvements **
+
+* Add "Clear" translation and fix search button labels
+* Modify responsiveness implementation
+* Add responsiveness to pagination
+* Add responsiveness to tables with mobile view
+* Make approval flows table responsive
+* Make quotes table responsive
+* Upgrade Node JS version
+* Fix table header error
+* Button component updates
+* Simplify color configuration for dropdown focus
+* Add gray-400 color to Tailwind and default theme
+* Update CSS classes to replace 'color-' with 'text-'
+* Update styles to use standardized color palette
+* Refactor color system to use semantic class names
+* Add Storybook accessibility addon and update dependencies
+* Add 404 to authentication whitelist
+
+
+** Bug Fixes **
+
+* Fix broken preview
+* Nextjs15 upgrade done
+* Fix keyboard navigation issues for a11y
+* Dashboard background change for sidebar
+
 ## Version 2.2.0 (2025-01-13)
 
 ** New Features & Improvements **

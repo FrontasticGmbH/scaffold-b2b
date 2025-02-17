@@ -82,9 +82,11 @@ export const cartLineItems: LineItem[] = [
         currencyCode: 'GBP',
       },
       discountedPrice: {
-        fractionDigits: 2,
-        centAmount: 215910,
-        currencyCode: 'GBP',
+        value: {
+          fractionDigits: 2,
+          centAmount: 215910,
+          currencyCode: 'GBP',
+        },
       },
       isOnStock: true,
     },

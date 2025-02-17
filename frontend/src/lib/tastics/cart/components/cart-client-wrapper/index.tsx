@@ -61,11 +61,12 @@ const CartClientWrapper = ({}: TasticProps<Props>) => {
         const res = await redeemDiscount(code);
         return !!res.cartId;
       }}
-      discountCodes={(cart?.discountCodes ?? []).map(({ discountId, name, code }) => ({
+      discountCodes={(cart?.discountCodes ?? []).map(({ discountCodeId, name, code }) => ({
+        discountCodeId: discountCodeId ?? '',
         name: name ?? '',
         code: code ?? '',
         onRemove: async () => {
-          const res = await removeDiscount(discountId ?? '');
+          const res = await removeDiscount(discountCodeId ?? '');
           return !!res.cartId;
         },
       }))}

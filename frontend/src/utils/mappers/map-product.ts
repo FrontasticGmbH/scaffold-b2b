@@ -15,7 +15,9 @@ export const mapProduct = (
     product.variants[variantIndex] ??
     product.variants.find(
       (v) =>
-        !!v.discountedPrice?.centAmount && !!v.price?.centAmount && v.discountedPrice.centAmount < v.price?.centAmount,
+        !!v.discountedPrice?.value?.centAmount &&
+        !!v.price?.centAmount &&
+        v.discountedPrice.value.centAmount < v.price?.centAmount,
     ) ??
     product.variants[0];
 
@@ -65,7 +67,8 @@ export const mapProduct = (
     colors,
     specs,
     price: (variant.price?.centAmount ?? 0) / Math.pow(10, variant.price?.fractionDigits ?? 2),
-    discountedPrice: (variant.discountedPrice?.centAmount ?? 0) / Math.pow(10, variant.price?.fractionDigits ?? 2),
+    discountedPrice:
+      (variant.discountedPrice?.value?.centAmount ?? 0) / Math.pow(10, variant.price?.fractionDigits ?? 2),
     currency: (variant.price?.currencyCode ?? 'USD') as Currency,
     inStock: variant.isOnStock,
     maxQuantity: variant.isOnStock ? Math.max(0, (variant.availableQuantity ?? Number.MAX_VALUE) - inCartQuantity) : 0,

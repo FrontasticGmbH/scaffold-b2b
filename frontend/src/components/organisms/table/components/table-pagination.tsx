@@ -39,7 +39,7 @@ const TablePagination = ({
   };
 
   const paginationClassName = classnames(
-    'flex flex-col-reverse md:flex-row w-full justify-between py-2 md:py-6 md:gap-0',
+    'flex w-full flex-col-reverse justify-between py-2 md:flex-row md:gap-0 md:py-6',
     className,
   );
 
@@ -71,7 +71,12 @@ const TablePagination = ({
           })}
         </Typography>
         <div className="mt-3 flex w-full justify-between gap-4 md:mt-0">
-          <button data-testid="previous-arrow" disabled={disablePrevious} onClick={onPrevious}>
+          <button
+            data-testid="previous-arrow"
+            disabled={disablePrevious}
+            onClick={onPrevious}
+            aria-label={translate('common.previous')}
+          >
             <ChevronLeftIcon data-disabled={disablePrevious} stroke="#212121" {...previousIconProps} />
           </button>
           <Typography fontSize={14} className="text-gray-700 md:hidden">
@@ -83,7 +88,12 @@ const TablePagination = ({
               },
             })}
           </Typography>
-          <button data-testid="next-arrow" onClick={onNext} disabled={disableNext}>
+          <button
+            data-testid="next-arrow"
+            onClick={onNext}
+            disabled={disableNext}
+            aria-label={translate('common.next')}
+          >
             <ChevronRightIcon data-disabled={disableNext} stroke="#212121" {...nextIconProps} />
           </button>
         </div>

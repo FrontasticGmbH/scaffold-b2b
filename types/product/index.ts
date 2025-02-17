@@ -4,7 +4,7 @@ import { FacetDefinition } from './FacetDefinition';
 import { FilterField, FilterFieldTypes, FilterFieldValue } from './FilterField';
 import { Money } from './Money';
 import { Product } from './Product';
-import { ProductDiscount, Variant } from './Variant';
+import { Variant } from './Variant';
 
 export {
   type Attributes,
@@ -16,5 +16,4 @@ export {
   type Money,
   type Product,
   type Variant,
-  type ProductDiscount,
 };

@@ -1,84 +1,84 @@
-import { Address } from "@shared/types/account";
-import { LineItem, Payment, ReturnLineItem } from "@shared/types/cart";
+import { Address } from '@shared/types/account';
+import { LineItem, Payment, ReturnLineItem } from '@shared/types/cart';
 
 type UpdateCartPayload = {
-	account?: { email: string };
-	shipping?: Address;
-	billing?: Address;
+  account?: { email: string };
+  shipping?: Address;
+  billing?: Address;
 };
 
 type ReassignCartPayload = {
-	accountId?: string;
-	email?: string;
+  accountId?: string;
+  email?: string;
 };
 
 type ReplicateOrderPayload = {
-	orderId: string;
+  orderId: string;
 };
 
 type AddCartItemPayload = {
-	lineItems: LineItem[];
+  lineItems: LineItem[];
 };
 
 type UpdateCartItemPayload = {
-	lineItem: { id: string; count?: number };
+  lineItem: { id: string; count?: number };
 };
 
 type SplitCartItemPayload = {
-	lineItemId: string;
-	shippingAddresses?: { address: Address; count: number }[];
+  lineItemId: string;
+  shippingAddresses?: { address: Address; count: number }[];
 };
 
 type RemoveCartItemPayload = {
-	lineItem: { id: string };
+  lineItem: { id: string };
 };
 type SetCartShippingMethodPayload = {
-	shippingMethod: { id: string };
+  shippingMethod: { id: string };
 };
 
 type RedeemDiscountCodePayload = {
-	code: string;
+  code: string;
 };
 
 type RemoveDiscountCodePayload = {
-	discountId: string;
+  discountCodeId: string;
 };
 
 type UpdatePaymentPayload = {
-	payment: Payment;
+  payment: Payment;
 };
 
 type AddPaymentByInvoicePayload = {
-	payment: Payment;
+  payment: Payment;
 };
 
 type CheckoutCartPayload = {
-	purchaseOrderNumber?: string;
+  purchaseOrderNumber?: string;
 };
 
 type ReturnOrderItemsPayload = {
-	orderId: string;
-	returnLineItems: ReturnLineItem[];
+  orderId: string;
+  returnLineItems: ReturnLineItem[];
 };
 
 type CancelOrderPayload = {
-	orderId: string;
+  orderId: string;
 };
 
 export {
-	type UpdateCartPayload,
-	type ReassignCartPayload,
-	type ReplicateOrderPayload,
-	type AddCartItemPayload,
-	type UpdateCartItemPayload,
-	type SplitCartItemPayload,
-	type RemoveCartItemPayload,
-	type SetCartShippingMethodPayload,
-	type RedeemDiscountCodePayload,
-	type RemoveDiscountCodePayload,
-	type UpdatePaymentPayload,
-	type AddPaymentByInvoicePayload,
-	type CheckoutCartPayload,
-	type ReturnOrderItemsPayload,
-	type CancelOrderPayload,
+  type UpdateCartPayload,
+  type ReassignCartPayload,
+  type ReplicateOrderPayload,
+  type AddCartItemPayload,
+  type UpdateCartItemPayload,
+  type SplitCartItemPayload,
+  type RemoveCartItemPayload,
+  type SetCartShippingMethodPayload,
+  type RedeemDiscountCodePayload,
+  type RemoveDiscountCodePayload,
+  type UpdatePaymentPayload,
+  type AddPaymentByInvoicePayload,
+  type CheckoutCartPayload,
+  type ReturnOrderItemsPayload,
+  type CancelOrderPayload,
 };

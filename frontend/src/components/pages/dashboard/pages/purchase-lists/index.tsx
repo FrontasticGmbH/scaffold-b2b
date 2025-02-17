@@ -3,10 +3,10 @@ import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import Table from '@/components/organisms/table';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
+import Accordion from '@/components/molecules/accordion';
 import { PurchaseListsPageProps } from './types';
 import SearchPanel from '../../components/search-panel';
 import { DashboardLinks } from '../../constants';
-import Accordion from '@/components/molecules/accordion';
 
 const PurchaseListsPage = ({ purchaseLists, loading }: PurchaseListsPageProps) => {
   const { translate } = useTranslation();
@@ -23,13 +23,11 @@ const PurchaseListsPage = ({ purchaseLists, loading }: PurchaseListsPageProps) =
         <Table.Container className="hidden md:table">
           <Table.Head>
             <Table.Row>
-              <Table.Cell isHeadCell>{translate('common.list.name')}</Table.Cell>
-              <Table.Cell isHeadCell>{translate('common.store')}</Table.Cell>
-              <Table.Cell isHeadCell>{translate('common.description')}</Table.Cell>
-              <Table.Cell isHeadCell className="text-right">
-                {translate('common.items')}
-              </Table.Cell>
-              <Table.Cell isButtonsHead />
+              <Table.HeaderCell>{translate('common.list.name')}</Table.HeaderCell>
+              <Table.HeaderCell>{translate('common.store')}</Table.HeaderCell>
+              <Table.HeaderCell>{translate('common.description')}</Table.HeaderCell>
+              <Table.HeaderCell className="text-right">{translate('common.items')}</Table.HeaderCell>
+              <Table.HeaderCell />
             </Table.Row>
           </Table.Head>
 
@@ -59,7 +57,7 @@ const PurchaseListsPage = ({ purchaseLists, loading }: PurchaseListsPageProps) =
         <Table.Container className="table md:hidden">
           <Table.Head>
             <Table.Row>
-              <Table.Cell isHeadCell>{translate('common.list.name')}</Table.Cell>
+              <Table.HeaderCell>{translate('common.list.name')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
 

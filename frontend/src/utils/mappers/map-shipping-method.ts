@@ -3,7 +3,7 @@ import { ShippingMethod as EntityShippingMethod } from '@/types/entity/shipping-
 import { Currency } from '@/types/currency';
 
 export const mapShippingMethod = (shippingMethod: ShippingMethod): EntityShippingMethod => {
-  const estimatedDays = +(shippingMethod.description ?? 3);
+  const estimatedDays = 7;
 
   const estimatedDeliveryDate = new Date(Date.now());
 
@@ -20,6 +20,7 @@ export const mapShippingMethod = (shippingMethod: ShippingMethod): EntityShippin
   return {
     id: shippingMethod.shippingMethodId,
     name: shippingMethod.name ?? '',
+    description: shippingMethod.description ?? '',
     price: (defaultRate?.price?.centAmount ?? 0) / Math.pow(10, defaultRate?.price?.fractionDigits ?? 2),
     currency: (defaultRate?.price?.currencyCode ?? 'USD') as Currency,
     ...(isNaN(estimatedDays)

@@ -52,7 +52,7 @@ export default class QuoteApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale);
+        return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -72,7 +72,7 @@ export default class QuoteApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale);
+        return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
         if (error.code === 404) {
@@ -96,7 +96,7 @@ export default class QuoteApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
+        return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
         if (error.code === 404) {
@@ -155,7 +155,7 @@ export default class QuoteApi extends BaseApi {
       .execute()
       .then((response) => {
         const quotes = response.body.results.map((commercetoolsQuote) => {
-          return QuoteMapper.commercetoolsQuoteToQuote(commercetoolsQuote, locale);
+          return QuoteMapper.commercetoolsQuoteToQuote(commercetoolsQuote, locale, this.defaultLocale);
         });
 
         return {
@@ -221,7 +221,11 @@ export default class QuoteApi extends BaseApi {
       .execute()
       .then((response) => {
         const quoteRequests = response.body.results.map((commercetoolsQuoteRequest) => {
-          return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(commercetoolsQuoteRequest, locale);
+          return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(
+            commercetoolsQuoteRequest,
+            locale,
+            this.defaultLocale,
+          );
         });
 
         const result: PaginatedResult<QuoteRequest> = {
@@ -262,7 +266,7 @@ export default class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
+          return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -293,7 +297,7 @@ export default class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale);
+          return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -321,7 +325,7 @@ export default class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale);
+          return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -357,7 +361,7 @@ export default class QuoteApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return CartMapper.commercetoolsOrderToOrder(response.body, locale);
+          return CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });

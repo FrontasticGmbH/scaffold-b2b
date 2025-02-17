@@ -3,10 +3,9 @@ import { SelectProps } from '@/components/atoms/select/types';
 
 export type TableCellProps = TableHTMLAttributes<HTMLTableCellElement> & {
   sortable?: boolean;
-  isButtonsHead?: boolean;
   isButtonsCell?: boolean;
-  isHeadCell?: boolean;
   onSorting?: () => void;
+  as?: 'th' | 'td';
 };
 
 export type TableRowProps = TableHTMLAttributes<HTMLTableRowElement>;

@@ -12,6 +12,7 @@ import {
   getStoreId,
   getStoreKey,
   getSupplyChannelId,
+  getAccountGroupId,
 } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 export class ProductQueryFactory {
@@ -192,6 +193,11 @@ export class ProductQueryFactory {
      * Map page cursor
      */
     productQuery.cursor = queryParams?.cursor || undefined;
+
+    /**
+     * Map accountGroupId
+     */
+    productQuery.accountGroupId = queryParams?.accountGroupId || getAccountGroupId(request) || undefined;
 
     return productQuery;
   };

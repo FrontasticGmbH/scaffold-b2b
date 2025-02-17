@@ -12,9 +12,13 @@ import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 
 export default class QuoteMapper {
-  static commercetoolsQuoteToQuote(commercetoolsQuote: CommercetoolsQuote, locale: Locale): Quote {
+  static commercetoolsQuoteToQuote(
+    commercetoolsQuote: CommercetoolsQuote,
+    locale: Locale,
+    defaultLocale: string,
+  ): Quote {
     const quoteRequest = commercetoolsQuote.quoteRequest?.obj
-      ? this.commercetoolsQuoteRequestToQuoteRequest(commercetoolsQuote.quoteRequest.obj, locale)
+      ? this.commercetoolsQuoteRequestToQuoteRequest(commercetoolsQuote.quoteRequest.obj, locale, defaultLocale)
       : undefined;
 
     return {
@@ -28,7 +32,7 @@ export default class QuoteMapper {
         firstName: commercetoolsQuote.customer.obj?.firstName,
         lastName: commercetoolsQuote.customer.obj?.lastName,
       },
-      lineItems: CartMapper.commercetoolsLineItemsToLineItems(commercetoolsQuote.lineItems, locale),
+      lineItems: CartMapper.commercetoolsLineItemsToLineItems(commercetoolsQuote.lineItems, locale, defaultLocale),
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsQuote.totalPrice),
       tax: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuote.taxedPrice),
       taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuote.taxedPrice),
@@ -39,7 +43,11 @@ export default class QuoteMapper {
       quoteRequest: quoteRequest,
       quoteVersion: commercetoolsQuote.version,
       quotationCart: commercetoolsQuote.stagedQuote?.obj?.quotationCart?.obj
-        ? CartMapper.commercetoolsCartToCart(commercetoolsQuote.stagedQuote?.obj.quotationCart.obj, locale)
+        ? CartMapper.commercetoolsCartToCart(
+            commercetoolsQuote.stagedQuote?.obj.quotationCart.obj,
+            locale,
+            defaultLocale,
+          )
         : undefined,
     };
   }
@@ -47,6 +55,7 @@ export default class QuoteMapper {
   static commercetoolsQuoteRequestToQuoteRequest(
     commercetoolsQuoteRequest: CommercetoolsQuoteRequest,
     locale: Locale,
+    defaultLocale: string,
   ): QuoteRequest {
     return {
       quoteRequestId: commercetoolsQuoteRequest.id,
@@ -62,7 +71,11 @@ export default class QuoteMapper {
       purchaseOrderNumber: commercetoolsQuoteRequest.purchaseOrderNumber,
       store: { key: commercetoolsQuoteRequest.store.key },
       businessUnit: { key: commercetoolsQuoteRequest.businessUnit.key },
-      lineItems: CartMapper.commercetoolsLineItemsToLineItems(commercetoolsQuoteRequest.lineItems, locale),
+      lineItems: CartMapper.commercetoolsLineItemsToLineItems(
+        commercetoolsQuoteRequest.lineItems,
+        locale,
+        defaultLocale,
+      ),
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsQuoteRequest.totalPrice),
       tax: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuoteRequest.taxedPrice),
       taxed: CartMapper.commercetoolsTaxedPriceToTaxed(commercetoolsQuoteRequest.taxedPrice),

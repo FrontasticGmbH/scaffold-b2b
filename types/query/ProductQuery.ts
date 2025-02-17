@@ -30,4 +30,5 @@ export interface ProductQuery extends PaginatedQuery {
   distributionChannelId?: string;
   supplyChannelId?: string;
   productSelectionIds?: string[];
+  accountGroupId?: string;
 }

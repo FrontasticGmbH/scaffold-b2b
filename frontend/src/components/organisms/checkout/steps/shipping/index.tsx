@@ -44,7 +44,7 @@ const ShippingStep = ({
   if (isCompleted) {
     const shippingMethod = shippingMethods.find((method) => method.id === selectedShippingMethodId);
 
-    const { name, estimatedDeliveryDate, price, currency } = shippingMethod ?? {};
+    const { name, description, price, currency } = shippingMethod ?? {};
 
     return (
       <div className="px-4 pb-4 lg:px-0 lg:pb-6">
@@ -52,9 +52,7 @@ const ShippingStep = ({
           <div className={classnames('flex items-center justify-between')}>
             <div>
               <h6 className="text-14 font-medium leading-loose text-gray-700">{name}</h6>
-              <p className="text-14 leading-loose text-gray-600">
-                {translate('common.estimated')}: {estimatedDeliveryDate}
-              </p>
+              <p className="text-14 leading-loose text-gray-600">{description}</p>
             </div>
             <span className="text-14 font-medium leading-loose text-gray-700">
               {formatCurrency(price ?? 0, currency ?? 'USD')}
@@ -69,7 +67,7 @@ const ShippingStep = ({
     <div>
       <div className="px-px">
         <div className="grid grid-cols-1 gap-px">
-          {shippingMethods.map(({ id, name, price, currency, estimatedDeliveryDate }, index, arr) => (
+          {shippingMethods.map(({ id, name, price, currency, description }, index, arr) => (
             <div
               key={id}
               className={classnames('flex items-center justify-between p-4 outline outline-1 outline-neutral-400', {
@@ -81,11 +79,7 @@ const ShippingStep = ({
                 <Radio checked={id === selectedShippingMethodId} />
                 <div>
                   <h6 className="text-14 font-medium leading-loose text-gray-700">{name}</h6>
-                  <p className="text-14 leading-loose text-gray-600">
-                    <span className="md:hidden">{translate('common.estimated')}</span>
-                    <span className="hidden md:inline">{translate('common.estimated.delivery')}</span>:{' '}
-                    {estimatedDeliveryDate}
-                  </p>
+                  <p className="text-14 leading-loose text-gray-600">{description}</p>
                 </div>
               </div>
               <span className="text-14 font-medium leading-loose text-gray-700">{formatCurrency(price, currency)}</span>

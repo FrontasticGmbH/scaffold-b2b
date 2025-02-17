@@ -7,7 +7,7 @@ const ButtonElement = ({ onOpen }: ButtonProps) => {
   const { translate } = useTranslation();
   return (
     <button
-      className="flex cursor-pointer items-center justify-center text-14 font-normal text-white underline-offset-4 hover:underline"
+      className="flex cursor-pointer items-center justify-center p-1 text-14 font-normal text-white underline-offset-4 hover:underline"
       data-testid="account-dropdown-button"
       onClick={onOpen}
     >

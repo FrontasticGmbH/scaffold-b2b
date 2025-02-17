@@ -31,11 +31,11 @@ const NavigationButton = ({ lastIndex, link, onClick }: NavigationButtonProps) =
       ) : (
         <div className={descendantClassNames}>
           <Link tabIndex={0} href={link?.path ?? '/'} className="w-full">
-            <div className="w-full" onClick={hideHeaderMenu}>
-              <Typography fontSize={16} className="text-gray-700">
+            <button className="w-full" onClick={hideHeaderMenu}>
+              <Typography fontSize={16} className="py-1 text-left text-gray-700">
                 {link.name}
               </Typography>
-            </div>
+            </button>
           </Link>
           {link.categoryId === 'quotes' && (
             <div className="flex size-5 items-center justify-center rounded-md bg-blue-100">

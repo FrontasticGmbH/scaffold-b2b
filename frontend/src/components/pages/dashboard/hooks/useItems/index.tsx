@@ -70,7 +70,7 @@ const useItems = () => {
       summary: translate('dashboard.approval.rules.summary'),
       href: DashboardLinks.approvalRules,
       disabled: !isLargerThanDesktop,
-      disabledMessage: translate('dashboard.approval.rules.disabled.on.small.screen'),
+      disabledMessage: translate('dashboard.approval.rules.disabled.on.small.screens'),
       order: isLargerThanDesktop ? 6 : 999,
     },
     approvalFlows: {

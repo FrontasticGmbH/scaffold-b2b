@@ -39,6 +39,7 @@ const Template: StoryFn<typeof ProductDetails> = ({ ...args }) => (
     shippingMethods={[
       {
         label: 'Standard Shipping',
+        description: '3-5 days',
         price: 3000,
         estimatedDeliveryDays: 3,
       },

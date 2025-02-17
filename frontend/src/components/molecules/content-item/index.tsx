@@ -19,7 +19,9 @@ const ContentItem = ({ image, imageSizes, title, variant = 'default', link }: Co
       <div className={imageClassName}>
         <Image {...image} fill sizes={imageSizes} style={{ objectFit: 'contain' }} alt={title ?? ''} />
       </div>
-      <h5 className={titleClassName}>{title}</h5>
+      <span data-testid="title-text" className={titleClassName}>
+        {title}
+      </span>
     </Link>
   );
 };

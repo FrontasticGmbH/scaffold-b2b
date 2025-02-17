@@ -32,7 +32,7 @@ const QuickOrderDesktop = ({
       handleSKUsUpdate={handleSKUsUpdate}
       onClose={onClose}
     >
-      <Link className="whitespace-nowrap text-gray-700" href="#" onClick={onOpen}>
+      <Link className="whitespace-nowrap p-1 text-gray-700" href="#" onClick={onOpen}>
         {translate('quick-order.quick.order')}
       </Link>
       <Drawer direction="right" isOpen={isOpen} headline="Quick add to cart" onClose={onClose}>

@@ -15,14 +15,12 @@ const Template: StoryFn<typeof Table> = () => (
     <Table.Container>
       <Table.Head>
         <Table.Row>
-          <Table.Cell isHeadCell>LABEL</Table.Cell>
-          <Table.Cell isHeadCell>LABEL</Table.Cell>
-          <Table.Cell isHeadCell>LABEL</Table.Cell>
-          <Table.Cell isHeadCell>LABEL</Table.Cell>
-          <Table.Cell isHeadCell className="text-right">
-            LABEL
-          </Table.Cell>
-          <Table.Cell isButtonsHead />
+          <Table.HeaderCell>LABEL</Table.HeaderCell>
+          <Table.HeaderCell>LABEL</Table.HeaderCell>
+          <Table.HeaderCell>LABEL</Table.HeaderCell>
+          <Table.HeaderCell>LABEL</Table.HeaderCell>
+          <Table.HeaderCell className="text-right">LABEL</Table.HeaderCell>
+          <Table.HeaderCell />
         </Table.Row>
       </Table.Head>
       <Table.Body>

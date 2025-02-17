@@ -122,9 +122,9 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
   );
 
   const removeDiscount = useCallback(
-    async (discountId: string) => {
+    async (discountCodeId: string) => {
       const result = await sdk.composableCommerce.cart.removeDiscountCode(
-        { discountId },
+        { discountCodeId },
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 

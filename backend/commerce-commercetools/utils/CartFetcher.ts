@@ -1,10 +1,10 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 export class CartFetcher {
   static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> {
@@ -24,7 +24,7 @@ export class CartFetcher {
       });
     }
 
-    return await getCartApi(request, actionContext.frontasticContext).getInStore(storeKey);
+    return await getCartApi(request, actionContext.frontasticContext).createCartInStore(storeKey);
   }
 
   static async fetchActiveCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
@@ -33,28 +33,30 @@ export class CartFetcher {
     const businessUnitKey = getBusinessUnitKey(request);
     const storeKey = getStoreKey(request);
 
-    if (!cartId || !account || !businessUnitKey || !storeKey) {
+    // In B2B we use associate endpoints so we need to validate the account, business unit key, and store key for the cart
+    if (!account || !businessUnitKey || !storeKey) {
       return undefined;
     }
 
     const cartApi = getCartApi(request, actionContext.frontasticContext);
 
     try {
-      const cart = await cartApi.getById(cartId);
-      if (
-        cartApi.assertCartIsActive(cart) &&
-        cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)
-      ) {
-        return cart;
+      if (cartId) {
+        const cart = await cartApi.getById(cartId);
+        if (
+          cartApi.assertCartIsActive(cart) &&
+          cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)
+        ) {
+          return cart;
+        }
       }
     } catch (error) {
-      // A ExternalError might be thrown if the cart does not exist or belongs to a different business unit,
-      // in which case we should create a new cart.
-      if (!(error instanceof ExternalError)) {
+      // Ignore the ResourceNotFoundError as it's expected if the cart does not exist
+      if (!(error instanceof ResourceNotFoundError)) {
         throw error;
       }
     }
 
-    return undefined;
+    return await cartApi.getActiveCartInStore(storeKey);
   }
 }

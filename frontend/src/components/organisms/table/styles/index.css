@@ -1,13 +1,12 @@
-
 table {
-    @apply border-spacing-0 overflow-hidden border-separate border-gray-300 rounded-md border border-solid;
+  @apply border-separate border-spacing-0 overflow-hidden rounded-md border border-solid border-gray-300;
 }
 
-
-table thead td, table tbody td {
-    @apply border-b border-solid border-gray-300;
+table thead th,
+table tbody td {
+  @apply border-b border-solid border-gray-300;
 }
 
 table tbody tr:last-child td {
-    @apply border-b-0
+  @apply border-b-0;
 }

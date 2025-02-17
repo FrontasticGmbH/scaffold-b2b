@@ -9,7 +9,7 @@ const CartLink = () => {
   const { translate } = useTranslation();
   const { cartLink, cartItems } = useContext(HeaderContext);
   return (
-    <Link href={cartLink.href ?? '/'} className="relative flex items-center justify-center">
+    <Link href={cartLink.href ?? '/'} className="relative flex items-center justify-center p-1">
       {cartItems > 0 && (
         <Typography
           fontSize={10}

@@ -116,3 +116,14 @@ export const getSupplyChannelId = (request: Request): string | null => {
 
   return null;
 };
+
+export const getAccountGroupId = (request: Request): string | null => {
+  if (request !== undefined) {
+    const { accountGroupId } = parseQueryParams<{
+      accountGroupId: string;
+    }>(request.query);
+    return accountGroupId ?? request.sessionData?.account?.accountGroupId;
+  }
+
+  return null;
+};

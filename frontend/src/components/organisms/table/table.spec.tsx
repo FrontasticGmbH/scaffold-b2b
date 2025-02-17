@@ -15,9 +15,9 @@ describe('[Component] Table', () => {
       <Table.Container>
         <Table.Head>
           <Table.Row>
-            <Table.Cell isHeadCell>H1</Table.Cell>
-            <Table.Cell isHeadCell>H2</Table.Cell>
-            <Table.Cell isHeadCell>H3</Table.Cell>
+            <Table.HeaderCell>H1</Table.HeaderCell>
+            <Table.HeaderCell>H2</Table.HeaderCell>
+            <Table.HeaderCell>H3</Table.HeaderCell>
           </Table.Row>
         </Table.Head>
       </Table.Container>,

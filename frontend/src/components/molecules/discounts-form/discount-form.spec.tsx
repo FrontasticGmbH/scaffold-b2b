@@ -6,8 +6,8 @@ import DiscountsForm from './';
 describe('DiscountsForm', () => {
   const mockOnSubmit = jest.fn();
   const defaultDiscounts = [
-    { name: 'Black Friday', code: 'SAVE10', onRemove: jest.fn() },
-    { name: 'Christmas', code: 'WELCOME5', onRemove: jest.fn() },
+    { discountCodeId: 'disc_1', name: 'Black Friday', code: 'SAVE10', onRemove: jest.fn() },
+    { discountCodeId: 'disc_2', name: 'Christmas', code: 'WELCOME5', onRemove: jest.fn() },
   ];
 
   beforeEach(() => {

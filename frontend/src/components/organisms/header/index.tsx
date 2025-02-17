@@ -24,7 +24,7 @@ const Header = ({
           <div className="flex items-center gap-x-1 md:gap-x-2 lg:gap-x-4">
             {variant === 'navigation' && <NavigationDrawer />}
             <div className="w-[170px] lg:w-[218px]">
-              <Logo {...props} />
+              <Logo imageClassName="block px-1 py-2" {...props} />
             </div>
           </div>
           {variant === 'navigation' && (

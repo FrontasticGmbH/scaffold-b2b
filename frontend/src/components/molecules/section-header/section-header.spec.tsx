@@ -5,8 +5,9 @@ describe('[Component] Section header', () => {
   it('Renders title correctly when provided', () => {
     render(<SectionHeader title="Hello!" />);
 
-    expect(screen.queryByRole('heading')).toBeInTheDocument();
-    expect(screen.queryByRole('heading')?.textContent).toBe('Hello!');
+    const titleTextField = screen.getByTestId('title-text');
+    expect(titleTextField).toBeInTheDocument();
+    expect(screen.getByTestId('title-text').textContent).toBe('Hello!');
   });
 
   it("Doesn't render title when not provided", () => {
