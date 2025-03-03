@@ -13,6 +13,17 @@
           "required": true
         }
       ]
+    },
+    {
+      "name": "Settings",
+      "fields": [
+        {
+          "label": "Enable CT (commercetools) payment",
+          "field": "enableCtCheckout",
+          "type": "boolean",
+          "default": true
+        }
+      ]
     }
   ]
 }

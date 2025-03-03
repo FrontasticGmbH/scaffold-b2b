@@ -214,5 +214,8 @@
   "is.less.than": "Is minder dan",
   "is.less.than.or.equal": "Is kleiner dan of gelijk",
   "approve": "Goedkeuren",
-  "reject": "Afwijzen"
+  "reject": "Afwijzen",
+  "desktop.only.message.title": "Oeps! Deze functie is alleen voor desktops",
+  "desktop.only.message": "Deze functie is alleen beschikbaar op desktop. Bezoek onze site via een desktopbrowser voor volledige toegang.",
+  "return.to.dashboard": "Terug naar dashboard"
 }

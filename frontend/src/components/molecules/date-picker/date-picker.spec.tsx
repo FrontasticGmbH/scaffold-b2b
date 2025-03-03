@@ -37,11 +37,7 @@ describe('[Component] DatePicker', () => {
     const currentYear = new Date().getFullYear().toString();
     const currentMonthYear = `${currentMonth} ${currentYear}`;
 
-    const monthYearButton = screen.getByRole('button', {
-      name: currentMonthYear,
-    });
-    expect(monthYearButton).toBeInTheDocument();
-    expect(monthYearButton).toHaveTextContent(currentMonthYear);
+    expect(screen.getByDisplayValue(currentMonthYear)).toBeInTheDocument();
   });
 
   it('Renders the navigation buttons', () => {

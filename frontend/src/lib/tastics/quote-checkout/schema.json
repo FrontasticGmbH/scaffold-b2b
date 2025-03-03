@@ -1,6 +1,6 @@
 {
   "tasticType": "commercetools/ui/quote-checkout",
-  "name": "update to Submit Quote",
+  "name": "Quote Checkout",
   "category": "Checkout",
   "schema": [
     {
@@ -11,6 +11,17 @@
           "field": "termsAndConditionsLink",
           "type": "reference",
           "required": true
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "fields": [
+        {
+          "label": "Enable CT (commercetools) payment",
+          "field": "enableCtCheckout",
+          "type": "boolean",
+          "default": true
         }
       ]
     }

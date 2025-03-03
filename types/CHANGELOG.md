@@ -1,4 +1,23 @@
 
+## Version 1.16.0 (2025-02-17)
+
+
+** New Features & Improvements **
+
+* Pass in accountGroupId on login
+* Add priceCustomerGroup to product search query
+* Added support for free shipping method above amount
+* Imported discont changes from B2C to B2B
+* Migrated B2C types to B2B for discounts
+* Add more types for B2B Direct Discounts
+* Introduce product discounts inside b2b
+* Add direct discount and rename discount to DiscountCodes
+
+
+** Bug Fixes **
+
+* Handled empty discount
+
 ## Version 1.15.0 (2025-02-03)
 
 ** New Features & Improvements **

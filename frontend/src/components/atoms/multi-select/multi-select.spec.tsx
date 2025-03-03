@@ -20,36 +20,36 @@ describe('[Component] MultiSelect', () => {
   test('It shows placeholder when no value is selected', () => {
     renderMultiSelect({ placeholder: 'Placeholder' });
 
-    expect(screen.getByRole('button').textContent).toBe('Placeholder');
+    expect(screen.getByPlaceholderText('Placeholder')).toBeInTheDocument();
   });
 
   test('It shows default values when no value is selected', () => {
     renderMultiSelect({ defaultValue: ['1', '2'] });
 
-    expect(screen.getByRole('button').textContent).toBe('1, 2');
+    expect(screen.getByDisplayValue('1, 2')).toBeInTheDocument();
   });
 
   test('It selects values correctly', async () => {
     const onChange = jest.fn();
 
-    renderMultiSelect({ onChange });
+    renderMultiSelect({ onChange, placeholder: 'Select' });
 
-    await act(async () => userEvent.click(screen.getByRole('button')));
-    await act(async () => userEvent.click(screen.getByText('1')));
+    userEvent.click(screen.getByPlaceholderText('Select'));
+    userEvent.click(await screen.findByText('1'));
 
-    expect(screen.getByRole('button').textContent).toBe('1');
+    expect(await screen.findByDisplayValue('1')).toBeInTheDocument();
     expect(onChange).toHaveBeenCalledWith(['1']);
 
-    await act(async () => userEvent.click(screen.getByRole('button')));
-    await act(async () => userEvent.click(screen.getByText('2')));
+    userEvent.click(screen.getByTestId('dropdown-button'));
+    userEvent.click(await screen.findByText('2'));
 
-    expect(screen.getByRole('button').textContent).toBe('1, 2');
+    expect(await screen.findByDisplayValue('1, 2')).toBeInTheDocument();
     expect(onChange).toHaveBeenCalledWith(['1', '2']);
 
-    await act(async () => userEvent.click(screen.getByRole('button')));
-    await act(async () => userEvent.click(screen.getByText('2')));
+    userEvent.click(screen.getByTestId('dropdown-button'));
+    userEvent.click(await screen.findByText('2'));
 
-    expect(screen.getByRole('button').textContent).toBe('1');
+    expect(await screen.findByDisplayValue('1')).toBeInTheDocument();
     expect(onChange).toHaveBeenCalledWith(['1']);
   });
 
@@ -77,14 +77,6 @@ describe('[Component] MultiSelect', () => {
     expect(screen.getByText('(common.optional)')).toBeDefined();
   });
 
-  test('It renders search correctly', async () => {
-    renderMultiSelect({ enableSearch: true });
-
-    await act(async () => userEvent.click(screen.getByRole('button')));
-
-    expect(screen.getByRole('textbox')).toBeDefined();
-  });
-
   test('It searches options correctly', async () => {
     renderMultiSelect({
       enableSearch: true,
@@ -93,30 +85,31 @@ describe('[Component] MultiSelect', () => {
         { name: '2', value: '2' },
         { name: '10', value: '10' },
       ],
+      placeholder: 'Select',
     });
 
-    await act(async () => userEvent.click(screen.getByRole('button')));
-
-    expect(screen.getByText('1')).toBeDefined();
+    userEvent.click(screen.getByPlaceholderText('Select'));
+    expect(await screen.findByText('1')).toBeDefined();
     expect(screen.getByText('2')).toBeDefined();
     expect(screen.getByText('10')).toBeDefined();
 
-    await act(async () => userEvent.type(screen.getByRole('textbox'), '1'));
+    userEvent.type(screen.getByPlaceholderText('Select'), '1');
 
-    expect(screen.getByText('1')).toBeDefined();
-    expect(screen.queryByText('2')).toBeNull();
-    expect(screen.getByText('10')).toBeDefined();
+    expect(await screen.findByText('1')).toBeDefined();
+    expect(await screen.findByText('10')).toBeDefined();
+    expect(await screen.findByText('2')).not.toBeInTheDocument();
   });
 
   test('It shows no results correctly when searching', async () => {
-    renderMultiSelect({ enableSearch: true });
+    renderMultiSelect({ enableSearch: true, placeholder: 'Select' });
 
-    await act(async () => userEvent.click(screen.getByRole('button')));
-    await act(async () => userEvent.type(screen.getByRole('textbox'), 'none'));
+    userEvent.click(screen.getByPlaceholderText('Select'));
+
+    userEvent.type(screen.getByPlaceholderText('Select'), 'none');
 
     expect(screen.queryByText('1')).toBeNull();
     expect(screen.queryByText('2')).toBeNull();
     expect(screen.queryByText('3')).toBeNull();
-    expect(screen.getByText('common.no.results.found')).toBeDefined();
+    expect(await screen.findByText('common.no.results.found')).toBeDefined();
   });
 });

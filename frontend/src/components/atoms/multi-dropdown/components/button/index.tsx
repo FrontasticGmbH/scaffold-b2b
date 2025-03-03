@@ -1,5 +1,5 @@
 import React from 'react';
-import { Listbox } from '@headlessui/react';
+import { ListboxButton } from '@headlessui/react';
 import { ChevronDownIcon as ArrowIcon } from '@heroicons/react/24/solid';
 import { classnames } from '@/utils/classnames/classnames';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
@@ -14,7 +14,7 @@ const DropdownButton = ({ children, className }: Props) => {
   const { buttonClassName } = useClassNames({ disabled, size });
 
   return (
-    <Listbox.Button
+    <ListboxButton
       data-testid="multi-dropdown-button"
       aria-label={translate('common.select')}
       className={classnames(className, buttonClassName)}
@@ -31,7 +31,7 @@ const DropdownButton = ({ children, className }: Props) => {
       <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         <ArrowIcon className="h-[18px]" aria-hidden="true" />
       </span>
-    </Listbox.Button>
+    </ListboxButton>
   );
 };
 

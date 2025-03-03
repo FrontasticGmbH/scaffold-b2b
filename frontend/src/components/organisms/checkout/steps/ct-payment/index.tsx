@@ -93,7 +93,7 @@ const CommercetoolsPayment = ({
 
               const { order } = message.payload as { order: { id: string } };
 
-              router.push(`/thank-you?orderId=${order.id}`);
+              router.push(`${process.env.NEXT_PUBLIC_COMMERCETOOLS_CHECKOUT_CALLBACK_URL}?orderId=${order.id}`);
 
               break;
           }

@@ -11,6 +11,7 @@ export interface ProductSuggestion {
   maxQuantity?: number;
 }
 export interface SearchProps {
+  ref?: React.ForwardedRef<HTMLInputElement | null>;
   scrollControl: boolean;
   variant: SearchVariant;
   disabled?: boolean;

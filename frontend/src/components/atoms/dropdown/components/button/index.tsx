@@ -1,5 +1,5 @@
 import React from 'react';
-import { Listbox } from '@headlessui/react';
+import { ListboxButton } from '@headlessui/react';
 import { ChevronDownIcon as ArrowIcon } from '@heroicons/react/24/solid';
 import { classnames } from '@/utils/classnames/classnames';
 import useClassNames from '../../hooks/useClassNames';
@@ -12,7 +12,7 @@ const DropdownButton = ({ children, className }: Props) => {
   const { buttonClassName } = useClassNames({ disabled, size });
 
   return (
-    <Listbox.Button data-testid="dropdown-button" className={classnames(className, buttonClassName)}>
+    <ListboxButton data-testid="dropdown-button" className={classnames(className, buttonClassName)}>
       {({ open }) => (
         <div>
           <div className="block truncate">
@@ -25,7 +25,7 @@ const DropdownButton = ({ children, className }: Props) => {
           </span>
         </div>
       )}
-    </Listbox.Button>
+    </ListboxButton>
   );
 };
 

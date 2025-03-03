@@ -27,8 +27,13 @@ const useListKeyboardNavigation = ({ length, onSelect, allow = () => true }: Opt
 
       let nextIndex = -1;
 
-      if (e.code === 'ArrowDown') nextIndex = activeIndex >= length - 1 ? 0 : activeIndex + 1;
-      else if (e.code === 'ArrowUp') nextIndex = activeIndex <= 0 ? length - 1 : activeIndex - 1;
+      if (e.code === 'ArrowDown') {
+        e.preventDefault();
+        nextIndex = activeIndex >= length - 1 ? 0 : activeIndex + 1;
+      } else if (e.code === 'ArrowUp') {
+        e.preventDefault();
+        nextIndex = activeIndex <= 0 ? length - 1 : activeIndex - 1;
+      }
 
       if (ref.current) ref.current.children.item(nextIndex)?.scrollIntoView({ behavior: 'auto', block: 'nearest' });
 

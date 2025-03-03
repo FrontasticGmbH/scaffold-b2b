@@ -58,6 +58,7 @@ const TablePagination = ({
             { name: '100', value: '100' },
             { name: 'All', value: totalItems.toString() },
           ]}
+          className="w-20"
         />
       </div>
       <div className="flex items-center gap-3 md:gap-9">

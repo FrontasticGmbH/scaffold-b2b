@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Typography from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
-import PopoverButton from '@/components/molecules/popover';
+import Popover from '@/components/molecules/popover';
 import Select from '@/components/atoms/select';
 import Link from '@/components/atoms/link';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -36,7 +36,7 @@ const AccountButton = ({
   }, [blockScroll, isOpen]);
 
   return (
-    <PopoverButton
+    <Popover
       isOpen={isOpen}
       direction="right"
       onClose={onClose}
@@ -55,7 +55,7 @@ const AccountButton = ({
             </Typography>
             <Select
               enableSearch
-              className="z-[100] pt-2"
+              className="pt-2"
               size="lg"
               value={selectedBusinessUnit ?? translate('common.select')}
               options={businessUnits}
@@ -107,7 +107,7 @@ const AccountButton = ({
           </Button>
         </div>
       </div>
-    </PopoverButton>
+    </Popover>
   );
 };
 export default AccountButton;

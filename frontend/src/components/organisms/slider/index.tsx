@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, forwardRef, ForwardedRef } from 'react';
+import React, { useState } from 'react';
 import Slick from 'react-slick';
 import { classnames } from '@/utils/classnames/classnames';
 import useResponsiveValue from '@/hooks/useResponsiveValue';
@@ -10,26 +10,24 @@ import './styles/index.css';
 import { ArrowProps, SliderProps } from './types';
 import Arrow from './components/arrow';
 
-const Slider = (
-  {
-    children,
-    slideWidth,
-    slidesToShow = 1,
-    infinite = false,
-    swipeToSlide = true,
-    spaceBetween = 10,
-    arrows = true,
-    arrowSize = 32,
-    arrowStyles = {},
-    arrowClassName = '',
-    arrowIconClassName = '',
-    arrowVariant = 'default',
-    overlayDarkArrow = false,
-    containerClassName = '',
-    ...props
-  }: SliderProps,
-  ref: ForwardedRef<Slick | null>,
-) => {
+const Slider = ({
+  ref,
+  children,
+  slideWidth,
+  slidesToShow = 1,
+  infinite = false,
+  swipeToSlide = true,
+  spaceBetween = 10,
+  arrows = true,
+  arrowSize = 32,
+  arrowStyles = {},
+  arrowClassName = '',
+  arrowIconClassName = '',
+  arrowVariant = 'default',
+  overlayDarkArrow = false,
+  containerClassName = '',
+  ...props
+}: SliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slidesCount = React.Children.count(children);
@@ -87,6 +85,7 @@ const Slider = (
         variableWidth={!!slideWidth}
         ref={ref}
         {...props}
+        className="aria-hidden:[&_.slick-slide]:invisible"
       >
         {React.Children.map(children, (Child, index) => (
           <Slide
@@ -105,5 +104,4 @@ const Slider = (
   );
 };
 
-const SliderWithRef = forwardRef(Slider);
-export default SliderWithRef;
+export default Slider;

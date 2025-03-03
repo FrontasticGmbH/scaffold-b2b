@@ -11,24 +11,22 @@ import useClassNames from './hooks/useClassNames';
 import { SearchInputProps } from './types';
 import Label from '../label';
 
-const SearchInput = (
-  {
-    label,
-    className = '',
-    containerClassName = '',
-    variant = 'xs',
-    disabled = false,
-    placeholder,
-    searchValue,
-    mobile,
-    onFocus: onFocusProp,
-    onBlur: onBlurProp,
-    onBackClick,
-    handleOnChange,
-    handleSearchAction,
-  }: SearchInputProps,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) => {
+const SearchInput = ({
+  ref,
+  label,
+  className = '',
+  containerClassName = '',
+  variant = 'xs',
+  disabled = false,
+  placeholder,
+  searchValue,
+  mobile,
+  onFocus: onFocusProp,
+  onBlur: onBlurProp,
+  onBackClick,
+  handleOnChange,
+  handleSearchAction,
+}: SearchInputProps) => {
   const { translate } = useTranslation();
   const [value, setValue] = useControllableState(searchValue, '');
 
@@ -124,4 +122,4 @@ const SearchInput = (
   );
 };
 
-export default React.forwardRef(SearchInput);
+export default SearchInput;

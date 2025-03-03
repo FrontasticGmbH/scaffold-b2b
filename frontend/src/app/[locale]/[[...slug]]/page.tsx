@@ -112,8 +112,8 @@ export default async function Page(props: PageProps) {
           associate: associate.isError ? undefined : associate.data,
           businessUnits: businessUnits.isError ? [] : businessUnits.data,
           projectSettings: projectSettings.isError ? undefined : projectSettings.data,
-          flatCategories: flatCategories.isError ? [] : flatCategories.data.items,
-          treeCategories: treeCategories.isError ? [] : treeCategories.data.items,
+          flatCategories: flatCategories.isError ? undefined : flatCategories.data,
+          treeCategories: treeCategories.isError ? undefined : treeCategories.data,
         }}
       >
         <Renderer

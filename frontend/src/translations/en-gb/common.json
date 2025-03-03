@@ -214,5 +214,8 @@
   "is.less.than": "Is less than",
   "is.less.than.or.equal": "Is less than or equal",
   "approve": "Approve",
-  "reject": "Reject"
+  "reject": "Reject",
+  "desktop.only.message.title": "Oops! This feature is desktop-only",
+  "desktop.only.message": "This feature is available only on desktop. Please visit our site from a desktop browser for full access.",
+  "return.to.dashboard": "Return to dashboard"
 }

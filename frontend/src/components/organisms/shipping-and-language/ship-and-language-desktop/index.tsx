@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@/components/atoms/typography';
 import FlagIconsSquare from '@/components/atoms/icons/flag-icons-square';
 import Radio from '@/components/atoms/radio';
-import PopoverButton from '@/components/molecules/popover';
+import Popover from '@/components/molecules/popover';
 import useTranslation from '@/providers/I18n/hooks/useTranslation';
 import useDisclosure from '@/hooks/useDisclosure';
 import { useShipAndLanguage } from '@/providers/ship-and-language';
@@ -30,7 +30,7 @@ const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) =>
   });
 
   return (
-    <PopoverButton
+    <Popover
       isOpen={isOpen}
       onClose={onClose}
       direction={direction}
@@ -80,7 +80,7 @@ const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) =>
           </div>
         )}
       </div>
-    </PopoverButton>
+    </Popover>
   );
 };
 export default ShipAndLanguageSectionDesktop;

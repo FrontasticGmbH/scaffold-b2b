@@ -214,5 +214,8 @@
   "is.less.than": "Es menos que",
   "is.less.than.or.equal": "es menor o igual",
   "approve": "Aprobar",
-  "reject": "Rechazar"
+  "reject": "Rechazar",
+  "desktop.only.message.title": "¡Ups! Esta función solo está disponible en computadoras de escritorio",
+  "desktop.only.message": "Esta función solo está disponible en computadoras de escritorio. Visite nuestro sitio desde un navegador de escritorio para tener acceso completo.",
+  "return.to.dashboard": "Regresar al panel de control"
 }

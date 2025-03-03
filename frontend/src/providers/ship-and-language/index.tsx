@@ -1,10 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { useParams } from 'next/navigation';
-import useCustomRouter from '@/hooks/useCustomRouter';
 import { Option } from '@/components/atoms/select/types';
 import usePath from '@/hooks/usePath';
 import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
-import useCart from '@/lib/hooks/useCart';
 import { mapCountry } from '@/utils/mappers/map-country';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
 import { useCategories } from '@/lib/hooks/useCategories';
@@ -21,12 +19,9 @@ const ShipAndLanguageProvider = ({
   children,
   projectSettings,
 }: React.PropsWithChildren<{ projectSettings?: ProjectSettings }>) => {
-  const router = useCustomRouter();
-
   const { path } = usePath();
 
-  const { mutateAll: mutateAllCarts } = useCart();
-  const { flatCategories, mutate: mutateCategories } = useCategories();
+  const { flatCategories } = useCategories();
 
   const locations = (projectSettings?.countries ?? []).map(mapCountry).map(
     ({ name, code, currencies, locales }) =>
@@ -40,11 +35,6 @@ const ShipAndLanguageProvider = ({
       }) as Location,
   );
   const { locale } = useParams();
-
-  useEffect(() => {
-    mutateAllCarts();
-    mutateCategories();
-  }, [locale, mutateAllCarts, mutateCategories]);
 
   const [selectedLocationValue, setSelectedLocationValue] = useState(locale?.split('-')[1]?.toLowerCase());
 
@@ -62,7 +52,8 @@ const ShipAndLanguageProvider = ({
 
     if (correctPath && path !== correctPath) pathToGo = correctPath;
 
-    router.push(pathToGo, { locale: language });
+    // Added to cause a full page reload
+    window.location.href = `/${language}/${pathToGo}`;
   };
 
   const onLocationSelect = (location: string) => {

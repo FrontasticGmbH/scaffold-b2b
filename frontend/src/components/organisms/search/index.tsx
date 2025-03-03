@@ -9,20 +9,18 @@ import useClassNames from './hooks/useClassNames';
 import { SearchProps } from './types';
 import SearchPanel from './search-suggestions-panel';
 
-const Search = (
-  {
-    disabled,
-    searchValue,
-    suggestions,
-    variant = 'sm',
-    placeholder,
-    onProductClick,
-    handleOnChange,
-    scrollControl,
-    handleSearchAction,
-  }: SearchProps,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) => {
+const Search = ({
+  ref,
+  disabled,
+  searchValue,
+  suggestions,
+  variant = 'sm',
+  placeholder,
+  onProductClick,
+  handleOnChange,
+  scrollControl,
+  handleSearchAction,
+}: SearchProps) => {
   const [focused, setFocused] = useState(false);
   const onFocus = useCallback(() => setFocused(true), []);
   const onBlur = useCallback(() => {
@@ -72,4 +70,4 @@ const Search = (
     </>
   );
 };
-export default React.forwardRef(Search);
+export default Search;

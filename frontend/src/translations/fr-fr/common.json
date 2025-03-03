@@ -214,5 +214,8 @@
   "is.less.than": "Est inférieur à",
   "is.less.than.or.equal": "Est inférieur ou égal",
   "approve": "Approuver",
-  "reject": "Rejeter"
+  "reject": "Rejeter",
+  "desktop.only.message.title": "Oups ! Cette fonctionnalité est disponible uniquement sur ordinateur de bureau",
+  "desktop.only.message": "Cette fonctionnalité n'est disponible que sur ordinateur. Veuillez visiter notre site à partir d'un navigateur de bureau pour un accès complet.",
+  "return.to.dashboard": "Retour au tableau de bord"
 }

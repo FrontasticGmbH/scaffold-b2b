@@ -1,10 +1,8 @@
-import { ForwardedRef, forwardRef } from 'react';
 import Slider from '@/components/organisms/slider';
 import Arrow from '@/components/organisms/slider/components/arrow';
 import { SliderProps } from '@/components/organisms/slider/types';
-import Slick from 'react-slick';
 
-const VerticalSlider = ({ children, ...props }: SliderProps, ref: ForwardedRef<Slick | null>) => {
+const VerticalSlider = ({ ref, children, ...props }: SliderProps) => {
   return (
     <Slider
       vertical
@@ -21,5 +19,4 @@ const VerticalSlider = ({ children, ...props }: SliderProps, ref: ForwardedRef<S
   );
 };
 
-const VerticalSliderWithRef = forwardRef(VerticalSlider);
-export default VerticalSliderWithRef;
+export default VerticalSlider;

@@ -214,5 +214,8 @@
   "is.less.than": "Ist weniger als",
   "is.less.than.or.equal": "Ist kleiner oder gleich",
   "approve": "Genehmigen",
-  "reject": "Ablehnen"
+  "reject": "Ablehnen",
+  "desktop.only.message.title": "Hoppla! Diese Funktion ist nur auf dem Desktop verfügbar",
+  "desktop.only.message": "Diese Funktion ist nur auf dem Desktop verfügbar. Bitte besuchen Sie unsere Site von einem Desktop-Browser aus, um vollen Zugriff zu erhalten.",
+  "return.to.dashboard": "Zurück zum Dashboard"
 }

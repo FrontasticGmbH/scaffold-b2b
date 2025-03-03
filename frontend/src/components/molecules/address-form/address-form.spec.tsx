@@ -77,8 +77,7 @@ describe('AddressForm', () => {
     await userEvent.type(screen.getByLabelText(/Zip Code/), '12345');
     await userEvent.type(screen.getByLabelText(/City/), 'Test City');
 
-    const countryDropdown = screen.getByText('common.select');
-    await userEvent.click(countryDropdown);
+    await userEvent.click(screen.getByPlaceholderText('common.select'));
     await userEvent.click(screen.getByText('USA')); // Click the desired option
 
     const saveButton = screen.getByRole('button', { name: /Save/i });

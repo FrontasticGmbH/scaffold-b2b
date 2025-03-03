@@ -28,7 +28,7 @@
   "dependencies": {
     "@commercetools/checkout-browser-sdk": "^0.7.1",
     "@commercetools/frontend-sdk": "^2.0.0",
-    "@headlessui/react": "^1.7.15",
+    "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.0.18",
     "date-fns": "^2.30.0",
     "fastest-levenshtein": "^1.0.16",

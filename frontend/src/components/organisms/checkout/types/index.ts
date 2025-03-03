@@ -41,6 +41,7 @@ export interface SubmitPurchasePayload {
 
 export interface CheckoutProps {
   buyerCanAddComment?: boolean;
+  enableCtCheckout?: boolean;
   addresses: Address[];
   onAddAddress?: (address: Address) => Promise<boolean>;
   products: Array<Pick<Product, 'id' | 'name' | 'currency' | 'price' | 'quantity' | 'images' | 'url'>>;

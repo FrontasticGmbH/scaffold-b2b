@@ -214,5 +214,8 @@
   "is.less.than": "É menos do que",
   "is.less.than.or.equal": "É menor ou igual",
   "approve": "Aprovar",
-  "reject": "Rejeitar"
+  "reject": "Rejeitar",
+  "desktop.only.message.title": "Opa! Este recurso é somente para desktop",
+  "desktop.only.message": "Este recurso está disponível somente no desktop. Visite nosso site em um navegador de desktop para acesso total.",
+  "return.to.dashboard": "Retornar ao painel"
 }

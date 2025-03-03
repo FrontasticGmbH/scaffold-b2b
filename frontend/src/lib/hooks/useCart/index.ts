@@ -20,7 +20,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
   }, [businessUnitKey, storeKey]);
 
   const { data, mutate, ...response } = useSWR(
-    !(businessUnitKey && storeKey) ? null : ['/action/cart/getCart', businessUnitKey, storeKey],
+    businessUnitKey && storeKey ? `/action/cart/getCart/${businessUnitKey}/${storeKey}` : null,
     getCart,
   );
 

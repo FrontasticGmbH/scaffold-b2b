@@ -5,6 +5,7 @@ import { SDKResponse } from '@commercetools/frontend-sdk';
 import { PageResponse } from '@commercetools/frontend-sdk/lib/types/api/page';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
 import { Category } from '@shared/types/product';
+import { PaginatedResult } from '@shared/types/result';
 import { I18nProviderProps } from '../I18n/types';
 
 export interface ProvidersProps extends I18nProviderProps, Pick<Params, 'locale'> {
@@ -13,8 +14,8 @@ export interface ProvidersProps extends I18nProviderProps, Pick<Params, 'locale'
     associate?: Associate;
     businessUnits?: BusinessUnit[];
     projectSettings?: ProjectSettings;
-    flatCategories?: Category[];
-    treeCategories?: Category[];
+    flatCategories?: PaginatedResult<Category>;
+    treeCategories?: PaginatedResult<Category>;
   };
   page: SDKResponse<PageResponse>;
 }

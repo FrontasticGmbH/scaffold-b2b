@@ -2,6 +2,7 @@ import { ResponsiveQuery } from '@/types/responsive';
 import Slick from 'react-slick';
 
 export interface SliderProps extends Omit<React.ComponentProps<typeof Slick>, 'slidesToShow'> {
+  ref?: React.ForwardedRef<Slick | null>;
   spaceBetween?: number | ResponsiveQuery<number>;
   arrowSize?: number;
   arrowStyles?: React.CSSProperties;

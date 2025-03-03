@@ -1,6 +1,7 @@
 export type SearchVariant = 'xs' | 'sm' | 'lg';
 
 export interface SearchInputProps {
+  ref?: React.ForwardedRef<HTMLInputElement | null>;
   variant: SearchVariant;
   disabled?: boolean;
   label?: string;

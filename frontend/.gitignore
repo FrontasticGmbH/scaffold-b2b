@@ -41,7 +41,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env.*
+!.env.dist
 
 # local folder
 local
