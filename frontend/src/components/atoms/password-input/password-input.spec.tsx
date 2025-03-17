@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent } from '@test/utils';
 import PasswordInput from '.';
 
 describe('[Component] Password Input', () => {

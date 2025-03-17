@@ -1,12 +1,12 @@
 import React from 'react';
 import Accordion from '@/components/molecules/accordion';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Radio from '@/components/atoms/radio';
 import { useProductList } from '../../context';
 import useFacetComponent from '../../hooks/useFacetComponent';
 
 const Facets = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { sortValues, currentSortValue, currentSortVector, onSortValueChange, facets } = useProductList();
 
@@ -38,7 +38,13 @@ const Facets = () => {
         <div key={facet.id} className="border-b border-neutral-400">
           <Accordion className="border-none">
             <Accordion.Button className="py-5" defaultSpacing={false}>
-              <span className="text-14 font-bold text-gray-700">{facet.name}</span>
+              <span className="text-14 font-bold text-gray-700">
+                {
+                  // eslint-disable-next-line
+                  // @ts-ignore
+                  translate('product.' + facet.id.replaceAll('.', '-'))
+                }
+              </span>
             </Accordion.Button>
             <Accordion.Panel defaultSpacing={false} className="pb-6">
               {resolveFacetComponent(facet)}

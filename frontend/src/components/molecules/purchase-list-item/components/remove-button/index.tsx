@@ -1,9 +1,9 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { Props } from './types';
 
 const RemoveButton = ({ onRemove }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <span

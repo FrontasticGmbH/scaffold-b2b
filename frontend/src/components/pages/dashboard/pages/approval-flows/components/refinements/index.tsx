@@ -1,11 +1,11 @@
 import React from 'react';
 import SearchInput from '@/components/atoms/search-input';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
 import { Props } from './types';
 
 const Refinements = ({ onSearch, searchValue, onInfoClick }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className="hidden items-center justify-between lg:flex">
@@ -14,7 +14,7 @@ const Refinements = ({ onSearch, searchValue, onInfoClick }: Props) => {
           containerClassName="h-[38px] w-[360px]"
           searchValue={searchValue}
           variant="xs"
-          placeholder={`${translate('dashboard.search.by.id.sku')}...`}
+          placeholder={`${translate('dashboard.search-by-id-sku')}...`}
           handleOnChange={(val) => onSearch(val)}
         />
       </div>

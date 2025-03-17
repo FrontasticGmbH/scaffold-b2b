@@ -1,7 +1,7 @@
 import React from 'react';
 import useDisclosure from '@/hooks/useDisclosure';
 import Drawer from '@/components/organisms/drawer';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import InfoBanner from '@/components/molecules/info-banner';
 import Link from '@/components/atoms/link';
 import QuickOrderAccordion from '../quick-order-accordion';
@@ -20,7 +20,7 @@ const QuickOrderDesktop = ({
   addItemDisabled,
   handleSKUsUpdate,
 }: QuickOrderDesktopProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -33,14 +33,14 @@ const QuickOrderDesktop = ({
       onClose={onClose}
     >
       <Link className="whitespace-nowrap p-1 text-gray-700" href="#" onClick={onOpen}>
-        {translate('quick-order.quick.order')}
+        {translate('quick-order.quick-order')}
       </Link>
       <Drawer direction="right" isOpen={isOpen} headline="Quick add to cart" onClose={onClose}>
         <div className="h-full overflow-y-scroll">
           <div className="px-4 lg:px-5">
             {addItemDisabled && (
               <InfoBanner className="mt-3">
-                <b>{translate('common.view.only')}</b> {translate('cart.view.only.desc')}
+                <b>{translate('common.view-only')}</b> {translate('cart.view-only-desc')}
               </InfoBanner>
             )}
           </div>

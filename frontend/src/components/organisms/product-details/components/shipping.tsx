@@ -1,15 +1,15 @@
 import Typography from '@/components/atoms/typography';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { ShippingProps } from '../types';
 import ShippingMethod from './shipping-method';
 
 const Shipping = ({ shippingMethods, currency }: ShippingProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className="grid gap-3">
       <Typography className="leading-[16px] text-gray-700" fontWeight="bold" fontSize={14}>
-        {translate('common.shipping.methods')}
+        {translate('common.shipping-methods')}
       </Typography>
       <div>
         {shippingMethods.map((method, index) => (

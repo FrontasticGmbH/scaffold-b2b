@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@test/utils';
 import ProductTile from '@/components/molecules/added-to-cart-modal/components/product-tile';
 import { sliderItems } from '@/mocks/productSliderItems';
 

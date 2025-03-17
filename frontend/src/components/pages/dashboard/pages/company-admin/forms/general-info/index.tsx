@@ -1,14 +1,14 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import { BusinessUnit } from '@/types/entity/business-unit';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { CompanyAdminPageProps } from '../../types';
 
 const GeneralInfoForm = ({ onUpdateGeneralInfo, generalInformation }: CompanyAdminPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showSavedMessage, showFailedMessage } = useEntityToasters('businessunit');
 

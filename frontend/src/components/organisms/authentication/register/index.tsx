@@ -5,7 +5,7 @@ import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import { InputProps } from '@/components/atoms/input/types';
 import { Account } from '@shared/types/account/Account';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Typography from '@/components/atoms/typography';
 import { namePattern } from '@/constants/regex';
 import useValidate from '@/hooks/useValidate/useValidate';
@@ -15,7 +15,7 @@ import AuthForm from '../layouts/auth-form';
 import useAuthProps from './hooks/useAuthProps';
 
 const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useCustomRouter();
 
@@ -24,7 +24,7 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const [data, setData] = useState<Account>({});
   const [errors, setErrors] = useState<Account>({});
   const [confirmed, setConfirmed] = useState(false);
-  const nameValidation = { pattern: namePattern, title: translate('common.name.validation') };
+  const nameValidation = { pattern: namePattern, title: translate('common.name-validation') };
 
   const inputArray: Array<InputProps> = [
     {
@@ -57,7 +57,7 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
       const isValidPassword = data.password && validatePassword(data.password);
 
       if (!isValidPassword) {
-        setErrors({ password: translate('error.password.not.valid') });
+        setErrors({ password: translate('error.password-not-valid') });
         return;
       }
 
@@ -68,11 +68,11 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
         .catch((err) => {
           if (err.message.includes('409')) {
             if (err.message.includes('account')) {
-              setErrors({ email: translate('error.email.exists') });
+              setErrors({ email: translate('error.email-exists') });
             } else if (err.message.includes('company')) {
-              setErrors({ companyName: translate('error.company.exists') });
+              setErrors({ companyName: translate('error.company-exists') });
             }
-          } else toast.error(translate('account.account.create.fail'));
+          } else toast.error(translate('error.account-create-fail'));
         });
     }
   };
@@ -99,13 +99,13 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
         {confirmed ? (
           <div>
             <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-              {translate('account.verification.sent')}
+              {translate('account.verification-sent')}
             </Typography>
             <Typography fontWeight="medium" fontSize={16} className="inline text-gray-600" lineHeight="loose">
               {` ${data.email}. `}
             </Typography>
             <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-              {translate('account.verification.login')}
+              {translate('account.verification-login')}
             </Typography>
           </div>
         ) : (

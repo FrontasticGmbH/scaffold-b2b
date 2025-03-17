@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useCloseFlyouts from '@/hooks/useCloseFlyouts';
 import Typography from '@/components/atoms/typography';
 import Image from '@/components/atoms/Image';
@@ -28,7 +28,7 @@ const Cart = ({
   onDiscountRedeem,
   ...props
 }: CartProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [lineItems, setLineItems] = useState<Array<Product & { deleted?: boolean }> | undefined>(lineItemsProp);
 
@@ -59,7 +59,7 @@ const Cart = ({
   const closeFlyouts = useCloseFlyouts();
 
   const defaultCheckoutCTAProps: CheckoutCTAProps = {
-    text: translate('cart.checkout.go'),
+    text: translate('cart.checkout-go'),
     link: '/checkout',
     quoteCheckoutLink: '/quote-checkout',
     onCheckout: closeFlyouts,
@@ -76,14 +76,14 @@ const Cart = ({
         <div className="grid w-full place-items-center gap-12 rounded-lg bg-white py-9 pb-[80px]">
           <div className="grid place-items-center gap-6">
             <Typography className="text-center text-16 text-gray-700 md:text-18 lg:text-20">
-              {translate('cart.view.disabled')}
+              {translate('cart.view-disabled')}
             </Typography>
 
             <Image src="/images/locked-cart.png" className="w-[200px] md:w-[256px] lg:w-[328px]" alt="Cart locked" />
           </div>
 
           <Typography lineHeight="loose" className="max-w-[720px] text-center text-14 text-gray-600 md:text-16">
-            {translate('cart.view.disabled.desc')}
+            {translate('cart.view-disabled-desc')}
           </Typography>
         </div>
       </div>
@@ -95,7 +95,7 @@ const Cart = ({
       {!invalidAddressesRequirements && (quoteRequestDisabled || checkoutDisabled) && (
         <div className="px-4 pt-3 md:px-8 lg:px-11">
           <InfoBanner>
-            <b>{translate('common.view.only')}</b> {translate('cart.checkout.request.disabled')}
+            <b>{translate('common.view-only')}</b> {translate('cart.checkout-request-disabled')}
           </InfoBanner>
         </div>
       )}
@@ -103,7 +103,7 @@ const Cart = ({
       {invalidAddressesRequirements && (
         <div className="px-4 pt-3 md:px-8 lg:px-11">
           <InfoBanner>
-            <b>{translate('cart.checkout.unavailable')}</b>: {translate('cart.invalid.addresses.requirements')}
+            <b>{translate('cart.checkout-unavailable')}</b>: {translate('cart.invalid-addresses-requirements')}
           </InfoBanner>
         </div>
       )}

@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { Account } from '@/types/entity/account';
 import Select from '@/components/atoms/select';
 import { SettingsPageProps } from '../../types';
 
 const RestrictedPersonalInfoForm = ({ onUpdateAccount, account, businessUnitOptions, isAdmin }: SettingsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useRouter();
 
@@ -27,7 +27,11 @@ const RestrictedPersonalInfoForm = ({ onUpdateAccount, account, businessUnitOpti
     >
       <div className="flex flex-col gap-4">
         <Select
-          label={translate('common.company')}
+          label={translate(
+            // eslint-disable-next-line
+            // @ts-ignore
+            'common.company',
+          )}
           required={isAdmin}
           value={data.businessUnit}
           onChange={(businessUnit) => setData({ ...data, businessUnit })}

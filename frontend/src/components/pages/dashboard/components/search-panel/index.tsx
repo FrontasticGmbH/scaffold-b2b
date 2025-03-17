@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import SearchInput from '@/components/atoms/search-input';
 import LoadingIcon from '@/components/atoms/loading-icon';
 import { Props } from './types';
@@ -17,7 +17,7 @@ const SearchPanel = ({
   isLoading,
   entity,
 }: React.PropsWithChildren<Props>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [search, setSearch] = useState('');
 

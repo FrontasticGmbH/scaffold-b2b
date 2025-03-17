@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import { PurchaseList } from '@/types/entity/purchase-list';
 import TextArea from '@/components/atoms/text-area';
@@ -17,7 +17,7 @@ const PurchaseListForm = ({
   onCancel,
   onSave,
 }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useRouter();
 

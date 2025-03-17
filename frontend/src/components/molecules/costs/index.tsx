@@ -1,6 +1,6 @@
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useFormat from '@/hooks/useFormat';
 import { CostsProps } from './types';
 
@@ -15,7 +15,7 @@ const Costs = ({
   classNames = {},
   isShippingEstimated = true,
 }: CostsProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency } = useFormat();
 
@@ -38,7 +38,7 @@ const Costs = ({
     },
     {
       key: 'shipping',
-      label: translate(isShippingEstimated ? 'cart.shipping.estimate' : 'cart.shipping'),
+      label: translate(isShippingEstimated ? 'cart.shipping-estimate' : 'cart.shipping'),
       value: shipping,
     },
     {

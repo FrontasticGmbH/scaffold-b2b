@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import Link from '@/components/atoms/link';
 import Button from '@/components/atoms/button';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import { CheckoutCTAProps } from '../types';
 
@@ -16,12 +16,12 @@ const CheckoutCTA = ({
   checkoutDisabled,
   quoteRequestDisabled,
 }: CheckoutCTAProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const handleDisabledClick = useCallback(() => {
     if (!disabled) return;
 
-    toast.error(translate('cart.attempt.with.outofstock.item'), { position: 'top-right' });
+    toast.error(translate('cart.attempt-with-outofstock-item'), { position: 'top-right' });
   }, [disabled, translate]);
 
   const CTAClassName = classnames(className, 'gap-4');
@@ -46,7 +46,7 @@ const CheckoutCTA = ({
         onClick={handleDisabledClick}
       >
         <Button size="full" variant="secondary" disabled={disabled || quoteRequestDisabled}>
-          {translate('cart.request.quote')}
+          {translate('cart.request-quote')}
         </Button>
       </Link>
     </div>

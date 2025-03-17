@@ -4,7 +4,7 @@ import { ChangeEvent, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Typography from '@/components/atoms/typography';
 import useValidate from '@/hooks/useValidate/useValidate';
 import AuthLayout from '../layouts/auth-layout';
@@ -18,7 +18,7 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
 
   const { validatePassword } = useValidate();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [reset, setReset] = useState(false);
   const [data, setData] = useState<ResetPasswordData>({
@@ -43,14 +43,14 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
       const isValidPassword = validatePassword(data.password);
 
       if (!isValidPassword) {
-        setValidationError(translate('error.password.not.valid'));
+        setValidationError(translate('error.password-not-valid'));
         return;
       }
       resetPassword(token, data.password).then(() => {
         setReset(true);
       });
     } else {
-      setValidationError(translate('dashboard.password.not.match'));
+      setValidationError(translate('dashboard.password-not-match'));
     }
   };
 
@@ -60,15 +60,15 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
         onSubmit={handleSubmit}
         includeCheckIcon={reset}
         title={
-          reset ? translate('account.password.reset.success.headline') : translate('account.password.reset.headline')
+          reset ? translate('account.password-reset-success-headline') : translate('account.password-reset-headline')
         }
-        buttonLabel={reset ? translate('account.account.login') : translate('account.password.reset.keyword')}
-        footerLinkLabel={reset ? '' : translate('account.account.back.login')}
+        buttonLabel={reset ? translate('account.account-login') : translate('account.password-reset-keyword')}
+        footerLinkLabel={reset ? '' : translate('account.account-back-login')}
         footerLink="/login"
       >
         {reset ? (
           <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-            {translate('account.password.reset.success.desc')}
+            {translate('account.password-reset-success-desc')}
           </Typography>
         ) : (
           <>
@@ -86,7 +86,7 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
               error={validationError}
               className="w-full"
               name="confirmPassword"
-              label={translate('account.password.confirm')}
+              label={translate('account.password-confirm')}
               value={data.confirmPassword}
               onChange={handleChange}
               required

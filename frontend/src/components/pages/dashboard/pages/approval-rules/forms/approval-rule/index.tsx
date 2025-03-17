@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Input from '@/components/atoms/input';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import InfoTooltip from '@/components/atoms/info-tooltip';
 import MultiSelect from '@/components/atoms/multi-select';
 import Button from '@/components/atoms/button';
@@ -22,7 +22,7 @@ const ApprovalRuleForm = ({
   approversCriteria,
   onSubmit,
 }: ApprovalRulesPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useCustomRouter();
 
@@ -95,18 +95,18 @@ const ApprovalRuleForm = ({
     <div className="pb-12">
       {viewOnly && (
         <InfoBanner className="mt-3">
-          <b>{translate('common.view.only')}</b> {translate('dashboard.rule.view.only.desc')}
+          <b>{translate('common.view-only')}</b> {translate('dashboard.rule-view-only-desc')}
         </InfoBanner>
       )}
 
       <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
-        {id ? translate('dashboard.approval.rule.edit') : translate('dashboard.approval.rule.add')}
+        {id ? translate('dashboard.approval-rule-edit') : translate('dashboard.approval-rule-add')}
       </h1>
 
       <div className="flex flex-col gap-4">
         <Input
           name="name"
-          label={translate('dashboard.rule.name')}
+          label={translate('dashboard.rule-name')}
           required
           containerClassName="max-w-[400px]"
           value={data.name ?? ''}
@@ -124,8 +124,8 @@ const ApprovalRuleForm = ({
 
         <MultiSelect
           label={
-            <InfoTooltip content={translate('dashboard.role.requesters.desc')}>
-              {translate('dashboard.role.requesters')}
+            <InfoTooltip content={translate('dashboard.role-requesters-desc')}>
+              {translate('dashboard.role-requesters')}
             </InfoTooltip>
           }
           options={roles}
@@ -145,9 +145,9 @@ const ApprovalRuleForm = ({
       <div className="mt-12">
         <RuleBuilderSection
           title={`${translate('common.rule')} *`}
-          summary={`${translate('common.rule.desc')}`}
+          summary={`${translate('common.rule-desc')}`}
           error={
-            isPreviewing.rules && !data.rules?.every(isValidGroup) ? translate('dashboard.rules.setup.incomplete') : ''
+            isPreviewing.rules && !data.rules?.every(isValidGroup) ? translate('dashboard.rules-setup-incomplete') : ''
           }
           criteria={rulesCriteria}
           tiers={data.rules as Group[]}
@@ -167,14 +167,14 @@ const ApprovalRuleForm = ({
       <div className="mt-12">
         <RuleBuilderSection
           title={`${translate('common.approvers')} *`}
-          summary={`${translate('common.approvers.desc')}`}
+          summary={`${translate('common.approvers-desc')}`}
           translations={{
-            addRule: translate('dashboard.add.approver'),
-            addSubgroup: translate('dashboard.add.approval.group'),
+            addRule: translate('dashboard.add-approver'),
+            addSubgroup: translate('dashboard.add-approval-group'),
           }}
           error={
             isPreviewing.approvers && !data.approvers?.every(isValidGroup)
-              ? translate('dashboard.tiers.setup.incomplete')
+              ? translate('dashboard.tiers-setup-incomplete')
               : ''
           }
           criteria={approversCriteria}
@@ -225,7 +225,7 @@ const ApprovalRuleForm = ({
 
       <div className="mt-12">
         <Toggle
-          label={translate('dashboard.set.rule.as.active')}
+          label={translate('dashboard.set-rule-as-active')}
           defaultChecked={data.status === 'active'}
           onChange={(checked) => setData({ ...data, status: checked ? 'active' : 'inactive' })}
         />
@@ -236,8 +236,8 @@ const ApprovalRuleForm = ({
           className="flex-1"
           onConfirm={async () => router.back()}
           translations={{
-            title: translate('common.unsaved.changes'),
-            summary: translate('common.unsaved.changes.warning'),
+            title: translate('common.unsaved-changes'),
+            summary: translate('common.unsaved-changes-warning'),
             cancel: translate('common.cancel'),
             confirm: translate('common.leave'),
           }}

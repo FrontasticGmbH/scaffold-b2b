@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Accordion from '@/components/molecules/accordion';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Checkbox from '@/components/atoms/checkbox';
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
@@ -10,7 +10,7 @@ import UploadPanel from './upload-panel';
 import { QuickOrderDesktopContext } from '../quick-order-csv-upload/context';
 
 const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const {
     checked,
@@ -42,14 +42,14 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
   return (
     <Accordion defaultIsExpanded={false}>
       <Accordion.Button defaultSpacing={false} className="p-3 text-gray-700">
-        {translate('quick-order.upload.csv')}
+        {translate('quick-order.upload-csv')}
       </Accordion.Button>
       <Accordion.Panel defaultSpacing={false} className="p-3">
         {productsLoading || products.length === 0 ? (
           <UploadPanel />
         ) : (
           <>
-            <Typography fontSize={14}>{translate('quick-order.select.items')}</Typography>
+            <Typography fontSize={14}>{translate('quick-order.select-items')}</Typography>
             <div className="mt-3 flex flex-col gap-y-4">
               {products.map((product) => (
                 <div key={product.sku}>
@@ -62,12 +62,12 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
                   />
                   {product.exists && !product.inStock && (
                     <Typography fontSize={12} className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-red-600">
-                      {translate('quick-order.out.of.stock')}
+                      {translate('quick-order.out-of-stock')}
                     </Typography>
                   )}
                   {!product.exists && (
                     <Typography fontSize={12} className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-red-600">
-                      {translate('quick-order.item.not.located')}
+                      {translate('quick-order.item-not-located')}
                     </Typography>
                   )}
                 </div>
@@ -81,7 +81,7 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
                 className="text-14"
                 onClick={handleProductClear}
               >
-                {translate('quick-order.click.clear')}
+                {translate('quick-order.click-clear')}
               </Button>
               <Button
                 variant="primary"
@@ -91,7 +91,7 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
                 onClick={handleAddToCart}
                 disabled={addItemDisabled || hasInvalidProducts}
               >
-                {translate('quick-order.add.to.cart')}
+                {translate('quick-order.add-to-cart')}
               </Button>
             </div>
           </>

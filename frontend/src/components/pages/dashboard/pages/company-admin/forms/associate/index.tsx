@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import { Associate } from '@/types/entity/associate';
 import useEntityToasters from '@/hooks/useEntityToasters';
@@ -9,7 +9,7 @@ import MultiSelect from '@/components/atoms/multi-select';
 import { CompanyAdminPageProps } from '../../types';
 
 const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOptions }: CompanyAdminPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showSavedMessage, showFailedMessage } = useEntityToasters('associate');
 

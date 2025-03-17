@@ -23,7 +23,7 @@ describe('ShowMore', () => {
       </ShowMore>,
     );
 
-    expect(screen.getByText('common.show.all')).toBeInTheDocument();
+    expect(screen.getByText('Show all')).toBeInTheDocument();
   });
 
   it('should toggle display when the label is clicked', async () => {
@@ -33,12 +33,12 @@ describe('ShowMore', () => {
       </ShowMore>,
     );
 
-    const shoMoreText = screen.getByText('common.show.all');
+    const shoMoreText = screen.getByText('Show all');
     expect(shoMoreText).toBeInTheDocument();
 
     fireEvent.click(shoMoreText);
 
-    expect(await screen.findByText('common.show.less')).toBeInTheDocument();
-    expect(screen.queryByText('common.show.all')).not.toBeInTheDocument();
+    expect(await screen.findByText('Show less')).toBeInTheDocument();
+    expect(screen.queryByText('Show all')).not.toBeInTheDocument();
   });
 });

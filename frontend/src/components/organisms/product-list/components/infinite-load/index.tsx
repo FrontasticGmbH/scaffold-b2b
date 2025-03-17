@@ -1,10 +1,10 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';
 import { useProductList } from '../../context';
 
 const InfiniteLoad = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { limit, total, onLoadMore } = useProductList();
 
@@ -20,7 +20,7 @@ const InfiniteLoad = () => {
         disabled={limit === total}
         onClick={onLoadMore}
       >
-        {translate('product.load.more')}
+        {translate('product.load-more')}
       </Button>
     </div>
   );

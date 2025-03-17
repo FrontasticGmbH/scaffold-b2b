@@ -13,6 +13,7 @@ interface Pagination {
 
 export interface ApprovalFlowsPageProps {
   selectedBusinessUnit?: BusinessUnit;
+  businessUnitIsLoading?: boolean;
   businessUnitOptions: Option[];
   onBusinessUnitChange?: (businessUnit: string) => void;
   onSearch: (val: string) => void;

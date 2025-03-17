@@ -1,10 +1,10 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Select from '@/components/atoms/select';
 import { useProductList } from '../../context';
 
 const SortDropdown = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { sortValues, currentSortValue, currentSortVector, onSortValueChange } = useProductList();
 

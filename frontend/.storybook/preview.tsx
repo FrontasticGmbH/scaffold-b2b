@@ -12,9 +12,18 @@ import ShipAndLanguageProvider from '@/providers/ship-and-language';
 import I18nProvider from '@/providers/I18n';
 import translations from './translations';
 import { projectSettings } from '@/mocks/projectSettings';
+import nextIntl from "./next-intl";
 
 const preview: Preview = {
+  initialGlobals: {
+    locale: 'en',
+    locales: {
+      en: 'English',
+      de: 'German',
+    },
+  },
   parameters: {
+    nextIntl,
     docs: {
       theme: theme,
     },
@@ -34,13 +43,10 @@ const preview: Preview = {
   decorators: [
     (Story) => (
       <div className={inter.variable} data-theme="default">
-        <I18nProvider translations={translations}>
-          <ShipAndLanguageProvider projectSettings={projectSettings}>
-            <Story />
-            <Toaster />
-          </ShipAndLanguageProvider>
-        </I18nProvider>
-
+        <ShipAndLanguageProvider projectSettings={projectSettings}>
+          <Story />
+          <Toaster />
+        </ShipAndLanguageProvider>
         <div id="react-modal-custom-portal" />
       </div>
     ),

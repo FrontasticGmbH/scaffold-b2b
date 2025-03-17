@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import ActivityLog from '@/components/molecules/activity-log';
 import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
@@ -20,7 +20,7 @@ const QuoteDetailsPage = ({
   onRevoke,
   onViewOrder,
 }: QuoteDetailsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency, formatLocalDate } = useFormat();
 
@@ -32,30 +32,30 @@ const QuoteDetailsPage = ({
     <div>
       {viewOnly && (
         <InfoBanner className="mt-3">
-          <b>{translate('common.view.only')}</b>{' '}
-          {translate(isQuoteRequest ? 'dashboard.quote.requests.view.only.desc' : 'dashboard.quotes.view.only.desc')}
+          <b>{translate('common.view-only')}</b>{' '}
+          {translate(isQuoteRequest ? 'dashboard.quote-requests-view-only-desc' : 'dashboard.quotes-view-only-desc')}
         </InfoBanner>
       )}
 
       <div className="flex items-center justify-between py-6 md:py-7 lg:py-9">
         <h1 className="text-18 font-extrabold leading-tight text-gray-800 md:text-20 lg:text-24">
-          {translate(isQuoteRequest ? 'dashboard.quote.request.details' : 'dashboard.quote.details')}
+          {translate(isQuoteRequest ? 'dashboard.quote-request-details' : 'dashboard.quote-details')}
         </h1>
         <PreviousPageLink className="hidden md:block" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-x-[80px] lg:grid-cols-3 lg:gap-x-[120px]">
         <h3 className="text-14 text-gray-600 lg:order-1">
-          {translate(isQuoteRequest ? 'dashboard.quote.request.id' : 'dashboard.quote.id')}: {quote.id}
+          {translate(isQuoteRequest ? 'dashboard.quote-request-id' : 'dashboard.quote-id')}: {quote.id}
         </h3>
 
         <h3 className="text-14 text-gray-600 lg:order-2">
-          {translate('dashboard.creation.date')}: {quote.creationDate ? formatLocalDate(quote.creationDate) : '-'}
+          {translate('dashboard.creation-date')}: {quote.creationDate ? formatLocalDate(quote.creationDate) : '-'}
         </h3>
 
         {quote.purchaseOrderNumber && (
           <h3 className="text-14 text-gray-600 lg:order-2">
-            {translate('dashboard.purchase.order.number')}: {quote.purchaseOrderNumber}
+            {translate('dashboard.purchase-order-number')}: {quote.purchaseOrderNumber}
           </h3>
         )}
 
@@ -69,7 +69,7 @@ const QuoteDetailsPage = ({
         </h3>
 
         <h3 className="text-14 text-gray-600 lg:order-3">
-          {translate('dashboard.last.modified.date')}:{' '}
+          {translate('dashboard.last-modified-date')}:{' '}
           {quote.lastModifiedDate ? formatLocalDate(quote.lastModifiedDate) : '-'}
         </h3>
       </div>
@@ -84,10 +84,12 @@ const QuoteDetailsPage = ({
                 { title, titleValues, date, author, comment, commentBy, reply, renegotiate, revoke, viewOrder },
                 index,
               ) => ({
+                // eslint-disable-next-line
+                // @ts-ignore
                 title: translate(title, { values: titleValues }),
                 summary: date || author ? `${date ?? ''} - ${translate('common.by')} ${author ?? ''}` : '',
                 comment: comment || (isRenegotiating[index] ? ' ' : undefined),
-                commentLabel: `${translate('common.comment.by')} ${translate(
+                commentLabel: `${translate('common.comment-by')} ${translate(
                   commentBy === 'author' || isRenegotiating[index] ? 'common.buyer' : 'common.seller',
                 )}`,
                 commentDisabled: !renegotiate || viewOnly,
@@ -102,7 +104,7 @@ const QuoteDetailsPage = ({
                       onReject,
                       ctaLink:
                         renegotiate || revoke
-                          ? translate(`dashboard.cta.${renegotiate ? 'renegotiate' : 'revoke'}`)
+                          ? translate(`dashboard.cta-${renegotiate ? 'renegotiate' : 'revoke'}`)
                           : '',
                       ctaLinkIsDisabled: renegotiate ? !permissions.canRenegotiate : !permissions.canRevoke,
                       onCtaLinkClick:
@@ -115,7 +117,7 @@ const QuoteDetailsPage = ({
                   : {}),
                 ...(viewOrder
                   ? {
-                      ctaButton: translate('dashboard.view.order.details'),
+                      ctaButton: translate('dashboard.view-order-details'),
                       ctaButtonIsDisabled: viewOnly,
                       onCtaButtonClick: onViewOrder,
                     }
@@ -123,7 +125,7 @@ const QuoteDetailsPage = ({
               }),
             )}
             translations={{
-              accept: translate('dashboard.accept.and.place.order'),
+              accept: translate('dashboard.accept-and-place-order'),
             }}
           />
         </div>
@@ -131,7 +133,7 @@ const QuoteDetailsPage = ({
 
       <div>
         <h5 className="pb-7 pt-6 text-gray-700">
-          {translate('dashboard.items.quoted')} <span className="text-gray-600">({quote.items.length})</span>
+          {translate('dashboard.items-quoted')} <span className="text-gray-600">({quote.items.length})</span>
         </h5>
 
         <div className="overflow-x-auto scrollbar-hide">

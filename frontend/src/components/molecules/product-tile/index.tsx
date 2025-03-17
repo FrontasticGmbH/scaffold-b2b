@@ -6,7 +6,7 @@ import QuantityWidget from '@/components/atoms/quantity-widget';
 import StockIndicator from '@/components/atoms/stock-indicator';
 import { classnames } from '@/utils/classnames/classnames';
 import useDiscount from '@/hooks/useDiscount';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { ProductTileProps } from './types';
 import ShowMore from '../show-more';
@@ -32,7 +32,7 @@ const ProductTile = ({
   variant = 'list-item',
   className = '',
 }: ProductTileProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [addingToCart, setAddingToCart] = useState(false);
 

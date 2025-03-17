@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import Header from '@/components/organisms/header';
 import AnnouncementBar from '@/components/organisms/announcement-bar';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { desktop } from '@/constants/screensizes';
 import { resolveReference } from '@/utils/lib/resolve-reference';
@@ -16,13 +16,14 @@ import { HeaderTasticProps } from './types';
 import useHeaderData from './hooks/useHeaderData';
 
 const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const [isDesktopSize] = useMediaQuery(desktop);
 
   const {
     account,
     businessUnits,
     selectedBusinessUnit,
+    businessUnitIsLoading,
     stores,
     selectedStore,
     quotes,
@@ -88,6 +89,7 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
               textBar={data.textBar}
               accountLinks={accountLinks}
               selectedBusinessUnit={selectedBusinessUnit}
+              businessUnitIsLoading={businessUnitIsLoading}
               businessUnits={businessUnits}
               stores={stores}
               selectedStore={selectedStore}
@@ -117,7 +119,7 @@ const HeaderTastic = ({ data }: TasticProps<HeaderTasticProps>) => {
             logo={data.logo}
             logoLink={resolveReference(data.logoLink)}
             searchPlaceholder={
-              isDesktopSize ? translate('common.search.placeholder') : translate('common.search.placeholder.mobile')
+              isDesktopSize ? translate('common.search-placeholder') : translate('common.search-placeholder-mobile')
             }
             searchSuggestions={headerProducts.map((product) => mapProductSuggestion(product))}
             quotes={quotes?.length ?? 0}

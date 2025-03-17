@@ -1,4 +1,28 @@
 
+## Version 3.2.1 (2025-03-04)
+
+** New Features & Improvements **
+
+* Refactor localiation issue in map category
+
+## Version 3.2.0 (2025-03-03)
+
+** New Features & Improvements **
+
+* Fix accessibility issues
+* Upgrade to headless ui V2
+* List keyboard navigation EAA
+* Fix b2b translations
+* Reload page when locale changes
+* Unify env usage
+* Update ref usage
+* Avoid duplicate get cart request
+
+
+** Bug Fixes **
+
+* Fix B2B categories response cache
+
 ## Version 3.0.0 (2025-02-03)
 
 ** New Features & Improvements **

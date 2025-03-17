@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';
 import TextArea from '@/components/atoms/text-area';
 import { classnames } from '@/utils/classnames/classnames';
@@ -13,7 +13,7 @@ const CompletePurchase = ({
 }: Pick<CheckoutProps, 'onSubmitPurchase' | 'translations' | 'buyerCanAddComment'>) => {
   const { isLastStep, isCtCheckoutEnabled, checkoutIsProcessing, setCheckoutIsProcessing } = useCheckout();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [buyerComment, setBuyerComment] = useState('');
 
@@ -51,7 +51,7 @@ const CompletePurchase = ({
               }
             : {})}
         >
-          {translations.purchase || translate('checkout.complete.purchase')}
+          {translations.purchase || translate('checkout.complete-purchase')}
         </Button>
 
         {isCtCheckoutEnabled && <div className="mt-3" data-ctc-selector="vendorPaymentButton"></div>}

@@ -1,5 +1,5 @@
 import InfoBanner from '@/components/molecules/info-banner';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Gallery from '../gallery';
 import AdditionalInfo from './components/additional-info';
 import Header from './components/header';
@@ -19,13 +19,13 @@ const ProductDetails = ({
   addToNewWishlist,
   addToCartDisabled = false,
 }: ProductDetailsProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className="mb-16 px-4 md:px-6 lg:px-12">
       {addToCartDisabled && (
         <InfoBanner className="mt-3">
-          <b>{translate('common.view.only')}</b> {translate('cart.view.only.desc')}
+          <b>{translate('common.view-only')}</b> {translate('cart.view-only-desc')}
         </InfoBanner>
       )}
 

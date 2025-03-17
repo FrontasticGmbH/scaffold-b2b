@@ -13,4 +13,7 @@ export interface Product {
   categories?: Category[];
   variants: Variant[];
   _url?: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string;
 }

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Tag from '@/components/atoms/tag';
 import { DocumentDuplicateIcon as DuplicateIcon, PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
@@ -11,7 +11,7 @@ import { classnames } from '@/utils/classnames/classnames';
 import { Props } from './types';
 
 const ApprovalRulesTable = ({ approvalRules, onDuplicate, pagination, viewOnly }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [isDuplicating, setIsDuplicating] = useState<Record<number, boolean>>({});
 
@@ -44,20 +44,20 @@ const ApprovalRulesTable = ({ approvalRules, onDuplicate, pagination, viewOnly }
               <Table.Cell>{approvalRule.requesters.map((r) => r.name ?? r.key ?? '').join(', ')}</Table.Cell>
               <Table.Cell>
                 <Tag variant={approvalRule.status === 'active' ? 'success' : 'danger'}>
-                  {translate(`common.status.${approvalRule.status}`)}
+                  {translate(`common.status-${approvalRule.status}`)}
                 </Tag>
               </Table.Cell>
               <Table.Cell>
                 <div className="flex items-center justify-end gap-5 text-primary">
                   <Link
-                    aria-label={translate('dashboard.edit.approval.rule')}
+                    aria-label={translate('dashboard.edit-approval-rule')}
                     href={!viewOnly ? `?subPath=edit-approval-rule&id=${approvalRule.id}` : '#'}
                   >
                     <EditIcon
                       className={classnames({ 'cursor-not-allowed opacity-30': viewOnly, 'cursor-pointer': !viewOnly })}
                       width={20}
                       data-tooltip-id={`${approvalRule.id}-edit-tooltip`}
-                      data-tooltip-content={translate('dashboard.edit.approval.rule')}
+                      data-tooltip-content={translate('dashboard.edit-approval-rule')}
                     />
                     <Tooltip id={`${approvalRule.id}-edit-tooltip`} place="top" />
                   </Link>
@@ -72,7 +72,7 @@ const ApprovalRulesTable = ({ approvalRules, onDuplicate, pagination, viewOnly }
                           width={20}
                           onClick={() => handleDuplicate(approvalRule, index)}
                           data-tooltip-id={`${approvalRule.id}-duplicate-tooltip`}
-                          data-tooltip-content={translate('dashboard.duplicate.approval.rule')}
+                          data-tooltip-content={translate('dashboard.duplicate-approval-rule')}
                         />
                         <Tooltip id={`${approvalRule.id}-duplicate-tooltip`} place="top" />
                       </>

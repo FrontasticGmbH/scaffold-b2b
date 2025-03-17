@@ -3,7 +3,7 @@
 import React from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import ProductList from '@/components/organisms/product-list';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useCart from '@/lib/hooks/useCart';
 import IntermediaryProductList from '@/components/organisms/product-list/components/intermediary-page';
 import { resolveReference } from '@/utils/lib/resolve-reference';
@@ -26,7 +26,7 @@ const ProductListViewModel = ({
   categoryConfiguration,
   displayIntermediaryPage = false,
 }: Omit<DataSourceProps, 'category'> & ViewModelProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { slug, locale } = useParams();
 
@@ -57,7 +57,7 @@ const ProductListViewModel = ({
     ? [
         { name: translate('common.home'), link: '/' },
         {
-          name: translate('product.search.results'),
+          name: translate('product.search-results'),
           link: '',
         },
       ]
@@ -75,7 +75,7 @@ const ProductListViewModel = ({
     return (
       <IntermediaryProductList
         title={rootCategory?.name ?? ''}
-        link={{ name: translate('common.shop.all'), href: `${category?._url}?view=1` }}
+        link={{ name: translate('common.shop-all'), href: `${category?._url}?view=1` }}
         breadcrumb={categoriesBreadcrumb}
         items={[
           ...(rootCategory?.descendants ?? []).map(({ name, path, categoryKey }) => {
@@ -86,7 +86,7 @@ const ProductListViewModel = ({
             };
           }),
           {
-            name: translate('common.view.all'),
+            name: translate('common.view-all'),
             image: categoryConfig?.image,
             url: `${category?._url}?view=1`,
           },
@@ -112,7 +112,7 @@ const ProductListViewModel = ({
 
   return (
     <ProductList
-      title={(isSearchPage ? `${translate('product.search.results.for')} "${searchQuery}"` : category?.name) ?? '#'}
+      title={(isSearchPage ? `${translate('product.search-results-for')} "${searchQuery}"` : category?.name) ?? '#'}
       products={mappedProducts}
       breadcrumb={categoriesBreadcrumb}
       sortValues={[
@@ -136,7 +136,7 @@ const ProductListViewModel = ({
       onAddToCart={async (sku, qty) => {
         const res = await addItem([{ sku, count: qty }]);
 
-        if (!res.success) toast.error(res.message || translate('common.something.went.wrong'));
+        if (!res.success) toast.error(res.message || translate('common.something-went-wrong'));
       }}
     />
   );

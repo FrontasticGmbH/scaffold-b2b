@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { Product } from '@/types/entity/product';
 import Image from '@/components/atoms/Image';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useFormat from '@/hooks/useFormat';
 import Link from '@/components/atoms/link';
 
@@ -15,7 +15,7 @@ const ProductTile = ({
   addToCartDisabled?: boolean;
   onAddToCart?: () => Promise<void>;
 }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [isLoading, setIsLoading] = useState(false);
 

@@ -1,5 +1,5 @@
 import Toaster from '@/components/atoms/toaster';
-import { act, render, renderHook, screen } from '@test/utils';
+import { act, createWrapper, render, renderHook, screen } from '@test/utils';
 import useClipboard from '.';
 
 describe('[Hook] useClipboard', () => {
@@ -24,7 +24,7 @@ describe('[Hook] useClipboard', () => {
       result: {
         current: { copyToClipboard },
       },
-    } = renderHook(useClipboard);
+    } = renderHook(useClipboard, { wrapper: createWrapper() });
 
     jest.spyOn(navigator.clipboard, 'writeText').mockImplementation(jest.fn());
 
@@ -32,7 +32,7 @@ describe('[Hook] useClipboard', () => {
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('COPYME!');
 
-    expect(screen.getByText('common.copy.clipboard.success')).toBeInTheDocument();
+    expect(screen.getByText('Copied to clipboard!')).toBeInTheDocument();
   });
 
   it('Shows an error message upon failing to copy to clipboard', async () => {
@@ -40,7 +40,7 @@ describe('[Hook] useClipboard', () => {
       result: {
         current: { copyToClipboard },
       },
-    } = renderHook(useClipboard);
+    } = renderHook(useClipboard, { wrapper: createWrapper() });
 
     jest.spyOn(navigator.clipboard, 'writeText').mockImplementation(() => {
       throw new Error('COPY FAILED!');
@@ -51,6 +51,6 @@ describe('[Hook] useClipboard', () => {
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith('COPYME!');
     expect(navigator.clipboard.writeText).toThrow('COPY FAILED!');
 
-    expect(screen.getByText('common.copy.clipboard.error')).toBeInTheDocument();
+    expect(screen.getByText('Failed to copy to clipboard--')).toBeInTheDocument();
   });
 });

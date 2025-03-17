@@ -3,7 +3,7 @@ import Typography from '@/components/atoms/typography';
 import FlagIconsSquare from '@/components/atoms/icons/flag-icons-square';
 import Radio from '@/components/atoms/radio';
 import Popover from '@/components/molecules/popover';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useDisclosure from '@/hooks/useDisclosure';
 import { useShipAndLanguage } from '@/providers/ship-and-language';
 import useListKeyboardNavigation from '@/hooks/useListKeyboardNavigation';
@@ -12,7 +12,7 @@ import { deskTopProps } from '../types';
 import FlagButton from './flag-button';
 
 const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { locations, selectedLocation, selectedLanguage, onLocationSelect, onLanguageSelect } = useShipAndLanguage();
 
@@ -40,7 +40,7 @@ const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) =>
     >
       <div className="w-[270px] p-4">
         <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
-          {translate('common.shop.ship.title')}
+          {translate('common.shop-ship-title')}
         </Typography>
         <ul className="flex flex-col gap-y-5 pt-5" ref={locationsListRef} tabIndex={0}>
           {locations.map((location, index) => (

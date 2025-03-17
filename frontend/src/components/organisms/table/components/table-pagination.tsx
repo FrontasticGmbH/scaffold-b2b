@@ -1,6 +1,6 @@
 import { SVGAttributes, useMemo } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
 import Select from '@/components/atoms/select';
@@ -15,7 +15,7 @@ const TablePagination = ({
   onPrevious,
   onNext,
 }: TablePaginationProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { from, to } = useMemo(() => {
     const from = totalItems === 0 ? '0' : ((page - 1) * limit + 1).toString();
@@ -47,7 +47,7 @@ const TablePagination = ({
     <div className={paginationClassName}>
       <div className="mt-2 flex items-center justify-center gap-2 md:mt-0 md:justify-start">
         <Typography fontSize={14} className="text-gray-700 md:block">
-          {translate('common.rows.per.page')}
+          {translate('common.rows-per-page')}
         </Typography>
         <Select
           onChange={onRowsPerPageChange}
@@ -63,12 +63,10 @@ const TablePagination = ({
       </div>
       <div className="flex items-center gap-3 md:gap-9">
         <Typography fontSize={14} className="hidden text-gray-700 md:flex">
-          {translate('common.from.to', {
-            values: {
-              from,
-              to,
-              totalItems: totalItems.toString(),
-            },
+          {translate('common.from-to', {
+            from,
+            to,
+            totalItems: totalItems.toString(),
           })}
         </Typography>
         <div className="mt-3 flex w-full justify-between gap-4 md:mt-0">
@@ -76,17 +74,15 @@ const TablePagination = ({
             data-testid="previous-arrow"
             disabled={disablePrevious}
             onClick={onPrevious}
-            aria-label={translate('common.previous')}
+            aria-label={translate('common.prev')}
           >
             <ChevronLeftIcon data-disabled={disablePrevious} stroke="#212121" {...previousIconProps} />
           </button>
           <Typography fontSize={14} className="text-gray-700 md:hidden">
-            {translate('common.from.to', {
-              values: {
-                from,
-                to,
-                totalItems: totalItems.toString(),
-              },
+            {translate('common.from-to', {
+              from,
+              to,
+              totalItems: totalItems.toString(),
             })}
           </Typography>
           <button

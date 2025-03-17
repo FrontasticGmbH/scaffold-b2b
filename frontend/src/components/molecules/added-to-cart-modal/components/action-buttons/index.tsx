@@ -1,13 +1,13 @@
 import React from 'react';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 type PropsType = {
   onClose: () => void;
 };
 const ActionButtons = ({ onClose }: PropsType) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className={'col-span-6 mt-8 grid gap-3 md:mt-12 md:grid-cols-2'}>
@@ -16,7 +16,7 @@ const ActionButtons = ({ onClose }: PropsType) => {
         variant={'secondary'}
         onClick={() => onClose()}
       >
-        {translate('cart.continue.shopping')}
+        {translate('cart.continue-shopping')}
       </Button>
       <Link href="/cart" underlineOnHover={false} className="row-start-1 h-10 w-full">
         <Button className={'size-full'} variant="primary">

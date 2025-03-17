@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import { BusinessUnit } from '@/types/entity/business-unit';
 import useEntityToasters from '@/hooks/useEntityToasters';
@@ -14,7 +14,7 @@ const BusinessUnitForm = ({
   businessUnits,
   storeName,
 }: CompanyAdminPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showSavedMessage, showFailedMessage } = useEntityToasters('businessunit');
 
@@ -53,10 +53,10 @@ const BusinessUnitForm = ({
       <div className="flex flex-col gap-4">
         {!id && (
           <p className="pb-2 text-14 text-gray-700">
-            {translate('dashboard.add.business.unit.to')} <span className="font-semibold">{storeName}</span>
+            {translate('dashboard.add-business-unit-to')} <span className="font-semibold">{storeName}</span>
           </p>
         )}
-        {id && <Typography>{translate('dashboard.entity.update.how.to.delete')}</Typography>}
+        {id && <Typography>{translate('dashboard.entity-update-how-to-delete')}</Typography>}
         <Input
           name="name"
           label={translate('common.name')}
@@ -74,7 +74,7 @@ const BusinessUnitForm = ({
           containerClassName="max-w-[400px]"
         />
         {/* <Checkbox
-          label={translate('dashboard.business.unit.create.specific.store')}
+          label={translate('dashboard.business-unit-create-specific-store')}
           onChecked={(checked) => setData({ ...data, createStore: checked })}
         /> */}
       </div>

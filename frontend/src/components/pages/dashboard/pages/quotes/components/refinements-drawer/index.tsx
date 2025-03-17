@@ -4,7 +4,7 @@ import {
   AdjustmentsHorizontalIcon as FiltersIcon,
   QuestionMarkCircleIcon as InfoIcon,
 } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Drawer from '@/components/organisms/drawer';
 import Button from '@/components/atoms/button';
 import Accordion from '@/components/molecules/accordion';
@@ -24,7 +24,7 @@ const RefinementsDrawer = ({
   onStatusRefine,
   onInfoClick,
 }: Partial<QuotesPageProps & { onInfoClick: () => void }>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -40,18 +40,18 @@ const RefinementsDrawer = ({
       ),
     },
     {
-      title: 'dashboard.quote.search',
+      title: 'dashboard.quote-search',
       Component: (
         <SearchInput
           searchValue={filters?.search ?? ''}
           variant="sm"
-          placeholder={`${translate('dashboard.search.by.id.sku')}...`}
+          placeholder={`${translate('dashboard.search-by-id-sku')}...`}
           handleOnChange={(val) => onSearch?.(val)}
         />
       ),
     },
     {
-      title: 'dashboard.order.status',
+      title: 'dashboard.order-status',
       Component: (
         <div className="flex flex-col gap-7">
           {(statusOptions ?? []).map(({ name, value }) => (
@@ -98,7 +98,13 @@ const RefinementsDrawer = ({
               <div key={index} className="border-b border-neutral-400">
                 <Accordion className="border-none">
                   <Accordion.Button className="py-5" defaultSpacing={false}>
-                    <span className="text-14 font-bold">{translate(title)}</span>
+                    <span className="text-14 font-bold">
+                      {
+                        // eslint-disable-next-line
+                        // @ts-ignore
+                        translate(title)
+                      }
+                    </span>
                   </Accordion.Button>
                   <Accordion.Panel defaultSpacing={false} className="pb-6">
                     {Component}
@@ -116,7 +122,7 @@ const RefinementsDrawer = ({
                 onClose();
               }}
             >
-              {translate('product.clear.all')}
+              {translate('product.clear-all')}
             </Button>
             <Button variant="primary" className="flex-1" onClick={onClose}>
               {translate('common.view')} ({quotes?.length})

@@ -7,6 +7,7 @@ import {
   getAccountGroupId,
   getDistributionChannelId,
   getPath,
+  getProductSelectionId,
   getStoreId,
   getStoreKey,
   getSupplyChannelId,
@@ -16,7 +17,8 @@ import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProd
 export default class ProductRouter {
   static generateUrlFor(item: Product | LineItem | WishlistItem) {
     if (ProductRouter.isProduct(item)) {
-      return `/${item.slug}/p/${item.variants?.[0]?.sku}`;
+      const variant = item.variants.find((variant) => variant.isMatchingVariant !== false) ?? item.variants[0];
+      return `/${item.slug}/p/${variant.sku}`;
     }
     return `/slug/p/${item.variant?.sku}`;
   }
@@ -48,6 +50,7 @@ export default class ProductRouter {
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
         storeId: getStoreId(request),
+        productSelectionId: getProductSelectionId(request),
         accountGroupId: getAccountGroupId(request),
       };
 
@@ -67,6 +70,7 @@ export default class ProductRouter {
         storeKey: getStoreKey(request),
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
+        productSelectionId: getProductSelectionId(request),
         accountGroupId: getAccountGroupId(request),
       };
 

@@ -5,7 +5,7 @@ import InfoTooltip from '@/components/atoms/info-tooltip';
 import EmptyState from '@/components/molecules/empty-state';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import InfoBanner from '@/components/molecules/info-banner';
 import useItems from '../../hooks/useItems';
 import OrdersTable from '../orders/components/orders-table';
@@ -13,7 +13,7 @@ import { DashboardProps } from './types';
 import { DashboardLinks } from '../../constants';
 
 const DashboardPage = ({ orders, hasPendingApprovalFlows }: DashboardProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { cardItems } = useItems();
 
   const [showDisabledMessage, setShowDisabledMessage] = useState<Record<string, boolean>>({});
@@ -24,9 +24,9 @@ const DashboardPage = ({ orders, hasPendingApprovalFlows }: DashboardProps) => {
     <div className="flex flex-col">
       {hasPendingApprovalFlows && (
         <InfoBanner variant="warning" className="mt-3">
-          {translate('dashboard.approval.flows.approve.ask')}{' '}
+          {translate('dashboard.approval-flows-approve-ask')}{' '}
           <Link href={DashboardLinks.approvalFlows} className="underline">
-            {translate('dashboard.approval.flows.section').toLowerCase()}
+            {translate('dashboard.approval-flows-section').toLowerCase()}
           </Link>
         </InfoBanner>
       )}
@@ -66,12 +66,12 @@ const DashboardPage = ({ orders, hasPendingApprovalFlows }: DashboardProps) => {
 
       <div className="mt-7 md:mt-9 lg:mt-11">
         <h2 className="mb-4 text-16 font-extrabold text-gray-800 md:mb-5 md:text-18 lg:mb-6 lg:text-20">
-          {translate('common.orders.latest')}
+          {translate('common.orders-latest')}
         </h2>
         {orders && orders.length > 0 ? (
           <OrdersTable orders={orders} />
         ) : (
-          <EmptyState header={translate('common.no.results.found')} />
+          <EmptyState header={translate('common.no-results-found')} />
         )}
       </div>
     </div>

@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import Button from '@/components/atoms/button';
 import Typography from '@/components/atoms/typography';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { HeaderContext } from '../../../context';
 
 const BackButton = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { removeCategory, hideQuickOrderMenu } = useContext(HeaderContext);
 
   const handleBackPress = () => {

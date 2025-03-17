@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { sdk } from '@/sdk';
 import { PageProps } from '@/types/next';
 import Renderer from '@/lib/renderer';
-import { getTranslations } from '@/utils/I18n/get-translations';
 import Toaster from '@/components/atoms/toaster';
 import { authenticate } from '@/utils/server/authenticate';
 import { Providers } from '@/providers';
@@ -80,32 +79,10 @@ export default async function Page(props: PageProps) {
     redirect(page.data.target);
   }
 
-  const translations = await getTranslations(
-    [locale],
-    [
-      'common',
-      'account',
-      'cart',
-      'checkout',
-      'customer-support',
-      'error',
-      'newsletter',
-      'orders',
-      'payment',
-      'product',
-      'success',
-      'thank-you',
-      'wishlist',
-      'dashboard',
-      'quick-order',
-    ],
-  );
-
   return (
     <div data-theme={(!page.isError && page.data.pageFolder.configuration.displayTheme) ?? 'default'}>
       <Providers
         page={{ ...page, data: page.data }}
-        translations={translations}
         locale={locale}
         initialData={{
           account: auth.isError ? undefined : auth.data,

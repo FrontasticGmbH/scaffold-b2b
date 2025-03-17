@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@test/utils';
 import AddedToCartModal from '@/components/molecules/added-to-cart-modal/index';
 import { Product } from '@/types/entity/product';
 
@@ -42,6 +42,6 @@ describe('AddedToCartModal', () => {
       />,
     );
 
-    expect(screen.getByText('product.bought.together')).toBeInTheDocument();
+    expect(screen.getByText('Frequently bought together')).toBeInTheDocument();
   });
 });

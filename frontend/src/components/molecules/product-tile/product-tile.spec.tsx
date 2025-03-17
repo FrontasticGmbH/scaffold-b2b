@@ -32,7 +32,7 @@ describe('[Component] Product Tile', () => {
       />,
     );
 
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(tree.baseElement.querySelector('.animate-spin')).toBeDefined();
     expect(onAddToCart).toHaveBeenCalledWith(1);
@@ -52,9 +52,9 @@ describe('[Component] Product Tile', () => {
       />,
     );
 
-    expect((screen.getByText('cart.add') as HTMLButtonElement).disabled).toBeTruthy();
+    expect((screen.getByText('Add to cart') as HTMLButtonElement).disabled).toBeTruthy();
 
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(tree.baseElement.querySelector('.animate-spin')).toBeNull();
     expect(onAddToCart).not.toHaveBeenCalledWith(1);
@@ -71,8 +71,8 @@ describe('[Component] Product Tile', () => {
       />,
     );
 
-    expect((screen.getByText('cart.add') as HTMLButtonElement).disabled).toBeTruthy();
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    expect((screen.getByText('Add to cart') as HTMLButtonElement).disabled).toBeTruthy();
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(tree.baseElement.querySelector('.animate-spin')).toBeNull();
     expect(onAddToCart).not.toHaveBeenCalledWith(1);
@@ -93,7 +93,7 @@ describe('[Component] Product Tile', () => {
     await act(async () => userEvent.click(screen.getAllByText('+')[0]));
     await act(async () => userEvent.click(screen.getAllByText('-')[0]));
 
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(onAddToCart).toHaveBeenCalledWith(3);
   });
@@ -112,7 +112,7 @@ describe('[Component] Product Tile', () => {
     await act(async () => userEvent.click(screen.getAllByText('+')[0]));
     await act(async () => userEvent.click(screen.getAllByText('+')[0]));
 
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(onAddToCart).toHaveBeenCalledWith(2);
   });
@@ -143,8 +143,8 @@ describe('[Component] Product Tile', () => {
     expect(screen.getByText('Spec2')).toBeDefined();
     expect(screen.getByText('Spec3')).toBeDefined();
 
-    expect(screen.queryByText('common.show.all')).toBeNull();
-    expect(screen.queryByText('common.show.less')).toBeNull();
+    expect(screen.queryByText('Show all')).toBeNull();
+    expect(screen.queryByText('Show less')).toBeNull();
   });
 
   test('It shows max description items correctly for a list-item product', async () => {
@@ -177,16 +177,16 @@ describe('[Component] Product Tile', () => {
     expect(screen.queryByTestId('Spec4')).toBeNull();
     expect(screen.queryByTestId('Spec5')).toBeNull();
 
-    expect(screen.getByText('common.show.all')).toBeDefined();
+    expect(screen.getByText('Show all')).toBeDefined();
 
-    await act(async () => userEvent.click(screen.getByText('common.show.all')));
+    await act(async () => userEvent.click(screen.getByText('Show all')));
 
     expect(screen.getByText('Spec4')).toBeDefined();
     expect(screen.getByText('Spec5')).toBeDefined();
 
-    expect(screen.getByText('common.show.less')).toBeDefined();
+    expect(screen.getByText('Show less')).toBeDefined();
 
-    await act(async () => userEvent.click(screen.getByText('common.show.less')));
+    await act(async () => userEvent.click(screen.getByText('Show less')));
 
     expect(screen.getByText('Spec1')).toBeDefined();
     expect(screen.getByText('Spec2')).toBeDefined();
@@ -194,6 +194,6 @@ describe('[Component] Product Tile', () => {
     expect(screen.queryByTestId('Spec4')).toBeNull();
     expect(screen.queryByTestId('Spec5')).toBeNull();
 
-    expect(screen.getByText('common.show.all')).toBeDefined();
+    expect(screen.getByText('Show all')).toBeDefined();
   });
 });

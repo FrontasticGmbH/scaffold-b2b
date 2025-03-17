@@ -1,12 +1,12 @@
 import Typography from '@/components/atoms/typography';
 import { classnames } from '@/utils/classnames/classnames';
 import Breadcrumb from '@/components/molecules/breadcrumb';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { PDPHeaderProps } from '../types';
 
 const Header = ({ className, product }: PDPHeaderProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const headerClassName = classnames('border-b border-neutral-400 pb-4 pt-3 md:pt-4 lg:pt-6', className);
 

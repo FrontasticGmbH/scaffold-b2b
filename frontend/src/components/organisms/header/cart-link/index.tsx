@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import Typography from '@/components/atoms/typography';
 import Link from '@/components/atoms/link';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { HeaderContext } from '../context';
 
 const CartLink = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { cartLink, cartItems } = useContext(HeaderContext);
   return (
     <Link href={cartLink.href ?? '/'} className="relative flex items-center justify-center p-1">

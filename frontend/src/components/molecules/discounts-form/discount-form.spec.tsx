@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import DiscountsForm from './';
 
@@ -17,8 +17,8 @@ describe('DiscountsForm', () => {
   it('renders the discount form correctly', () => {
     render(<DiscountsForm className="custom-class" discounts={[]} onSubmit={mockOnSubmit} />);
 
-    expect(screen.getByText('cart.discount.apply')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('cart.discount.enter')).toBeInTheDocument();
+    expect(screen.getByText('Apply a discount')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter discount code')).toBeInTheDocument();
   });
 
   it('applies the provided custom className', () => {
@@ -31,7 +31,7 @@ describe('DiscountsForm', () => {
     mockOnSubmit.mockResolvedValue(true);
     render(<DiscountsForm onSubmit={mockOnSubmit} discounts={[]} />);
 
-    const input = screen.getByPlaceholderText('cart.discount.enter');
+    const input = screen.getByPlaceholderText('Enter discount code');
     const code = 'SAVE10';
 
     await userEvent.type(input, code);
@@ -49,7 +49,7 @@ describe('DiscountsForm', () => {
     mockOnSubmit.mockResolvedValue(false);
     render(<DiscountsForm onSubmit={mockOnSubmit} customError="Invalid code!" discounts={[]} />);
 
-    const input = screen.getByPlaceholderText('cart.discount.enter');
+    const input = screen.getByPlaceholderText('Enter discount code');
     const code = 'INVALID';
 
     await userEvent.type(input, code);
@@ -78,7 +78,7 @@ describe('DiscountsForm', () => {
   it('clears the input when XMarkIcon is clicked', async () => {
     render(<DiscountsForm discounts={[]} onSubmit={mockOnSubmit} />);
 
-    const input = screen.getByPlaceholderText('cart.discount.enter');
+    const input = screen.getByPlaceholderText('Enter discount code');
     const code = 'SAVE10';
 
     await userEvent.type(input, code);

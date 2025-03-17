@@ -1,6 +1,6 @@
 import React from 'react';
 import Accordion from '@/components/molecules/accordion';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import QuickOrderContent from './quick-order-content';
 import { QuickOrderContentProps } from '../types';
 
@@ -12,7 +12,7 @@ const QuickOrderAccordion = ({
   addItemDisabled,
   closeMenu,
 }: QuickOrderContentProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   return (
     <Accordion defaultIsExpanded>
       <Accordion.Button defaultSpacing={false} className="p-3 text-gray-700">

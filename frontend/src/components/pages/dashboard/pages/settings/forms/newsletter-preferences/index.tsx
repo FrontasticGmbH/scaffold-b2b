@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Radio from '@/components/atoms/radio';
 import { Props } from './types';
 
 const NewsletterPreferencesForm = ({ onCancel, onUpdateNewsletterPreferences }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [subscribe, setSubscribe] = useState(false);
 
@@ -27,12 +27,12 @@ const NewsletterPreferencesForm = ({ onCancel, onUpdateNewsletterPreferences }: 
       <div className="flex flex-col gap-6">
         <Radio
           checked={subscribe}
-          label={translate('dashboard.want.to.subscribe')}
+          label={translate('dashboard.want-to-subscribe')}
           onSelected={() => setSubscribe(true)}
         />
         <Radio
           checked={!subscribe}
-          label={translate('dashboard.not.want.to.subscribe')}
+          label={translate('dashboard.not-want-to-subscribe')}
           onSelected={() => setSubscribe(false)}
         />
       </div>

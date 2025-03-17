@@ -2,24 +2,26 @@ import { render, screen } from '@test/utils';
 import Image from '.';
 
 jest.mock(
-  './loaders/cloudinary/index.ts',
-  () =>
-    ({ mediaId }: { mediaId: string }) =>
-      `${mediaId}?w=10`,
-);
-
-jest.mock(
   './loaders/default/index.ts',
   () =>
     ({ src }: { src: string }) =>
       src,
 );
 
+jest.mock('next-cloudinary', () => {
+  return {
+    CldImage: ({ src, alt }: { src: string; alt: string }) => {
+      //eslint-disable-next-line @next/next/no-img-element
+      return <img src={src} alt={alt} />;
+    },
+  };
+});
+
 describe('[Component] Image', () => {
   test('It renders images with media ID correctly', () => {
-    render(<Image media={{ mediaId: 'MEDIA_ID', width: 10 }} src="SRC" alt="IMG" />);
+    render(<Image media={{ mediaId: 'MEDIA_ID' }} src="SRC" alt="IMG" />);
 
-    expect(screen.getByAltText('IMG').getAttribute('src')).toBe('MEDIA_ID?w=10');
+    expect(screen.getByAltText('IMG').getAttribute('src')).toBe('MEDIA_ID');
   });
 
   test('It renders image with no media ID correctly', () => {

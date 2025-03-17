@@ -1,13 +1,13 @@
 import { useMemo } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Typography from '@/components/atoms/typography';
 import Image from '@/components/atoms/Image';
 import { ClosedButtonProps } from '../types';
 
 const ClosedButton = ({ lineItems, hiddenItemsCount, open, onClick }: ClosedButtonProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const arrowClassNames = classnames(open ? 'rotate-180' : '', 'mr-8 transition');
 
@@ -17,7 +17,7 @@ const ClosedButton = ({ lineItems, hiddenItemsCount, open, onClick }: ClosedButt
     <div className="flex w-full flex-col overflow-x-visible pb-4" onClick={onClick}>
       <div className="flex w-full justify-between">
         <Typography fontSize={16} className="text-secondary">
-          {translate('orders.your.order')}
+          {translate('orders.your-order')}
         </Typography>
         <ChevronDownIcon width={20} strokeWidth={1.5} className={arrowClassNames} />
       </div>

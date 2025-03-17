@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@test/utils';
 import Input from '@/components/atoms/input/index';
 
 describe('[Component] Input', () => {

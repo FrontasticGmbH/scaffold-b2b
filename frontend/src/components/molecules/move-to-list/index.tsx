@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useDisclosure from '@/hooks/useDisclosure';
 import { MoveToListProps } from './types';
 import WishlistModal from '../wishlist-modal';
@@ -11,7 +11,7 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
 
   const [loading, setLoading] = useState(false);
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [checkedBoxes, setCheckedBoxes] = useState<Record<string, boolean>>({});
 
@@ -44,7 +44,7 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
         onClick={onOpen}
         disabled={disabled}
       >
-        {translate('wishlist.move.to.list')}
+        {translate('wishlist.move-to-list')}
       </Button>
       <WishlistModal
         lists={lists}

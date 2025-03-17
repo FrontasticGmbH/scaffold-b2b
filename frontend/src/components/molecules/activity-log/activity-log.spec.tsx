@@ -33,26 +33,26 @@ describe('[Component] Activity log', () => {
 
     await act(async () => userEvent.click(screen.getByRole('textbox')));
 
-    expect(screen.getByText('common.cancel')).toBeDefined();
-    expect(screen.getByText('common.send')).toBeDefined();
+    expect(screen.getByText('Cancel')).toBeDefined();
+    expect(screen.getByText('Send')).toBeDefined();
 
     await act(async () => userEvent.type(screen.getByRole('textbox'), '!'));
 
     expect((screen.getByRole('textbox') as HTMLTextAreaElement).value).toBe("Hey, I'm a comment!");
 
-    await act(async () => userEvent.click(screen.getByText('common.send')));
+    await act(async () => userEvent.click(screen.getByText('Send')));
 
     expect(onCommentUpdate).toHaveBeenCalledWith("Hey, I'm a comment!");
-    expect(screen.queryByText('common.cancel')).toBeNull();
-    expect(screen.queryByText('common.send')).toBeNull();
+    expect(screen.queryByText('Cancel')).toBeNull();
+    expect(screen.queryByText('Send')).toBeNull();
 
     await act(async () => userEvent.click(screen.getByRole('textbox')));
 
-    await act(async () => userEvent.click(screen.getByText('common.cancel')));
+    await act(async () => userEvent.click(screen.getByText('Cancel')));
 
     expect(onCommentCancel).toHaveBeenCalled();
-    expect(screen.queryByText('common.cancel')).toBeNull();
-    expect(screen.queryByText('common.send')).toBeNull();
+    expect(screen.queryByText('Cancel')).toBeNull();
+    expect(screen.queryByText('Send')).toBeNull();
   });
 
   test('It interacts with disabled form correctly', async () => {
@@ -60,8 +60,8 @@ describe('[Component] Activity log', () => {
 
     await act(async () => userEvent.click(screen.getByRole('textbox')));
 
-    expect(screen.queryByText('common.cancel')).toBeNull();
-    expect(screen.queryByText('common.send')).toBeNull();
+    expect(screen.queryByText('Cancel')).toBeNull();
+    expect(screen.queryByText('Send')).toBeNull();
   });
 
   test('It shows form errors correctly when max length is exceeded', async () => {
@@ -79,7 +79,7 @@ describe('[Component] Activity log', () => {
       ),
     );
 
-    expect(screen.getByText('dashboard.message.too.long')).toBeDefined();
+    expect(screen.getByText('Message is too long (maximum 160 characters)')).toBeDefined();
   });
 
   test('It can accept & reject correctly', async () => {
@@ -90,14 +90,14 @@ describe('[Component] Activity log', () => {
       <ActivityLog activities={[{ title: '', reply: true, onAccept, onReject, canAccept: true, canReject: true }]} />,
     );
 
-    expect(screen.getByText('common.accept')).toBeDefined();
-    expect(screen.getByText('common.decline')).toBeDefined();
+    expect(screen.getByText('Accept')).toBeDefined();
+    expect(screen.getByText('Decline')).toBeDefined();
 
-    await act(async () => userEvent.click(screen.getByText('common.accept')));
+    await act(async () => userEvent.click(screen.getByText('Accept')));
 
     expect(onAccept).toHaveBeenCalled();
 
-    await act(async () => userEvent.click(screen.getByText('common.decline')));
+    await act(async () => userEvent.click(screen.getByText('Decline')));
 
     expect(onReject).toHaveBeenCalled();
   });
@@ -110,17 +110,17 @@ describe('[Component] Activity log', () => {
       <ActivityLog activities={[{ title: '', reply: true, onAccept, onReject, canAccept: false, canReject: false }]} />,
     );
 
-    expect(screen.getByText('common.accept')).toBeDefined();
-    expect(screen.getByText('common.decline')).toBeDefined();
+    expect(screen.getByText('Accept')).toBeDefined();
+    expect(screen.getByText('Decline')).toBeDefined();
 
-    await act(async () => userEvent.click(screen.getByText('common.accept')));
+    await act(async () => userEvent.click(screen.getByText('Accept')));
 
-    expect((screen.getByText('common.accept') as HTMLButtonElement).disabled).toBeTruthy();
+    expect((screen.getByText('Accept') as HTMLButtonElement).disabled).toBeTruthy();
     expect(onAccept).not.toHaveBeenCalled();
 
-    await act(async () => userEvent.click(screen.getByText('common.decline')));
+    await act(async () => userEvent.click(screen.getByText('Decline')));
 
-    expect((screen.getByText('common.decline') as HTMLButtonElement).disabled).toBeTruthy();
+    expect((screen.getByText('Decline') as HTMLButtonElement).disabled).toBeTruthy();
     expect(onReject).not.toHaveBeenCalled();
   });
 

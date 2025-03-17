@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';
 import Confirmation from '@/components/organisms/confirmation';
 import PurchaseListItem from '@/components/molecules/purchase-list-item';
@@ -17,7 +17,7 @@ const PurchaseListDetailPage = ({
   onRemoveItem,
   onUpdateItem,
 }: PurchaseListDetailPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('purchaselist');
 
@@ -58,8 +58,8 @@ const PurchaseListDetailPage = ({
             </EditPurchaseListModal>
             <Confirmation
               translations={{
-                title: translate('dashboard.purchase.list.delete'),
-                summary: translate('dashboard.purchase.list.delete.confirm'),
+                title: translate('dashboard.purchase-list-delete'),
+                summary: translate('dashboard.purchase-list-delete-confirm'),
                 cancel: translate('common.cancel'),
                 confirm: translate('common.delete'),
               }}
@@ -79,7 +79,7 @@ const PurchaseListDetailPage = ({
       </div>
 
       <p className="py-6 lg:pb-9 lg:pt-8 lg:text-18">
-        {translate('common.purchase.list')}{' '}
+        {translate('common.purchase-list')}{' '}
         <span className="text-gray-600">
           ({itemsCount} {translate(itemsCount === 1 ? 'common.item' : 'common.items')})
         </span>

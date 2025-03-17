@@ -1,11 +1,11 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Timeline from '@/components/molecules/timeline';
 import { Order } from '@/types/entity/order';
 import { classnames } from '@/utils/classnames/classnames';
 
 const OrderStatusBar = ({ order }: { order: Order }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const statusesTimeline = ['Confirmed', 'Shipped', 'Delivered', 'Returned'] as Array<Order['status']>;
 

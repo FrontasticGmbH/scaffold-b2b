@@ -4,7 +4,7 @@ import Button from '@/components/atoms/button';
 import useFormat from '@/hooks/useFormat';
 import QuantityWidget from '@/components/atoms/quantity-widget';
 import StockIndicator from '@/components/atoms/stock-indicator';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { PurchaseListItemProps } from './types';
 import ShowMore from '../show-more';
@@ -30,7 +30,7 @@ const PurchaseListItem = ({
   onAddToCart,
   onQuantityChange,
 }: PurchaseListItemProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [addingToCart, setAddingToCart] = useState(false);
 
@@ -79,7 +79,7 @@ const PurchaseListItem = ({
             {translate('common.manufacturer')} - <span className="font-semibold">{manufacturer}</span>
           </p>
           <p>
-            {translate('common.part.number')} - <span className="font-semibold">{partNumber}</span>
+            {translate('common.part-number')} - <span className="font-semibold">{partNumber}</span>
           </p>
           {(pressure || weight) && (
             <ShowMore>

@@ -13,6 +13,7 @@ import {
   getStoreKey,
   getSupplyChannelId,
   getAccountGroupId,
+  getProductSelectionId,
 } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 export class ProductQueryFactory {
@@ -27,7 +28,6 @@ export class ProductQueryFactory {
       productKeys: [],
       productRefs: [],
       skus: [],
-      productSelectionIds: [],
     };
 
     /**
@@ -180,9 +180,9 @@ export class ProductQueryFactory {
     productQuery.supplyChannelId = queryParams?.supplyChannelId || getSupplyChannelId(request) || undefined;
 
     /**
-     * Map productSelectionIds
+     * Map productSelectionId
      */
-    productQuery.productSelectionIds = queryParams?.productSelectionIds || undefined;
+    productQuery.productSelectionId = queryParams?.productSelectionId || getProductSelectionId(request) || undefined;
 
     /**
      * Map page limit

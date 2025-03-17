@@ -1,6 +1,6 @@
 {
   "name": "@b2bdev/poc-frontend",
-  "version": "3.0.0",
+  "version": "3.2.1",
   "engines": {
     "node": ">=22"
   },
@@ -39,6 +39,8 @@
     "negotiator": "^0.6.3",
     "next": "15.1.6",
     "next-client-cookies": "^1.1.0",
+    "next-cloudinary": "^6.16.0",
+    "next-intl": "^3.26.3",
     "react": "19.0.0",
     "react-day-picker": "^8.8.0",
     "react-dom": "19.0.0",
@@ -106,6 +108,7 @@
     "rimraf": "^5.0.1",
     "server-only": "^0.0.1",
     "storybook": "^8.5.0",
+    "storybook-next-intl": "^1.2.4",
     "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss": "^3.3.2",
     "ts-jest": "^29.1.1",

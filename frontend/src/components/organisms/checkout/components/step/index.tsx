@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { Props } from './types';
 
 const Step = ({ number, title, isActive, isCompleted, onNavigate, children }: React.PropsWithChildren<Props>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,7 +40,11 @@ const Step = ({ number, title, isActive, isCompleted, onNavigate, children }: Re
           <span
             className={classnames('md:text-18 lg:text-20', isActive ? 'text-white lg:text-gray-700' : 'text-gray-700')}
           >
-            {translate(title)}
+            {
+              // eslint-disable-next-line
+              // @ts-ignore
+              translate(title)
+            }
           </span>
         </div>
 

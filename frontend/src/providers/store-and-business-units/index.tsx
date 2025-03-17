@@ -14,7 +14,7 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
   const [selectedBusinessUnitKey, setSelectedBusinessUnitKey] = useState('');
   const [selectedStoreKey, setSelectedStoreKey] = useState('');
 
-  const { setBusinessUnitAndStoreSessionKeys } = useSessionStoreAndBusinessUnitKeys();
+  const { setBusinessUnitAndStoreSessionKeys, sessionIsUpdating } = useSessionStoreAndBusinessUnitKeys();
 
   const { businessUnits, defaultBusinessUnit } = useBusinessUnits();
 
@@ -23,11 +23,11 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
     selectedBusinessUnit?.stores?.find((st) => st.key === selectedStoreKey) ?? selectedBusinessUnit?.stores?.[0];
 
   const handleBusinessUnitSelection = useCallback(
-    (key: string) => {
+    async (key: string) => {
       const businessUnit = businessUnits.find((bu) => bu.key === key);
 
       if (businessUnit && businessUnit.stores?.[0]) {
-        setBusinessUnitAndStoreSessionKeys(key, businessUnit.stores[0].key);
+        await setBusinessUnitAndStoreSessionKeys(key, businessUnit.stores[0].key);
 
         localStorage.setItem('bu-key', key);
         localStorage.setItem('st-key', businessUnit.stores[0].key);
@@ -79,6 +79,7 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
         setSelectedBusinessUnitKey: handleBusinessUnitSelection,
         setSelectedStoreKey: handleStoreSelection,
         clearBusinessUnitAndStoreFromStorage,
+        sessionIsUpdating,
       }}
     >
       {children}

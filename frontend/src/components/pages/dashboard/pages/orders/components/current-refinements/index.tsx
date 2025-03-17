@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { XMarkIcon as CloseIcon } from '@heroicons/react/24/solid';
 import { OrdersPageProps } from '../../types';
 
@@ -9,7 +9,7 @@ const CurrentRefinements = ({
   onStatusRefine,
   onCreationDateRefine,
 }: Partial<OrdersPageProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const appliedFilters = useMemo(() => {
     const result = [] as Array<{ name: string; onRefine: () => void }>;
@@ -19,7 +19,9 @@ const CurrentRefinements = ({
     if (filters.status?.length)
       result.push(
         ...filters.status.map((status) => ({
-          name: translate(`orders.status.${status.toLowerCase()}`),
+          // eslint-disable-next-line
+          // @ts-ignore
+          name: translate(`orders.status-${status.toLowerCase()}`),
           onRefine: () => onStatusRefine?.(filters.status?.filter((s) => s !== status) ?? []),
         })),
       );
@@ -45,7 +47,7 @@ const CurrentRefinements = ({
           className="cursor-pointer rounded-md border border-gray-300 px-2 py-[6px] text-14 leading-[20px] text-gray-700"
           onClick={onClearRefinements}
         >
-          {translate('dashboard.clear.all')}
+          {translate('dashboard.clear-all')}
         </div>
         {appliedFilters.map(({ name, onRefine }) => (
           <div

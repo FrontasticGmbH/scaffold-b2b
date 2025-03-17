@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import EmptyState from '@/components/molecules/empty-state';
 import LoadingIcon from '@/components/atoms/loading-icon';
 import { OrdersPageProps } from './types';
@@ -25,7 +25,7 @@ const OrdersPage = ({
   onRowsPerPageChange,
   limit,
 }: OrdersPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const refinementProps = {
     orders,
@@ -75,7 +75,7 @@ const OrdersPage = ({
                 <LoadingIcon svgWidth={20} svgHeight={20} className="fill-gray-700" />
               </div>
             ) : (
-              <EmptyState header={translate('common.no.results.found')} />
+              <EmptyState header={translate('common.no-results-found')} />
             ))}
         </div>
       </div>

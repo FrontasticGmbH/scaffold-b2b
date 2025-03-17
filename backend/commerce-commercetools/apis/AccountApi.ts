@@ -15,6 +15,7 @@ import { AccountAuthenticationError } from '@Commerce-commercetools/errors/Accou
 import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { AccountEmailDuplicatedError } from '@Commerce-commercetools/errors/AccountEmailDuplicatedError';
+import CartMapper from '@Commerce-commercetools/mappers/CartMapper';
 
 export default class AccountApi extends BaseApi {
   async create(account: Account, cart?: Cart | undefined): Promise<Account> {
@@ -103,8 +104,11 @@ export default class AccountApi extends BaseApi {
       });
   }
 
-  async login(account: Account, cart: Cart | undefined): Promise<Account> {
-    account = await this.requestBuilder()
+  async login(account: Account, cart: Cart | undefined): Promise<{ account: Account; cart: Cart | undefined }> {
+    const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = this.defaultLocale;
+
+    const { account: loggedInAccount, cart: loggedInCart } = await this.requestBuilder()
       .login()
       .post({
         body: {
@@ -121,7 +125,12 @@ export default class AccountApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return AccountMapper.commercetoolsCustomerToAccount(response.body.customer);
+        return {
+          account: AccountMapper.commercetoolsCustomerToAccount(response.body.customer),
+          cart: response.body.cart
+            ? CartMapper.commercetoolsCartToCart(response.body.cart, locale, defaultLocale)
+            : undefined,
+        };
       })
       .catch((error) => {
         if (error.code && error.code === 400) {
@@ -142,11 +151,11 @@ export default class AccountApi extends BaseApi {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
-    if (!account.confirmed) {
-      account.confirmationToken = await this.getConfirmationToken(account);
+    if (!loggedInAccount.confirmed) {
+      loggedInAccount.confirmationToken = await this.getConfirmationToken(loggedInAccount);
     }
 
-    return account;
+    return { account: loggedInAccount, cart: loggedInCart };
   }
 
   async generatePasswordResetToken(email: string): Promise<AccountToken> {

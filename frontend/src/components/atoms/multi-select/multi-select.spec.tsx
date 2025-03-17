@@ -68,13 +68,13 @@ describe('[Component] MultiSelect', () => {
   test('It renders required label (label) correctly', () => {
     renderMultiSelect({ label: 'Label', required: true, requiredStyle: 'label' });
 
-    expect(screen.getByText('common.field.required')).toBeDefined();
+    expect(screen.getByText('Required')).toBeDefined();
   });
 
   test('It renders optional label correctly', () => {
     renderMultiSelect({ label: 'Label', showOptionalLabel: true });
 
-    expect(screen.getByText('(common.optional)')).toBeDefined();
+    expect(screen.getByText('(Optional)')).toBeDefined();
   });
 
   test('It searches options correctly', async () => {
@@ -110,6 +110,6 @@ describe('[Component] MultiSelect', () => {
     expect(screen.queryByText('1')).toBeNull();
     expect(screen.queryByText('2')).toBeNull();
     expect(screen.queryByText('3')).toBeNull();
-    expect(await screen.findByText('common.no.results.found')).toBeDefined();
+    expect(await screen.findByText('No results found')).toBeDefined();
   });
 });

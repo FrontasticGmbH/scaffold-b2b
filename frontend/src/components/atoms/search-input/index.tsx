@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/24/solid';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useClassNames from './hooks/useClassNames';
 import { SearchInputProps } from './types';
 import Label from '../label';
@@ -27,7 +27,7 @@ const SearchInput = ({
   handleOnChange,
   handleSearchAction,
 }: SearchInputProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const [value, setValue] = useControllableState(searchValue, '');
 
   const [searchFocused, setSearchFocused] = useState(false);
@@ -78,7 +78,7 @@ const SearchInput = ({
         )}
         <input
           ref={ref}
-          aria-label={translate('product.search.results.for')}
+          aria-label={translate('product.search-results-for')}
           disabled={disabled}
           value={value}
           className={classnames(searchInputClassNames, className)}

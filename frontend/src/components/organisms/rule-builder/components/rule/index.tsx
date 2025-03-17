@@ -2,13 +2,13 @@ import React from 'react';
 import Select from '@/components/atoms/select';
 import Button from '@/components/atoms/button';
 import { TrashIcon as RemoveIcon, PlusIcon as AddIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import { RuleProps } from './types';
 import ValueSelector from '../value-selector';
 
 const Rule = ({ rule, singleMode, criteria, addButtonIsDisabled, onUpdate, onRemove, onAddNew }: RuleProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const selectedCriteria = criteria.find((c) => c.key === rule.key);
 
@@ -18,7 +18,7 @@ const Rule = ({ rule, singleMode, criteria, addButtonIsDisabled, onUpdate, onRem
         options={criteria.map(({ key, name }) => ({ name, value: key }))}
         value={rule.key}
         className="col-span-4"
-        placeholder={translate('common.select.predicate')}
+        placeholder={translate('common.select-predicate')}
         onChange={(val) => onUpdate({ ...rule, key: val, operator: '', value: '' })}
       />
 

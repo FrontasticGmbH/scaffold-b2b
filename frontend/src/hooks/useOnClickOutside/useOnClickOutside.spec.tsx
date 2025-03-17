@@ -1,4 +1,4 @@
-import { renderHook, render, fireEvent, screen } from '@testing-library/react';
+import { renderHook, render, fireEvent, screen } from '@test/utils';
 import useOnClickOutside from '.';
 
 describe('[Hook] useOnClickOutside', () => {

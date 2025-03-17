@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import Input from '@/components/atoms/input';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 const PurchaseOrderForm = ({
   defaultValues,
@@ -9,7 +9,7 @@ const PurchaseOrderForm = ({
   defaultValues: { purchaseOrderNumber?: string; invoiceMemo?: string };
   onChange?: (data: unknown) => void;
 }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [data, setData] = useState({
     purchaseOrderNumber: defaultValues.purchaseOrderNumber ?? '',
@@ -27,10 +27,10 @@ const PurchaseOrderForm = ({
   return (
     <form className="flex flex-col items-stretch gap-4 md:items-start">
       <Input
-        aria-label={translate('checkout.po.number')}
+        aria-label={translate('checkout.po-number')}
         name="purchaseOrderNumber"
         className="md:w-[280px]"
-        label={translate('checkout.po.number')}
+        label={translate('checkout.po-number')}
         required
         value={data.purchaseOrderNumber}
         onChange={handleChange}
@@ -38,7 +38,7 @@ const PurchaseOrderForm = ({
       <Input
         name="invoiceMemo"
         className="md:w-[280px]"
-        label={translate('checkout.invoice.memo')}
+        label={translate('checkout.invoice-memo')}
         showOptionalLabel
         value={data.invoiceMemo}
         onChange={handleChange}

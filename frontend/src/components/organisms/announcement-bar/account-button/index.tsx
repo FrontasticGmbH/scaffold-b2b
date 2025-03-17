@@ -5,13 +5,14 @@ import Popover from '@/components/molecules/popover';
 import Select from '@/components/atoms/select';
 import Link from '@/components/atoms/link';
 import useDisclosure from '@/hooks/useDisclosure';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useScrollBlock from '@/hooks/useScrollBlock';
 import { AccountButtonProps } from '../types';
 import ButtonElement from './button';
 
 const AccountButton = ({
   selectedBusinessUnit,
+  businessUnitIsLoading,
   businessUnits,
   selectedStore,
   stores,
@@ -22,7 +23,7 @@ const AccountButton = ({
   onBusinessUnitChange,
   onStoreChange,
 }: AccountButtonProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleLogoutClick = () => {
@@ -51,13 +52,15 @@ const AccountButton = ({
           </div>
           <div className="pt-5">
             <Typography fontSize={14} className="text-gray-800">
-              {translate('account.business.unit')}
+              {translate('account.business-unit')}
             </Typography>
             <Select
               enableSearch
               className="pt-2"
               size="lg"
-              value={selectedBusinessUnit ?? translate('common.select')}
+              value={selectedBusinessUnit}
+              defaultValue={translate('common.select')}
+              disabled={businessUnitIsLoading}
               options={businessUnits}
               onChange={onBusinessUnitChange}
             />
@@ -71,7 +74,9 @@ const AccountButton = ({
               className="pt-2"
               size="lg"
               placeholder="Select"
-              defaultValue={selectedStore ?? translate('common.select')}
+              value={selectedStore}
+              defaultValue={translate('common.select')}
+              disabled={businessUnitIsLoading}
               options={stores}
               onChange={onStoreChange}
             />
@@ -96,14 +101,14 @@ const AccountButton = ({
         <div className="px-4 pt-4">
           <div className="flex flex-col gap-y-4 pb-5 pt-1">
             <Typography fontSize={14} fontWeight="bold" className="text-primary">
-              {translate('account.help.center')}
+              {translate('account.help-center')}
             </Typography>
             <Typography fontSize={14} className="text-gray-700">
-              {translate('account.mon.fri')}
+              {translate('account.mon-fri')}
             </Typography>
           </div>
           <Button variant="secondary" size="full" data-testid="logout-button" onClick={handleLogoutClick}>
-            {translate('account.sign.out')}
+            {translate('account.sign-out')}
           </Button>
         </div>
       </div>

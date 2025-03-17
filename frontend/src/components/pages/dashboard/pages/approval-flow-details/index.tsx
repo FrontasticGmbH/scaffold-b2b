@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import InfoBanner from '@/components/molecules/info-banner';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { Approver } from '@/types/entity/approval-flow';
 import { Group, Rule } from '@/components/organisms/rule-builder/types';
@@ -24,7 +24,7 @@ const ApprovalFlowDetailsPage = ({
   onApprove,
   onReject,
 }: ApprovalFlowDetailsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [processing, setProcessing] = useState(false);
 
@@ -89,20 +89,20 @@ const ApprovalFlowDetailsPage = ({
     setRejectionReasonTextarea(false);
     setProcessing(false);
 
-    toast.success(translate('dashboard.approval.flow.rejected'), { position: 'top-right' });
+    toast.success(translate('dashboard.approval-flow-rejected'), { position: 'top-right' });
   }, [onReject, rejectionReason, translate]);
 
   return (
     <div>
       {viewOnly && (
         <InfoBanner className="mt-3">
-          <b>{translate('common.view.only')}</b> {translate('dashboard.flow.view.only.desc')}
+          <b>{translate('common.view-only')}</b> {translate('dashboard.flow-view-only-desc')}
         </InfoBanner>
       )}
 
       <div className="flex items-center justify-between">
         <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
-          {translate('dashboard.flow.details')}
+          {translate('dashboard.flow-details')}
         </h1>
         <div className="hidden items-center justify-normal gap-x-3 md:flex">
           <PreviousPageLink />
@@ -111,7 +111,7 @@ const ApprovalFlowDetailsPage = ({
 
       <div className="flex flex-col gap-6">
         <h3 className="text-14 text-gray-600">
-          {translate('dashboard.flow.id')}: {approvalFlow.id}
+          {translate('dashboard.flow-id')}: {approvalFlow.id}
         </h3>
 
         <h3 className="flex items-center gap-2 text-14 text-gray-600">
@@ -121,10 +121,10 @@ const ApprovalFlowDetailsPage = ({
       </div>
 
       <div className="mt-9 border-t border-neutral-400 pt-10">
-        <h5 className="pb-9 text-20 font-bold text-gray-700">{translate('common.approval.flow')}</h5>
+        <h5 className="pb-9 text-20 font-bold text-gray-700">{translate('common.approval-flow')}</h5>
 
         <div>
-          <h6 className="text-16 font-semibold text-gray-700">{translate('dashboard.rules.applied')}</h6>
+          <h6 className="text-16 font-semibold text-gray-700">{translate('dashboard.rules-applied')}</h6>
           <div className="mt-4 flex flex-wrap items-center gap-4 rounded-md border border-gray-300 p-6">
             {(approvalFlow.rules ?? []).map((rule, index, arr) => (
               <div key={rule.id}>
@@ -144,18 +144,16 @@ const ApprovalFlowDetailsPage = ({
       <div className="mt-6">
         <div>
           <h5 className="text-16 font-semibold text-gray-700">
-            {translate('dashboard.approval.flow.required.approvers')}
+            {translate('dashboard.approval-flow-required-approvers')}
           </h5>
           <div
             className="mt-1 text-16 font-normal text-gray-700"
             dangerouslySetInnerHTML={{
-              __html: translate('dashboard.approval.flow.required.approvers.desc', {
-                values: {
-                  preview: `<div class="w-fit border border-blue-500 p-1 inline-flex items-center gap-1 rounded-sm text-xs text-blue-500">
+              __html: translate('dashboard.approval-flow-required-approvers-desc', {
+                preview: `<div class="w-fit border border-blue-500 p-1 inline-flex items-center gap-1 rounded-sm text-xs text-blue-500">
                     <span>${translate('common.name')}</span>
                     <span class="w-[12px] h-[12px] border border-gray-500 rounded-full block" />
                   </div>`,
-                },
               }),
             }}
           />
@@ -227,7 +225,7 @@ const ApprovalFlowDetailsPage = ({
               }}
             >
               <h6 className="mb-3 text-12 font-medium uppercase text-gray-600">
-                {translate('dashboard.approval.flow.rejection.reason')}
+                {translate('dashboard.approval-flow-rejection-reason')}
               </h6>
               <TextArea
                 value={rejectionReason}
@@ -235,8 +233,8 @@ const ApprovalFlowDetailsPage = ({
                 fitContent={false}
                 error={
                   rejectionReason.length > maxRejectionReasonCharacters
-                    ? translate('dashboard.message.too.long', {
-                        values: { maxCharacters: maxRejectionReasonCharacters.toString() },
+                    ? translate('dashboard.message-too-long', {
+                        maxCharacters: maxRejectionReasonCharacters.toString(),
                       })
                     : ''
                 }

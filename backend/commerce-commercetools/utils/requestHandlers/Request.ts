@@ -117,6 +117,18 @@ export const getSupplyChannelId = (request: Request): string | null => {
   return null;
 };
 
+export const getProductSelectionId = (request: Request): string | null => {
+  if (request !== undefined) {
+    const { productSelectionId } = parseQueryParams<{
+      productSelectionId: string;
+    }>(request.query);
+
+    return productSelectionId ?? request.sessionData?.productSelectionId;
+  }
+
+  return null;
+};
+
 export const getAccountGroupId = (request: Request): string | null => {
   if (request !== undefined) {
     const { accountGroupId } = parseQueryParams<{

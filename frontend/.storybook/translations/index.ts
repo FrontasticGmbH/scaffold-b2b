@@ -4,7 +4,7 @@ import cart from '@/translations/en-us/cart.json';
 import checkout from '@/translations/en-us/checkout.json';
 import customerSupport from '@/translations/en-us/customer-support.json';
 import error from '@/translations/en-us/error.json';
-import newsletter from '@/translations/en-us/newsletter.json';
+import newsletter from '@/messages/en.json/en-us/newsletter.json';
 import orders from '@/translations/en-us/orders.json';
 import payment from '@/translations/en-us/payment.json';
 import product from '@/translations/en-us/product.json';

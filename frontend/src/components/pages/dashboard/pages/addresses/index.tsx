@@ -1,18 +1,18 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import InfoBanner from '@/components/molecules/info-banner';
 import SearchPanel from '../../components/search-panel';
 import AddressesTable from '../company-admin/components/addresses-table';
 import { AddressesPageProps } from './types';
 
 const AddressesPage = ({ addresses, loading, onDeleteAddress, onSearchAddresses, viewOnly }: AddressesPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div>
       {viewOnly && (
         <InfoBanner className="mt-3">
-          <b>{translate('common.view.only')}</b> {translate('dashboard.addresses.view.only.desc')}
+          <b>{translate('common.view-only')}</b> {translate('dashboard.addresses-view-only-desc')}
         </InfoBanner>
       )}
 
@@ -21,7 +21,7 @@ const AddressesPage = ({ addresses, loading, onDeleteAddress, onSearchAddresses,
       </h1>
 
       <SearchPanel
-        translations={{ button: translate('dashboard.address.add') }}
+        translations={{ button: translate('dashboard.address-add') }}
         buttonLink={`?subPath=add-address`}
         buttonDisabled={viewOnly}
         onSearchChange={onSearchAddresses}

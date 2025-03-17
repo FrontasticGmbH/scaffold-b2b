@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { ApprovalFlowStatus } from '@/types/entity/approval-flow';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -13,6 +13,7 @@ import ApprovalFlowsTable from './components/approval-flows-table';
 
 const ApprovalFlowsPage = ({
   selectedBusinessUnit,
+  businessUnitIsLoading,
   businessUnitOptions,
   onBusinessUnitChange,
   onSearch,
@@ -23,7 +24,7 @@ const ApprovalFlowsPage = ({
   approvalFlows,
   loading,
 }: ApprovalFlowsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { isOpen: isStatusModalOpen, onOpen: onStatusModalOpen, onClose: onStatusModalClose } = useDisclosure();
 
@@ -37,7 +38,7 @@ const ApprovalFlowsPage = ({
     approvalFlows.length > 0 ? (
       <ApprovalFlowsTable approvalFlows={approvalFlows} pagination={pagination} />
     ) : (
-      <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+      <EmptyState isLoading={loading} header={translate('common.no-results-found')} />
     );
 
   return (
@@ -45,7 +46,7 @@ const ApprovalFlowsPage = ({
       <div className="flex items-center justify-between py-6 md:py-7 lg:py-9">
         <div className="flex items-center gap-3">
           <h1 className="text-18 font-extrabold text-gray-800 md:text-20 lg:text-24">
-            {translate(`common.approval.flows`)}
+            {translate(`common.approval-flows`)}
           </h1>
           {approvalFlows.length > 0 && (
             <div className="rounded-md bg-primary px-[6px] py-[2px] text-12 font-semibold text-white">
@@ -59,12 +60,13 @@ const ApprovalFlowsPage = ({
       <div>
         <Select
           className="w-[280px]"
-          label={translate('common.business.unit')}
+          label={translate('common.business-unit')}
           placeholder={translate('common.select')}
           enableSearch
           options={businessUnitOptions}
           value={selectedBusinessUnit?.key}
           onChange={onBusinessUnitChange}
+          disabled={businessUnitIsLoading}
         />
       </div>
 
@@ -74,9 +76,9 @@ const ApprovalFlowsPage = ({
           onActiveIndexChange={(index) => onStatusSelectedChange(tabsIndexMapper[index])}
         >
           <Tabs.TabList>
-            <Tabs.Tab>{translate(`dashboard.approval.flow.status.pending`)}</Tabs.Tab>
-            <Tabs.Tab>{translate(`dashboard.approval.flow.status.accepted`)}</Tabs.Tab>
-            <Tabs.Tab>{translate(`dashboard.approval.flow.status.rejected`)}</Tabs.Tab>
+            <Tabs.Tab>{translate(`dashboard.approval-flow-status-pending`)}</Tabs.Tab>
+            <Tabs.Tab>{translate(`dashboard.approval-flow-status-accepted`)}</Tabs.Tab>
+            <Tabs.Tab>{translate(`dashboard.approval-flow-status-rejected`)}</Tabs.Tab>
           </Tabs.TabList>
           <Tabs.Panels className="overflow-visible">
             <Tabs.Panel>

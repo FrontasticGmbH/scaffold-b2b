@@ -1,13 +1,13 @@
 import React from 'react';
 import useDisclosure from '@/hooks/useDisclosure';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import { ShowMoreProps } from './types';
 
 const ShowMore = ({ children, className, renderLabel }: React.PropsWithChildren<ShowMoreProps>) => {
   const { isOpen: isShowingAll, onToggle } = useDisclosure();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div>
@@ -22,7 +22,7 @@ const ShowMore = ({ children, className, renderLabel }: React.PropsWithChildren<
               className,
             )}
           >
-            {translate(isShowingAll ? 'common.show.less' : 'common.show.all')}
+            {translate(isShowingAll ? 'common.show-less' : 'common.show-all')}
           </span>
         )}
       </span>

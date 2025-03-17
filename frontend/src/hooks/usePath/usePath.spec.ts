@@ -1,5 +1,5 @@
 import * as nextNavigation from 'next/navigation';
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@test/utils';
 import usePath from '.';
 
 describe('[Hook] usePath', () => {

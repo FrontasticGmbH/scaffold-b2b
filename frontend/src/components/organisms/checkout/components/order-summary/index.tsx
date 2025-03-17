@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import Accordion from '@/components/molecules/accordion';
 import useFormat from '@/hooks/useFormat';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Image from '@/components/atoms/Image';
 import Link from '@/components/atoms/link';
 import Costs from '@/components/molecules/costs';
@@ -31,7 +31,7 @@ const OrderSummary = ({
   | 'translations'
   | 'buyerCanAddComment'
 >) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [isLargerThanDesktop] = useMediaQuery(desktop);
 
@@ -58,7 +58,7 @@ const OrderSummary = ({
     <div className="shrink-0 rounded-lg bg-white lg:w-[432px] lg:p-9">
       <div className="border-b border-neutral-400 pb-4">
         <h5 className="text-gray-700 md:text-18">
-          {translations.orderSummaryTitle || translate('checkout.order.summary')}
+          {translations.orderSummaryTitle || translate('checkout.order-summary')}
         </h5>
       </div>
       <Accordion className="border-none" defaultIsExpanded={isLargerThanDesktop}>
@@ -164,7 +164,7 @@ const OrderSummary = ({
                 }
               : {})}
           >
-            {translations.purchase || translate('checkout.complete.purchase')}
+            {translations.purchase || translate('checkout.complete-purchase')}
           </Button>
 
           {isCtCheckoutEnabled && <div className="mt-3" data-ctc-selector="vendorPaymentButton"></div>}

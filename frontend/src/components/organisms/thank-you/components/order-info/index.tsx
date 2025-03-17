@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { ThankYouProps } from '../../types';
 
 const OrderInfo = ({
@@ -10,32 +10,32 @@ const OrderInfo = ({
   billingAddress,
   purchaseOrderNumber,
 }: Omit<ThankYouProps, 'account' | 'lineItems' | 'transaction'>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className="flex flex-col gap-4 border-b border-neutral-400 py-6 text-14 md:gap-6 md:text-16">
       <div className="gap-1 md:flex md:gap-5">
-        <span className="text-gray-600 md:w-[136px]">{translate('thank-you.order.number')}: </span>
+        <span className="text-gray-600 md:w-[136px]">{translate('thank-you.order-number')}: </span>
         <span className="font-semibold leading-loose text-gray-600">{orderNumber}</span>
       </div>
 
       {purchaseOrderNumber && (
         <div className="gap-1 md:flex md:gap-5">
-          <span className="text-gray-600 md:w-[136px]">{translate('checkout.purchase.order')}: </span>
+          <span className="text-gray-600 md:w-[136px]">{translate('checkout.purchase-order')}: </span>
           <span className="font-semibold leading-loose text-gray-600">{purchaseOrderNumber}</span>
         </div>
       )}
 
       {deliveryMethod && (
         <div className="gap-1 md:flex md:gap-5">
-          <span className="text-gray-600 md:w-[136px]">{translate('thank-you.delivery.method')}: </span>
+          <span className="text-gray-600 md:w-[136px]">{translate('thank-you.delivery-method')}: </span>
           <span className="font-semibold leading-loose text-gray-600">{deliveryMethod}</span>
         </div>
       )}
 
       {deliveryAddress && (
         <div className="gap-1 md:flex md:gap-5">
-          <span className="text-gray-600 md:w-[136px]">{translate('thank-you.delivery.address')}: </span>
+          <span className="text-gray-600 md:w-[136px]">{translate('thank-you.delivery-address')}: </span>
           <p className="inline leading-loose text-gray-600 md:hidden">
             <span className="font-medium">{deliveryAddress.name}</span>
             {deliveryAddress.careOf ? ` (c/o ${deliveryAddress.careOf})` : ''}, {deliveryAddress.zip}{' '}
@@ -55,7 +55,7 @@ const OrderInfo = ({
 
       {billingAddress && (
         <div className="gap-1 text-gray-600 md:flex md:gap-5">
-          <span className="md:w-[136px]">{translate('thank-you.billing.address')}: </span>
+          <span className="md:w-[136px]">{translate('thank-you.billing-address')}: </span>
           <p className="inline leading-loose md:hidden">
             <span className="font-medium">{billingAddress.name}</span>
             {billingAddress.careOf ? ` (c/o ${billingAddress.careOf})` : ''}, {billingAddress.zip} {billingAddress.city}
@@ -75,7 +75,7 @@ const OrderInfo = ({
 
       {paymentMethod && (
         <div className="gap-1 md:flex md:gap-5">
-          <span className="text-gray-600 md:w-[136px]">{translate('thank-you.payment.method')}: </span>
+          <span className="text-gray-600 md:w-[136px]">{translate('thank-you.payment-method')}: </span>
           <span className="font-semibold leading-loose text-gray-600">{paymentMethod}</span>
         </div>
       )}

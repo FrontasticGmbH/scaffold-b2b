@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import useFormat from '@/hooks/useFormat';
 import Radio from '@/components/atoms/radio';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import Button from '@/components/atoms/button';
 import toast from 'react-hot-toast';
@@ -16,7 +16,7 @@ const ShippingStep = ({
   initialData = {},
 }: Pick<CheckoutProps, 'shippingMethods' | 'onCompleteShipping' | 'initialData'> &
   Pick<StepProps, 'isActive' | 'isCompleted'>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { nextStep, visitedAllSteps, goToLastStep } = useCheckout();
 
@@ -36,7 +36,7 @@ const ShippingStep = ({
     const success = await onCompleteShipping?.(selectedShippingMethodId);
 
     if (success) (visitedAllSteps ? goToLastStep : nextStep)();
-    else toast.error(translate('common.something.went.wrong'), { position: 'top-right' });
+    else toast.error(translate('common.something-went-wrong'), { position: 'top-right' });
 
     setLoading(false);
   }, [selectedShippingMethodId, onCompleteShipping, nextStep, translate, visitedAllSteps, goToLastStep]);
@@ -94,7 +94,7 @@ const ShippingStep = ({
         loading={loading}
         onClick={handleStepCompletion}
       >
-        {translate(visitedAllSteps ? 'checkout.save.and.review' : 'checkout.continue.to.payment')}
+        {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-payment')}
       </Button>
     </div>
   );

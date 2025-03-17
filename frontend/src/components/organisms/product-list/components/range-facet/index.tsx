@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { RangeFacet as RangeFacetType } from '@/types/entity/facet';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import Button from '@/components/atoms/button';
 import { useProductList } from '../../context';
 
 const RangeFacet = (facet: RangeFacetType) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [focused, setFocused] = useState({ min: false, max: false });
 

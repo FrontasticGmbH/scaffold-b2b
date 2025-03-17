@@ -12,10 +12,10 @@ import { mapAddress } from '@/utils/mappers/map-address';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
 import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 const QuoteThankYouClientWrapper = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useCustomRouter();
 
@@ -47,8 +47,8 @@ const QuoteThankYouClientWrapper = () => {
         deliveryAddress={mapAddress(quoteRequest.shippingAddress as Address)}
         billingAddress={mapAddress(quoteRequest.billingAddress as Address)}
         comment={quoteRequest.buyerComment}
-        paymentMethod={translate('thank-you.payment.purchase.order', {
-          values: { number: quoteRequest.purchaseOrderNumber ?? '' },
+        paymentMethod={translate('thank-you.payment-purchase-order', {
+          number: quoteRequest.purchaseOrderNumber ?? '',
         })}
         transaction={{
           subtotal: transaction.subtotal.centAmount,

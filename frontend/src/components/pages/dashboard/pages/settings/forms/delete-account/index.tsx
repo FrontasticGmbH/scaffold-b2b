@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import Confirmation from '@/components/organisms/confirmation';
@@ -9,7 +9,7 @@ import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { Props } from './types';
 
 const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useCustomRouter();
 
@@ -33,7 +33,7 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
     if (success === true) {
       router.push('/login');
     } else {
-      toast.error(translate('dashboard.failed.to.delete.account'), {
+      toast.error(translate('dashboard.failed-to-delete-account'), {
         position: 'top-right',
       });
     }
@@ -44,11 +44,11 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
 
   return (
     <form>
-      <p className="pb-4 text-14 text-gray-700">{translate('dashboard.cannot.regain.access')}</p>
+      <p className="pb-4 text-14 text-gray-700">{translate('dashboard.cannot-regain-access')}</p>
       <PasswordInput
         containerClassName="w-[370px]"
         name="password"
-        label={translate('dashboard.password.confirmation')}
+        label={translate('dashboard.password-confirmation')}
         required
         value={data.password}
         onChange={handleChange}
@@ -60,9 +60,9 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
         </Button>
         <Confirmation
           translations={{
-            title: translate('account.delete.account'),
+            title: translate('account.delete-account'),
             summary: translate(
-              isLastAssociate ? 'dashboard.associate.delete.disabled' : 'dashboard.cannot.regain.access',
+              isLastAssociate ? 'dashboard.associate-delete-disabled' : 'dashboard.cannot-regain-access',
             ),
             cancel: translate('common.cancel'),
             confirm: translate('common.delete'),

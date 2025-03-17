@@ -1,11 +1,11 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { useProductList } from '../../context';
 
 const Header = () => {
   const { title, limit, total } = useProductList();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div>

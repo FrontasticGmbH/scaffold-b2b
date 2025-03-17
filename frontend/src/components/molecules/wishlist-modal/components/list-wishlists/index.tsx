@@ -1,12 +1,12 @@
 import Button from '@/components/atoms/button';
 import Checkbox from '@/components/atoms/checkbox';
 import Typography from '@/components/atoms/typography';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import { ListWishListsProps } from '@/components/molecules/wishlist-modal/types';
 
 const ListWishlist = ({ lists, selectedIds, onClose, onSubmit, handleChange, loading }: ListWishListsProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   return (
     <>
       <div className="px-6 lg:pl-0 lg:pr-5">
@@ -16,7 +16,7 @@ const ListWishlist = ({ lists, selectedIds, onClose, onSubmit, handleChange, loa
           lineHeight="loose"
           className="border-b border-neutral-400 pb-6 pt-4 text-gray-700 md:pt-6 md:text-20 lg:mx-auto lg:max-w-[400px]"
         >
-          {translate('wishlist.select.list')}
+          {translate('wishlist.select-list')}
         </Typography>
       </div>
       <div className="lg:pr-5">

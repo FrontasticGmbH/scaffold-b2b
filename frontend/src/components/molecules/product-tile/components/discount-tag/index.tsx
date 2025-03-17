@@ -1,10 +1,10 @@
 import React from 'react';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { Props } from './types';
 
 const DiscountTag = ({ discountPercentage, className }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Typography from '@/components/atoms/typography';
 import WishlistModal from '@/components/molecules/wishlist-modal';
 import useDisclosure from '@/hooks/useDisclosure';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import { ShoppingListCTAProps, Wishlist } from '../types';
 import WishlistToast from './wishlist-toast';
@@ -13,7 +13,7 @@ const ShoppingListCTA = ({
   removeFromWishlists,
   addToNewWishlist,
 }: ShoppingListCTAProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -89,7 +89,7 @@ const ShoppingListCTA = ({
   return (
     <div className="mb-1 mt-2 border-y border-neutral-400 py-5 lg:mt-4">
       <Typography onClick={onOpen} className="cursor-pointer leading-[16px] text-gray-700" fontSize={14}>
-        {`+ ${translate('product.add.to.list')}`}
+        {`+ ${translate('product.add-to-list')}`}
       </Typography>
       <WishlistModal
         lists={lists}

@@ -10,7 +10,7 @@ import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { mapShippingMethod } from '@/utils/mappers/map-shipping-method';
 import toast from '@/components/atoms/toaster/helpers/toast';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useAccount from '@/lib/hooks/useAccount';
 import { TasticProps } from '@/lib/tastics/types';
@@ -29,7 +29,7 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
   const { account } = useAccount();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { addAddress } = useBusinessUnits();
 
@@ -83,7 +83,7 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
         currency: cart?.transaction.total.currencyCode ?? 'USD',
       }}
       translations={{
-        review: translate('checkout.review.order'),
+        review: translate('checkout.review-order'),
       }}
       products={(cart?.lineItems ?? []).map(mapLineItem)}
       addresses={selectedBusinessUnit?.addresses ?? []}
@@ -138,7 +138,7 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
         if (orderId) {
           mutateAllApprovalFlows();
           router.push(`/thank-you?orderId=${orderId}`);
-        } else toast.error(translate('common.something.went.wrong'), { position: 'top-right' });
+        } else toast.error(translate('common.something-went-wrong'), { position: 'top-right' });
 
         return !!orderId;
       }}

@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act } from '@test/utils';
 import { useDebounce } from './'; // Adjust the path as needed
 
 describe('[Hook] useDebounce hook', () => {

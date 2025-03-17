@@ -1,5 +1,4 @@
-import I18nProvider from '@/providers/I18n';
-import { act, render, screen } from '@test/utils';
+import { act, createWrapper, render, screen } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import Table from '.';
 
@@ -79,22 +78,20 @@ describe('[Component] Table', () => {
 
   it('Renders pagination numbers correctly', () => {
     const { rerender } = render(<Table.Pagination page={1} limit={25} totalItems={100} />, {
-      wrapper: ({ children }) => (
-        <I18nProvider translations={{ en: { common: { 'from.to': `{from} - {to} /  {totalItems}` } } }}>
-          {children}
-        </I18nProvider>
-      ),
+      wrapper: createWrapper(),
     });
 
-    expect(screen.getAllByText('1 - 25 / 100')[0]).toBeDefined();
+    expect(screen.getAllByText('1 - 25 of 100')[0]).toBeDefined();
 
     rerender(<Table.Pagination page={2} limit={25} totalItems={200} />);
 
-    expect(screen.getAllByText('26 - 50 / 200')[0]).toBeDefined();
+    expect(screen.getAllByText('26 - 50 of 200')[0]).toBeDefined();
   });
 
   it('Disables next and previous buttons correctly', () => {
-    const { rerender } = render(<Table.Pagination page={1} limit={25} totalItems={100} />);
+    const { rerender } = render(<Table.Pagination page={1} limit={25} totalItems={100} />, {
+      wrapper: createWrapper(),
+    });
 
     expect(screen.getByTestId('previous-arrow')).toBeDisabled();
     expect(screen.getByTestId('next-arrow')).not.toBeDisabled();
@@ -119,6 +116,7 @@ describe('[Component] Table', () => {
         onPrevious={onPrevious}
         onNext={onNext}
       />,
+      { wrapper: createWrapper() },
     );
 
     await act(async () => userEvent.click(screen.getByTestId('dropdown-button')));

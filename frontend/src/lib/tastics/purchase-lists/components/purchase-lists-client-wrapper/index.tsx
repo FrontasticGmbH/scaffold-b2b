@@ -34,7 +34,7 @@ const PurchaseListsClientWrapper = () => {
 
   return (
     <Dashboard
-      title={ActiveSubPath?.title ?? 'common.purchase.lists'}
+      title={ActiveSubPath?.title ?? 'common.purchase-lists'}
       href={DashboardLinks.shoppingLists}
       userName={account?.firstName}
     >

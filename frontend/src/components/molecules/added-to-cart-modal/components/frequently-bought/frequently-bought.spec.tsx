@@ -1,12 +1,12 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@test/utils';
 import FrequentlyBoughtContainer from '@/components/molecules/added-to-cart-modal/components/frequently-bought/index';
 
 describe('FrequentlyBoughtContainer', () => {
   it('renders headline with correct translation', () => {
     render(<FrequentlyBoughtContainer sliderProducts={[]} />);
 
-    expect(screen.getByText('product.bought.together')).toBeInTheDocument();
+    expect(screen.getByText('Frequently bought together')).toBeInTheDocument();
   });
 
   it('renders with the correct class names', () => {

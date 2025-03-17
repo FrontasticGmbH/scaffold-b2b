@@ -1,9 +1,8 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@test/utils';
 import ItemPricing from '@/components/molecules/added-to-cart-modal/components/item-pricing';
 import { ItemPricingProps } from '@/components/molecules/added-to-cart-modal/types';
 import { sliderItems } from '@/mocks/productSliderItems';
-import { act } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 
 const mockItemPricingProps: ItemPricingProps = {

@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { PurchaseList } from '@/types/entity/purchase-list';
 import EntityForm from '@/components/organisms/entity-form';
@@ -12,7 +12,7 @@ import toast from '@/components/atoms/toaster/helpers/toast';
 import WishlistToast from '@/components/organisms/product-details/components/wishlist-toast';
 
 const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showFailedMessage } = useEntityToasters('purchaselist');
   const { selectedStore } = useStoreAndBusinessUnits();
@@ -51,7 +51,7 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
           lineHeight="loose"
           className="pt-4 text-gray-700 md:pt-6 md:text-20 lg:mx-auto lg:max-w-[400px]"
         >
-          {translate('product.add.to.new.list')}
+          {translate('product.add-to-new-list')}
         </Typography>
       </div>
       <EntityForm
@@ -59,7 +59,7 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
           form: 'w-fit m-auto border-none',
           buttonsContainer: 'border-t border-neutral-400 mt-8 pt-5 justify-end',
         }}
-        translations={{ cancel: translate('common.cancel'), submit: translate('product.save.and.add') }}
+        translations={{ cancel: translate('common.cancel'), submit: translate('product.save-and-add') }}
         onSubmit={handleSubmit}
         onCancel={onClose}
       >

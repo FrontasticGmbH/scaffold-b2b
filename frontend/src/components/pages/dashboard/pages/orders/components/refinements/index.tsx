@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import SearchInput from '@/components/atoms/search-input';
 import Dropdown from '@/components/atoms/dropdown';
 import DatePicker from '@/components/molecules/date-picker';
@@ -13,7 +13,7 @@ const Refinements = ({
   onStatusRefine,
   onCreationDateRefine,
 }: Partial<OrdersPageProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const refinements = [
     {
@@ -23,7 +23,7 @@ const Refinements = ({
           containerClassName="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
-          placeholder={`${translate('dashboard.search.for.orders')}...`}
+          placeholder={`${translate('dashboard.search-for-orders')}...`}
           handleOnChange={(val) => onSearch?.(val)}
         />
       ),
@@ -43,7 +43,7 @@ const Refinements = ({
       ),
     },
     {
-      title: 'dashboard.creation.date',
+      title: 'dashboard.creation-date',
       Component: (
         <Dropdown size="lg" className="w-[200px]">
           <Dropdown.Button>{translate('common.select')}</Dropdown.Button>
@@ -66,7 +66,13 @@ const Refinements = ({
     <div className="hidden gap-3 lg:flex">
       {refinements.map(({ title, Component }, index) => (
         <div key={index}>
-          <p className="text-14 text-gray-700">{translate(title)}</p>
+          <p className="text-14 text-gray-700">
+            {
+              // eslint-disable-next-line
+              // @ts-ignore
+              translate(title)
+            }
+          </p>
           <div className="mt-2">{Component}</div>
         </div>
       ))}

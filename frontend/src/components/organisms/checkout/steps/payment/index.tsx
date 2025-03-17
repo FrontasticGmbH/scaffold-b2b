@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Radio from '@/components/atoms/radio';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import Button from '@/components/atoms/button';
 import toast from 'react-hot-toast';
@@ -20,7 +20,7 @@ const PaymentStep = ({
   translations,
 }: Pick<CheckoutProps, 'paymentMethods' | 'onCompletePayment' | 'initialData' | 'translations'> &
   Pick<StepProps, 'isActive' | 'isCompleted'>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { nextStep, tempData, setTempData } = useCheckout();
 
@@ -40,7 +40,7 @@ const PaymentStep = ({
     const success = await onCompletePayment?.(selectedPaymentMethodId, paymentData);
 
     if (success) nextStep();
-    else toast.error(translate('common.something.went.wrong'), { position: 'top-right' });
+    else toast.error(translate('common.something-went-wrong'), { position: 'top-right' });
 
     setLoading(false);
   }, [selectedPaymentMethodId, onCompletePayment, nextStep, translate, paymentData]);
@@ -118,7 +118,7 @@ const PaymentStep = ({
         loading={loading}
         onClick={handleStepCompletion}
       >
-        {translations?.review ?? translate('checkout.review.quote')}
+        {translations?.review ?? translate('checkout.review-quote')}
       </Button>
     </div>
   );

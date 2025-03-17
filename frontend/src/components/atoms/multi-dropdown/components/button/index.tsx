@@ -2,13 +2,13 @@ import React from 'react';
 import { ListboxButton } from '@headlessui/react';
 import { ChevronDownIcon as ArrowIcon } from '@heroicons/react/24/solid';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useClassNames from '../../hooks/useClassNames';
 import { useDropdown } from '../../context';
 import { Props } from './types';
 
 const DropdownButton = ({ children, className }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { disabled, size, value, defaultValue, onToggle, isExpanded } = useDropdown();
 
   const { buttonClassName } = useClassNames({ disabled, size });

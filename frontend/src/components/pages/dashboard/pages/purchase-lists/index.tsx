@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Table from '@/components/organisms/table';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
@@ -9,21 +9,21 @@ import SearchPanel from '../../components/search-panel';
 import { DashboardLinks } from '../../constants';
 
 const PurchaseListsPage = ({ purchaseLists, loading }: PurchaseListsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <SearchPanel
-      translations={{ button: translate('dashboard.purchase.list.add') }}
+      translations={{ button: translate('dashboard.purchase-list-add') }}
       buttonLink={`?subPath=add-purchase-list`}
       isEmpty={!purchaseLists?.length}
       isLoading={loading}
-      entity={translate('common.purchase.lists')}
+      entity={translate('common.purchase-lists')}
     >
       <Table>
         <Table.Container className="hidden md:table">
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>{translate('common.list.name')}</Table.HeaderCell>
+              <Table.HeaderCell>{translate('common.list-name')}</Table.HeaderCell>
               <Table.HeaderCell>{translate('common.store')}</Table.HeaderCell>
               <Table.HeaderCell>{translate('common.description')}</Table.HeaderCell>
               <Table.HeaderCell className="text-right">{translate('common.items')}</Table.HeaderCell>
@@ -57,7 +57,7 @@ const PurchaseListsPage = ({ purchaseLists, loading }: PurchaseListsPageProps) =
         <Table.Container className="table md:hidden">
           <Table.Head>
             <Table.Row>
-              <Table.HeaderCell>{translate('common.list.name')}</Table.HeaderCell>
+              <Table.HeaderCell>{translate('common.list-name')}</Table.HeaderCell>
             </Table.Row>
           </Table.Head>
 

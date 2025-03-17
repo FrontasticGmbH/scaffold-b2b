@@ -873,7 +873,7 @@ export default class CartApi extends BaseApi {
       whereClause.push(`createdAt < "${orderQuery.created.to.toISOString()}"`);
     }
 
-    const queryResult = await this.associateEndpoints(this.accountId, this.businessUnitKey)
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .get({
         queryArgs: {
@@ -903,18 +903,6 @@ export default class CartApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-
-    // If the order was created without an order number, set one now
-    queryResult.items = await Promise.all(
-      queryResult.items.map(async (order) => {
-        if (!order.orderNumber) {
-          return await this.setOrderNumber(order);
-        }
-        return order;
-      }),
-    );
-
-    return queryResult;
   }
 
   async getCheckoutSessionToken(cartId: string): Promise<Token> {

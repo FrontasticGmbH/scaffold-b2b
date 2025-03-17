@@ -1,12 +1,18 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { sdk } from '@/sdk';
 
 const useSessionStoreAndBusinessUnitKeys = () => {
+  const [sessionIsUpdating, setSessionIsUpdating] = useState(false);
+
   const setBusinessUnitAndStoreSessionKeys = useCallback(async (businessUnitKey: string, storeKey: string) => {
-    await sdk.composableCommerce.businessUnit.setBusinessUnitAndStoreKeys({ businessUnitKey, storeKey });
+    setSessionIsUpdating(true);
+    await sdk.composableCommerce.businessUnit
+      .setBusinessUnitAndStoreKeys({ businessUnitKey, storeKey })
+      .catch(() => {});
+    setSessionIsUpdating(false);
   }, []);
 
-  return { setBusinessUnitAndStoreSessionKeys };
+  return { setBusinessUnitAndStoreSessionKeys, sessionIsUpdating };
 };
 
 export default useSessionStoreAndBusinessUnitKeys;

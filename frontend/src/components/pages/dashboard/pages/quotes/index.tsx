@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Tabs from '@/components/organisms/tabs';
 import EmptyState from '@/components/molecules/empty-state';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
@@ -31,7 +31,7 @@ const QuotesPage = ({
   onRowsPerPageChange,
   onSelectedChange,
 }: QuotesPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useRouter();
 
@@ -81,7 +81,7 @@ const QuotesPage = ({
       <div className="flex items-center justify-between py-6 md:py-7 lg:py-9">
         <div className="flex items-center gap-3">
           <h1 className="text-18 font-extrabold text-gray-800 md:text-20 lg:text-24">
-            {translate(`common.${selected}`)}
+            {translate(`common.${selected.replace('.', '-') as 'quotes' | 'quotes-requests'}`)}
           </h1>
           {quotes.length > 0 && (
             <div className="rounded-md bg-primary px-[6px] py-[2px] text-12 font-semibold text-white">
@@ -103,11 +103,11 @@ const QuotesPage = ({
         >
           <Tabs.TabList>
             <Tabs.Tab>
-              <span className="capitalize">{translate('dashboard.quotes.all')}</span>
+              <span className="capitalize">{translate('dashboard.quotes-all')}</span>
             </Tabs.Tab>
             <Tabs.Tab>
               <div className="flex items-center gap-2">
-                <span className="capitalize">{translate('common.quotes.requests')}</span>
+                <span className="capitalize">{translate('common.quotes-requests')}</span>
               </div>
             </Tabs.Tab>
           </Tabs.TabList>
@@ -121,7 +121,7 @@ const QuotesPage = ({
                   <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
                 </>
               ) : (
-                <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+                <EmptyState isLoading={loading} header={translate('common.no-results-found')} />
               )}
             </Tabs.Panel>
             <Tabs.Panel>
@@ -133,7 +133,7 @@ const QuotesPage = ({
                   <QuotesTable quotes={quotes} pagination={tablePaginationProps} />
                 </>
               ) : (
-                <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+                <EmptyState isLoading={loading} header={translate('common.no-results-found')} />
               )}
             </Tabs.Panel>
           </Tabs.Panels>

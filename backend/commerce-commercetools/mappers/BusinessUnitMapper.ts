@@ -139,8 +139,9 @@ export default class BusinessUnitMapper {
             storeId: storeObj.storeId,
             distributionChannels: storeObj?.distributionChannels,
             supplyChannels: storeObj?.supplyChannels,
+            productSelectionIds: storeObj?.productSelectionIds,
           }
-        : (store as Store);
+        : store;
     });
   }
 

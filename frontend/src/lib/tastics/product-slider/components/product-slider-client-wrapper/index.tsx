@@ -12,12 +12,12 @@ import usePath from '@/hooks/usePath';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import { TasticProps } from '@/lib/tastics/types';
 import toast from '@/components/atoms/toaster/helpers/toast';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 const ProductSliderClientWrapper = ({
   data,
 }: TasticProps<DataSource<{ items: Product[] }> & Pick<ProductSliderProps, 'headline'>>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
@@ -44,7 +44,7 @@ const ProductSliderClientWrapper = ({
       onAddToCart={async (sku) => {
         const res = await addItem([{ sku, count: 1 }]);
 
-        if (!res.success) toast.error(res.message || translate('common.something.went.wrong'));
+        if (!res.success) toast.error(res.message || translate('common.something-went-wrong'));
       }}
     />
   );

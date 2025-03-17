@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
 import { Props } from './types';
@@ -14,7 +14,7 @@ const QuantityWidget = ({
   disabled,
   showLabel = true,
 }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [value, setValue] = useControllableState(valueProp, Math.min(defaultValue, maxValue));
   const [rawValue, setRawValue] = useState(value.toString());
@@ -59,7 +59,7 @@ const QuantityWidget = ({
 
   return (
     <div className="flex items-center gap-3">
-      {showLabel && <span className="text-14 text-gray-700">{translate('common.quantity.shorthand')}</span>}
+      {showLabel && <span className="text-14 text-gray-700">{translate('common.quantity-shorthand')}</span>}
       <div className="flex overflow-hidden rounded-md border border-gray-300 text-gray-700">
         <button
           disabled={value <= minValue || disabled}

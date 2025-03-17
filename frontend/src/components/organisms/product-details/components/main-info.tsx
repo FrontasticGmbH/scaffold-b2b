@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Typography from '@/components/atoms/typography';
 import useFormat from '@/hooks/useFormat';
 import { useAddToCartOverlay } from '@/providers/add-to-cart-overlay';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { PDPMainInfoProps } from '../types';
 import ColoredVariants from './color-variants';
 import SpecsVariants from './specs-variants';
@@ -28,7 +28,7 @@ const MainInfo = ({
 
   const { formatCurrency } = useFormat();
   const { showModal } = useAddToCartOverlay();
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const handleOnAddToCart = async (count: number) => {
     await addToCart(count);
@@ -85,7 +85,7 @@ const MainInfo = ({
         )}
         {(!product.inStock || !product.price) && (
           <Typography fontSize={18} lineHeight="loose" className="text-red-500 md:text-16 lg:text-18">
-            {translate('common.out.of.stock')}
+            {translate('common.out-of-stock')}
           </Typography>
         )}
         <CartCTA

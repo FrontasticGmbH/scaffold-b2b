@@ -62,6 +62,7 @@ export default class ProductMapper {
     productIdField: string,
     categoryIdField: string,
     locale: Locale,
+    defaultLocale: string,
     supplyChannelId?: string,
   ): Product {
     const product: Product = {
@@ -78,6 +79,21 @@ export default class ProductMapper {
         locale,
       ),
       variants: this.commercetoolsProductProjectionToVariants(commercetoolsProduct, locale, supplyChannelId),
+      metaTitle:
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProduct?.productProjection?.metaTitle) ||
+        undefined,
+      metaDescription:
+        LocalizedValue.getLocalizedValue(
+          locale,
+          defaultLocale,
+          commercetoolsProduct?.productProjection?.metaDescription,
+        ) || undefined,
+      metaKeywords:
+        LocalizedValue.getLocalizedValue(
+          locale,
+          defaultLocale,
+          commercetoolsProduct?.productProjection?.metaKeywords,
+        ) || undefined,
     };
 
     product._url = ProductRouter.generateUrlFor(product);
@@ -586,6 +602,7 @@ export default class ProductMapper {
     commercetoolsCategory: CommercetoolsCategory,
     categoryIdField: string,
     locale: Locale,
+    defaultLocale?: string,
   ): Category {
     return {
       categoryId: commercetoolsCategory?.id,
@@ -600,6 +617,11 @@ export default class ProductMapper {
       slug: commercetoolsCategory.slug?.[locale.language] ?? undefined,
       depth: commercetoolsCategory.ancestors.length,
       _url: this.generateLocalizedUrl(commercetoolsCategory),
+      metaTitle: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsCategory?.metaTitle) || undefined,
+      metaDescription:
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsCategory?.metaDescription) || undefined,
+      metaKeywords:
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsCategory?.metaKeywords) || undefined,
     };
   }
 

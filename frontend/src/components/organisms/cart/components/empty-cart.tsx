@@ -1,12 +1,12 @@
 import Button from '@/components/atoms/button';
 import Typography from '@/components/atoms/typography';
 import Image from '@/components/atoms/Image';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import LoadingIcon from '@/components/atoms/loading-icon';
 
 const EmptyCart = ({ loading }: { loading?: boolean }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   if (loading)
     return (
@@ -26,11 +26,11 @@ const EmptyCart = ({ loading }: { loading?: boolean }) => {
       </div>
 
       <Typography fontSize={16} lineHeight="loose" className="text-gray-600">
-        {translate('cart.no.items.added')}
+        {translate('cart.no-items-added')}
       </Typography>
 
       <Link href="/" underlineOnHover={false}>
-        <Button size="l">{translate('cart.continue.shopping')}</Button>
+        <Button size="l">{translate('cart.continue-shopping')}</Button>
       </Link>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
 import Confirmation from '@/components/organisms/confirmation';
 import Link from '@/components/atoms/link';
@@ -12,7 +12,7 @@ const AssociatesTable = ({
   associatesAreViewOnly,
   associates = [],
 }: Partial<CompanyAdminPageProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('associate');
 
@@ -50,11 +50,11 @@ const AssociatesTable = ({
                   <div className="flex items-center justify-end gap-5 text-primary">
                     <Confirmation
                       translations={{
-                        title: translate('dashboard.associate.delete'),
+                        title: translate('dashboard.associate-delete'),
                         summary: translate(
                           isDeleteDisabled
-                            ? 'dashboard.associate.delete.disabled'
-                            : 'dashboard.associate.delete.confirm',
+                            ? 'dashboard.associate-delete-disabled'
+                            : 'dashboard.associate-delete-confirm',
                         ),
                         cancel: translate(isDeleteDisabled ? 'common.close' : 'common.cancel'),
                         confirm: translate('common.delete'),

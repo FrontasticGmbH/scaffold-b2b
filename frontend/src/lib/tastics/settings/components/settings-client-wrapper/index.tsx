@@ -60,7 +60,7 @@ const SettingsClientWrapper = () => {
 
   return (
     <Dashboard
-      title={ActiveSubPath?.title ?? 'account.settings.security'}
+      title={ActiveSubPath?.title ?? 'account.settings-security'}
       href={DashboardLinks.settings}
       userName={account?.firstName}
     >

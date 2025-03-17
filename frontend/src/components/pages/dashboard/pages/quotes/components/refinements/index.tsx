@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import SearchInput from '@/components/atoms/search-input';
 import { QuestionMarkCircleIcon as InfoIcon } from '@heroicons/react/24/outline';
 import MultiSelect from '@/components/atoms/multi-select';
@@ -12,17 +12,17 @@ const Refinements = ({
   onStatusRefine,
   onInfoClick,
 }: Partial<QuotesPageProps & { onInfoClick: () => void }>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const refinements = [
     {
-      title: 'dashboard.quote.search',
+      title: 'dashboard.quote-search',
       Component: (
         <SearchInput
           containerClassName="h-[38px] w-[360px]"
           searchValue={filters?.search ?? ''}
           variant="xs"
-          placeholder={`${translate('dashboard.search.by.id.sku')}...`}
+          placeholder={`${translate('dashboard.search-by-id-sku')}...`}
           handleOnChange={(val) => onSearch?.(val)}
         />
       ),
@@ -48,7 +48,13 @@ const Refinements = ({
       <div className="flex gap-3">
         {refinements.map(({ title, Component }, index) => (
           <div key={index}>
-            <p className="text-14 text-gray-700">{translate(title)}</p>
+            <p className="text-14 text-gray-700">
+              {
+                // eslint-disable-next-line
+                // @ts-ignore
+                translate(title)
+              }
+            </p>
             <div className="mt-2">{Component}</div>
           </div>
         ))}

@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import PasswordInput from '@/components/atoms/password-input';
 // import useValidate from '@/hooks/useValidate/useValidate';
 import { Props } from './types';
 
 const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   // const { validatePassword } = useValidate();
 
@@ -30,7 +30,7 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
       //TODO: Need to discuss, there are no restrictions on signup
       // const isValidPassword = validatePassword(data.newPassword);
       // if (!isValidPassword) {
-      //   setPasswordError(translate('error.password.not.valid'));
+      //   setPasswordError(translate('error.password-not-valid'));
       //   setIsLoading(false);
       //   return;
       // }
@@ -54,7 +54,7 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
         <PasswordInput
           containerClassName="w-[370px]"
           name="oldPassword"
-          label={translate('dashboard.current.password')}
+          label={translate('dashboard.current-password')}
           required
           value={data.oldPassword}
           onChange={handleChange}
@@ -63,7 +63,7 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
         <PasswordInput
           containerClassName="w-[370px]"
           name="newPassword"
-          label={translate('dashboard.new.password')}
+          label={translate('dashboard.new-password')}
           required
           value={data.newPassword}
           error={passwordError}
@@ -73,13 +73,13 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
         <PasswordInput
           containerClassName="w-[370px]"
           name="confirmedNewPassword"
-          label={translate('dashboard.confirm.password')}
+          label={translate('dashboard.confirm-password')}
           required
           value={data.confirmedNewPassword}
           onChange={handleChange}
           error={
             data.newPassword && data.confirmedNewPassword && data.newPassword !== data.confirmedNewPassword
-              ? translate('dashboard.password.not.match')
+              ? translate('dashboard.password-not-match')
               : ''
           }
         />

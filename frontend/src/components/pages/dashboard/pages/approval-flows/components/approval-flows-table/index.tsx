@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import ApprovalFlowStatusTag from '@/components/pages/dashboard/components/approval-flow-status-tag';
 import useFormat from '@/hooks/useFormat';
 import Button from '@/components/atoms/button';
@@ -10,7 +10,7 @@ import Accordion from '@/components/molecules/accordion';
 import { Props } from './types';
 
 const ApprovalFlowsTable = ({ approvalFlows, pagination }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency } = useFormat();
 
@@ -22,7 +22,7 @@ const ApprovalFlowsTable = ({ approvalFlows, pagination }: Props) => {
             <Table.HeaderCell>{translate('common.status')}</Table.HeaderCell>
             <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
             <Table.HeaderCell>{translate('common.date')}</Table.HeaderCell>
-            <Table.HeaderCell>{translate('common.business.unit')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.business-unit')}</Table.HeaderCell>
             <Table.HeaderCell className="text-right">{translate('common.total')}</Table.HeaderCell>
             <Table.HeaderCell />
           </Table.Row>
@@ -73,7 +73,7 @@ const ApprovalFlowsTable = ({ approvalFlows, pagination }: Props) => {
                   </Accordion.Button>
                   <Accordion.Panel defaultSpacing={false}>
                     <div className="mt-3 flex gap-1">
-                      <p className="basis-32 font-semibold uppercase">{translate('common.business.unit')}: </p>
+                      <p className="basis-32 font-semibold uppercase">{translate('common.business-unit')}: </p>
                       <p className="max-w-48 truncate">{businessUnit.name ?? businessUnit.key}</p>
                     </div>
                     <div className="mt-2 flex gap-1">

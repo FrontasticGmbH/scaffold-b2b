@@ -5,6 +5,7 @@ export interface AnnouncementBarProps {
   accountLinks: NavigationCategory[];
   textBar: string;
   selectedBusinessUnit?: string;
+  businessUnitIsLoading?: boolean;
   businessUnits: Option[];
   selectedStore?: string;
   stores: Option[];
@@ -19,6 +20,7 @@ export interface AccountButtonProps {
   quotes: number;
   name: string;
   selectedBusinessUnit?: string;
+  businessUnitIsLoading?: boolean;
   businessUnits: Option[];
   selectedStore?: string;
   stores: Option[];

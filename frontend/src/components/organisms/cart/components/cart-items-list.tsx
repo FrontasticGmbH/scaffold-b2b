@@ -1,9 +1,9 @@
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import CartItem from './cart-item';
 import { CartItemsListProps } from '../types';
 
 const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd, onAddToNewWishlist }: CartItemsListProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const inStockItems = lineItems?.filter((item) => !!item.inStock) ?? [];
   const soldOutItems = lineItems?.filter((item) => !item.inStock) ?? [];
@@ -27,7 +27,7 @@ const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd, onAddToNe
 
       {soldOutItems?.length > 0 && (
         <div className="border-t border-neutral-400 pt-9">
-          <h3 className="text-16 md:text-18 lg:text-22">{translate('product.sold.out')}</h3>
+          <h3 className="text-16 md:text-18 lg:text-22">{translate('product.sold-out')}</h3>
           <div className="mt-12">
             {soldOutItems.map((lineItem) => (
               <div key={lineItem.id}>

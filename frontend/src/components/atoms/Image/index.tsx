@@ -2,8 +2,8 @@
 
 import React from 'react';
 import NextImage from 'next/image';
+import { CldImage } from 'next-cloudinary';
 import { ImageProps } from './types';
-import cloudinaryLoader from './loaders/cloudinary';
 import useDimensions from './hooks/useDimensions';
 import defaultLoader from './loaders/default';
 
@@ -25,19 +25,14 @@ const Image = ({ media, ratio, gravity, suffix, src = '', width, height, alt = '
     );
 
   return (
-    <NextImage
+    <CldImage
       src={media.mediaId}
-      loader={({ src: mediaId, width }) =>
-        cloudinaryLoader({
-          mediaId,
-          width,
-          ratio,
-          gravity: gravity?.mode,
-          x: gravity?.coordinates?.x.toString(),
-          y: gravity?.coordinates?.y.toString(),
-        })
-      }
       alt={alt}
+      aspectRatio={ratio}
+      gravity={gravity?.mode ?? 'auto'}
+      format="auto"
+      crop={{ type: 'scale', x: gravity?.coordinates?.x.toString(), y: gravity?.coordinates?.y.toString() }}
+      quality="auto"
       {...dimensions}
       {...props}
     />

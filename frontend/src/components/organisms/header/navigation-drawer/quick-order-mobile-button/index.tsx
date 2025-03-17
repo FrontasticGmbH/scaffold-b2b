@@ -1,11 +1,11 @@
 import React from 'react';
 import Button from '@/components/atoms/button';
 import Typography from '@/components/atoms/typography';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { QuickOrderMobileProps } from '../../types';
 
 const QuickOrderMobileButton = ({ showQuickOrderMenu }: QuickOrderMobileProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   return (
     <Button
       variant="ghost"
@@ -14,7 +14,7 @@ const QuickOrderMobileButton = ({ showQuickOrderMenu }: QuickOrderMobileProps) =
       onClick={showQuickOrderMenu}
     >
       <Typography fontSize={16} fontWeight="semibold" className="text-gray-800">
-        {translate('quick-order.quick.order')}
+        {translate('quick-order.quick-order')}
       </Typography>
     </Button>
   );

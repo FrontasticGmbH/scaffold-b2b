@@ -2,11 +2,11 @@ import React from 'react';
 import { Variant as TagVariant } from '@/components/atoms/tag/types';
 import Tag from '@/components/atoms/tag';
 import { OrderStatus } from '@/types/entity/order';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { OrderStatusTagProps } from './types';
 
 const OrderStatusTag = ({ status }: OrderStatusTagProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const statusVariant = {
     Pending: 'warning',
@@ -19,7 +19,11 @@ const OrderStatusTag = ({ status }: OrderStatusTagProps) => {
 
   return (
     <Tag className="capitalize" variant={statusVariant[status]}>
-      {translate(`orders.status.${status.toLowerCase()}`)}
+      {
+        // eslint-disable-next-line
+        // @ts-ignore
+        translate(`orders.status-${status.toLowerCase()}`)
+      }
     </Tag>
   );
 };

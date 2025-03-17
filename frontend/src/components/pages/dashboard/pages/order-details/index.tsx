@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
 import Button from '@/components/atoms/button';
@@ -17,7 +17,7 @@ const OrderDetailsPage = ({
   showCtaButtons = true,
   showOrderStatusBar = true,
 }: OrderDetailsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency, formatLocalDate } = useFormat();
 
@@ -45,12 +45,12 @@ const OrderDetailsPage = ({
     <div>
       {viewOnly && (
         <InfoBanner className="mt-3">
-          <b>{translate('common.view.only')}</b> {translate('dashboard.orders.view.only.desc')}
+          <b>{translate('common.view-only')}</b> {translate('dashboard.orders-view-only-desc')}
         </InfoBanner>
       )}
       <div className="flex items-center justify-between">
         <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
-          {translate('dashboard.order.details')}
+          {translate('dashboard.order-details')}
         </h1>
         {showCtaButtons && (
           <div className="hidden items-center justify-normal gap-x-3 md:flex">
@@ -62,7 +62,7 @@ const OrderDetailsPage = ({
               </Button>
             )}
             {/* <Button size="s" variant="secondary" disabled>
-                  {translate('orders.download.invoice')}
+                  {translate('orders.download-invoice')}
                 </Button> */}
             {!viewOnly && !order.isFromAQuote && (
               <Button size="s" variant="primary" onClick={handleReorder} loading={loading.reorder}>
@@ -74,18 +74,18 @@ const OrderDetailsPage = ({
       </div>
 
       <h3 className="text-14 text-gray-600">
-        {translate('dashboard.order.id')}: {order.number}
+        {translate('dashboard.order-id')}: {order.number}
       </h3>
 
       {order.creationDate && (
         <h3 className="mt-4 text-14 text-gray-600">
-          {translate('dashboard.order.date')}: {formatLocalDate(order.creationDate)}
+          {translate('dashboard.order-date')}: {formatLocalDate(order.creationDate)}
         </h3>
       )}
 
       {order.purchaseOrderNumber && (
         <h3 className="mt-4 text-14 text-gray-600">
-          {translate('dashboard.purchase.order.number')}: {order.purchaseOrderNumber}
+          {translate('dashboard.purchase-order-number')}: {order.purchaseOrderNumber}
         </h3>
       )}
 
@@ -106,7 +106,7 @@ const OrderDetailsPage = ({
           )}
 
           {/* <Button size="full" variant="secondary" disabled>
-            {translate('orders.download.invoice')}
+            {translate('orders.download-invoice')}
           </Button> */}
 
           {!viewOnly && !order.isFromAQuote && (
@@ -119,7 +119,7 @@ const OrderDetailsPage = ({
 
       <div className={classnames({ 'mt-8 border-t border-neutral-400 md:mt-12': !showCtaButtons })}>
         <h5 className="pb-7 pt-6 text-gray-700">
-          {translate('dashboard.items.ordered')} <span className="text-gray-600">({order.items.length})</span>
+          {translate('dashboard.items-ordered')} <span className="text-gray-600">({order.items.length})</span>
         </h5>
 
         <table className="w-full border-collapse">
@@ -191,26 +191,26 @@ const OrderDetailsPage = ({
       </div>
 
       {/* <div>
-        <h5 className="pb-7 pt-6 text-gray-700 border-t border-neutral-400">{translate('dashboard.shipping.and.payment')}</h5>
+        <h5 className="pb-7 pt-6 text-gray-700 border-t border-neutral-400">{translate('dashboard.shipping-and-payment')}</h5>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
           <div>
-            <h6 className="text-14 uppercase text-gray-500">{translate('common.address.shipping')}</h6>
+            <h6 className="text-14 uppercase text-gray-500">{translate('common.address-shipping')}</h6>
             <p className="mt-2 whitespace-pre-line text-14 text-gray-700">{order.shippingAddress}</p>
           </div>
 
           <div>
-            <h6 className="text-14 uppercase text-gray-500">{translate('common.address.billing')}</h6>
+            <h6 className="text-14 uppercase text-gray-500">{translate('common.address-billing')}</h6>
             <p className="mt-2 whitespace-pre-line text-14 text-gray-700">{order.billingAddress}</p>
           </div>
 
           <div>
-            <h6 className="text-14 uppercase text-gray-500">{translate('common.shipping.method')}</h6>
+            <h6 className="text-14 uppercase text-gray-500">{translate('common.shipping-method')}</h6>
             <p className="mt-2 whitespace-pre-line text-14 text-gray-700">{order.shippingMethod}</p>
           </div>
 
           <div>
-            <h6 className="text-14 uppercase text-gray-500">{translate('common.payment.method')}</h6>
+            <h6 className="text-14 uppercase text-gray-500">{translate('common.payment-method')}</h6>
             <p className="mt-2 whitespace-pre-line text-14 text-gray-700">{order.paymentMethod}</p>
           </div>
         </div>

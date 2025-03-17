@@ -1,7 +1,7 @@
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 const useStatusesOptions = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const quoteStatusOptions = [
     { name: 'Accepted', value: 'Accepted' },
@@ -22,7 +22,9 @@ const useStatusesOptions = () => {
 
   const mapOptions = (options: typeof quoteStatusOptions | typeof quoteRequestStatusOptions) => {
     return options.map(({ name, value }) => ({
-      name: translate(`dashboard.quote.status.${name.toLowerCase()}`),
+      name: translate(
+        `dashboard.quote-status-${name.toLowerCase() as 'accepted' | 'cancelled' | 'closed' | 'rejected' | 'submitted'}`,
+      ),
       value,
     }));
   };

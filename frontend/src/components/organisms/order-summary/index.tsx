@@ -1,7 +1,7 @@
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
 import DiscountsForm from '@/components/molecules/discounts-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import OrderPaymentSection from '../order-payment-section';
 import { OrderSummaryProps } from './types';
 import SummaryAccordion from './components/summary-accordion';
@@ -17,7 +17,7 @@ const OrderSummary = ({
   onDiscountRedeem,
   ...props
 }: OrderSummaryProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const itemsListClassName = classnames('mb-6 border-y border-neutral-400', props.classNames?.itemsList);
 
@@ -44,7 +44,7 @@ const OrderSummary = ({
           className={`${props.classNames?.applyDiscountButton} block lg:hidden`}
           discounts={discounts ?? []}
           onSubmit={onDiscountRedeem}
-          customError={translate('cart.quote.cannot.apply.discount')}
+          customError={translate('cart.quote-cannot-apply-discount')}
         />
       )}
 

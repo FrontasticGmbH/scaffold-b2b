@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import { Account } from '@/types/entity/account';
 import { SettingsPageProps } from '../../types';
 
 const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useRouter();
 
@@ -26,7 +26,7 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
     router.back();
   }, [onUpdateAccount, data, router]);
 
-  const nameValidationProps = { pattern: '[A-Za-z\\s\\.]+', title: translate('common.name.validation') };
+  const nameValidationProps = { pattern: '[A-Za-z\\s\\.]+', title: translate('common.name-validation') };
 
   return (
     <EntityForm

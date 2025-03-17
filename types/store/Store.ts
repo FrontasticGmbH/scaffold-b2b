@@ -6,4 +6,5 @@ export interface Store {
   name?: string;
   distributionChannels?: Channel[];
   supplyChannels?: Channel[];
+  productSelectionIds?: string[];
 }

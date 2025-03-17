@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import Typography from '@/components/atoms/typography';
 import Accordion from '@/components/molecules/accordion';
@@ -9,7 +9,7 @@ import OrderItemsList from './components/order-items-list';
 import { OrderItemsListingProps } from './types';
 
 const OrderItemsListing: FC<OrderItemsListingProps> = ({ className, lineItems }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [open, setOpen] = useState(false);
 
@@ -25,7 +25,7 @@ const OrderItemsListing: FC<OrderItemsListingProps> = ({ className, lineItems })
         <div className={containerClassName}>
           <div className="border-b pb-16">
             <Typography fontSize={16} className="text-secondary">
-              {translate('orders.your.order')}
+              {translate('orders.your-order')}
             </Typography>
           </div>
           <OrderItem lineItem={lineItems[0]} />

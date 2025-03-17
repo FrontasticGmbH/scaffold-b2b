@@ -1,29 +1,29 @@
 import toast from '@/components/atoms/toaster/helpers/toast';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
-const useEntityToasters = (entity: string) => {
-  const { translate } = useTranslation();
+const useEntityToasters = (entity: 'address' | 'associate' | 'businessunit' | 'purchaselist') => {
+  const translate = useTranslations();
 
   const showSavedMessage = () => {
-    toast.success(translate(`dashboard.entity.${entity}.saved`), {
+    toast.success(translate(`dashboard.entity-${entity}-saved`), {
       position: 'top-right',
     });
   };
 
   const showFailedMessage = () => {
-    toast.error(translate(`dashboard.entity.${entity}.failed`), {
+    toast.error(translate(`dashboard.entity-${entity}-failed`), {
       position: 'top-right',
     });
   };
 
   const showDeletedMessage = () => {
-    toast.success(translate(`dashboard.entity.${entity}.deleted`), {
+    toast.success(translate(`dashboard.entity-${entity}-deleted`), {
       position: 'top-right',
     });
   };
 
   const showDeletedFailedMessage = () => {
-    toast.error(translate(`dashboard.entity.${entity}.deleted.failed`), {
+    toast.error(translate(`dashboard.entity-${entity}-deleted-failed`), {
       position: 'top-right',
     });
   };

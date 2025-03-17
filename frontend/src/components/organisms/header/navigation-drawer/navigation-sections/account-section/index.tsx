@@ -2,11 +2,11 @@ import React, { useContext } from 'react';
 import Typography from '@/components/atoms/typography';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import Select from '@/components/atoms/select';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { HeaderContext } from '../../../context';
 
 const AccountSection = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const {
     navigationLevel,
     insertCategory,
@@ -28,7 +28,7 @@ const AccountSection = () => {
               <>
                 <div className="pt-4">
                   <Typography fontSize={14} className="text-gray-800">
-                    {translate('account.business.unit')}
+                    {translate('account.business-unit')}
                   </Typography>
                   <Select
                     className="z-[100] pt-2"

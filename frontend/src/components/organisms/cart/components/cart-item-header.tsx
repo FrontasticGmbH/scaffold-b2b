@@ -1,10 +1,10 @@
 import StockIndicator from '@/components/atoms/stock-indicator';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { CartItemHeaderProps } from '../types';
 
 const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className={className}>

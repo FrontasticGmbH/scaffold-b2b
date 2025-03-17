@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '@/components/atoms/button';
 import { PlusIcon as AddItemIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Search from '../../../search';
 import ProductItem from './product-item';
 import { ProductSuggestion } from '../../../search/types';
@@ -18,7 +18,7 @@ const QuickOrderContent = ({
 }: QuickOrderContentProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const [showSearch, setShowSearch] = useState(true);
   const [addingToCart, setAddingToCart] = useState(false);
   const [quantity, setQuantity] = useState<Record<string, number>>({});
@@ -114,7 +114,7 @@ const QuickOrderContent = ({
           variant="primary"
           className="text-14"
         >
-          {translate('quick-order.add.to.cart')}
+          {translate('quick-order.add-to-cart')}
         </Button>
       </div>
     </>

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@test/utils';
 import { useScrollbarWidth } from '.';
 
 describe('[Hook] useScrollbarWidth', () => {

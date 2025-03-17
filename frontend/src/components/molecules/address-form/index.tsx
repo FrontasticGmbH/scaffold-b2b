@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import Select from '@/components/atoms/select';
 import Checkbox from '@/components/atoms/checkbox';
@@ -24,7 +24,7 @@ const AddressForm = ({
   showSubmitButton = true,
   showDefaultCheckBoxes = true,
 }: AddressFormProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showSavedMessage, showFailedMessage } = useEntityToasters('address');
 
@@ -77,7 +77,7 @@ const AddressForm = ({
       <div className="flex flex-col gap-4">
         <Input
           name="name"
-          label={translate('common.company.name')}
+          label={translate('common.company-name')}
           required
           value={data.name ?? ''}
           onChange={handleChange}
@@ -86,7 +86,7 @@ const AddressForm = ({
 
         <Input
           name="careOf"
-          label={translate('common.care.of')}
+          label={translate('common.care-of')}
           showOptionalLabel
           value={data.careOf ?? ''}
           onChange={handleChange}
@@ -98,7 +98,7 @@ const AddressForm = ({
             name="phone"
             label={translate('common.phone')}
             showOptionalLabel
-            optionalLabel={translate('common.optional.for.order.updates')}
+            optionalLabel={translate('common.optional-for-order-updates')}
             value={data.phone ?? ''}
             onChange={handleChange}
             containerClassName="max-w-[400px]"
@@ -135,7 +135,7 @@ const AddressForm = ({
           />
         ) : (
           <span className="w-fit cursor-pointer text-14 font-medium text-gray-700" onClick={() => setShowLine2(true)}>
-            + {translate('dashboard.add.another.address')}
+            + {translate('dashboard.add-another-address')}
           </span>
         )}
 
@@ -173,17 +173,17 @@ const AddressForm = ({
 
         {showDefaultCheckBoxes && (
           <>
-            <p className="cursor-pointer text-14 font-medium text-gray-700">{translate('dashboard.save.as.default')}</p>
+            <p className="cursor-pointer text-14 font-medium text-gray-700">{translate('dashboard.save-as-default')}</p>
 
             <div className="flex items-center gap-5">
               <Checkbox
                 checked={!!data.isDefaultShipping}
-                label={translate('common.address.shipping')}
+                label={translate('common.address-shipping')}
                 onChecked={(checked) => setData({ ...data, isDefaultShipping: checked })}
               />
               <Checkbox
                 checked={!!data.isDefaultBilling}
-                label={translate('common.address.billing')}
+                label={translate('common.address-billing')}
                 onChecked={(checked) => setData({ ...data, isDefaultBilling: checked })}
               />
             </div>

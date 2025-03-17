@@ -21,7 +21,6 @@ export default class ProductApi extends BaseApi {
     const locale = await this.getCommercetoolsLocal();
     productQuery.categories = await this.hydrateCategories(productQuery);
     productQuery.filters = await this.hydrateFilters(productQuery);
-    productQuery.productSelectionIds = await this.hydrateProductSelectionIds(productQuery);
 
     const facetDefinitions: FacetDefinition[] = [
       ...ProductMapper.commercetoolsProductTypesToFacetDefinitions(await this.getCommercetoolsProductTypes(), locale),
@@ -39,6 +38,7 @@ export default class ProductApi extends BaseApi {
         locale,
         this.productIdField,
       );
+    const defaultLocale = this.defaultLocale;
 
     return this.requestBuilder()
       .products()
@@ -54,6 +54,7 @@ export default class ProductApi extends BaseApi {
             this.productIdField,
             this.categoryIdField,
             locale,
+            defaultLocale,
             productQuery.supplyChannelId,
           ),
         );
@@ -171,6 +172,7 @@ export default class ProductApi extends BaseApi {
 
   async queryCategories(categoryQuery: CategoryQuery, buckets?: string[]): Promise<PaginatedResult<Category>> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = this.defaultLocale;
 
     // TODO: get default from constant
     const limit = +categoryQuery.limit || 24;
@@ -204,7 +206,7 @@ export default class ProductApi extends BaseApi {
           categoryQuery.format === CategoryQueryFormat.TREE
             ? ProductMapper.commercetoolsCategoriesToTreeCategory(response.body.results, this.categoryIdField, locale)
             : response.body.results.map((category) =>
-                ProductMapper.commercetoolsCategoryToCategory(category, this.categoryIdField, locale),
+                ProductMapper.commercetoolsCategoryToCategory(category, this.categoryIdField, locale, defaultLocale),
               );
 
         const result: PaginatedResult<Category> = {
@@ -255,35 +257,6 @@ export default class ProductApi extends BaseApi {
       }
 
       return categoryIds;
-    }
-    return [];
-  }
-
-  protected async hydrateProductSelectionIds(productQuery: ProductQuery): Promise<string[]> {
-    if (productQuery.productSelectionIds !== undefined && productQuery.productSelectionIds.length !== 0) {
-      let productSelectionIds = productQuery.productSelectionIds.filter(function uniqueCategories(value, index, self) {
-        return self.indexOf(value) === index;
-      });
-
-      // commercetools only allows filter productSelection by id. If we are using something different as productSelectionField,
-      // we need first to fetch the productSelectionIds to get the correspondent productSelectionField id.
-      if (this.productSelectionIdField !== 'id') {
-        const categoriesMethodArgs = {
-          queryArgs: {
-            where: [`key in ("${productSelectionIds.join('","')}")`],
-          },
-        };
-
-        productSelectionIds = await this.getCommercetoolsProductSelectionPagedQueryResponse(categoriesMethodArgs).then(
-          (response) => {
-            return response.body.results.map((category) => {
-              return category.id;
-            });
-          },
-        );
-      }
-
-      return productSelectionIds;
     }
     return [];
   }

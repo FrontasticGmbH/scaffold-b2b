@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { LabelProps } from './types';
 
 const Label = ({
@@ -10,7 +10,7 @@ const Label = ({
   requiredStyle = 'asterisk',
   htmlFor,
 }: React.PropsWithChildren<LabelProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   if (!children && !required) return <></>;
 
@@ -26,7 +26,7 @@ const Label = ({
         </label>
       )}
       {required && requiredStyle === 'label' && (
-        <span className="text-12 text-gray-500">{translate('common.field.required')}</span>
+        <span className="text-12 text-gray-500">{translate('common.field-required')}</span>
       )}
     </div>
   );

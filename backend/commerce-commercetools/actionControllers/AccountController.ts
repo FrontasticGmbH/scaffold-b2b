@@ -50,22 +50,22 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
 
   const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
 
-  account = await accountApi.login(account, cart);
+  const { account: loggedInAccount, cart: loggedInCart } = await accountApi.login(account, cart);
 
-  if (!account.confirmed && account.confirmationToken) {
+  if (!loggedInAccount.confirmed && loggedInAccount.confirmationToken) {
     const locale = getLocale(request);
 
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
-    await emailApi.sendAccountVerificationEmail(account);
+    await emailApi.sendAccountVerificationEmail(loggedInAccount);
 
     throw new AccountAuthenticationError({
-      message: `Your email address "${account.email}" was not yet verified. Please check your inbox.`,
+      message: `Your email address "${loggedInAccount.email}" was not yet verified. Please check your inbox.`,
     });
   }
 
   const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
-  const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId, true);
+  const businessUnits = await businessUnitApi.getBusinessUnitsForUser(loggedInAccount.accountId, true);
 
   // By default, we'll select the first business unit and store for the user.
   const businessUnitKey = businessUnits?.[0]?.key;
@@ -73,18 +73,21 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
   const storeId = businessUnits?.[0]?.stores?.[0]?.storeId;
   const distributionChannelId = businessUnits?.[0]?.stores?.[0]?.distributionChannels?.[0]?.channelId;
   const supplyChannelId = businessUnits?.[0]?.stores?.[0]?.supplyChannels?.[0]?.channelId;
+  const productSelectionId = businessUnits?.[0]?.stores?.[0]?.productSelectionIds?.[0];
 
   return {
     statusCode: 200,
-    body: JSON.stringify(account),
+    body: JSON.stringify(loggedInAccount),
     sessionData: {
       ...request.sessionData,
-      account,
+      ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
+      account: loggedInAccount,
       businessUnitKey,
       storeKey,
       storeId,
       distributionChannelId,
       supplyChannelId,
+      productSelectionId,
     },
   };
 }
@@ -199,9 +202,9 @@ export const deleteAccount: ActionHook = async (request: Request, actionContext:
       password: accountDeleteBody.password,
     } as Account;
 
-    account = await accountApi.login(account, undefined);
+    const { account: loggedInAccount } = await accountApi.login(account, undefined);
 
-    await accountApi.delete(account);
+    await accountApi.delete(loggedInAccount);
 
     return {
       statusCode: 200,
@@ -224,22 +227,32 @@ export const requestConfirmationEmail: ActionHook = async (request: Request, act
 
     const accountLoginBody: AccountLoginBody = JSON.parse(request.body);
 
-    let account = {
+    const account = {
       email: accountLoginBody.email,
       password: accountLoginBody.password,
     } as Account;
 
     const cart = await CartFetcher.fetchCart(request, actionContext);
 
-    account = await accountApi.login(account, cart);
+    const { account: loggedInAccount, cart: loggedInCart } = await accountApi.login(account, cart);
 
-    if (account.confirmed) {
-      throw new AccountAuthenticationError({ message: `Your email address "${account.email}" was verified already.` });
+    if (loggedInAccount.confirmed) {
+      const response: Response = {
+        statusCode: 405,
+        body: JSON.stringify(`Your email address "${loggedInAccount.email}" was verified already.`),
+        sessionData: {
+          ...accountApi.getSessionData(),
+          ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
+          account: loggedInAccount,
+        },
+      };
+
+      return response;
     }
 
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
 
-    emailApi.sendAccountVerificationEmail(account);
+    emailApi.sendAccountVerificationEmail(loggedInAccount);
 
     const response: Response = {
       statusCode: 200,

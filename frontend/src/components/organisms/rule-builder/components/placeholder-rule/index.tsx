@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from '@/components/atoms/select';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { TrashIcon as RemoveIcon } from '@heroicons/react/24/outline';
 import Button from '@/components/atoms/button';
 import { classnames } from '@/utils/classnames/classnames';
@@ -8,7 +8,7 @@ import { PlaceholderRuleProps } from './types';
 import ValueSelector from '../value-selector';
 
 const PlaceholderRule = ({ rule, singleMode, translations, criteria, onUpdate, onRemove }: PlaceholderRuleProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const selectedCriteria = criteria.find((c) => c.key === rule.key);
 
@@ -20,7 +20,7 @@ const PlaceholderRule = ({ rule, singleMode, translations, criteria, onUpdate, o
         options={criteria.map(({ key, name }) => ({ name, value: key }))}
         value={rule.key}
         className="col-span-3"
-        placeholder={translate('common.select.predicate')}
+        placeholder={translate('common.select-predicate')}
         onChange={(val) => onUpdate({ ...rule, key: val, operator: '', value: '' })}
       />
 
@@ -50,14 +50,14 @@ const PlaceholderRule = ({ rule, singleMode, translations, criteria, onUpdate, o
           disabled={addIsDisabled}
           onClick={() => onUpdate({ ...rule, isPlaceholder: false })}
         >
-          {translations?.addRule ?? translate('dashboard.add.rule')}
+          {translations?.addRule ?? translate('dashboard.add-rule')}
         </Button>
         <Button
           variant="secondary"
           disabled={addIsDisabled}
           onClick={() => onUpdate({ type: 'group', combinator: 'AND', rules: [{ ...rule, isPlaceholder: false }] })}
         >
-          {translations?.addSubgroup ?? translate('dashboard.add.subgroup')}
+          {translations?.addSubgroup ?? translate('dashboard.add-subgroup')}
         </Button>
       </div>
     </div>

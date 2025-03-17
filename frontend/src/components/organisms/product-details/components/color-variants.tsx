@@ -1,11 +1,11 @@
 import Typography from '@/components/atoms/typography';
 import { TypographyProps } from '@/components/atoms/typography/types';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import ColoredVariant from '@/components/atoms/colored-variants';
 import { ColorVariantsProps } from '../types';
 
 const ColorVariants = ({ currentColor, colors, onChangeColor }: ColorVariantsProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const commonTypographyProps: TypographyProps = {
     className: 'text-grey-700',

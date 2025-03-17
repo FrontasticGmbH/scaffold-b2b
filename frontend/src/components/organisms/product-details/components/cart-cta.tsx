@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Button from '@/components/atoms/button';
 import QuantityWidget from '@/components/atoms/quantity-widget';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { CartCTAProps } from '../types';
 
 const CartCTA = ({ product, addToCart, countChange, addToCartDisabled }: CartCTAProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [count, setCount] = useState(1);
 

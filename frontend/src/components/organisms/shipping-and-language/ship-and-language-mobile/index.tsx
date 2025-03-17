@@ -1,7 +1,7 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import Typography from '@/components/atoms/typography';
 import Select from '@/components/atoms/select';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { useShipAndLanguage } from '@/providers/ship-and-language';
 import { HeaderContext } from '@/components/organisms/header/context';
 import ShippingSelect from './shipping-select';
@@ -9,7 +9,7 @@ import ShippingSelect from './shipping-select';
 const ShippingAndLanguageSectionMobile = () => {
   const { selectedLocation, selectedLanguage, onLanguageSelect } = useShipAndLanguage();
   const { showMenu } = useContext(HeaderContext);
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const [languageMenuTop, setLanguageMenuTop] = useState(false);
   const languageButtonRef = useRef<HTMLDivElement>(null);
 

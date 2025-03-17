@@ -1,11 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import Costs from './';
+import { render, screen } from '@test/utils';
 import { CostsProps } from '@/components/molecules/costs/types';
-
-jest.mock('@/providers/I18n/hooks/useTranslation', () => ({
-  __esModule: true,
-  default: () => ({ translate: (key: string) => key }),
-}));
+import Costs from './';
 
 jest.mock('@/hooks/useFormat', () => ({
   __esModule: true,
@@ -29,30 +24,30 @@ describe('Costs Component', () => {
   it('renders all cost items and total correctly', () => {
     render(<Costs {...defaultProps} />);
 
-    expect(screen.getByText('cart.subtotal')).toBeInTheDocument();
+    expect(screen.getByText('Subtotal')).toBeInTheDocument();
     expect(screen.getByText('USD 100.00')).toBeInTheDocument();
 
-    expect(screen.getByText('cart.shipping.estimate')).toBeInTheDocument();
+    expect(screen.getByText('Est- Shipping')).toBeInTheDocument();
     expect(screen.getByText('USD 10.00')).toBeInTheDocument();
 
-    expect(screen.getByText('cart.tax')).toBeInTheDocument();
+    expect(screen.getByText('Tax')).toBeInTheDocument();
     expect(screen.getByText('USD 15.00')).toBeInTheDocument();
 
-    expect(screen.getByText('cart.discount')).toBeInTheDocument();
+    expect(screen.getByText('Discount')).toBeInTheDocument();
     expect(screen.getByText('USD -5.00')).toBeInTheDocument();
 
-    expect(screen.getByText('cart.total:')).toBeInTheDocument();
+    expect(screen.getByText('Total:')).toBeInTheDocument();
     expect(screen.getByText('USD 110.00')).toBeInTheDocument();
   });
 
   it('does not render costs with a value of 0', () => {
     render(<Costs {...defaultProps} shipping={0} tax={0} discount={0} />);
 
-    expect(screen.queryByText('cart.shipping.estimate')).not.toBeInTheDocument();
-    expect(screen.queryByText('cart.tax')).not.toBeInTheDocument();
-    expect(screen.queryByText('cart.discount')).not.toBeInTheDocument();
+    expect(screen.queryByText('Est- Shipping')).not.toBeInTheDocument();
+    expect(screen.queryByText('Tax')).not.toBeInTheDocument();
+    expect(screen.queryByText('Discount')).not.toBeInTheDocument();
 
-    expect(screen.getByText('cart.subtotal')).toBeInTheDocument();
+    expect(screen.getByText('Subtotal')).toBeInTheDocument();
     expect(screen.getByText('USD 100.00')).toBeInTheDocument();
   });
 
@@ -67,7 +62,7 @@ describe('Costs Component', () => {
   it('uses "cart.shipping" translation when shipping is not estimated', () => {
     render(<Costs {...defaultProps} isShippingEstimated={false} />);
 
-    expect(screen.getByText('cart.shipping')).toBeInTheDocument();
+    expect(screen.getByText('Shipping')).toBeInTheDocument();
   });
 
   it('renders skeleton loader when loading is true', () => {

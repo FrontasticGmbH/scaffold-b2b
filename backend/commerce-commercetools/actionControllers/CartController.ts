@@ -552,7 +552,7 @@ export const getCheckoutSessionToken: ActionHook = async (request: Request, acti
       statusCode: 200,
       body: checkoutSessionToken ? JSON.stringify(checkoutSessionToken) : '',
       sessionData: {
-        ...request.sessionData,
+        ...cartApi.getSessionData(),
       },
     };
 

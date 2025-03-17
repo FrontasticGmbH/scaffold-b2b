@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Select from '@/components/atoms/select';
 import useFormat from '@/hooks/useFormat';
 import { classnames } from '@/utils/classnames/classnames';
@@ -28,7 +28,7 @@ const AddressesStep = ({
 
   const [error, setError] = useState(false);
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatAddress } = useFormat();
 
@@ -93,7 +93,7 @@ const AddressesStep = ({
           {preview.map(({ key, address }) => (
             <div key={key} className="flex flex-col gap-[6px] overflow-hidden md:flex-1">
               <h5 className="text-14 font-medium uppercase text-gray-700">
-                {translate(`common.address.${keyToTitle[key as keyof typeof keyToTitle]}`)}
+                {translate(`common.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}`)}
               </h5>
               {address && (
                 <>
@@ -118,7 +118,7 @@ const AddressesStep = ({
     return (
       <div>
         <h5 className="pb-4 text-14 font-medium uppercase text-gray-700">
-          {translate(`common.address.${keyToTitle[addingNewAddress]}`)}
+          {translate(`common.address-${keyToTitle[addingNewAddress] as 'delivery' | 'billing'}`)}
         </h5>
 
         <AddressForm
@@ -144,8 +144,8 @@ const AddressesStep = ({
         <Confirmation
           isOpen={isAddressUnsavedModalOpen}
           translations={{
-            title: translate('checkout.unsaved.changes'),
-            summary: translate('checkout.unsaved.address.changes.confirmation'),
+            title: translate('checkout.unsaved-changes'),
+            summary: translate('checkout.unsaved-address-changes-confirmation'),
             confirm: translate('common.discard'),
             cancel: translate('common.cancel'),
           }}
@@ -165,7 +165,7 @@ const AddressesStep = ({
       <div>
         <div>
           <h5 className="pb-4 text-14 font-medium uppercase text-gray-700">
-            {translate('common.address.delivery')} (1/2)
+            {translate('common.address-delivery')} (1/2)
           </h5>
           <AddressForm
             addresses={[]}
@@ -180,7 +180,7 @@ const AddressesStep = ({
             showDefaultCheckBoxes={false}
             showSubmitButton={!newUnsavedBillingAddress}
             showCancelButton={false}
-            translations={{ submit: translate('checkout.continue.to.billing.address') }}
+            translations={{ submit: translate('checkout.continue-to-billing-address') }}
             unstyled
             toasters={false}
           />
@@ -188,7 +188,7 @@ const AddressesStep = ({
         {newUnsavedBillingAddress && (
           <div className="mt-8">
             <h5 className="pb-6 text-14 font-medium uppercase text-gray-700">
-              {translate('common.address.billing')} (2/2)
+              {translate('common.address-billing')} (2/2)
             </h5>
 
             <div className="pb-6">
@@ -214,7 +214,7 @@ const AddressesStep = ({
                     return true;
                   }}
                 >
-                  {translate(visitedAllSteps ? 'checkout.save.and.review' : 'checkout.continue.to.shipping')}
+                  {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-shipping')}
                 </Button>
               )}
             </div>
@@ -241,7 +241,7 @@ const AddressesStep = ({
                 showPhoneField={false}
                 showCancelButton={false}
                 translations={{
-                  submit: translate(visitedAllSteps ? 'checkout.save.and.review' : 'checkout.continue.to.shipping'),
+                  submit: translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-shipping'),
                 }}
                 unstyled
                 toasters={false}
@@ -261,7 +261,7 @@ const AddressesStep = ({
           key: 'shipping',
           className: '',
           extra: () => (
-            <>{error && <p className="pt-5 text-12 text-red-500">{translate('checkout.tax.rates.undefined')}</p>}</>
+            <>{error && <p className="pt-5 text-12 text-red-500">{translate('checkout.tax-rates-undefined')}</p>}</>
           ),
         },
         { key: 'billing', className: 'mt-9 lg:mt-11' },
@@ -270,13 +270,16 @@ const AddressesStep = ({
           <div>
             <div className="flex items-center justify-between">
               <h5 className="text-14 font-medium uppercase text-gray-700">
-                {translate(`common.address.${keyToTitle[key as keyof typeof keyToTitle]}`)}
+                {translate(`common.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}`)}
               </h5>
               <button
                 className="hidden text-left text-14 text-gray-600 underline underline-offset-2 lg:block"
                 onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
               >
-                {translate(`checkout.address.${keyToTitle[key as keyof typeof keyToTitle]}.add`)} +
+                {translate(
+                  `checkout.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}-add`,
+                )}{' '}
+                +
               </button>
             </div>
             <h6 className="mt-4 text-14 text-gray-700"></h6>
@@ -308,7 +311,8 @@ const AddressesStep = ({
             className="text-left text-14 text-gray-600 underline underline-offset-2 lg:hidden"
             onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
           >
-            {translate(`checkout.address.${keyToTitle[key as keyof typeof keyToTitle]}.add`)} +
+            {translate(`checkout.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}-add`)}{' '}
+            +
           </button>
         </div>
       ))}
@@ -320,7 +324,7 @@ const AddressesStep = ({
         loading={loading}
         onClick={() => handleStepCompletion(selectedAddresses.shipping, selectedAddresses.billing)}
       >
-        {translate(visitedAllSteps ? 'checkout.save.and.review' : 'checkout.continue.to.shipping')}
+        {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-shipping')}
       </Button>
     </div>
   );

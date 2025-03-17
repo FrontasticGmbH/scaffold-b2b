@@ -1,9 +1,9 @@
 import { BooleanFacet, Facet, RangeFacet, TermFacet } from '@/types/entity/facet';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { DataSourceProps, Props } from '../../types';
 
 const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   // Only facet keys present here will be picked up
   const allowedFacets = new Set([
@@ -26,7 +26,9 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
 
       const res = {
         id: facet.identifier,
-        name: translate(`product.${facet.identifier}`),
+        // eslint-disable-next-line
+        // @ts-ignore
+        name: translate(`product.${facet.identifier.replaceAll('.', '-')}`),
         selected: facet.selected,
         count: facet.count,
         type: facet.type,
@@ -38,7 +40,13 @@ const useMappedFacets = ({ facets, categories }: Partial<DataSourceProps & Props
         (res as TermFacet | BooleanFacet).values = (facet.terms ?? []).map((term) => {
           const value = {
             id: term.identifier,
-            name: isBooleanFacet ? translate(`product.${facet.identifier}.${term.identifier}`) : term.label,
+            name: isBooleanFacet
+              ? translate(
+                  // eslint-disable-next-line
+                // @ts-ignore
+                  `product.${facet.identifier.replaceAll('.', '-')}-${term.identifier.replaceAll('.', '-')}`,
+                )
+              : term.label,
             selected: term.selected,
             count: term.count,
           };

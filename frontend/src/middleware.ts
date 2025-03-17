@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Negotiator from 'negotiator';
+import createMiddleware from 'next-intl/middleware';
 import { i18nConfig, Locale } from './project.config';
+import { routing } from './i18n/routing';
 
 export function middleware(request: NextRequest) {
   const headers = Object.fromEntries(request.headers.entries());
@@ -51,3 +53,5 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: '/((?!api|_next|favicon|manifest|locales|storybook|images|sb-assets|template\\.csv).*)',
 };
+
+export default createMiddleware(routing);

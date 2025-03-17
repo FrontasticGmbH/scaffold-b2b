@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import useSession from '@/lib/hooks/useSession';
 import useProjectSettings from '@/lib/hooks/useProjectSettings';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import useAccount from '@/lib/hooks/useAccount';
 import useCustomRouter from '@/hooks/useCustomRouter';
@@ -36,7 +36,7 @@ const CommercetoolsPayment = ({
 
   const { projectSettings } = useProjectSettings();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const projectKey = projectSettings?.projectKey;
   const region = projectSettings?.region;
@@ -121,7 +121,7 @@ const CommercetoolsPayment = ({
       errorTriggered.current = true;
       logout().then(() => {
         router.push('/login');
-        toast.error(translate('checkout.your.token.has.expired'), { position: 'top-right' });
+        toast.error(translate('checkout.your-token-has-expired'), { position: 'top-right' });
       });
     }
   }, [isExpired, router, logout, translate, account]);
@@ -139,7 +139,7 @@ const CommercetoolsPayment = ({
           loading={loading}
           data-ctc-selector="confirmMethod"
         >
-          {translations?.review ?? translate('checkout.review.quote')}
+          {translations?.review ?? translate('checkout.review-quote')}
         </Button>
       )}
     </div>

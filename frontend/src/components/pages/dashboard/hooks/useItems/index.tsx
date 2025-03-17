@@ -1,6 +1,6 @@
 import { desktop } from '@/constants/screensizes';
 import useMediaQuery from '@/hooks/useMediaQuery';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import {
   ChatBubbleLeftRightIcon as QuotesIcon,
   ShoppingCartIcon as OrdersIcon,
@@ -14,7 +14,7 @@ import {
 import { DashboardLinks } from '../../constants';
 
 const useItems = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [isLargerThanDesktop] = useMediaQuery(desktop);
 
@@ -31,7 +31,7 @@ const useItems = () => {
     orders: {
       icon: <OrdersIcon />,
       name: translate('common.orders'),
-      summary: translate('dashboard.orders.summary'),
+      summary: translate('dashboard.orders-summary'),
       href: DashboardLinks.orders,
       disabled: false,
       disabledMessage: '',
@@ -40,7 +40,7 @@ const useItems = () => {
     quotes: {
       icon: <QuotesIcon />,
       name: translate('common.quotes'),
-      summary: translate('dashboard.quotes.summary'),
+      summary: translate('dashboard.quotes-summary'),
       href: DashboardLinks.quotes,
       disabled: false,
       disabledMessage: '',
@@ -48,17 +48,17 @@ const useItems = () => {
     },
     companyAdmin: {
       icon: <CompanyAdminIcon />,
-      name: translate('common.company.admin'),
-      summary: translate('dashboard.company.admin.summary'),
+      name: translate('common.company-admin'),
+      summary: translate('dashboard.company-admin-summary'),
       href: DashboardLinks.companyAdmin,
       disabled: !isLargerThanDesktop,
-      disabledMessage: translate('dashboard.company.admin.disabled.on.small.screens'),
+      disabledMessage: translate('dashboard.company-admin-disabled-on-small-screens'),
       order: isLargerThanDesktop ? 4 : 999,
     },
     purchaseLists: {
       icon: <PurchaseListsIcon />,
-      name: translate('common.purchase.lists'),
-      summary: translate('dashboard.purchase.lists.summary'),
+      name: translate('common.purchase-lists'),
+      summary: translate('dashboard.purchase-lists-summary'),
       href: DashboardLinks.shoppingLists,
       disabled: false,
       disabledMessage: '',
@@ -66,17 +66,17 @@ const useItems = () => {
     },
     approvalRules: {
       icon: <ApprovalIcon />,
-      name: translate('common.approval.rules'),
-      summary: translate('dashboard.approval.rules.summary'),
+      name: translate('common.approval-rules'),
+      summary: translate('dashboard.approval-rules-summary'),
       href: DashboardLinks.approvalRules,
       disabled: !isLargerThanDesktop,
-      disabledMessage: translate('dashboard.approval.rules.disabled.on.small.screens'),
+      disabledMessage: translate('dashboard.approval-rules-disabled-on-small-screens'),
       order: isLargerThanDesktop ? 6 : 999,
     },
     approvalFlows: {
       icon: <FlowIcon />,
-      name: translate('common.approval.flows'),
-      summary: translate('dashboard.approval.flows.summary'),
+      name: translate('common.approval-flows'),
+      summary: translate('dashboard.approval-flows-summary'),
       href: DashboardLinks.approvalFlows,
       disabled: false,
       disabledMessage: '',
@@ -85,7 +85,7 @@ const useItems = () => {
     settings: {
       icon: <SettingsIcon />,
       name: translate('common.settings'),
-      summary: translate('dashboard.settings.summary'),
+      summary: translate('dashboard.settings-summary'),
       href: DashboardLinks.settings,
       disabled: false,
       disabledMessage: '',
@@ -94,7 +94,7 @@ const useItems = () => {
     addresses: {
       icon: <AddressesIcon />,
       name: translate('common.addresses'),
-      summary: translate('dashboard.addresses.summary'),
+      summary: translate('dashboard.addresses-summary'),
       href: DashboardLinks.addresses,
       disabled: false,
       disabledMessage: '',

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import Input from '@/components/atoms/input';
 import { DiscountFormProps } from './types';
 import Accordion from '../accordion';
 
 const DiscountsForm = ({ className, discounts, onSubmit, customError }: DiscountFormProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [code, setCode] = useState('');
   const [codeIsInvalid, setCodeIsInvalid] = useState(false);
@@ -58,15 +58,15 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
     <div className={containerClassName}>
       <Accordion className="border-0">
         <Accordion.Button defaultSpacing={false} className="text-gray-600">
-          {translate('cart.discount.apply')}
+          {translate('cart.discount-apply')}
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false}>
           <form className="pt-6" onSubmit={handleSubmit}>
             <Input
-              aria-label={translate('cart.discount.code')}
+              aria-label={translate('cart.discount-code')}
               className={inputClassName}
               value={code ?? ''}
-              placeholder={translate('cart.discount.enter')}
+              placeholder={translate('cart.discount-enter')}
               onChange={handleChange}
               disabled={processing}
               icon={

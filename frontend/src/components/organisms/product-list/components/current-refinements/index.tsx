@@ -1,11 +1,11 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { BaseFacet } from '@/types/entity/facet';
 import { useProductList } from '../../context';
 import Refinement from '../refinement';
 
 const CurrentRefinements = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { facets, onRefine, onResetAll } = useProductList();
 
@@ -18,7 +18,7 @@ const CurrentRefinements = () => {
           className="flex h-[32px] cursor-pointer items-center justify-center rounded-md border border-gray-300 bg-white px-2 transition hover:bg-gray-50"
           onClick={onResetAll}
         >
-          <span className="text-14 leading-[20px] text-gray-700">{translate('product.clear.all')}</span>
+          <span className="text-14 leading-[20px] text-gray-700">{translate('product.clear-all')}</span>
         </div>
       )}
 

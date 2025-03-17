@@ -6,4 +6,5 @@ export interface ContextShape {
   setSelectedBusinessUnitKey: (key: string) => void;
   setSelectedStoreKey: (key: string) => void;
   clearBusinessUnitAndStoreFromStorage: () => void;
+  sessionIsUpdating: boolean;
 }

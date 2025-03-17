@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@test/utils';
 import { blog } from '@/mocks/blog';
 import Blog from '@/components/molecules/blog/index';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AdjustmentsHorizontalIcon as FiltersIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useDisclosure from '@/hooks/useDisclosure';
 import Drawer from '@/components/organisms/drawer';
 import Button from '@/components/atoms/button';
@@ -9,7 +9,7 @@ import { useProductList } from '../../context';
 import ViewToggle from '../view-toggle';
 
 const FacetsDrawer = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 

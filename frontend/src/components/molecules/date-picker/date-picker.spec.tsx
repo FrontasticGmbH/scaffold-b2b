@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@test/utils';
 import { DayPickerProps } from 'react-day-picker';
 import DatePicker from '.';
 

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import { TrashIcon as RemoveIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { GroupProps } from './types';
 import Rule from '../rule';
 import { Group as GroupType, Rule as RuleType } from '../../types';
@@ -18,7 +18,7 @@ const Group = ({
   onUpdate,
   onRemove,
 }: GroupProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const combinators = [{ key: 'AND' }, { key: 'OR' }] as const;
 

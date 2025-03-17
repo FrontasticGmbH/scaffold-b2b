@@ -40,6 +40,7 @@ const useHeaderData = () => {
     setSelectedBusinessUnitKey,
     setSelectedStoreKey,
     clearBusinessUnitAndStoreFromStorage,
+    sessionIsUpdating,
   } = useStoreAndBusinessUnits();
 
   const { totalItems: totalCartItems, addItem } = useCart(selectedBusinessUnit?.key, selectedStore?.key);
@@ -114,6 +115,7 @@ const useHeaderData = () => {
     selectedStore: selectedStore?.key,
     stores: mappedStores,
     selectedBusinessUnit: selectedBusinessUnit?.key,
+    businessUnitIsLoading: sessionIsUpdating,
     businessUnits: mappedBusinessUnits,
     totalCartItems,
     quotes: quotesMapped,

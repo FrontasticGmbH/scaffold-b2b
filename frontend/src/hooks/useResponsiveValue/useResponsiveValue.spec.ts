@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@test/utils';
 import { smallMobile, mobile, tablet, mediumDesktop, hugeDesktop } from '@/constants/screensizes';
 import useResponsiveValue from './';
 import useMediaQuery from '../useMediaQuery';

@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import useFormat from '@/hooks/useFormat';
@@ -15,7 +15,7 @@ interface QuotesTableProps {
 }
 
 const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency } = useFormat();
 
@@ -27,7 +27,7 @@ const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
             <Table.HeaderCell>{translate('common.status')}</Table.HeaderCell>
             <Table.HeaderCell>{translate('common.id')}</Table.HeaderCell>
             <Table.HeaderCell>{translate('common.date')}</Table.HeaderCell>
-            <Table.HeaderCell>{translate('common.business.unit')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('common.business-unit')}</Table.HeaderCell>
             <Table.HeaderCell className="text-right">{translate('common.total')}</Table.HeaderCell>
             <Table.HeaderCell />
           </Table.Row>
@@ -99,7 +99,7 @@ const QuotesTable: React.FC<QuotesTableProps> = ({ quotes, pagination }) => {
 
                   <Accordion.Panel defaultSpacing={false}>
                     <div className="mt-2 flex">
-                      <p className="basis-32 text-14 font-semibold uppercase"> {translate('common.business.unit')}:</p>
+                      <p className="basis-32 text-14 font-semibold uppercase"> {translate('common.business-unit')}:</p>
                       <p className="w-48 truncate">{businessUnit}</p>
                     </div>
                     <div className="flex">

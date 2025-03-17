@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, render, screen } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import Overlay from '@/components/atoms/overlay/index';
 

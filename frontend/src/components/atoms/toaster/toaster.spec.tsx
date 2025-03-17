@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@test/utils';
 import Button from '../button';
 import Toaster from '.';
 import toast from './helpers/toast';

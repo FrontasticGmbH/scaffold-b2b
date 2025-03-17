@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
 import Accordion from '@/components/molecules/accordion';
@@ -10,7 +10,7 @@ import ChangePasswordForm from './forms/change-password';
 import DeleteAccountForm from './forms/delete-account';
 
 const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDeleteAccount }: SettingsPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const personalInfo = [
     { name: translate('common.name'), value: `${account.firstName} ${account.lastName}` },
@@ -19,7 +19,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
 
   const restrictedPersonalInfo = [
     {
-      name: translate('common.business.unit'),
+      name: translate('common.business-unit'),
       value: businessUnitOptions.find((unit) => unit.value === account.businessUnit)?.name,
     },
     { name: translate('common.role'), value: account.roles.join(', ') },
@@ -39,7 +39,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
           ))}
         </div>
         <Link
-          aria-label={translate('account.personal.info.edit')}
+          aria-label={translate('account.personal-info-edit')}
           href="?subPath=edit-personal-info"
           className="absolute right-4 top-4"
         >
@@ -56,7 +56,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
             </div>
           ))}
         </div>
-        <InfoTooltip content={translate('dashboard.modification.prohibited')} className="absolute right-4 top-4" />
+        <InfoTooltip content={translate('dashboard.modification-prohibited')} className="absolute right-4 top-4" />
       </div>
 
       <div className="mt-7 md:mt-9 lg:mt-11">
@@ -69,7 +69,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
             onCollapse={() => collapseAccordion('passwordChange')}
           >
             <Accordion.Button className="text-14 font-medium leading-normal">
-              {translate('dashboard.change.your.password')}
+              {translate('dashboard.change-your-password')}
             </Accordion.Button>
             <Accordion.Panel>
               <ChangePasswordForm
@@ -86,7 +86,7 @@ const SettingsPage = ({ account, businessUnitOptions, onChangePassword, onDelete
             onCollapse={() => collapseAccordion('deleteAccount')}
           >
             <Accordion.Button className="text-14 font-medium leading-[14px]">
-              {translate('dashboard.delete.your.account')}
+              {translate('dashboard.delete-your-account')}
             </Accordion.Button>
             <Accordion.Panel>
               <DeleteAccountForm

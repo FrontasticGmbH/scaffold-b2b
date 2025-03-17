@@ -1,18 +1,18 @@
 import React, { useContext } from 'react';
 import Button from '@/components/atoms/button';
 import { Bars3CenterLeftIcon } from '@heroicons/react/24/outline';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Drawer from '../../drawer';
 import NavigationSections from '../navigation-drawer/navigation-sections';
 import { HeaderContext } from '../context';
 
 const NavigationDrawer = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const { showMenu, showHeaderMenu, hideHeaderMenu } = useContext(HeaderContext);
 
   return (
     <div className="flex">
-      <Button variant="ghost" size="fit" onClick={showHeaderMenu} title={translate('header.menu.open')}>
+      <Button variant="ghost" size="fit" onClick={showHeaderMenu} title={translate('common.header-menu-open')}>
         <Bars3CenterLeftIcon className="w-8 text-gray-700 lg:w-9" />
       </Button>
 

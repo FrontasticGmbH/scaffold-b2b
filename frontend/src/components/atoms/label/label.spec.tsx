@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render } from '@test/utils';
 import Label from './index';
 
 describe('Label Component', () => {
@@ -10,7 +10,7 @@ describe('Label Component', () => {
 
   it('renders optional label when showOptionalLabel is true', () => {
     const { getByText } = render(<Label showOptionalLabel>Test Label</Label>);
-    expect(getByText('(common.optional)')).toBeInTheDocument();
+    expect(getByText('(Optional)')).toBeInTheDocument();
   });
 
   it('renders custom optional label when provided', () => {
@@ -37,7 +37,7 @@ describe('Label Component', () => {
         Test Label
       </Label>,
     );
-    expect(getByText('common.field.required')).toBeInTheDocument();
+    expect(getByText('Required')).toBeInTheDocument();
   });
 
   it('does not render when children and required are both false', () => {

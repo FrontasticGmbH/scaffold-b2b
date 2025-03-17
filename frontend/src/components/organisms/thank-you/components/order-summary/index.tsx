@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useFormat from '@/hooks/useFormat';
 import Image from '@/components/atoms/Image';
 import Costs from '@/components/molecules/costs';
@@ -7,14 +7,14 @@ import Accordion from '@/components/molecules/accordion';
 import { ThankYouProps } from '../../types';
 
 const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems' | 'transaction'>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency } = useFormat();
 
   return (
     <div>
-      <h5 className="lg:hidden">{translate('thank-you.order.details')}</h5>
-      <h5 className="hidden text-18 lg:block">{translate('thank-you.order.summary')}</h5>
+      <h5 className="lg:hidden">{translate('thank-you.order-details')}</h5>
+      <h5 className="hidden text-18 lg:block">{translate('thank-you.order-summary')}</h5>
 
       <div className="lg:hidden">
         {lineItems.map(({ id, name, price, currency, quantity, images }) => (
@@ -36,7 +36,7 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
 
       <Accordion className="mt-6 hidden border-none pb-4 lg:block" defaultIsExpanded>
         <Accordion.Button defaultSpacing={false} className="border-t border-neutral-400 pt-4">
-          {translate('thank-you.your.order')}
+          {translate('thank-you.your-order')}
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false} className="py-4">
           <div className="hidden pt-2 lg:block">
@@ -66,7 +66,7 @@ const OrderSummary = ({ lineItems, transaction }: Pick<ThankYouProps, 'lineItems
       </div>
 
       {/* <Button className="mt-5 hidden w-full lg:block" variant="secondary" size="m" disabled>
-        {translate('thank-you.download.invoice')}
+        {translate('thank-you.download-invoice')}
       </Button> */}
     </div>
   );

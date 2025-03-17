@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
 import toast from '@/components/atoms/toaster/helpers/toast';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 const useClipboard = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const onSuccess = useCallback(() => {
-    toast.success(translate('common.copy.clipboard.success'), { position: 'top-right' });
+    toast.success(translate('common.copy-clipboard-success'), { position: 'top-right' });
   }, [translate]);
 
   const onError = useCallback(() => {
-    toast.error(translate('common.copy.clipboard.error'), { position: 'top-right' });
+    toast.error(translate('common.copy-clipboard-error'), { position: 'top-right' });
   }, [translate]);
 
   const copyToClipboard = useCallback(

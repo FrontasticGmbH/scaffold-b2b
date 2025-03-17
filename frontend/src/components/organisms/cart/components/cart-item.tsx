@@ -3,7 +3,7 @@ import Image from '@/components/atoms/Image';
 import Typography from '@/components/atoms/typography';
 import QuantityWidget from '@/components/atoms/quantity-widget';
 import Link from '@/components/atoms/link';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { ArrowUturnLeftIcon as UndoIcon } from '@heroicons/react/24/outline';
 import Button from '@/components/atoms/button';
 import useFormat from '@/hooks/useFormat';
@@ -14,7 +14,7 @@ import { CartItemProps } from '../types';
 const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWishlist }: CartItemProps) => {
   const { formatCurrency } = useFormat();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   if (item.deleted)
     return (
@@ -23,7 +23,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
           <Link href={item.url ?? '#'} className="inline text-primary underline">
             {item.name}
           </Link>{' '}
-          {translate('cart.item.was.removed')}
+          {translate('cart.item-was-removed')}
         </p>
         <Button variant="secondary" size="m" Icon={UndoIcon} onClick={onUndoRemove}>
           {translate('common.undo')}

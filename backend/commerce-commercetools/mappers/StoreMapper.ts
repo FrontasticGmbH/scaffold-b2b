@@ -20,6 +20,12 @@ export default class StoreMapper {
         };
         return channel;
       }),
+      productSelectionIds: store.productSelections
+        // We are only mapping active product selections
+        .filter((commercetoolsProductSelectionSetting) => commercetoolsProductSelectionSetting.active)
+        .map((commercetoolsProductSelectionSetting) => {
+          return commercetoolsProductSelectionSetting.productSelection.id;
+        }),
     };
   }
 }

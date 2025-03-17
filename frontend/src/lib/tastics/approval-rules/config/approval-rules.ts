@@ -21,13 +21,13 @@ export const generateApprovalRulesConfig = ({ countries }: GenerateApprovalRules
   return {
     'totalPrice.centAmount': {
       type: 'text',
-      name: 'cart.cart.amount',
+      name: 'cart.cart-amount',
       operators: [
-        { name: 'common.is.equal', value: '=' },
-        { name: 'common.is.more.than', value: '>' },
-        { name: 'common.is.more.than.or.equal', value: '>=' },
-        { name: 'common.is.less.than', value: '<' },
-        { name: 'common.is.less.than.or.equal', value: '<=' },
+        { name: 'common.is-equal', value: '=' },
+        { name: 'common.is-more-than', value: '>' },
+        { name: 'common.is-more-than-or-equal', value: '>=' },
+        { name: 'common.is-less-than', value: '<' },
+        { name: 'common.is-less-than-or-equal', value: '<=' },
       ],
       constructPredicateFromRule(rule) {
         return `${rule.key} ${rule.operator} ${parseInt(rule.value) * 100}`;
@@ -47,7 +47,7 @@ export const generateApprovalRulesConfig = ({ countries }: GenerateApprovalRules
       name: 'common.currency',
       operators: [
         { name: 'common.is', value: 'is' },
-        { name: 'common.is.not', value: 'is_not' },
+        { name: 'common.is-not', value: 'is_not' },
       ],
       values: [
         { name: 'USD', value: 'USD' },
@@ -71,7 +71,7 @@ export const generateApprovalRulesConfig = ({ countries }: GenerateApprovalRules
       name: 'common.country',
       operators: [
         { name: 'common.is', value: 'is' },
-        { name: 'common.is.not', value: 'is_not' },
+        { name: 'common.is-not', value: 'is_not' },
       ],
       values: countries.map(({ name, code }) => ({ name, value: code })),
       constructPredicateFromRule(rule) {

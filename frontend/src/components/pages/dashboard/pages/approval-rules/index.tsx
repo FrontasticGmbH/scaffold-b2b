@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from '@/components/atoms/select';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import InfoBanner from '@/components/molecules/info-banner';
@@ -19,25 +19,25 @@ const ApprovalRulesPage = ({
   pagination,
   onDuplicate,
 }: ApprovalRulesPageProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <>
       <div className="hidden lg:block">
         {viewOnly && (
           <InfoBanner className="mt-3">
-            <b>{translate('common.view.only')}</b> {translate('dashboard.rule.view.only.desc')}
+            <b>{translate('common.view-only')}</b> {translate('dashboard.rule-view-only-desc')}
           </InfoBanner>
         )}
 
         <h1 className="py-6 text-18 font-extrabold text-gray-800 md:py-7 md:text-20 lg:py-9 lg:text-24">
-          {translate('common.approval.rules')}
+          {translate('common.approval-rules')}
         </h1>
 
         <div className="flex items-end justify-between gap-3">
           <Select
             className="w-[280px]"
-            label={translate('common.business.unit')}
+            label={translate('common.business-unit')}
             placeholder={translate('common.select')}
             enableSearch
             options={businessUnitOptions}
@@ -51,7 +51,7 @@ const ApprovalRulesPage = ({
             underlineOnHover={false}
           >
             <Button size="m" className="w-full px-6" disabled={viewOnly}>
-              {translate('dashboard.approval.rule.add')}
+              {translate('dashboard.approval-rule-add')}
             </Button>
           </Link>
         </div>
@@ -65,7 +65,7 @@ const ApprovalRulesPage = ({
               viewOnly={viewOnly}
             />
           ) : (
-            <EmptyState isLoading={loading} header={translate('common.no.results.found')} />
+            <EmptyState isLoading={loading} header={translate('common.no-results-found')} />
           )}
         </div>
       </div>

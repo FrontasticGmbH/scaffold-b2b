@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import TextArea from '@/components/atoms/text-area';
 import Button from '@/components/atoms/button';
 import { ActivityLogProps } from './types';
 
 const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [commentValue, setCommentValue] = useState<Record<number, string>>({});
 
@@ -89,8 +89,8 @@ const ActivityLog = ({ activities, translations = {} }: ActivityLogProps) => {
                   fitContent={!ctaLink}
                   error={
                     commentLength[index] && commentLength[index] > maximumCommentCharacters
-                      ? translate('dashboard.message.too.long', {
-                          values: { maxCharacters: maximumCommentCharacters.toString() },
+                      ? translate('dashboard.message-too-long', {
+                          maxCharacters: maximumCommentCharacters.toString(),
                         })
                       : ''
                   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import useFormat from '@/hooks/useFormat';
 import Image from '@/components/atoms/Image';
 import Link from '@/components/atoms/link';
@@ -8,14 +8,14 @@ import Accordion from '@/components/molecules/accordion';
 import { QuoteThankYouProps } from '../../types';
 
 const OrderSummary = ({ lineItems, transaction }: Pick<QuoteThankYouProps, 'lineItems' | 'transaction'>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { formatCurrency } = useFormat();
 
   return (
     <div>
-      <h5 className="lg:hidden">{translate('thank-you.quote.summary')}</h5>
-      <h5 className="hidden lg:block lg:text-18">{translate('thank-you.quote.items')}</h5>
+      <h5 className="lg:hidden">{translate('thank-you.quote-summary')}</h5>
+      <h5 className="hidden lg:block lg:text-18">{translate('thank-you.quote-items')}</h5>
 
       <div className="lg:hidden">
         {lineItems.map(({ id, name, price, currency, quantity, images, url }) => (
@@ -44,7 +44,7 @@ const OrderSummary = ({ lineItems, transaction }: Pick<QuoteThankYouProps, 'line
 
       <Accordion className="mt-6 hidden border-none pb-4 lg:block" defaultIsExpanded>
         <Accordion.Button defaultSpacing={false} className="border-t border-neutral-400 pt-4">
-          {translate('thank-you.your.order')}
+          {translate('thank-you.your-order')}
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false} className="py-4">
           <div className="hidden pt-2 lg:block">

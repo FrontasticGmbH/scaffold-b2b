@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
 import { CompanyAdminPageProps } from '../../types';
@@ -9,7 +9,7 @@ const GeneralInformationTable = ({
   generalInformation = [],
   businessUnitsAreViewOnly,
 }: Partial<CompanyAdminPageProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <Table>

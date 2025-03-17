@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { PencilSquareIcon as EditIcon, TrashIcon as DeleteIcon } from '@heroicons/react/24/outline';
 import Confirmation from '@/components/organisms/confirmation';
 import Link from '@/components/atoms/link';
@@ -9,7 +9,7 @@ import Accordion from '@/components/molecules/accordion';
 import { CompanyAdminPageProps } from '../../types';
 
 const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly }: Partial<CompanyAdminPageProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { showDeletedMessage, showDeletedFailedMessage } = useEntityToasters('address');
 
@@ -46,7 +46,7 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
               <Table.Cell>
                 {isDefaultBilling || isDefaultShipping ? (
                   <>
-                    <span className="text-14">{translate('dashboard.default.for')}</span>{' '}
+                    <span className="text-14">{translate('dashboard.default-for')}</span>{' '}
                     <span className="text-14 font-medium lowercase">
                       {[
                         ...(isDefaultShipping ? [translate('common.shipping')] : []),
@@ -71,8 +71,8 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
                   <div className="flex items-center justify-end gap-5 text-primary">
                     <Confirmation
                       translations={{
-                        title: translate('dashboard.address.delete'),
-                        summary: translate('dashboard.address.delete.confirm'),
+                        title: translate('dashboard.address-delete'),
+                        summary: translate('dashboard.address-delete-confirm'),
                         cancel: translate('common.cancel'),
                         confirm: translate('common.delete'),
                       }}
@@ -80,7 +80,7 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
                     >
                       <DeleteIcon className="cursor-pointer" width={20} />
                     </Confirmation>
-                    <Link aria-label={translate('dashboard.address.edit')} href={`?subPath=edit-address&id=${id}`}>
+                    <Link aria-label={translate('dashboard.address-edit')} href={`?subPath=edit-address&id=${id}`}>
                       <EditIcon className="cursor-pointer" width={20} />
                     </Link>
                   </div>
@@ -108,7 +108,7 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
                       <span className="basis-24 font-semibold uppercase">{translate('common.use')}: </span>
                       {isDefaultBilling || isDefaultShipping ? (
                         <>
-                          <span>{translate('dashboard.default.for')}</span>{' '}
+                          <span>{translate('dashboard.default-for')}</span>{' '}
                           <span className="font-medium lowercase">
                             {[
                               ...(isDefaultShipping ? [translate('common.shipping')] : []),
@@ -144,8 +144,8 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
                       <div className="mt-3 flex gap-5 text-primary">
                         <Confirmation
                           translations={{
-                            title: translate('dashboard.address.delete'),
-                            summary: translate('dashboard.address.delete.confirm'),
+                            title: translate('dashboard.address-delete'),
+                            summary: translate('dashboard.address-delete-confirm'),
                             cancel: translate('common.cancel'),
                             confirm: translate('common.delete'),
                           }}
@@ -153,7 +153,7 @@ const AddressesTable = ({ onDeleteAddress, addresses = [], addressesAreViewOnly 
                         >
                           <DeleteIcon className="cursor-pointer" width={24} />
                         </Confirmation>
-                        <Link aria-label={translate('dashboard.address.edit')} href={`?subPath=edit-address&id=${id}`}>
+                        <Link aria-label={translate('dashboard.address-edit')} href={`?subPath=edit-address&id=${id}`}>
                           <EditIcon className="cursor-pointer" width={24} />
                         </Link>
                       </div>

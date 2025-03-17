@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook } from '@test/utils';
 import { cva } from '@/utils/classnames/cva';
 import { classnames } from '@/utils/classnames/classnames';
 import useClassNames from './';

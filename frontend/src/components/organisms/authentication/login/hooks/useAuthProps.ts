@@ -1,4 +1,4 @@
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { UseAuthProps } from '../types';
 import { AuthLayoutProps, AuthTemplatesProps } from '../../types';
 
@@ -12,7 +12,7 @@ const useAuthProps: UseAuthProps = ({
   handleResetSubmit,
   goBackToLogin,
 }) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const commonProps: AuthLayoutProps = {
     image,
@@ -23,25 +23,25 @@ const useAuthProps: UseAuthProps = ({
   const authLayoutProps: { [key in 'reset' | 'login' | 'requested']: AuthTemplatesProps } = {
     login: {
       onSubmit: handleLoginSubmit,
-      title: translate('account.account.login.yours'),
-      subtitle: translate('account.account.doNotHave'),
+      title: translate('account.account-login-yours'),
+      subtitle: translate('account.account-doNotHave'),
       subtitleLink: '/register',
-      subtitleLinkLabel: translate('account.account.register.link'),
-      buttonLabel: translate('account.account.login'),
+      subtitleLinkLabel: translate('account.account-register-link'),
+      buttonLabel: translate('account.account-login'),
       ...commonProps,
     },
     reset: {
       onSubmit: handleResetSubmit,
-      title: translate('account.password.reset.headline'),
-      buttonLabel: translate('account.account.reset.link'),
-      footerLinkLabel: translate('account.account.back.login'),
+      title: translate('account.password-reset-headline'),
+      buttonLabel: translate('account.account-reset-link'),
+      footerLinkLabel: translate('account.account-back-login'),
       footerLink: '/login',
       footerOnClick: goBackToLogin,
       ...commonProps,
     },
     requested: {
-      title: translate('account.password.req.sent.headline'),
-      buttonLabel: translate('account.account.back.login'),
+      title: translate('account.password-req-sent-headline'),
+      buttonLabel: translate('account.account-back-login'),
       onSubmit: goBackToLogin,
       ...commonProps,
     },

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 
 import {
@@ -14,6 +14,7 @@ import {
 } from '@headlessui/react';
 
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import useControllableState from '@/hooks/useControllableState';
 import { SelectProps } from './types';
 import Label from '../label';
 
@@ -25,16 +26,16 @@ const Select = ({
   options = [],
   placeholder = '',
   enableSearch = false,
-  value = '',
+  value,
   onChange,
   disabled = false,
   className,
   defaultValue,
 }: SelectProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [search, setSearch] = useState('');
-  const [dropdownValue, setDropdownValue] = useState(defaultValue || value);
+  const [dropdownValue, setDropdownValue] = useControllableState(value, defaultValue);
 
   const filteredOptions = useMemo(() => {
     if (!enableSearch || !search) return options;
@@ -90,7 +91,7 @@ const Select = ({
           )}
         >
           {enableSearch && filteredOptions.length === 0 && (
-            <p className="px-3 py-2 text-14 text-gray-500">{translate('common.no.results.found')}</p>
+            <p className="px-3 py-2 text-14 text-gray-500">{translate('common.no-results-found')}</p>
           )}
           {filteredOptions.map(({ name, value }) => (
             <ComboboxOption

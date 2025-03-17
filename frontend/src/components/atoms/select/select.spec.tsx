@@ -56,13 +56,13 @@ describe('[Component] Select', () => {
   test('It renders required label (label) correctly', () => {
     renderSelect({ label: 'Label', required: true, requiredStyle: 'label' });
 
-    expect(screen.getByText('common.field.required')).toBeDefined();
+    expect(screen.getByText('Required')).toBeDefined();
   });
 
   test('It renders optional label correctly', () => {
     renderSelect({ label: 'Label', showOptionalLabel: true });
 
-    expect(screen.getByText('(common.optional)')).toBeDefined();
+    expect(screen.getByText('(Optional)')).toBeDefined();
   });
 
   test('It searches options correctly', async () => {
@@ -99,6 +99,6 @@ describe('[Component] Select', () => {
     expect(screen.queryByText('1')).toBeNull();
     expect(screen.queryByText('2')).toBeNull();
     expect(screen.queryByText('3')).toBeNull();
-    expect(await screen.findByText('common.no.results.found')).toBeInTheDocument();
+    expect(await screen.findByText('No results found')).toBeInTheDocument();
   });
 });

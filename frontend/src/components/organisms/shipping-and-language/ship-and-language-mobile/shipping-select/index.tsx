@@ -1,7 +1,7 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import Typography from '@/components/atoms/typography';
 import FlagIcons from '@/components/atoms/icons/flag-icons';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Dropdown from '@/components/atoms/dropdown';
 import { useShipAndLanguage } from '@/providers/ship-and-language';
 import { HeaderContext } from '@/components/organisms/header/context';
@@ -10,7 +10,7 @@ import { Location } from '../../types';
 const ShippingSelect = () => {
   const { locations, selectedLocation, onLocationSelect } = useShipAndLanguage();
   const { showMenu } = useContext(HeaderContext);
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const [shippingMenuTop, setShippingMenuTop] = useState(false);
   const locationButtonRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +36,7 @@ const ShippingSelect = () => {
   return (
     <div className="pt-2" ref={locationButtonRef}>
       <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
-        {translate('common.shop.ship.title')}
+        {translate('common.shop-ship-title')}
       </Typography>
       <div className="z-[150] pt-2">
         <Dropdown>

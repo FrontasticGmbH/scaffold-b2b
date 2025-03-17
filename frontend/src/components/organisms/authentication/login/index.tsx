@@ -4,7 +4,7 @@ import { ChangeEvent, FC, useState } from 'react';
 import Input from '@/components/atoms/input';
 import PasswordInput from '@/components/atoms/password-input';
 import { Account } from '@shared/types/account/Account';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Checkbox from '@/components/atoms/checkbox';
 import Link from '@/components/atoms/link';
 import Typography from '@/components/atoms/typography';
@@ -20,7 +20,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const clearCache = useSwrClearCache();
 
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [data, setData] = useState<Account & { rememberMe?: boolean }>({});
   const [resetting, setResetting] = useState(false);
@@ -55,13 +55,13 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
         })
         .catch((err: Error) => {
           if (err.message.includes('unverified')) {
-            setInputError(translate('error.auth.action.verify'));
+            setInputError(translate('error.auth-action-verify'));
           } else {
-            setError(translate('error.auth.wrong'));
+            setError(translate('error.auth-wrong'));
           }
         });
     } else {
-      setError(translate('error.auth.wrong'));
+      setError(translate('error.auth-wrong'));
     }
   };
 
@@ -72,7 +72,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
           setRequested(true);
         })
         .catch(() => {
-          setError(translate('error.email.not.found'));
+          setError(translate('error.email-not-found'));
         });
     }
   };
@@ -91,7 +91,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
       <AuthForm {...formProps} error={error} includeCheckIcon={requested}>
         {requested ? (
           <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-            {translate('account.password.req.sent.desc')}
+            {translate('account.password-req-sent-desc')}
           </Typography>
         ) : (
           <Input
@@ -125,7 +125,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
                 onChange={handleChange}
               />
               <Link className="text-14 text-gray-600 underline hover:text-gray-500" href="#" onClick={gotToReset}>
-                {translate('account.password.forgot')}
+                {translate('account.password-forgot')}
               </Link>
             </div>
           </>

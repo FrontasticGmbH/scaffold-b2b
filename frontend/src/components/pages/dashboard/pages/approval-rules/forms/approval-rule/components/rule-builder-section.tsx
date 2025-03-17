@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@/components/atoms/button';
 import RuleBuilder from '@/components/organisms/rule-builder';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import { Props } from './types';
 
@@ -25,7 +25,7 @@ const RuleBuilderSection = ({
   translations = {},
   includeGroupHeader = false,
 }: Props) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div>
@@ -81,7 +81,7 @@ const RuleBuilderSection = ({
 
             {allowMultiTier && !isPreviewing && (typeof maxTiers === 'undefined' || tiers.length < maxTiers) && (
               <Button variant="secondary" className="self-end" size="m" onClick={onTierAdd}>
-                {translate('dashboard.add.approval.tier')}
+                {translate('dashboard.add-approval-tier')}
               </Button>
             )}
 

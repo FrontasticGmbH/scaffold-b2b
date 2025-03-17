@@ -1,4 +1,4 @@
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import Typography from '@/components/atoms/typography';
 import CartItemsList from './cart-items-list';
 import EmptyCart from './empty-cart';
@@ -13,7 +13,7 @@ const CartContent = ({
   onAdd,
   onAddToNewWishlist,
 }: CartContentProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const cartHasProducts = lineItems?.length ?? 0;
 

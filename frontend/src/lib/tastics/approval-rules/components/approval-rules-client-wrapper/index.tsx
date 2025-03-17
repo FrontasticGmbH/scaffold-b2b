@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Dashboard from '@/components/pages/dashboard';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import useAccount from '@/lib/hooks/useAccount';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { ApprovalRulesPageProps } from '@/components/pages/dashboard/pages/approval-rules/types';
 import ApprovalRulesPage from '@/components/pages/dashboard/pages/approval-rules';
 import useApprovalRules from '@/lib/hooks/useApprovalRules';
@@ -21,7 +21,7 @@ import useRefinements from '../../hooks/useRefinements';
 import { generateApprovalRulesConfig } from '../../config/approval-rules';
 
 const ApprovalRulesTastic = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const router = useCustomRouter();
 
@@ -63,9 +63,21 @@ const ApprovalRulesTastic = () => {
     rulesCriteria: Object.entries(approvalRulesConfig).map(([key, config]) => ({
       key,
       type: config.type,
+      // eslint-disable-next-line
+      // @ts-ignore
       name: translate(config.name),
+      // eslint-disable-next-line
+      // @ts-ignore
       operators: config.operators.map((operator) => ({ name: translate(operator.name), value: operator.value })),
-      values: (config.values ?? []).map((value) => ({ name: translate(value.name), value: value.value })),
+      values: (config.values ?? []).map((value) => ({
+        name:
+          key === 'country' || key === 'currency'
+            ? value.name
+            : // eslint-disable-next-line
+          // @ts-ignore
+              translate(value.name),
+        value: value.value,
+      })),
     })),
     approversCriteria: rolesData
       .filter((role) => role.permissions?.includes('UpdateApprovalFlows'))

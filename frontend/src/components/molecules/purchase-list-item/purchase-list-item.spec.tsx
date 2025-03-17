@@ -23,7 +23,7 @@ describe('[Component] Purhcase List Item', () => {
       />,
     );
 
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(tree.baseElement.querySelector('.animate-spin')).toBeDefined();
     expect(onAddToCart).toHaveBeenCalled();
@@ -53,9 +53,9 @@ describe('[Component] Purhcase List Item', () => {
       />,
     );
 
-    expect((screen.getByText('cart.add') as HTMLButtonElement).disabled).toBeTruthy();
+    expect((screen.getByText('Add to cart') as HTMLButtonElement).disabled).toBeTruthy();
 
-    await act(async () => userEvent.click(screen.getByText('cart.add')));
+    await act(async () => userEvent.click(screen.getByText('Add to cart')));
 
     expect(tree.baseElement.querySelector('.animate-spin')).toBeNull();
     expect(onAddToCart).not.toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe('[Component] Purhcase List Item', () => {
       />,
     );
 
-    await act(async () => userEvent.click(screen.getAllByText('common.remove')[0]));
+    await act(async () => userEvent.click(screen.getAllByText('Remove')[0]));
 
     expect(onRemove).toHaveBeenCalled();
   });
@@ -157,11 +157,11 @@ describe('[Component] Purhcase List Item', () => {
       />,
     );
 
-    expect(screen.queryByText('common.pressure')).toBeNull();
-    expect(screen.queryByText('common.weight')).toBeNull();
+    expect(screen.queryByText('Pressure')).toBeNull();
+    expect(screen.queryByText('Weight')).toBeNull();
 
-    expect(screen.queryByText('common.show.all')).toBeNull();
-    expect(screen.queryByText('common.show.less')).toBeNull();
+    expect(screen.queryByText('Show all')).toBeNull();
+    expect(screen.queryByText('Show less')).toBeNull();
   });
 
   test('It shows a `showMore` widget when either pressure or weight are present', async () => {
@@ -183,20 +183,20 @@ describe('[Component] Purhcase List Item', () => {
       />,
     );
 
-    expect(screen.getByText('common.show.all')).toBeDefined();
+    expect(screen.getByText('Show all')).toBeDefined();
 
-    await act(async () => userEvent.click(screen.getByText('common.show.all')));
+    await act(async () => userEvent.click(screen.getByText('Show all')));
 
-    expect(screen.getByText('common.pressure -')).toBeDefined();
-    expect(screen.getByText('common.weight -')).toBeDefined();
+    expect(screen.getByText('Pressure -')).toBeDefined();
+    expect(screen.getByText('Weight -')).toBeDefined();
 
-    expect(screen.getByText('common.show.less')).toBeDefined();
+    expect(screen.getByText('Show less')).toBeDefined();
 
-    await act(async () => userEvent.click(screen.getByText('common.show.less')));
+    await act(async () => userEvent.click(screen.getByText('Show less')));
 
-    expect(screen.queryByTestId('common.pressure -')).toBeNull();
-    expect(screen.queryByTestId('common.weight -')).toBeNull();
+    expect(screen.queryByTestId('Pressure -')).toBeNull();
+    expect(screen.queryByTestId('Weight -')).toBeNull();
 
-    expect(screen.getByText('common.show.all')).toBeDefined();
+    expect(screen.getByText('Show all')).toBeDefined();
   });
 });

@@ -1,11 +1,11 @@
 import Typography from '@/components/atoms/typography';
 import Select from '@/components/atoms/select';
 import { TypographyProps } from '@/components/atoms/typography/types';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { SpecsVariantsProps } from '../types';
 
 const SpecsVariants = ({ specs, currentSpecs, onChangeSpecs }: SpecsVariantsProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const commonTypographyProps: TypographyProps = {
     className: 'text-grey-700',

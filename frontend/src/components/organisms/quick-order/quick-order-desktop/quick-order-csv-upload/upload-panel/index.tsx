@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import Button from '@/components/atoms/button';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { XMarkIcon as CloseIcon } from '@heroicons/react/24/outline';
 import Image from '@/components/atoms/Image';
 import Typography from '@/components/atoms/typography';
@@ -8,7 +8,7 @@ import { QuickOrderDesktopContext } from '../context';
 
 const UploadPanel = () => {
   const inputFile = useRef<HTMLInputElement>(null);
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   const {
     files,
     downloadLink,
@@ -41,7 +41,7 @@ const UploadPanel = () => {
     <div>
       <a href={downloadLink} download="template" target="_blank" rel="noopener noreferrer">
         <Button tabIndex={-1} variant="underlined" size="fit" className="text-14 font-normal">
-          {translate('quick-order.download.csv')}
+          {translate('quick-order.download-csv')}
         </Button>
       </a>
       <div
@@ -57,10 +57,10 @@ const UploadPanel = () => {
         <Image src={'/sb-assets/upload.svg'} width={50} height={50} alt="Upload" />
         <div className="mt-5">
           <Typography align="center" fontSize={14} fontWeight="medium" className="text-gray-700">
-            {translate('quick-order.drag.csv')}
+            {translate('quick-order.drag-csv')}
           </Typography>
           <Typography align="center" fontSize={12} className="mt-3">
-            {translate('quick-order.click.csv')}
+            {translate('quick-order.click-csv')}
           </Typography>
         </div>
       </div>
@@ -98,7 +98,7 @@ const UploadPanel = () => {
           className="text-14"
           onClick={handleClearClick}
         >
-          {translate('quick-order.click.clear')}
+          {translate('quick-order.click-clear')}
         </Button>
         <Button
           variant="primary"
@@ -108,7 +108,7 @@ const UploadPanel = () => {
           onClick={() => handleUploadClick(files)}
           className="text-14"
         >
-          {translate('quick-order.click.upload')}
+          {translate('quick-order.click-upload')}
         </Button>
       </div>
     </div>

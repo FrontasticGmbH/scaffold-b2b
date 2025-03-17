@@ -34,7 +34,7 @@ const ApprovalFlowsClientWrapper = () => {
 
   const { businessUnits } = useBusinessUnits();
 
-  const { selectedBusinessUnit, setSelectedBusinessUnitKey } = useStoreAndBusinessUnits();
+  const { selectedBusinessUnit, setSelectedBusinessUnitKey, sessionIsUpdating } = useStoreAndBusinessUnits();
 
   const { account } = useAccount();
 
@@ -57,6 +57,7 @@ const ApprovalFlowsClientWrapper = () => {
     <Dashboard href={DashboardLinks.approvalFlows} userName={account?.firstName}>
       <ApprovalFlowsPage
         selectedBusinessUnit={selectedBusinessUnit}
+        businessUnitIsLoading={sessionIsUpdating}
         businessUnitOptions={businessUnits.map(({ name, key }) => ({ name: name ?? key ?? '', value: key ?? '' }))}
         onBusinessUnitChange={setSelectedBusinessUnitKey}
         onSearch={(val) => refinements[selectedStatus].setSearch(val)}

@@ -8,6 +8,7 @@ const AnnouncementBar = ({
   textBar,
   accountLinks,
   selectedBusinessUnit,
+  businessUnitIsLoading,
   businessUnits,
   selectedStore,
   stores,
@@ -30,6 +31,7 @@ const AnnouncementBar = ({
             onLogoutClick={onLogoutClick}
             accountLinks={accountLinks}
             selectedBusinessUnit={selectedBusinessUnit}
+            businessUnitIsLoading={businessUnitIsLoading}
             businessUnits={businessUnits}
             onBusinessUnitChange={onBusinessUnitChange}
             selectedStore={selectedStore}

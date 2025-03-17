@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@test/utils';
 import InfoTooltip from '.';
 
 describe('[Component] Info Tooltip', () => {

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import {
   Combobox,
@@ -31,7 +31,7 @@ const MultiSelect = ({
   value = [],
   defaultValue,
 }: SelectProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const [search, setSearch] = useState('');
   const [dropdownValue, setDropdownValue] = useState(defaultValue || value);
@@ -101,7 +101,7 @@ const MultiSelect = ({
               )}
             >
               {enableSearch && filteredOptions.length === 0 && (
-                <p className="px-3 py-2 text-14 text-gray-500">{translate('common.no.results.found')}</p>
+                <p className="px-3 py-2 text-14 text-gray-500">{translate('common.no-results-found')}</p>
               )}
               {filteredOptions.map(({ name, value }) => (
                 <ComboboxOption

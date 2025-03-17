@@ -1,10 +1,10 @@
 import useCart from '@/lib/hooks/useCart';
 import { CheckoutPayload } from '@/lib/hooks/useCart/types';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 
 const usePaymentMethods = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
 
@@ -13,8 +13,8 @@ const usePaymentMethods = () => {
   const paymentMethods = [
     {
       id: 'purchase.order',
-      name: `${translate('checkout.purchase.order')} (PO)`,
-      description: translate('checkout.purchase.order.desc'),
+      name: `${translate('checkout.purchase-order')} (PO)`,
+      description: translate('checkout.purchase-order-desc'),
       image: {
         src: '',
         className: '',

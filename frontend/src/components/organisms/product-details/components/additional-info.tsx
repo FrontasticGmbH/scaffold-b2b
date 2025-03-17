@@ -1,10 +1,10 @@
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import ProductAttributes from '@/components/molecules/product-attributes';
 import { AdditionalInfoProps } from '../types';
 import AdditionalInfoItem from './additional-info-item';
 
 const AdditionalInfo = ({ className, description, specifications }: AdditionalInfoProps) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   return (
     <div className={className}>

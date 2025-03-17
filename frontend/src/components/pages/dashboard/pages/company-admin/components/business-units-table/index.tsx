@@ -1,12 +1,12 @@
 import React from 'react';
 import Table from '@/components/organisms/table';
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 import { PencilSquareIcon as EditIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
 import { CompanyAdminPageProps } from '../../types';
 
 const BusinessUnitsTable = ({ businessUnitsAreViewOnly, businessUnits = [] }: Partial<CompanyAdminPageProps>) => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
   return (
     <Table>
       <Table.Container>
@@ -14,8 +14,8 @@ const BusinessUnitsTable = ({ businessUnitsAreViewOnly, businessUnits = [] }: Pa
           <Table.Row>
             <Table.HeaderCell>{translate('common.name')}</Table.HeaderCell>
             <Table.HeaderCell>{translate('common.key')}</Table.HeaderCell>
-            <Table.HeaderCell>{translate('dashboard.toplevel.unit')}</Table.HeaderCell>
-            <Table.HeaderCell>{translate('dashboard.parent.unit')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('dashboard.toplevel-unit')}</Table.HeaderCell>
+            <Table.HeaderCell>{translate('dashboard.parent-unit')}</Table.HeaderCell>
             <Table.HeaderCell>{translate('common.email')}</Table.HeaderCell>
             <Table.HeaderCell />
           </Table.Row>

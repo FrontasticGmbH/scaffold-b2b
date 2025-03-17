@@ -12,4 +12,7 @@ export interface Category {
   _url?: LocalizedString;
   slug?: string;
   descendants?: Category[];
+  metaKeywords?: string;
+  metaDescription?: string;
+  metaTitle?: string;
 }

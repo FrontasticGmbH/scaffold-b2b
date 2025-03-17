@@ -1,7 +1,7 @@
-import useTranslation from '@/providers/I18n/hooks/useTranslation';
+import { useTranslations } from 'use-intl';
 
 const useStatusesOptions = () => {
-  const { translate } = useTranslation();
+  const translate = useTranslations();
 
   const orderStatusOptions = [
     { name: 'Pending', value: 'Open' },
@@ -12,7 +12,7 @@ const useStatusesOptions = () => {
 
   const mapOptions = (options: typeof orderStatusOptions) => {
     return options.map(({ name, value }) => ({
-      name: translate(`orders.status.${name.toLowerCase()}`),
+      name: translate(`orders.status-${name.toLowerCase() as 'pending' | 'confirmed' | 'delivered' | 'returned'}`),
       value,
     }));
   };
