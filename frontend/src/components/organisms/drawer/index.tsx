@@ -4,12 +4,12 @@ import { classnames } from '@/utils/classnames/classnames';
 import { Transition } from '@headlessui/react';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
 import useScrollBlock from '@/hooks/useScrollBlock';
-import Typography from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { DrawerProps } from './types';
 import useClassNames from './hooks/useClassNames';
 import Overlay from '../../atoms/overlay';
+import { useTranslations } from 'use-intl';
 
 const Drawer = ({
   className = '',
@@ -23,6 +23,7 @@ const Drawer = ({
   children,
 }: React.PropsWithChildren<DrawerProps>) => {
   const { blockScroll } = useScrollBlock();
+  const translate = useTranslations();
 
   useEffect(() => {
     if (blockScrolling) {
@@ -56,15 +57,14 @@ const Drawer = ({
         <div ref={ref} className={drawerClassName}>
           <div className={drawerHeaderClassName}>
             <div className="flex items-center justify-between">
-              <Typography
-                as="h2"
-                fontSize={18}
-                fontWeight="extrabold"
-                className="text-gray-700 lg:text-24 lg:font-bold"
-              >
-                {headline}
-              </Typography>
-              <Button variant="ghost" size="l" Icon={XMarkIcon} onClick={onClose} />
+              <h2 className="text-18 font-extrabold text-gray-700 lg:text-24 lg:font-bold">{headline}</h2>
+              <Button
+                variant="ghost"
+                size="l"
+                Icon={XMarkIcon}
+                onClick={onClose}
+                aria-label={translate('common.close')}
+              />
             </div>
           </div>
           <div className="grow overflow-y-auto">{children}</div>

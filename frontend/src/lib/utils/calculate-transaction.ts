@@ -21,7 +21,7 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
     (acc, curr) =>
       acc +
       (curr.price?.centAmount || 0) * (curr.count as number) -
-      (curr.taxIncludedInPrice ? curr.taxed?.taxAmount?.centAmount || 0 : 0),
+      (curr.taxRate?.includedInPrice ? curr.taxed?.taxAmount?.centAmount || 0 : 0),
     0,
   );
 
@@ -32,9 +32,9 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
 
   const excludedTaxes =
     cart.lineItems
-      .filter((item) => !item.taxIncludedInPrice)
+      .filter((item) => !item.taxRate?.includedInPrice)
       .reduce((acc, curr) => acc + (curr.taxed?.taxAmount?.centAmount ?? 0), 0) +
-    (!cart.shippingInfo?.taxIncludedInPrice ? (cart.shippingInfo?.taxed?.taxAmount?.centAmount ?? 0) : 0);
+    (!cart.shippingInfo?.taxRate?.includedInPrice ? (cart.shippingInfo?.taxed?.taxAmount?.centAmount ?? 0) : 0);
 
   const totalTax = totalAmount > 0 ? (cart.taxed?.taxAmount?.centAmount ?? 0) : 0;
 
@@ -48,7 +48,7 @@ export const calculateTransaction = (cart: Partial<Cart>): Transaction => {
     } else {
       shipping =
         (cart.shippingInfo?.price?.centAmount || 0) -
-        (cart.shippingInfo?.taxIncludedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount || 0 : 0);
+        (cart.shippingInfo?.taxRate?.includedInPrice ? cart.shippingInfo?.taxed?.taxAmount?.centAmount || 0 : 0);
     }
 
     return shipping;

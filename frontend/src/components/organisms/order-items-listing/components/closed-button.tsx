@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { classnames } from '@/utils/classnames/classnames';
 import { useTranslations } from 'use-intl';
-import Typography from '@/components/atoms/typography';
 import Image from '@/components/atoms/Image';
 import { ClosedButtonProps } from '../types';
 
@@ -16,9 +15,7 @@ const ClosedButton = ({ lineItems, hiddenItemsCount, open, onClick }: ClosedButt
   return (
     <div className="flex w-full flex-col overflow-x-visible pb-4" onClick={onClick}>
       <div className="flex w-full justify-between">
-        <Typography fontSize={16} className="text-secondary">
-          {translate('orders.your-order')}
-        </Typography>
+        <p className="text-16 text-secondary">{translate('orders.your-order')}</p>
         <ChevronDownIcon width={20} strokeWidth={1.5} className={arrowClassNames} />
       </div>
       <div className="mt-12 flex justify-between pr-20">
@@ -42,9 +39,7 @@ const ClosedButton = ({ lineItems, hiddenItemsCount, open, onClick }: ClosedButt
         )}
         {hiddenItemsCount > 0 && !open && (
           <div className="flex items-center">
-            <Typography fontSize={16} className="mr-8 whitespace-nowrap text-secondary">
-              {`+ ${hiddenItemsCount}`}
-            </Typography>
+            <p className="mr-8 whitespace-nowrap text-16 text-secondary">{`+ ${hiddenItemsCount}`}</p>
           </div>
         )}
       </div>

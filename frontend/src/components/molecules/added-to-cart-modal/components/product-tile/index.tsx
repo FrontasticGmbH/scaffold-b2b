@@ -3,7 +3,6 @@ import Image from '@/components/atoms/Image';
 import useFormat from '@/hooks/useFormat';
 import Link from '@/components/atoms/link';
 import { ProductTileProps } from '@/components/molecules/added-to-cart-modal/types';
-import Typography from '@/components/atoms/typography';
 
 const ProductTile = ({ product }: ProductTileProps) => {
   const { formatCurrency } = useFormat();
@@ -27,9 +26,9 @@ const ProductTile = ({ product }: ProductTileProps) => {
         </Link>
         <div className="mt-2">
           <div className="flex">
-            <Typography className="text-12 font-bold leading-loose text-gray-800 md:text-14 lg:text-16">
+            <p className="text-12 font-bold leading-loose text-gray-800 md:text-14 lg:text-16">
               {formatCurrency(product.price, product.currency)}
-            </Typography>
+            </p>
           </div>
         </div>
       </div>

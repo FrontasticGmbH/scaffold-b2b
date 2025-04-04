@@ -20,7 +20,6 @@ export interface LineItem {
   discountedPricePerCount?: DiscountedPricePerCount[];
   totalPrice?: Money;
   taxed?: Tax;
-  taxIncludedInPrice?: boolean; // @deprecated use taxRate instead
   taxRate?: TaxRate;
   variant?: Variant;
   isGift?: boolean;

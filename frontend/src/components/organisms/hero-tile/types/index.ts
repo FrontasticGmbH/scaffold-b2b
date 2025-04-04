@@ -5,4 +5,6 @@ export interface HeroTileProps {
   image?: Image;
   title?: string;
   links?: Link[];
+  isPriority?: boolean;
+  imageQuality: number;
 }

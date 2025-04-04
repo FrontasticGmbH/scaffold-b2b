@@ -1,4 +1,3 @@
-import Typography from '@/components/atoms/typography';
 import { classnames } from '@/utils/classnames/classnames';
 import Breadcrumb from '@/components/molecules/breadcrumb';
 import { useTranslations } from 'use-intl';
@@ -26,19 +25,10 @@ const Header = ({ className, product }: PDPHeaderProps) => {
         </Breadcrumb>
       )}
 
-      <Typography
-        data-testid="product-name"
-        as="h1"
-        className="text-gray-700 md:text-18 lg:text-20"
-        fontSize={16}
-        lineHeight="loose"
-        fontWeight="bold"
-      >
+      <h1 data-testid="product-name" className="text-16 font-bold leading-loose text-gray-700 md:text-18 lg:text-20">
         {product.name}
-      </Typography>
-      <Typography className="text-gray-600" fontSize={14} lineHeight="loose">
-        {product.sku}
-      </Typography>
+      </h1>
+      <p className="text-14 leading-loose text-gray-600">{product.sku}</p>
     </div>
   );
 };

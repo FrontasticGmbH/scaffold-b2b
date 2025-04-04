@@ -1,5 +1,4 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
-import Typography from '@/components/atoms/typography';
 import Select from '@/components/atoms/select';
 import { useTranslations } from 'use-intl';
 import { useShipAndLanguage } from '@/providers/ship-and-language';
@@ -25,9 +24,7 @@ const ShippingAndLanguageSectionMobile = () => {
       <ShippingSelect />
 
       <div className="pt-5" ref={languageButtonRef}>
-        <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
-          {translate('common.language')}
-        </Typography>
+        <p className="text-14 font-semibold text-gray-800">{translate('common.language')}</p>
         <Select
           menuTop={languageMenuTop}
           value={selectedLanguage?.value}

@@ -13,6 +13,7 @@ describe('HeroTile', () => {
       { name: 'Link 1', href: '/link1' },
       { name: 'Link 2', href: '/link2', openInNewTab: true },
     ],
+    imageQuality: 75,
   };
 
   it('renders the component with all props', () => {

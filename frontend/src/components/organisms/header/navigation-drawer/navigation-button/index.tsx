@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import Link from '@/components/atoms/link';
-import Typography from '@/components/atoms/typography';
 import { classnames } from '@/utils/classnames/classnames';
 import Button from '@/components/atoms/button';
 import { HeaderContext } from '../../context';
@@ -15,7 +14,7 @@ const NavigationButton = ({ lastIndex, link, onClick }: NavigationButtonProps) =
     lastIndex ? 'pb-0' : 'pb-2 lg:pb-7',
   );
   const descendantClassNames = classnames(
-    'flex h-[48px] w-full items-center pb-2 lg:h-fit lg:pb-7',
+    'flex h-[48px] w-full items-center  pb-2 lg:h-fit lg:pb-7',
     link.categoryId === 'quotes' ? 'justify-between' : 'justify-start',
   );
 
@@ -23,25 +22,19 @@ const NavigationButton = ({ lastIndex, link, onClick }: NavigationButtonProps) =
     <div key={link.categoryId}>
       {link?.descendants?.length > 0 ? (
         <Button variant="ghost" size="fit" tabIndex={0} onClick={onClick} className={categoryClassNames}>
-          <Typography fontSize={16} fontWeight="normal" className="text-gray-700">
-            {link.name}
-          </Typography>
+          <span className="text-16 font-normal text-gray-700">{link.name}</span>
           <ChevronRightIcon className="w-5 text-gray-700" />
         </Button>
       ) : (
         <div className={descendantClassNames}>
           <Link tabIndex={0} href={link?.path ?? '/'} className="w-full">
-            <button className="w-full" onClick={hideHeaderMenu}>
-              <Typography fontSize={16} className="py-1 text-left text-gray-700">
-                {link.name}
-              </Typography>
+            <button className="w-full text-left" onClick={hideHeaderMenu}>
+              <span className="py-1 text-left text-16 text-gray-700">{link.name}</span>
             </button>
           </Link>
           {link.categoryId === 'quotes' && (
             <div className="flex size-5 items-center justify-center rounded-md bg-blue-100">
-              <Typography fontSize={12} fontWeight="semibold" align="center" className="text-primary">
-                {quotes.toString()}
-              </Typography>
+              <p className="text-center text-12 font-semibold text-primary">{quotes.toString()}</p>
             </div>
           )}
         </div>

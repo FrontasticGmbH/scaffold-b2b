@@ -1,4 +1,4 @@
-import { act, render, screen } from '@test/utils';
+import { render, screen } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import MultiSelect from '.';
 import { SelectProps } from './types';

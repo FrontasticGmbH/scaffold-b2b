@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import Link from '@/components/atoms/link';
-import Typography from '@/components/atoms/typography';
 import { HeaderContext } from '../../../context';
 
 const PageLinksSection = () => {
@@ -11,9 +10,7 @@ const PageLinksSection = () => {
         <div key={index} className={index >= pageLinks.length - 1 ? 'pb-0' : 'pb-8'}>
           <div onClick={hideHeaderMenu}>
             <Link href={pageLink.href ?? '/'}>
-              <Typography fontSize={16} fontWeight="semibold" className="text-gray-800">
-                {pageLink.name}
-              </Typography>
+              <p className="text-16 font-semibold text-gray-800">{pageLink.name}</p>
             </Link>
           </div>
         </div>

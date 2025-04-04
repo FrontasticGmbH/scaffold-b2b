@@ -13,6 +13,7 @@ const ValueSelector = ({ criteria, className, value, disabled, onChange }: Props
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
         outerContainerClassName={className}
+        data-testid="value-selector-input"
       />
     );
 

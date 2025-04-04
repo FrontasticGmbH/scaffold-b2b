@@ -1,5 +1,4 @@
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
-import Typography from '@/components/atoms/typography';
 import FlagIcons from '@/components/atoms/icons/flag-icons';
 import { useTranslations } from 'use-intl';
 import Dropdown from '@/components/atoms/dropdown';
@@ -27,17 +26,13 @@ const ShippingSelect = () => {
     return (
       <div className="flex h-6 items-center gap-x-2" onClick={() => onLocationSelect(location?.value ?? '')}>
         <FlagIcons name={location?.flagName ?? ''} className="size-4" />
-        <Typography fontSize={14} className="text-gray-800">
-          {location?.name}
-        </Typography>
+        <p className="text-14 text-gray-800">{location?.name}</p>
       </div>
     );
   };
   return (
     <div className="pt-2" ref={locationButtonRef}>
-      <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
-        {translate('common.shop-ship-title')}
-      </Typography>
+      <p className="text-14 font-semibold text-gray-800">{translate('common.shop-ship-title')}</p>
       <div className="z-[150] pt-2">
         <Dropdown>
           <Dropdown.Button>

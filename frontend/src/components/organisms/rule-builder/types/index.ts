@@ -1,4 +1,5 @@
 import { Option } from '@/components/atoms/select/types';
+import { GroupProps } from '../components/group/types';
 
 export type Combinator = 'AND' | 'OR';
 
@@ -41,6 +42,7 @@ export interface Translations {
 
 export interface RuleBuilderProps {
   group?: Group;
+  maxDepth?: number;
   translations?: Translations;
   singleMode?: boolean;
   includeGroupHeader?: boolean;
@@ -50,4 +52,6 @@ export interface RuleBuilderProps {
   criteria: Criteria[];
   onRuleUpdate?: (rule: Group) => void;
   onReset?: () => void;
+  allowedCombinators?: GroupProps['allowedCombinators'];
+  showCombinators?: GroupProps['showCombinators'];
 }

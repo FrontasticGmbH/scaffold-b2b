@@ -65,14 +65,6 @@ describe('Costs Component', () => {
     expect(screen.getByText('Shipping')).toBeInTheDocument();
   });
 
-  it('renders skeleton loader when loading is true', () => {
-    render(<Costs {...defaultProps} loading={true} />);
-
-    const skeletons = screen.getAllByTestId('skeleton'); // Assuming `asSkeleton` renders a data-testid="skeleton"
-
-    expect(skeletons.length).toBeGreaterThan(0);
-  });
-
   it('applies custom classNames', () => {
     const customClasses = {
       container: 'custom-container',

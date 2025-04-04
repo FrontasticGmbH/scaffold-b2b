@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import Link from '@/components/atoms/link';
-import Typography from '@/components/atoms/typography';
 import { classnames } from '@/utils/classnames/classnames';
 import { useTranslations } from 'use-intl';
 import NavigationButton from '../../navigation-button';
@@ -19,17 +18,13 @@ const CategorySection = () => {
     <div className={categorySectionClassNames}>
       {navigationLevel && navigationLevel?.length > 0 && (
         <div className="pb-2 pt-6 lg:pb-6 lg:pt-0">
-          <Typography fontSize={16} fontWeight="semibold" className="text-gray-700">
-            {navigationLevel[navigationLevel.length - 1].name}
-          </Typography>
+          <p className="text-16 font-semibold text-gray-700">{navigationLevel[navigationLevel.length - 1].name}</p>
         </div>
       )}
       {navigationLevel && navigationLevel.length === 0 ? (
         <>
           <div className="block pb-2 pt-6 lg:hidden">
-            <Typography fontSize={16} fontWeight="semibold" className="text-gray-800">
-              {translate('common.shop-by-category')}
-            </Typography>
+            <p className="text-16 font-semibold text-gray-800">{translate('common.shop-by-category')}</p>
           </div>
           {categoryLinks?.map((link, index) => (
             <NavigationButton
@@ -53,10 +48,8 @@ const CategorySection = () => {
                       : '/'
                   }
                 >
-                  <button className="flex h-[48px] items-center pb-2 lg:h-fit lg:pb-7" onClick={hideHeaderMenu}>
-                    <Typography fontSize={16} className="text-gray-700">
-                      {translate('common.view-all')}
-                    </Typography>
+                  <button className="flex h-[48px] pb-2 lg:h-fit lg:pb-7" onClick={hideHeaderMenu}>
+                    <span className="text-16 text-gray-700">{translate('common.view-all')}</span>
                   </button>
                 </Link>
               )}
@@ -71,15 +64,15 @@ const CategorySection = () => {
       {navigationLevel && navigationLevel[navigationLevel.length - 1]?.name === 'My Account' && (
         <>
           <div className="h-[48px] w-full pb-2 lg:h-fit lg:pb-7">
-            <Typography fontSize={16} fontWeight="normal" className="text-gray-300">
+            <p className="text-16 font-normal text-gray-300">
               {`${translate('common.company-admin')} - ${translate('common.desktop-only')}`}
-            </Typography>
+            </p>
           </div>
 
           <div className="h-[48px] w-full pb-2 lg:h-fit lg:pb-7">
-            <Typography fontSize={16} fontWeight="normal" className="text-gray-300">
+            <p className="text-16 font-normal text-gray-300">
               {`${translate('common.approval-rules')} - ${translate('common.desktop-only')}`}
-            </Typography>
+            </p>
           </div>
         </>
       )}

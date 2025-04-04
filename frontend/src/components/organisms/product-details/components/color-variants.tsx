@@ -1,5 +1,3 @@
-import Typography from '@/components/atoms/typography';
-import { TypographyProps } from '@/components/atoms/typography/types';
 import { useTranslations } from 'use-intl';
 import ColoredVariant from '@/components/atoms/colored-variants';
 import { ColorVariantsProps } from '../types';
@@ -7,19 +5,11 @@ import { ColorVariantsProps } from '../types';
 const ColorVariants = ({ currentColor, colors, onChangeColor }: ColorVariantsProps) => {
   const translate = useTranslations();
 
-  const commonTypographyProps: TypographyProps = {
-    className: 'text-grey-700',
-    lineHeight: 'loose',
-    fontSize: 14,
-  };
-
   return (
     <div className="grid gap-4">
       <div className="flex gap-1">
-        <Typography {...commonTypographyProps}>{`${translate('product.color')}:`}</Typography>
-        <Typography {...commonTypographyProps} fontWeight="medium">
-          {currentColor?.label}
-        </Typography>
+        <p className="text-14 leading-loose text-gray-700">{`${translate('product.color')}:`}</p>
+        <p className="text-14 font-medium leading-loose text-gray-700">{currentColor?.label}</p>
       </div>
 
       <div className="flex gap-3">

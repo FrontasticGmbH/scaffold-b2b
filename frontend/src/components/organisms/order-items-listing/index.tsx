@@ -1,7 +1,6 @@
 import React, { FC, useMemo, useState } from 'react';
 import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
-import Typography from '@/components/atoms/typography';
 import Accordion from '@/components/molecules/accordion';
 import ClosedButton from './components/closed-button';
 import OrderItem from './components/order-item';
@@ -24,9 +23,7 @@ const OrderItemsListing: FC<OrderItemsListingProps> = ({ className, lineItems })
       {lineItems.length === 1 ? (
         <div className={containerClassName}>
           <div className="border-b pb-16">
-            <Typography fontSize={16} className="text-secondary">
-              {translate('orders.your-order')}
-            </Typography>
+            <p className="text-16 text-secondary">{translate('orders.your-order')}</p>
           </div>
           <OrderItem lineItem={lineItems[0]} />
         </div>

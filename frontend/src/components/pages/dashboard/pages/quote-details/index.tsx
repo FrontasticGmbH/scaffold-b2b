@@ -86,7 +86,7 @@ const QuoteDetailsPage = ({
               ) => ({
                 // eslint-disable-next-line
                 // @ts-ignore
-                title: translate(title, { values: titleValues }),
+                title: translate(title, { ...titleValues }),
                 summary: date || author ? `${date ?? ''} - ${translate('common.by')} ${author ?? ''}` : '',
                 comment: comment || (isRenegotiating[index] ? ' ' : undefined),
                 commentLabel: `${translate('common.comment-by')} ${translate(

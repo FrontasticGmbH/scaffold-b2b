@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import Typography from '@/components/atoms/typography';
 import WishlistModal from '@/components/molecules/wishlist-modal';
 import useDisclosure from '@/hooks/useDisclosure';
 import { useTranslations } from 'use-intl';
@@ -88,9 +87,9 @@ const ShoppingListCTA = ({
 
   return (
     <div className="mb-1 mt-2 border-y border-neutral-400 py-5 lg:mt-4">
-      <Typography onClick={onOpen} className="cursor-pointer leading-[16px] text-gray-700" fontSize={14}>
+      <button onClick={onOpen} className="text-14 leading-[16px] text-gray-700">
         {`+ ${translate('product.add-to-list')}`}
-      </Typography>
+      </button>
       <WishlistModal
         lists={lists}
         isOpen={isOpen}

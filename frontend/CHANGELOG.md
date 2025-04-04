@@ -1,4 +1,23 @@
 
+## Version 4.0.0 (2025-03-17)
+
+
+** New Features & Improvements **
+
+* update translations and fixtures
+* Add e2e tests for country & locale selection
+* merge master & resolve conflicts
+* Use next-cloudinary for cloudinary images
+* use next-intl - migration
+* catch exceptions when updating session
+
+
+** Bug Fixes **
+
+* set the order Id instead of order when or order cancellation
+* adapted according to PR feedback
+* Session update bug fix
+
 ## Version 3.2.1 (2025-03-04)
 
 ** New Features & Improvements **

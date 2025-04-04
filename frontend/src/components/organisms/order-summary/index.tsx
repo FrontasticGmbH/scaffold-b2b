@@ -1,5 +1,4 @@
 import { classnames } from '@/utils/classnames/classnames';
-import Typography from '@/components/atoms/typography';
 import DiscountsForm from '@/components/molecules/discounts-form';
 import { useTranslations } from 'use-intl';
 import OrderPaymentSection from '../order-payment-section';
@@ -25,9 +24,7 @@ const OrderSummary = ({
     <div className={className}>
       {title && (
         <div className="hidden py-4 md:py-6 lg:block lg:pb-6 lg:pt-0">
-          <Typography fontSize={16} className="md:text-18">
-            {title}
-          </Typography>
+          <p className="text-16 md:text-18">{title}</p>
         </div>
       )}
 

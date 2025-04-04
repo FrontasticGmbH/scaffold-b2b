@@ -24,6 +24,9 @@ const RuleBuilderSection = ({
   singleMode = false,
   translations = {},
   includeGroupHeader = false,
+  allowedCombinators,
+  showCombinators,
+  maxDepth = Infinity,
 }: Props) => {
   const translate = useTranslations();
 
@@ -64,6 +67,9 @@ const RuleBuilderSection = ({
                         isPreview={isPreviewing}
                         criteria={criteria}
                         onRuleUpdate={(rule) => onRuleUpdate(rule, index)}
+                        allowedCombinators={allowedCombinators}
+                        showCombinators={showCombinators}
+                        maxDepth={maxDepth}
                       />
                     </div>
                   )),

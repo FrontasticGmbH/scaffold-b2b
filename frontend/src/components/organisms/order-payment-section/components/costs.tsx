@@ -1,7 +1,6 @@
 import { useParams } from 'next/navigation';
 import { classnames } from '@/utils/classnames/classnames';
 import { CurrencyHelpers } from '@/utils/currency-helpers';
-import Typography from '@/components/atoms/typography';
 import useCostsData from '../hooks/useCostsData';
 import { CostsProps } from '../types';
 
@@ -15,7 +14,7 @@ const Costs = ({
   totalAmountClassName,
 }: CostsProps) => {
   const { locale } = useParams();
-  const { loading, costsToRender, total } = useCostsData({ dataReference, order, cart });
+  const { costsToRender, total } = useCostsData({ dataReference, order, cart });
 
   const totalAmountClassNames = classnames('mt-6 flex items-center justify-between font-medium', totalAmountClassName);
 
@@ -28,8 +27,8 @@ const Costs = ({
         {costsToRender.map(({ key, label, value }) =>
           value?.centAmount && value.centAmount > 0 ? (
             <div key={key} className={subCostsClassNames}>
-              <Typography asSkeleton={loading}>{label}</Typography>
-              <Typography asSkeleton={loading}>{CurrencyHelpers.formatForCurrency(value, locale)}</Typography>
+              <p>{label}</p>
+              <p>{CurrencyHelpers.formatForCurrency(value, locale)}</p>
             </div>
           ) : (
             <></>
@@ -38,8 +37,8 @@ const Costs = ({
       </div>
 
       <div className={totalAmountClassNames}>
-        <Typography asSkeleton={loading}>{total.label}</Typography>
-        <Typography asSkeleton={loading}>{CurrencyHelpers.formatForCurrency(total.value, locale)}</Typography>
+        <p>{total.label}</p>
+        <p>{CurrencyHelpers.formatForCurrency(total.value, locale)}</p>
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ const Toaster = () => {
               <div className="flex w-full items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="block shrink-0">{icon}</span>
-                  <ToastMessage>{message}</ToastMessage>
+                  {message && <ToastMessage>{message}</ToastMessage>}
                 </div>
                 <XMarkIcon
                   data-testid="toast-dismiss"

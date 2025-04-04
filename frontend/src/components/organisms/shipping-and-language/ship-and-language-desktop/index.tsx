@@ -1,5 +1,4 @@
 import React from 'react';
-import Typography from '@/components/atoms/typography';
 import FlagIconsSquare from '@/components/atoms/icons/flag-icons-square';
 import Radio from '@/components/atoms/radio';
 import Popover from '@/components/molecules/popover';
@@ -39,9 +38,7 @@ const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) =>
       )}
     >
       <div className="w-[270px] p-4">
-        <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
-          {translate('common.shop-ship-title')}
-        </Typography>
+        <p className="text-14 font-semibold text-gray-800">{translate('common.shop-ship-title')}</p>
         <ul className="flex flex-col gap-y-5 pt-5" ref={locationsListRef} tabIndex={0}>
           {locations.map((location, index) => (
             <div key={location.value} className={classnames({ outline: locationsActiveIndex === index })}>
@@ -52,7 +49,7 @@ const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) =>
                 label={
                   <div className="flex items-center justify-start gap-5">
                     <FlagIconsSquare name={location.flagName} />
-                    <Typography fontSize={14}>{location.label}</Typography>
+                    <p className="text-14">{location.label}</p>
                   </div>
                 }
               />
@@ -62,9 +59,7 @@ const ShipAndLanguageSectionDesktop = ({ direction = 'right' }: deskTopProps) =>
 
         {selectedLocation?.languages && selectedLocation.languages.length > 0 && (
           <div className="pt-5">
-            <Typography fontSize={14} fontWeight="semibold" className="text-gray-800">
-              {translate('common.language')}
-            </Typography>
+            <p className="text-14 font-semibold text-gray-800">{translate('common.language')}</p>
             <ul className="flex flex-col gap-y-5 pt-5" ref={languagesListRef} tabIndex={0}>
               {selectedLocation?.languages.map((language, index) => (
                 <div key={language.value} className={classnames({ outline: languagesActiveIndex === index })}>

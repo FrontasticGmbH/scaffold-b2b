@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import Typography from '@/components/atoms/typography';
 import useFormat from '@/hooks/useFormat';
 import { useAddToCartOverlay } from '@/providers/add-to-cart-overlay';
 import { useTranslations } from 'use-intl';
@@ -44,28 +43,17 @@ const MainInfo = ({
       <div className="grid gap-6">
         {product.discountedPrice ? (
           <div className="flex items-center gap-2">
-            <Typography
-              className="text-red-500 md:text-20 lg:text-24"
-              fontSize={18}
-              lineHeight="loose"
-              fontWeight="bold"
-            >
+            <p className="text-18 font-bold leading-loose text-red-500 md:text-20 lg:text-24">
               {formatCurrency(product.discountedPrice, product.currency)}
-            </Typography>
-            <Typography as="h2" className="text-gray-600 line-through md:text-14" fontSize={12} lineHeight="loose">
+            </p>
+            <h2 className="text-12 leading-loose text-gray-600 line-through md:text-14">
               {formatCurrency(product.price, product.currency)}
-            </Typography>
+            </h2>
           </div>
         ) : (
-          <Typography
-            as="h2"
-            className="text-gray-700 md:text-20 lg:text-24"
-            fontSize={18}
-            lineHeight="loose"
-            fontWeight="bold"
-          >
+          <h2 className="text-18 font-bold leading-loose text-gray-700 md:text-20 lg:text-24">
             {formatCurrency(product.price, product.currency)}
-          </Typography>
+          </h2>
         )}
 
         {currentColor && product.colors && (
@@ -84,9 +72,7 @@ const MainInfo = ({
           />
         )}
         {(!product.inStock || !product.price) && (
-          <Typography fontSize={18} lineHeight="loose" className="text-red-500 md:text-16 lg:text-18">
-            {translate('common.out-of-stock')}
-          </Typography>
+          <p className="text-18 leading-loose text-red-500 md:text-16 lg:text-18">{translate('common.out-of-stock')}</p>
         )}
         <CartCTA
           product={product}

@@ -6,7 +6,6 @@ import toast from '@/components/atoms/toaster/helpers/toast';
 import { InputProps } from '@/components/atoms/input/types';
 import { Account } from '@shared/types/account/Account';
 import { useTranslations } from 'use-intl';
-import Typography from '@/components/atoms/typography';
 import { namePattern } from '@/constants/regex';
 import useValidate from '@/hooks/useValidate/useValidate';
 import AuthLayout from '../layouts/auth-layout';
@@ -98,15 +97,9 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
       <AuthForm {...authProps}>
         {confirmed ? (
           <div>
-            <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-              {translate('account.verification-sent')}
-            </Typography>
-            <Typography fontWeight="medium" fontSize={16} className="inline text-gray-600" lineHeight="loose">
-              {` ${data.email}. `}
-            </Typography>
-            <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-              {translate('account.verification-login')}
-            </Typography>
+            <p className="inline text-16 leading-loose text-gray-600">{translate('account.verification-sent')}</p>
+            <p className="inline text-16 font-medium leading-loose text-gray-600">{` ${data.email}. `}</p>
+            <p className="inline text-16 leading-loose text-gray-600">{translate('account.verification-login')}</p>
           </div>
         ) : (
           <>

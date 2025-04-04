@@ -1,4 +1,27 @@
 
+## Version 2.2.0 (2025-03-17)
+
+** New Features & Improvements **
+
+* removed missing log
+* added product selection ids on PDP queries for B2B
+* used full name to loop over variants
+* generated product url using, if exist, the first matching variant
+* set meta fields undefined if empty in B2C and B2B
+* switch to using LocalizedValue.getLocalizedValue
+* map meta data fields for products and categories
+* add method to retrieve session data in BaseApi
+* mapped cart returned by accoun login method in B2B
+* set order number during checkout session
+
+
+** Bug Fixes **
+
+* restored product limit filter
+* handled product queries with multiple or/and and a single or/and
+* store the first product selection on the session
+* ensured that if no local or default local exist, first locale available is returned
+
 ## Version 2.0.0 (2025-02-03)
 
 ** New Features & Improvements **

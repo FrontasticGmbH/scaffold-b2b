@@ -7,7 +7,16 @@ import { classnames } from '@/utils/classnames/classnames';
 import { PlaceholderRuleProps } from './types';
 import ValueSelector from '../value-selector';
 
-const PlaceholderRule = ({ rule, singleMode, translations, criteria, onUpdate, onRemove }: PlaceholderRuleProps) => {
+const PlaceholderRule = ({
+  rule,
+  singleMode,
+  disableAddingSubgroup = false,
+  translations,
+  criteria,
+  defaultCombinator = 'AND',
+  onUpdate,
+  onRemove,
+}: PlaceholderRuleProps) => {
   const translate = useTranslations();
 
   const selectedCriteria = criteria.find((c) => c.key === rule.key);
@@ -44,21 +53,27 @@ const PlaceholderRule = ({ rule, singleMode, translations, criteria, onUpdate, o
       )}
 
       <div className={classnames('flex gap-2', singleMode ? 'col-span-9' : 'col-span-4')}>
-        <Button variant="secondary" size="l" Icon={RemoveIcon} onClick={onRemove} />
+        <Button variant="secondary" size="m" Icon={RemoveIcon} onClick={onRemove} />
         <Button
+          size="m"
           variant="secondary"
           disabled={addIsDisabled}
           onClick={() => onUpdate({ ...rule, isPlaceholder: false })}
         >
           {translations?.addRule ?? translate('dashboard.add-rule')}
         </Button>
-        <Button
-          variant="secondary"
-          disabled={addIsDisabled}
-          onClick={() => onUpdate({ type: 'group', combinator: 'AND', rules: [{ ...rule, isPlaceholder: false }] })}
-        >
-          {translations?.addSubgroup ?? translate('dashboard.add-subgroup')}
-        </Button>
+        {!disableAddingSubgroup && (
+          <Button
+            size="m"
+            variant="secondary"
+            disabled={addIsDisabled}
+            onClick={() =>
+              onUpdate({ type: 'group', combinator: defaultCombinator, rules: [{ ...rule, isPlaceholder: false }] })
+            }
+          >
+            {translations?.addSubgroup ?? translate('dashboard.add-subgroup')}
+          </Button>
+        )}
       </div>
     </div>
   );

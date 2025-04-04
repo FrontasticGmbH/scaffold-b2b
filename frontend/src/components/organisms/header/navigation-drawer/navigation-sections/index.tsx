@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import ShippingAndLanguageSection from '@/components/organisms/shipping-and-language';
-import Typography from '@/components/atoms/typography';
 import QuickOrderContent from '@/components/organisms/quick-order/quick-order-accordion/quick-order-content';
 import { useTranslations } from 'use-intl';
 import useMediaQuery from '@/hooks/useMediaQuery';
@@ -71,9 +70,7 @@ const NavigationSections = () => {
       ) : (
         <div className="border-t">
           <div className="py-5">
-            <Typography fontSize={16} fontWeight="bold">
-              {translate('quick-order.quick-add-cart')}
-            </Typography>
+            <p className="text-16 font-bold">{translate('quick-order.quick-add-cart')}</p>
           </div>
           {addToCartDisabled && (
             <InfoBanner className="mb-5">

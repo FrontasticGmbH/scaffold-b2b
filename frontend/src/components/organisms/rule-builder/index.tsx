@@ -6,6 +6,9 @@ import RulePreview from './components/rule-preview';
 
 const RuleBuilder = ({
   group,
+  maxDepth = Infinity,
+  allowedCombinators = () => ['AND', 'OR'],
+  showCombinators = () => true,
   singleMode,
   translations,
   includeGroupHeader,
@@ -19,10 +22,10 @@ const RuleBuilder = ({
   const initialState = useMemo<Group>(
     () => ({
       type: 'group',
-      combinator: 'AND',
+      combinator: allowedCombinators(0)[0],
       rules: [{ type: 'rule', isPlaceholder: true, key: '', operator: '', value: '' }],
     }),
-    [],
+    [allowedCombinators],
   );
 
   const [rule, setRule] = useControllableState<Group>(group, initialState);
@@ -49,6 +52,8 @@ const RuleBuilder = ({
     <GroupRule
       group={rule}
       translations={translations}
+      allowedCombinators={allowedCombinators}
+      showCombinators={showCombinators}
       includeGroupHeader={includeGroupHeader}
       includeRemoveButton={includeRemoveButton}
       onRemoveGroup={onRemoveGroup}
@@ -56,6 +61,7 @@ const RuleBuilder = ({
       criteria={criteria}
       onUpdate={onUpdate}
       onRemove={onRemove}
+      maxDepth={maxDepth}
     />
   );
 };

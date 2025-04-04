@@ -7,7 +7,6 @@ import { Account } from '@shared/types/account/Account';
 import { useTranslations } from 'use-intl';
 import Checkbox from '@/components/atoms/checkbox';
 import Link from '@/components/atoms/link';
-import Typography from '@/components/atoms/typography';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import useSwrClearCache from '@/hooks/useSwrClearCache';
 import AuthLayout from '../layouts/auth-layout';
@@ -90,9 +89,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
     <AuthLayout image={image} logo={logo} logoLink={logoLink}>
       <AuthForm {...formProps} error={error} includeCheckIcon={requested}>
         {requested ? (
-          <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
-            {translate('account.password-req-sent-desc')}
-          </Typography>
+          <p className="inline text-16 leading-loose text-gray-600">{translate('account.password-req-sent-desc')}</p>
         ) : (
           <Input
             containerClassName="w-full"

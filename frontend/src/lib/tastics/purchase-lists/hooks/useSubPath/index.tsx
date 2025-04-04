@@ -11,7 +11,7 @@ const useSubPath = (props: PurchaseListsPageProps) => {
   const ActiveSubPath = useMemo(() => {
     const components = {
       'add-purchase-list': {
-        title: 'dashboard.purchase.list.add',
+        title: 'dashboard.purchase-list-add',
         Component: <PurchaseListForm {...props} />,
       },
     };

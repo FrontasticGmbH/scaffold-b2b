@@ -1,7 +1,6 @@
 import { Category } from '@shared/types/product/Category';
 import { Category as EntityCategory } from '@/types/entity/category';
-import { Locale } from '@/project.config';
-import { getLocalizationInfo } from '../../project.config';
+import { Locale, getLocalizationInfo } from '@/project.config';
 
 export const mapCategory = (category: Category, { locale = 'en-us' }: { locale?: Locale } = {}): EntityCategory => {
   return {

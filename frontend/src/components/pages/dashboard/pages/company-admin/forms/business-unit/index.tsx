@@ -5,7 +5,6 @@ import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
 import { BusinessUnit } from '@/types/entity/business-unit';
 import useEntityToasters from '@/hooks/useEntityToasters';
-import Typography from '@/components/atoms/typography';
 import { BusinessUnitPayload, CompanyAdminPageProps } from '../../types';
 
 const BusinessUnitForm = ({
@@ -56,7 +55,7 @@ const BusinessUnitForm = ({
             {translate('dashboard.add-business-unit-to')} <span className="font-semibold">{storeName}</span>
           </p>
         )}
-        {id && <Typography>{translate('dashboard.entity-update-how-to-delete')}</Typography>}
+        {id && <p>{translate('dashboard.entity-update-how-to-delete')}</p>}
         <Input
           name="name"
           label={translate('common.name')}
@@ -73,10 +72,6 @@ const BusinessUnitForm = ({
           onChange={handleChange}
           containerClassName="max-w-[400px]"
         />
-        {/* <Checkbox
-          label={translate('dashboard.business-unit-create-specific-store')}
-          onChecked={(checked) => setData({ ...data, createStore: checked })}
-        /> */}
       </div>
     </EntityForm>
   );

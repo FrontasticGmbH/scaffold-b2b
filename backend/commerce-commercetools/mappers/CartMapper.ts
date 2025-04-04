@@ -15,6 +15,7 @@ import {
   DiscountedLineItemPrice as CommercetoolsDiscountedLineItemPrice,
   CartDiscount as CommercetoolsCartDiscount,
   DirectDiscount as CommercetoolsDirectDiscount,
+  ShippingRate as CommercetoolsShippingRate,
 } from '@commercetools/platform-sdk';
 import { LineItem, LineItemShippingAddress } from '@Types/cart/LineItem';
 import { Cart, CartOrigin, CartState } from '@Types/cart/Cart';
@@ -166,7 +167,6 @@ export default class CartMapper {
         ),
         totalPrice: ProductMapper.commercetoolsMoneyToMoney(commercetoolsLineItem.totalPrice),
         taxed: this.commercetoolsTaxedItemPriceToTaxed(commercetoolsLineItem.taxedPrice),
-        taxIncludedInPrice: commercetoolsLineItem.taxRate?.includedInPrice,
         taxRate: this.commercetoolsTaxRateToTaxRate(commercetoolsLineItem.taxRate),
         variant: ProductMapper.commercetoolsProductVariantToVariant(
           commercetoolsLineItem.variant,
@@ -304,31 +304,25 @@ export default class CartMapper {
       return undefined;
     }
 
-    let shippingMethod: ShippingMethod = {
-      shippingMethodId: commercetoolsShippingInfo?.shippingMethod?.id,
-      // name: commercetoolsShippingInfo?.shippingMethodName,
-    };
-
-    if (commercetoolsShippingInfo.shippingMethod.obj) {
-      shippingMethod = {
-        ...this.commercetoolsShippingMethodToShippingMethod(
-          commercetoolsShippingInfo.shippingMethod.obj,
-          locale,
-          defaultLocale,
-        ),
-      };
-    }
-
     return {
-      ...shippingMethod,
+      shippingMethodId: commercetoolsShippingInfo?.shippingMethod?.id,
+      name: commercetoolsShippingInfo?.shippingMethodName,
       price: ProductMapper.commercetoolsMoneyToMoney(commercetoolsShippingInfo.price),
+      rate: CartMapper.commercetoolsShippingRateToShippingRate(commercetoolsShippingInfo.shippingRate),
+      taxRate: this.commercetoolsTaxRateToTaxRate(commercetoolsShippingInfo.taxRate),
       taxed: this.commercetoolsTaxedItemPriceToTaxed(commercetoolsShippingInfo.taxedPrice),
-      taxIncludedInPrice: commercetoolsShippingInfo.taxRate?.includedInPrice,
       discountedPrice: this.commercetoolsDiscountedLineItemPriceToDiscountedPrice(
         commercetoolsShippingInfo.discountedPrice,
         locale,
         defaultLocale,
       ),
+    };
+  }
+
+  static commercetoolsShippingRateToShippingRate(commercetoolsShippingRate: CommercetoolsShippingRate): ShippingRate {
+    return {
+      price: ProductMapper.commercetoolsMoneyToMoney(commercetoolsShippingRate.price),
+      freeAbove: ProductMapper.commercetoolsMoneyToMoney(commercetoolsShippingRate.freeAbove),
     };
   }
 

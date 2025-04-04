@@ -1,4 +1,11 @@
 
+## Version 1.17.0 (2025-03-17)
+
+** New Features & Improvements **
+
+* added the type changes for the product selection
+* map meta data fields for products and categories
+
 ## Version 1.16.0 (2025-02-17)
 
 

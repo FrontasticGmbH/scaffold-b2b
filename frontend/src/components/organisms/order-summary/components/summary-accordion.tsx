@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { Cart } from '@shared/types/cart/Cart';
 import { classnames } from '@/utils/classnames/classnames';
 import Image from '@/components/atoms/Image';
-import Typography from '@/components/atoms/typography';
 import { CurrencyHelpers } from '@/utils/currency-helpers';
 import Accordion from '@/components/molecules/accordion';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -41,9 +40,9 @@ const SummaryAccordion = ({ className, order, cart, transaction }: SummaryAccord
               </div>
             )}
             <div className="flex flex-col justify-center gap-8 pl-16 text-14 text-primary">
-              <Typography>{lineItem?.name}</Typography>
-              <Typography>{CurrencyHelpers.formatForCurrency(lineItem?.price as number, locale)}</Typography>
-              <Typography>{`x ${lineItem?.count}`}</Typography>
+              <p>{lineItem?.name}</p>
+              <p>{CurrencyHelpers.formatForCurrency(lineItem?.price as number, locale)}</p>
+              <p>{`x ${lineItem?.count}`}</p>
             </div>
           </div>
         ))}

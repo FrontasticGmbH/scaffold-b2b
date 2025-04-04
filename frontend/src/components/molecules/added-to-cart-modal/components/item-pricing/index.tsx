@@ -1,5 +1,4 @@
 import React from 'react';
-import Typography from '@/components/atoms/typography';
 import QuantityWidget from '@/components/atoms/quantity-widget';
 import useFormat from '@/hooks/useFormat';
 import { ItemPricingProps } from '@/components/molecules/added-to-cart-modal/types';
@@ -16,9 +15,9 @@ const ItemPricing = ({ item, quantity, onQuantityChange }: ItemPricingProps) => 
   return (
     <div className="row-start-2 flex flex-col items-center justify-center gap-2 md:col-span-5 md:col-start-2 md:row-start-2 md:flex-row md:justify-start md:gap-0 md:pl-6">
       {quantity && quantity > 0 && (
-        <Typography fontSize={12} className={'mb-0.5 inline-block w-fit md:order-2 md:mb-0 md:ml-4'}>
+        <p className="mb-0.5 inline-block w-fit text-12 md:order-2 md:mb-0 md:ml-4">
           {`${formatCurrency(item.price, item.currency)}/ea`}
-        </Typography>
+        </p>
       )}
       <div className="inline-block">
         <QuantityWidget
@@ -30,14 +29,9 @@ const ItemPricing = ({ item, quantity, onQuantityChange }: ItemPricingProps) => 
         />
       </div>
       {quantity && (
-        <Typography
-          fontSize={16}
-          lineHeight={'tight'}
-          fontWeight={'semibold'}
-          className="mt-1 md:order-3 md:ml-4 md:mt-0 md:inline-block"
-        >
+        <p className="mt-1 text-16 font-semibold leading-tight md:order-3 md:ml-4 md:mt-0 md:inline-block">
           {formatCurrency(item.price * quantity, item.currency)}
-        </Typography>
+        </p>
       )}
     </div>
   );

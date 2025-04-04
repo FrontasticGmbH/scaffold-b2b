@@ -23,6 +23,7 @@ import { ClientFactory } from '../ClientFactory';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { ConfigurationError } from '@Commerce-commercetools/errors/ConfigurationError';
 
 const defaultCurrency = 'USD';
 
@@ -649,6 +650,13 @@ export default abstract class BaseApi {
       } catch (error) {
         // We are ignoring the error refreshing the token and trying to generate a new one
       }
+    }
+
+    if (!this.clientSettings.checkoutApplicationKey || !this.clientSettings.sessionUrl) {
+      throw new ConfigurationError({
+        message:
+          'Missing required configuration for checkout session token generation. Please configure the checkout application key and session URL',
+      });
     }
 
     const url = `${this.clientSettings.sessionUrl}/${this.projectKey}/sessions`;

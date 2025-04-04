@@ -2,7 +2,6 @@ import { SVGAttributes, useMemo } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
-import Typography from '@/components/atoms/typography';
 import Select from '@/components/atoms/select';
 import { TablePaginationProps } from '../types';
 
@@ -46,9 +45,7 @@ const TablePagination = ({
   return (
     <div className={paginationClassName}>
       <div className="mt-2 flex items-center justify-center gap-2 md:mt-0 md:justify-start">
-        <Typography fontSize={14} className="text-gray-700 md:block">
-          {translate('common.rows-per-page')}
-        </Typography>
+        <p className="text-14 text-gray-700 md:block">{translate('common.rows-per-page')}</p>
         <Select
           onChange={onRowsPerPageChange}
           value={limit.toString()}
@@ -62,13 +59,13 @@ const TablePagination = ({
         />
       </div>
       <div className="flex items-center gap-3 md:gap-9">
-        <Typography fontSize={14} className="hidden text-gray-700 md:flex">
+        <p className="hidden text-14 text-gray-700 md:flex">
           {translate('common.from-to', {
             from,
             to,
             totalItems: totalItems.toString(),
           })}
-        </Typography>
+        </p>
         <div className="mt-3 flex w-full justify-between gap-4 md:mt-0">
           <button
             data-testid="previous-arrow"
@@ -78,13 +75,13 @@ const TablePagination = ({
           >
             <ChevronLeftIcon data-disabled={disablePrevious} stroke="#212121" {...previousIconProps} />
           </button>
-          <Typography fontSize={14} className="text-gray-700 md:hidden">
+          <p className="text-14 text-gray-700 md:hidden">
             {translate('common.from-to', {
               from,
               to,
               totalItems: totalItems.toString(),
             })}
-          </Typography>
+          </p>
           <button
             data-testid="next-arrow"
             onClick={onNext}

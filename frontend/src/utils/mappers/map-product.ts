@@ -9,7 +9,12 @@ import { mapAttribute } from './map-attribute';
 
 export const mapProduct = (
   product: Product,
-  { variantIndex = -1, cart, locale = 'en-us' }: { variantIndex?: number; cart?: Cart; locale?: Locale } = {},
+  {
+    variantIndex = -1,
+    cart,
+    locale = 'en-us',
+    filterOutNonMatchingVariants = true,
+  }: { variantIndex?: number; cart?: Cart; locale?: Locale; filterOutNonMatchingVariants?: boolean } = {},
 ): EntityProduct => {
   const variant =
     product.variants[variantIndex] ??
@@ -35,9 +40,13 @@ export const mapProduct = (
     } as Variant,
   );
 
-  const colors = product.variants.map((v) => mapAttribute(v.attributes?.color)).filter(Boolean) as Attribute[];
+  const colors = product.variants
+    .filter((variant) => (filterOutNonMatchingVariants ? variant.isMatchingVariant !== false : true))
+    .map((v) => mapAttribute(v.attributes?.color))
+    .filter(Boolean) as Attribute[];
   //   Temporary until correct mapping is done for the model attribute
   const specs = product.variants
+    .filter((variant) => (filterOutNonMatchingVariants ? variant.isMatchingVariant !== false : true))
     .map((v) => mapAttribute({ label: v.attributes?.model, key: v.attributes?.model }))
     .filter(Boolean) as Attribute[];
 

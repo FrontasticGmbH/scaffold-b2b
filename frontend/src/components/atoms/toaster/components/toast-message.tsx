@@ -1,14 +1,11 @@
 import { ReactElement } from 'react';
-import Typography from '../../typography';
 
 type ToastMessageProps = {
   children: ReactElement<any, any> | string; // explicitly allows any React element or a string
 };
 
 const ToastMessage = ({ children }: ToastMessageProps) => (
-  <Typography className="text-gray-700" fontSize={14}>
-    {typeof children === 'string' ? children : children.props?.children}
-  </Typography>
+  <p className="text-14 text-gray-700">{typeof children === 'string' ? children : children.props?.children}</p>
 );
 
 export default ToastMessage;

@@ -3,7 +3,6 @@ import Button from '@/components/atoms/button';
 import { useTranslations } from 'use-intl';
 import { XMarkIcon as CloseIcon } from '@heroicons/react/24/outline';
 import Image from '@/components/atoms/Image';
-import Typography from '@/components/atoms/typography';
 import { QuickOrderDesktopContext } from '../context';
 
 const UploadPanel = () => {
@@ -56,12 +55,8 @@ const UploadPanel = () => {
         <input type="file" multiple onChange={handleChange} ref={inputFile} className="invisible" />
         <Image src={'/sb-assets/upload.svg'} width={50} height={50} alt="Upload" />
         <div className="mt-5">
-          <Typography align="center" fontSize={14} fontWeight="medium" className="text-gray-700">
-            {translate('quick-order.drag-csv')}
-          </Typography>
-          <Typography align="center" fontSize={12} className="mt-3">
-            {translate('quick-order.click-csv')}
-          </Typography>
+          <p className="text-center text-14 font-medium text-gray-700">{translate('quick-order.drag-csv')}</p>
+          <p className="mt-3 text-center text-12">{translate('quick-order.click-csv')}</p>
         </div>
       </div>
       {files.length > 0 && (
@@ -70,9 +65,7 @@ const UploadPanel = () => {
             <div className="relative" key={file.lastModified}>
               <div className={fileNameClassNames(file)}>
                 <div className="flex justify-between px-2 py-3">
-                  <Typography fontSize={14} className="truncate">
-                    {file.name}
-                  </Typography>
+                  <p className="truncate text-14">{file.name}</p>
                   <Button variant="ghost" size="fit" onClick={() => handleRemoveClick(file)}>
                     <CloseIcon className="w-4" />
                   </Button>
@@ -81,11 +74,7 @@ const UploadPanel = () => {
                   <div className={loadingBarClassName(file)} />
                 )}
               </div>
-              {fileError[file.name] && (
-                <Typography fontSize={14} className="mt-3 text-red-500">
-                  {fileError[file.name]}
-                </Typography>
-              )}
+              {fileError[file.name] && <p className="mt-3 text-14 text-red-500">{fileError[file.name]}</p>}
             </div>
           ))}
         </div>

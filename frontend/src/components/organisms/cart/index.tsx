@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'use-intl';
 import useCloseFlyouts from '@/hooks/useCloseFlyouts';
-import Typography from '@/components/atoms/typography';
 import Image from '@/components/atoms/Image';
 import { classnames } from '@/utils/classnames/classnames';
 import InfoBanner from '@/components/molecules/info-banner';
@@ -75,16 +74,14 @@ const Cart = ({
       <div className="relative p-4 md:bg-neutral-200 md:px-5 md:py-6 lg:p-12">
         <div className="grid w-full place-items-center gap-12 rounded-lg bg-white py-9 pb-[80px]">
           <div className="grid place-items-center gap-6">
-            <Typography className="text-center text-16 text-gray-700 md:text-18 lg:text-20">
-              {translate('cart.view-disabled')}
-            </Typography>
+            <p className="text-center text-16 text-gray-700 md:text-18 lg:text-20">{translate('cart.view-disabled')}</p>
 
             <Image src="/images/locked-cart.png" className="w-[200px] md:w-[256px] lg:w-[328px]" alt="Cart locked" />
           </div>
 
-          <Typography lineHeight="loose" className="max-w-[720px] text-center text-14 text-gray-600 md:text-16">
+          <p className="max-w-[720px] text-center text-14 leading-loose text-gray-600 md:text-16">
             {translate('cart.view-disabled-desc')}
-          </Typography>
+          </p>
         </div>
       </div>
     );

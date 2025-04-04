@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import Typography from '@/components/atoms/typography';
 import Link from '@/components/atoms/link';
 import Image from '@/components/atoms/Image';
 import useListKeyboardNavigation from '@/hooks/useListKeyboardNavigation';
@@ -39,14 +38,12 @@ const SearchPanel = ({ className, variant, panelItems, onClick }: SearchPanelPro
                     <Image fill src={item.image} alt={item.name} style={{ objectFit: 'contain' }} />
                   </div>
                 )}
-                <Typography fontSize={16} className="w-full truncate">
-                  {item.name}
-                </Typography>
+                <p className="w-full truncate text-16">{item.name}</p>
               </div>
             </Link>
           </div>
         ) : (
-          <div
+          <button
             data-testid="search-panel-item"
             key={item.sku}
             className={classnames('flex h-12 cursor-pointer items-center hover:bg-neutral-200', {
@@ -56,11 +53,9 @@ const SearchPanel = ({ className, variant, panelItems, onClick }: SearchPanelPro
             tabIndex={-1}
           >
             <div className="w-full px-3">
-              <Typography fontSize={16} className="truncate text-gray-700">
-                {item.sku ?? item.name}
-              </Typography>
+              <span className="truncate text-16 text-gray-700">{item.sku ?? item.name}</span>
             </div>
-          </div>
+          </button>
         ),
       )}
     </ul>

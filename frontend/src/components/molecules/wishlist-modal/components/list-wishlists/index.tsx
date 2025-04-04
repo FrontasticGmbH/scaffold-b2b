@@ -1,6 +1,5 @@
 import Button from '@/components/atoms/button';
 import Checkbox from '@/components/atoms/checkbox';
-import Typography from '@/components/atoms/typography';
 import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
 import { ListWishListsProps } from '@/components/molecules/wishlist-modal/types';
@@ -10,14 +9,9 @@ const ListWishlist = ({ lists, selectedIds, onClose, onSubmit, handleChange, loa
   return (
     <>
       <div className="px-6 lg:pl-0 lg:pr-5">
-        <Typography
-          fontWeight="semibold"
-          fontSize={16}
-          lineHeight="loose"
-          className="border-b border-neutral-400 pb-6 pt-4 text-gray-700 md:pt-6 md:text-20 lg:mx-auto lg:max-w-[400px]"
-        >
+        <p className="border-b border-neutral-400 pb-6 pt-4 text-16 font-semibold leading-loose text-gray-700 md:pt-6 md:text-20 lg:mx-auto lg:max-w-[400px]">
           {translate('wishlist.select-list')}
-        </Typography>
+        </p>
       </div>
       <div className="lg:pr-5">
         <div className="custom-scrollbar max-h-[284px] overflow-y-scroll px-6 lg:px-0">

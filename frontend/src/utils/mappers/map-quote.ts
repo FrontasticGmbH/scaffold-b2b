@@ -14,22 +14,22 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
 
   if (status === 'submitted') {
     activity.push({
-      title: 'dashboard.awaiting.reply.from.seller',
+      title: 'dashboard.awaiting-reply-from-seller',
       revoke: true,
     });
   }
 
   if (status === 'cancelled') {
-    activity.push({ title: 'dashboard.quote.cancelled' });
+    activity.push({ title: 'dashboard.quote-cancelled' });
   }
 
   if (status === 'rejected') {
-    activity.push({ title: 'dashboard.quote.rejected.by.seller' });
+    activity.push({ title: 'dashboard.quote-rejected-by-seller' });
   }
 
   if (status === 'inprogress') {
     activity.push({
-      title: 'dashboard.quote.accepted.by.seller',
+      title: 'dashboard.quote-accepted-by-seller',
       comment: '',
       commentBy: 'seller',
     });
@@ -37,7 +37,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
     if (isQuote) {
       if (quote.expirationDate) {
         activity.push({
-          title: 'dashboard.reply.needed.before',
+          title: 'dashboard.reply-needed-before',
           titleValues: {
             date: new Date(quote.expirationDate).toLocaleDateString().replace(/\//g, '-'),
           },
@@ -46,7 +46,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
         });
       } else {
         activity.push({
-          title: 'dashboard.reply.needed',
+          title: 'dashboard.reply-needed',
           renegotiate: true,
           reply: true,
         });
@@ -57,12 +57,12 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
   if (status === 'declined') {
     activity.push(
       {
-        title: 'dashboard.quote.accepted.by.seller',
+        title: 'dashboard.quote-accepted-by-seller',
         comment: '',
         commentBy: 'seller',
       },
       {
-        title: 'dashboard.quote.declined',
+        title: 'dashboard.quote-declined',
       },
     );
   }
@@ -70,17 +70,17 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
   if (status === 'waiting') {
     activity.push(
       {
-        title: 'dashboard.quote.accepted.by.seller',
+        title: 'dashboard.quote-accepted-by-seller',
         comment: '',
         commentBy: 'seller',
       },
       {
-        title: 'dashboard.quote.renegotiated',
+        title: 'dashboard.quote-renegotiated',
         comment: quote.buyerComment ?? '',
         commentBy: 'author',
       },
       {
-        title: 'dashboard.awaiting.reply.from.seller',
+        title: 'dashboard.awaiting-reply-from-seller',
       },
     );
   }
@@ -88,17 +88,17 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
   if (status === 'renegotiated') {
     activity.push(
       {
-        title: 'dashboard.quote.accepted.by.seller',
+        title: 'dashboard.quote-accepted-by-seller',
         comment: '',
         commentBy: 'seller',
       },
       {
-        title: 'dashboard.quote.renegotiated',
+        title: 'dashboard.quote-renegotiated',
         comment: quote.buyerComment ?? '',
         commentBy: 'author',
       },
       {
-        title: 'dashboard.quote.accepted.by.seller',
+        title: 'dashboard.quote-accepted-by-seller',
         comment: '',
         commentBy: 'seller',
       },
@@ -108,7 +108,7 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
   if (status === 'accepted') {
     if (isQuote) {
       activity.push({
-        title: 'dashboard.quote.accepted.by.seller',
+        title: 'dashboard.quote-accepted-by-seller',
         comment: '',
         commentBy: 'seller',
       });
@@ -116,12 +116,12 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
       if (quote.buyerComment) {
         activity.push(
           {
-            title: 'dashboard.quote.renegotiated',
+            title: 'dashboard.quote-renegotiated',
             comment: quote.buyerComment ?? '',
             commentBy: 'author',
           },
           {
-            title: 'dashboard.quote.accepted.by.seller',
+            title: 'dashboard.quote-accepted-by-seller',
             comment: '',
             commentBy: 'seller',
           },
@@ -129,17 +129,17 @@ const getQuoteActivity = (quote: CoCoQuote | QuoteRequest, status: Quote['status
       }
 
       activity.push({
-        title: 'dashboard.quote.accepted.by.buyer',
+        title: 'dashboard.quote-accepted-by-buyer',
       });
 
       if ((quote as CoCoQuote).purchaseOrderNumber) {
         activity.push({
-          title: 'dashboard.quote.order.was.created',
+          title: 'dashboard.quote-order-was-created',
           titleValues: { number: (quote as CoCoQuote).purchaseOrderNumber ?? '' },
         });
       }
     } else {
-      activity.push({ title: 'dashboard.quote.accepted.by.seller' });
+      activity.push({ title: 'dashboard.quote-accepted-by-seller' });
     }
   }
 
@@ -192,7 +192,7 @@ export const mapQuote = (
       '',
     activity: [
       {
-        title: 'dashboard.quote.request.submitted',
+        title: 'dashboard.quote-request-submitted',
         comment: quote.quoteRequest?.buyerComment,
         commentBy: 'author',
       },
@@ -230,7 +230,7 @@ export const mapQuoteRequest = (
       '',
     activity: [
       {
-        title: 'dashboard.quote.request.submitted',
+        title: 'dashboard.quote-request-submitted',
         comment: quoteRequest.buyerComment,
         commentBy: 'author',
       },

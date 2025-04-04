@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import Image from '@/components/atoms/Image';
-import Typography from '@/components/atoms/typography';
 import { CurrencyHelpers } from '@/utils/currency-helpers';
 import { OrderItemProps } from '../types';
 
@@ -20,15 +19,11 @@ const OrderItem = ({ lineItem }: OrderItemProps) => {
         </div>
       )}
       <div className="flex flex-col justify-center pl-16">
-        <Typography fontSize={14} className="uppercase text-primary">
-          {lineItem?.name}
-        </Typography>
-        <Typography fontSize={14} fontWeight="medium" className="mt-8 text-primary">
+        <p className="text-14 uppercase text-primary">{lineItem?.name}</p>
+        <p className="mt-8 text-14 font-medium text-primary">
           {CurrencyHelpers.formatForCurrency(lineItem?.price as number, locale)}
-        </Typography>
-        <Typography fontSize={14} className="mt-8 text-primary">
-          {`x ${lineItem?.count}`}
-        </Typography>
+        </p>
+        <p className="mt-8 text-14 text-primary">{`x ${lineItem?.count}`}</p>
       </div>
     </div>
   );

@@ -7,7 +7,16 @@ import { classnames } from '@/utils/classnames/classnames';
 import { RuleProps } from './types';
 import ValueSelector from '../value-selector';
 
-const Rule = ({ rule, singleMode, criteria, addButtonIsDisabled, onUpdate, onRemove, onAddNew }: RuleProps) => {
+const Rule = ({
+  rule,
+  singleMode,
+  criteria,
+  addButtonIsDisabled,
+  deleteButtonIsDisabled,
+  onUpdate,
+  onRemove,
+  onAddNew,
+}: RuleProps) => {
   const translate = useTranslations();
 
   const selectedCriteria = criteria.find((c) => c.key === rule.key);
@@ -42,9 +51,9 @@ const Rule = ({ rule, singleMode, criteria, addButtonIsDisabled, onUpdate, onRem
       )}
 
       <div className={classnames('flex gap-2', singleMode ? 'col-span-8' : 'col-span-2')}>
-        <Button variant="secondary" size="l" Icon={RemoveIcon} onClick={onRemove} />
+        <Button variant="secondary" size="m" Icon={RemoveIcon} onClick={onRemove} disabled={deleteButtonIsDisabled} />
         <Button
-          size="l"
+          size="m"
           Icon={AddIcon}
           disabled={
             (!singleMode && (!rule.key || !rule.operator || !rule.value)) ||

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Typography from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
 import Popover from '@/components/molecules/popover';
 import Select from '@/components/atoms/select';
@@ -46,14 +45,10 @@ const AccountButton = ({
       <div className="max-h-[90vh] w-[330px] overflow-y-auto py-4">
         <div className="px-4">
           <div className="pt-2">
-            <Typography fontSize={18} fontWeight="bold" className="text-primary">
-              {`${translate('account.hello')} ${name}!`}
-            </Typography>
+            <p className="text-18 font-bold text-primary">{`${translate('account.hello')} ${name}!`}</p>
           </div>
           <div className="pt-5">
-            <Typography fontSize={14} className="text-gray-800">
-              {translate('account.business-unit')}
-            </Typography>
+            <p className="text-14 text-gray-800">{translate('account.business-unit')}</p>
             <Select
               enableSearch
               className="pt-2"
@@ -66,9 +61,7 @@ const AccountButton = ({
             />
           </div>
           <div className="py-4">
-            <Typography fontSize={14} className="text-gray-800">
-              {translate('account.store')}
-            </Typography>
+            <p className="text-14 text-gray-800">{translate('account.store')}</p>
             <Select
               enableSearch
               className="pt-2"
@@ -89,9 +82,7 @@ const AccountButton = ({
             </Link>
             {account.categoryId === 'quotes' && (
               <div className="mr-4 flex size-5 items-center justify-center rounded-md bg-blue-100">
-                <Typography fontSize={12} fontWeight="semibold" align="center" className="text-primary">
-                  {quotes.toString()}
-                </Typography>
+                <p className="text-center text-12 font-semibold text-primary">{quotes.toString()}</p>
               </div>
             )}
           </div>
@@ -100,12 +91,8 @@ const AccountButton = ({
 
         <div className="px-4 pt-4">
           <div className="flex flex-col gap-y-4 pb-5 pt-1">
-            <Typography fontSize={14} fontWeight="bold" className="text-primary">
-              {translate('account.help-center')}
-            </Typography>
-            <Typography fontSize={14} className="text-gray-700">
-              {translate('account.mon-fri')}
-            </Typography>
+            <p className="text-14 font-bold text-primary">{translate('account.help-center')}</p>
+            <p className="text-14 text-gray-700">{translate('account.mon-fri')}</p>
           </div>
           <Button variant="secondary" size="full" data-testid="logout-button" onClick={handleLogoutClick}>
             {translate('account.sign-out')}

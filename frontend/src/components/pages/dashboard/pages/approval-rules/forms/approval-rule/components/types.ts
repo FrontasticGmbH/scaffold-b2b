@@ -1,3 +1,4 @@
+import { GroupProps } from '@/components/organisms/rule-builder/components/group/types';
 import { Criteria, Group } from '@/components/organisms/rule-builder/types';
 
 export interface Props {
@@ -10,6 +11,9 @@ export interface Props {
     groupHeaderLabel?: string;
   };
   includeGroupHeader?: boolean;
+  allowedCombinators?: GroupProps['allowedCombinators'];
+  showCombinators?: GroupProps['showCombinators'];
+  maxDepth?: number;
   addRule: boolean;
   onAddRule: () => void;
   singleMode?: boolean;

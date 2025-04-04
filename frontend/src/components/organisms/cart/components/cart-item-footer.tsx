@@ -1,5 +1,4 @@
 import Button from '@/components/atoms/button';
-import Typography from '@/components/atoms/typography';
 import MoveToList from '@/components/molecules/move-to-list';
 import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
@@ -29,7 +28,7 @@ const CartItemFooter = ({ className, onRemove, item, onAddToNewWishlist, isQuota
         }}
       />
 
-      <Typography className="text-neutral-400">|</Typography>
+      <span className="text-neutral-400">|</span>
 
       <Button
         variant="ghost"

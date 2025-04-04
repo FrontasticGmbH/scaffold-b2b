@@ -3,7 +3,6 @@ import Accordion from '@/components/molecules/accordion';
 import { useTranslations } from 'use-intl';
 import Checkbox from '@/components/atoms/checkbox';
 import { classnames } from '@/utils/classnames/classnames';
-import Typography from '@/components/atoms/typography';
 import Button from '@/components/atoms/button';
 import { Product, QuickOrderCSVUploadProps } from '../../types';
 import UploadPanel from './upload-panel';
@@ -49,7 +48,7 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
           <UploadPanel />
         ) : (
           <>
-            <Typography fontSize={14}>{translate('quick-order.select-items')}</Typography>
+            <p className="text-14">{translate('quick-order.select-items')}</p>
             <div className="mt-3 flex flex-col gap-y-4">
               {products.map((product) => (
                 <div key={product.sku}>
@@ -61,14 +60,14 @@ const QuickOrderCSVUpload = ({ addItemDisabled }: Partial<QuickOrderCSVUploadPro
                     onChecked={(value) => onCheckboxChange(product, value)}
                   />
                   {product.exists && !product.inStock && (
-                    <Typography fontSize={12} className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-red-600">
+                    <p className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-12 text-red-600">
                       {translate('quick-order.out-of-stock')}
-                    </Typography>
+                    </p>
                   )}
                   {!product.exists && (
-                    <Typography fontSize={12} className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-red-600">
+                    <p className="ml-7 mt-1 w-fit rounded-sm bg-red-100 px-2 py-1 text-12 text-red-600">
                       {translate('quick-order.item-not-located')}
-                    </Typography>
+                    </p>
                   )}
                 </div>
               ))}

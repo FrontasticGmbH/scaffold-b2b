@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import { useTranslations } from 'use-intl';
-import Typography from '@/components/atoms/typography';
 import useValidate from '@/hooks/useValidate/useValidate';
 import AuthLayout from '../layouts/auth-layout';
 import { ResetPasswordData, ResetPasswordProps } from './types';
@@ -67,9 +66,9 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
         footerLink="/login"
       >
         {reset ? (
-          <Typography fontSize={16} className="inline text-gray-600" lineHeight="loose">
+          <p className="inline text-16 leading-loose text-gray-600">
             {translate('account.password-reset-success-desc')}
-          </Typography>
+          </p>
         ) : (
           <>
             <PasswordInput

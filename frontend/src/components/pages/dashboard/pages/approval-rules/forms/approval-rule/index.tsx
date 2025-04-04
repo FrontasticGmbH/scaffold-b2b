@@ -182,7 +182,10 @@ const ApprovalRuleForm = ({
           singleMode
           tiers={data.approvers as Group[]}
           maxTiers={5}
+          maxDepth={1}
           allowMultiTier
+          allowedCombinators={(depth) => (depth === 0 ? ['AND'] : ['OR'])}
+          showCombinators={() => false}
           onTierAdd={() =>
             setData({
               ...data,

@@ -9,10 +9,8 @@ import 'flag-icons/css/flag-icons.min.css';
 import '@/styles/global/index.css';
 import theme from './theme';
 import ShipAndLanguageProvider from '@/providers/ship-and-language';
-import I18nProvider from '@/providers/I18n';
-import translations from './translations';
 import { projectSettings } from '@/mocks/projectSettings';
-import nextIntl from "./next-intl";
+import nextIntl from './next-intl';
 
 const preview: Preview = {
   initialGlobals: {
@@ -36,7 +34,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Introduction', 'Atoms', 'Molecules', 'Organisms', 'Pages', '*'],
+        order: ['Introduction', 'Accessibility', 'Atoms', 'Molecules', 'Organisms', 'Pages', '*'],
       },
     },
   },

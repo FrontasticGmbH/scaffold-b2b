@@ -13,8 +13,7 @@ const PreviewRenderer = ({ data, params, searchParams }: PreviewRendererProps) =
   const customer = data.previewContext?.customerName ?? 'demo';
 
   const handleRefresh = () => {
-    // Do a proper refresh and no full reload
-    window.location = window.location;
+    window.location.href = window.location.href;
   };
 
   const handleEndHighlight = () => setCurrentHighlight(undefined);

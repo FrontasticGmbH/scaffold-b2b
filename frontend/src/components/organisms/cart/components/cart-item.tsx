@@ -1,6 +1,5 @@
 import React from 'react';
 import Image from '@/components/atoms/Image';
-import Typography from '@/components/atoms/typography';
 import QuantityWidget from '@/components/atoms/quantity-widget';
 import Link from '@/components/atoms/link';
 import { useTranslations } from 'use-intl';
@@ -63,9 +62,9 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
 
           <div className="flex flex-col items-center justify-center gap-2 lg:gap-3">
             {item.quantity && item.quantity > 1 && (
-              <Typography lineHeight="loose" fontSize={12} className="text-gray-600">
+              <p className="text-12 leading-loose text-gray-600">
                 {`${formatCurrency(item.discountedPrice ?? item.price ?? 0, item.currency)}/ea`}
-              </Typography>
+              </p>
             )}
 
             <QuantityWidget
@@ -80,31 +79,17 @@ const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWi
             <div>
               {item.discountedPrice ? (
                 <div className="relative">
-                  <Typography
-                    lineHeight="tight"
-                    fontSize={14}
-                    className="absolute -left-2 top-1/2 -translate-x-full -translate-y-1/2 font-normal text-gray-600 line-through"
-                  >
+                  <p className="absolute -left-2 top-1/2 -translate-x-full -translate-y-1/2 text-14 font-normal leading-tight text-gray-600 line-through">
                     {formatCurrency((item.price ?? 0) * (item.quantity ?? 1), item.currency)}
-                  </Typography>
-                  <Typography
-                    lineHeight="loose"
-                    fontSize={16}
-                    fontWeight="semibold"
-                    className="text-center text-red-500 md:text-18"
-                  >
+                  </p>
+                  <p className="text-center text-16 font-semibold leading-loose text-red-500 md:text-18">
                     {formatCurrency(item.discountedPrice * (item.quantity ?? 1), item.currency)}
-                  </Typography>
+                  </p>
                 </div>
               ) : (
-                <Typography
-                  lineHeight="loose"
-                  fontSize={16}
-                  fontWeight="semibold"
-                  className="text-center text-gray-700 md:text-18"
-                >
+                <p className="text-center text-16 font-semibold leading-loose text-gray-700 md:text-18">
                   {formatCurrency((item.price ?? 0) * (item.quantity ?? 1), item.currency)}
-                </Typography>
+                </p>
               )}
             </div>
           </div>

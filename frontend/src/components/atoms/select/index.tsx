@@ -95,6 +95,7 @@ const Select = ({
           )}
           {filteredOptions.map(({ name, value }) => (
             <ComboboxOption
+              aria-label={name}
               className={({ focus, selected }) =>
                 classnames(
                   'relative block cursor-default select-none truncate px-3 py-[10px] text-14 text-gray-700 lg:py-1',

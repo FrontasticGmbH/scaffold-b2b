@@ -1,5 +1,4 @@
 import { classnames } from '@/utils/classnames/classnames';
-import Typography from '@/components/atoms/typography';
 import { useTranslations } from 'use-intl';
 import useFormat from '@/hooks/useFormat';
 import { CostsProps } from './types';
@@ -11,7 +10,6 @@ const Costs = ({
   discount,
   tax,
   currency = 'USD',
-  loading = false,
   classNames = {},
   isShippingEstimated = true,
 }: CostsProps) => {
@@ -60,23 +58,15 @@ const Costs = ({
           .filter(({ value }) => value != 0)
           .map(({ key, label, value }) => (
             <div key={key} className={subCostsClassNames}>
-              <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>
-                {label}
-              </Typography>
-              <Typography fontSize={14} className="text-14 md:text-16" asSkeleton={loading}>
-                {formatCurrency(value, currency)}
-              </Typography>
+              <p className="text-14 md:text-16">{label}</p>
+              <p className="text-14 md:text-16">{formatCurrency(value, currency)}</p>
             </div>
           ))}
       </div>
 
       <div className={totalAmountClassNames}>
-        <Typography className="text-16 text-gray-700 md:text-18" fontWeight="medium" asSkeleton={loading}>
-          {`${translate('cart.total')}:`}
-        </Typography>
-        <Typography className="text-16 text-gray-700 md:text-18" fontWeight="medium" asSkeleton={loading}>
-          {formatCurrency(total, currency)}
-        </Typography>
+        <p className="text-16 font-medium text-gray-700 md:text-18">{`${translate('cart.total')}:`}</p>
+        <p className="text-16 font-medium text-gray-700 md:text-18">{formatCurrency(total, currency)}</p>
       </div>
     </div>
   );

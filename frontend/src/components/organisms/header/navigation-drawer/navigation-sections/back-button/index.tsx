@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import Button from '@/components/atoms/button';
-import Typography from '@/components/atoms/typography';
 import { ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'use-intl';
 import { HeaderContext } from '../../../context';
@@ -19,14 +18,12 @@ const BackButton = () => {
         tabIndex={0}
         onClick={handleBackPress}
         iconPosition="left"
-        Icon={ChevronLeftIcon}
         variant="ghost"
-        size="l"
-        className="hover:underline"
+        size="fit"
+        className="flex items-center justify-between hover:underline"
       >
-        <Typography fontSize={14} fontWeight="medium" className="text-primary">
-          {translate('common.back')}
-        </Typography>
+        <ChevronLeftIcon className="size-5" />
+        <span className="text-14 font-medium text-primary">{translate('common.back')}</span>
       </Button>
     </div>
   );

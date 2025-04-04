@@ -1,8 +1,16 @@
 import React from 'react';
 import { DataSource } from '@/types/lib/datasources';
+import { Product } from '@shared/types/product';
 import { TasticProps } from '../types';
 import { CategoryConfiguration, DataSourceProps, Props } from './types';
 import ProductListClientWrapper from './components/product-list-client-wrapper';
+
+const filterMatchingVariants = (items: Product[]) => {
+  return items.map((item) => ({
+    ...item,
+    variants: item.variants.filter((variant) => variant.isMatchingVariant !== false),
+  }));
+};
 
 const ProductListTastic = async ({
   data,
@@ -35,6 +43,7 @@ const ProductListTastic = async ({
   return (
     <ProductListClientWrapper
       {...data.data.dataSource}
+      items={filterMatchingVariants(data.data.dataSource.items)}
       categoryConfiguration={categoryConfiguration}
       categories={flatCategories}
       category={treeCategories.find((c) => c.slug === slug) ?? category}

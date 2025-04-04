@@ -52,6 +52,8 @@ const ShipAndLanguageProvider = ({
 
     if (correctPath && path !== correctPath) pathToGo = correctPath;
 
+    if (pathToGo.startsWith('/')) pathToGo = pathToGo.slice(1);
+
     // Added to cause a full page reload
     window.location.href = `/${language}/${pathToGo}`;
   };

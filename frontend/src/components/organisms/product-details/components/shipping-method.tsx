@@ -1,4 +1,3 @@
-import Typography from '@/components/atoms/typography';
 import { classnames } from '@/utils/classnames/classnames';
 import { TruckIcon } from '@heroicons/react/24/outline';
 import { ShippingMethodProps } from '../types';
@@ -12,16 +11,12 @@ const ShippingMethod = ({ className, label, description }: ShippingMethodProps) 
       <div className="grid gap-2">
         {/* Label & Price */}
         <div className="flex flex-wrap gap-4">
-          <Typography className="text-gray-700" fontSize={14} fontWeight="medium" lineHeight="tight">
-            {description}
-          </Typography>
+          <p className="text-14 font-medium leading-tight text-gray-700">{description}</p>
         </div>
 
         {/* Est. delivery date */}
         <div>
-          <Typography className="text-gray-600" fontSize={14} lineHeight="tight">
-            {label}
-          </Typography>
+          <p className="text-14 leading-tight text-gray-600">{label}</p>
         </div>
       </div>
     </div>

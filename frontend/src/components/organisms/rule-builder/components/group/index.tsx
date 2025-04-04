@@ -1,13 +1,18 @@
 import React, { useCallback } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
-import { TrashIcon as RemoveIcon } from '@heroicons/react/24/outline';
+import { TrashIcon as RemoveIcon, PlusIcon as AddIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'use-intl';
+import Button from '@/components/atoms/button';
 import { GroupProps } from './types';
 import Rule from '../rule';
 import { Group as GroupType, Rule as RuleType } from '../../types';
 import PlaceholderRule from '../placeholder-rule';
 
 const Group = ({
+  depth = 0,
+  maxDepth = Infinity,
+  allowedCombinators,
+  showCombinators,
   group,
   singleMode,
   translations,
@@ -20,7 +25,7 @@ const Group = ({
 }: GroupProps) => {
   const translate = useTranslations();
 
-  const combinators = [{ key: 'AND' }, { key: 'OR' }] as const;
+  const combinators = allowedCombinators(depth).map((v) => ({ key: v }));
 
   const getRuleComponent = useCallback(
     (rule: RuleType | GroupType, index: number) => {
@@ -41,11 +46,15 @@ const Group = ({
           return (
             <Group
               group={rule}
+              depth={depth + 1}
               translations={translations}
               singleMode={singleMode}
               criteria={criteria}
               onUpdate={handleUpdate}
               onRemove={handleRemove}
+              allowedCombinators={allowedCombinators}
+              showCombinators={showCombinators}
+              maxDepth={maxDepth}
             />
           );
         case 'rule':
@@ -55,7 +64,9 @@ const Group = ({
                 rule={rule}
                 translations={translations}
                 singleMode={singleMode}
+                disableAddingSubgroup={depth === maxDepth}
                 criteria={criteria}
+                defaultCombinator={allowedCombinators(depth + 1)[0]}
                 onUpdate={handleUpdate}
                 onRemove={handleRemove}
               />
@@ -67,6 +78,7 @@ const Group = ({
               singleMode={singleMode}
               criteria={criteria}
               addButtonIsDisabled={index < group.rules.length - 1}
+              deleteButtonIsDisabled={depth === 0 && group.rules.length === 1}
               onUpdate={handleUpdate}
               onRemove={handleRemove}
               onAddNew={() =>
@@ -79,7 +91,18 @@ const Group = ({
           );
       }
     },
-    [criteria, group, onUpdate, onRemove, singleMode, translations],
+    [
+      criteria,
+      group,
+      onUpdate,
+      onRemove,
+      singleMode,
+      translations,
+      depth,
+      maxDepth,
+      allowedCombinators,
+      showCombinators,
+    ],
   );
 
   return (
@@ -96,7 +119,7 @@ const Group = ({
           )}
         </div>
       )}
-      <div className="grid w-[100px] grid-cols-2 gap-px">
+      <div className={classnames('grid w-[100px] grid-cols-2 gap-px', { hidden: !showCombinators(depth) })}>
         {combinators.map((combinator, index, arr) => (
           <div
             className={classnames('cursor-pointer py-3 text-center text-14 font-medium outline outline-1', {
@@ -125,6 +148,20 @@ const Group = ({
                   <span className="block shrink-0 text-14 font-medium text-gray-600">{group.combinator}</span>
                   <div className="h-px flex-1 bg-neutral-400" />
                 </div>
+              )}
+
+              {index === arr.length - 1 && rule.type === 'group' && (
+                <Button
+                  size="l"
+                  Icon={AddIcon}
+                  className="mt-5"
+                  onClick={() =>
+                    onUpdate({
+                      ...group,
+                      rules: [...group.rules, { type: 'rule', isPlaceholder: true, key: '', operator: '', value: '' }],
+                    })
+                  }
+                />
               )}
             </>
           )),

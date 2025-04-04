@@ -31,4 +31,5 @@ Primary.args = {
     { name: 'Orders', href: '#' },
     { name: 'Company Admin', href: '#' },
   ],
+  imageQuality: 75,
 };

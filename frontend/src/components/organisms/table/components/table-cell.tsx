@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
-import Typography from '@/components/atoms/typography';
 import { TableCellProps } from '../types';
 
 const TableCell = ({
@@ -29,13 +28,15 @@ const TableCell = ({
 
   const asTypography = useMemo(
     () => (
-      <Typography
-        fontSize={isHeadCell ? 12 : 14}
-        className="leading-[20px]"
-        fontWeight={isHeadCell ? 'semibold' : 'normal'}
+      <span
+        className={classnames(
+          'leading-[20px]',
+          { 'text-12 font-semibold': isHeadCell },
+          { 'text-14 font-normal': !isHeadCell },
+        )}
       >
         {children as string}
-      </Typography>
+      </span>
     ),
     [children],
   );
