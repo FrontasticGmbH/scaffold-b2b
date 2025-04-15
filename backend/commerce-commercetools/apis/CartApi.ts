@@ -661,7 +661,6 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         return CartMapper.commercetoolsPaymentToPayment(response.body);
-        //return response;
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -681,16 +680,47 @@ export default class CartApi extends BaseApi {
       ],
     };
 
-    const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate).catch((error) => {
-      if (error instanceof ExternalError) {
-        throw new CartRedeemDiscountCodeError({
-          message: `Redeem discount code '${code}' failed. ${error.message}`,
-          statusCode: error.statusCode,
-        });
-      }
+    const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate)
+      .then((commercetoolsCart) => {
+        const commercetoolsDiscountCode = commercetoolsCart.discountCodes.find(
+          (discountCode) => discountCode.discountCode?.obj.code === code,
+        );
 
-      throw error;
-    });
+        if (commercetoolsDiscountCode.state !== 'MatchesCart') {
+          // Remove the discount code if status is different than MatchesCart
+          const cartUpdate: CartUpdate = {
+            version: +commercetoolsCart.version,
+            actions: [
+              {
+                action: 'removeDiscountCode',
+                discountCode: {
+                  typeId: 'discount-code',
+                  id: commercetoolsDiscountCode.discountCode.id,
+                },
+              } as CartRemoveDiscountCodeAction,
+            ],
+          };
+
+          this.updateCart(commercetoolsCart.id, cartUpdate);
+
+          throw new CartRedeemDiscountCodeError({
+            message: `Redeem discount code '${code}' failed with state '${commercetoolsDiscountCode.state}'`,
+            statusCode: 409,
+          });
+        }
+
+        return commercetoolsCart;
+      })
+      .catch((error) => {
+        if (error instanceof ExternalError) {
+          throw new CartRedeemDiscountCodeError({
+            message: `Redeem discount code '${code}' failed. ${error.message}`,
+            statusCode: error.statusCode,
+          });
+        }
+
+        throw error;
+      });
 
     return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
   }
@@ -971,13 +1001,6 @@ export default class CartApi extends BaseApi {
       locale: locale.language,
     };
 
-    // TODO: implement a logic that hydrate cartDraft with commercetoolsCart
-    // for (const key of Object.keys(commercetoolsCart)) {
-    //   if (cartDraft.hasOwnProperty(key) && cartDraft[key] !== undefined) {
-    //     cartDraft[key] = commercetoolsCart[key];
-    //   }
-    // }
-
     const propertyList = [
       'customerEmail',
       'store',
@@ -1016,6 +1039,11 @@ export default class CartApi extends BaseApi {
     // Add line items to the replicated cart one by one to handle the exception
     // if an item is not available on the new currency.
     for (const lineItem of lineItems) {
+      if (lineItem.lineItemMode === 'GiftLineItem') {
+        // If the line item is a gift, we don't need to add it to the cart
+        continue;
+      }
+
       try {
         const cartUpdate: CartUpdate = {
           version: +replicatedCommercetoolsCart.version,

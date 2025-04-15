@@ -1,5 +1,5 @@
 const withPlugins = require('next-compose-plugins');
-const createNextIntlPlugin = require("next-intl/plugin");
+const createNextIntlPlugin = require('next-intl/plugin');
 
 const withNextIntl = createNextIntlPlugin();
 
@@ -26,10 +26,6 @@ const nextConfig = withNextIntl({
     NEXT_PUBLIC_EXT_BUILD_ID:
       process.env.NEXT_PUBLIC_EXT_BUILD_ID ??
       JSON.stringify(process.env.NETLIFY ? process.env.COMMIT_REF.substring(0, 7) : 'staging'),
-  },
-
-  compiler: {
-    reactRemoveProperties: process.env.NODE_ENV === 'production' ? { properties: ['^data-test'] } : false,
   },
 
   webpack(config) {

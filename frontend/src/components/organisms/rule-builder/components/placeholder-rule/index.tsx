@@ -41,6 +41,7 @@ const PlaceholderRule = ({
             className="col-span-2"
             disabled={!rule.key}
             onChange={(val) => onUpdate({ ...rule, operator: val })}
+            testId={'rule-select'}
           />
           <ValueSelector
             criteria={selectedCriteria}

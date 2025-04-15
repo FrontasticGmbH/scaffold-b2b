@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.16.5",
-    "@commercetools/platform-sdk": "8.1.0",
+    "@commercetools/platform-sdk": "8.7.0",
     "@commercetools/sdk-client-v2": "2.3.0",
     "@sendgrid/mail": "^7.7.0",
     "axios": "^0.24.0",

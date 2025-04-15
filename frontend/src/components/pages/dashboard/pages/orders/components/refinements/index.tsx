@@ -1,9 +1,8 @@
 import React from 'react';
 import { useTranslations } from 'use-intl';
 import SearchInput from '@/components/atoms/search-input';
-import Dropdown from '@/components/atoms/dropdown';
-import DatePicker from '@/components/molecules/date-picker';
 import MultiSelect from '@/components/atoms/multi-select';
+import DatePickerInput from '@/components/molecules/date-picker-input';
 import { OrdersPageProps } from '../../types';
 
 const Refinements = ({
@@ -45,19 +44,14 @@ const Refinements = ({
     {
       title: 'dashboard.creation-date',
       Component: (
-        <Dropdown size="lg" className="w-[200px]">
-          <Dropdown.Button>{translate('common.select')}</Dropdown.Button>
-          <Dropdown.Options className="max-h-[unset] w-max">
-            <DatePicker
-              mode="range"
-              selected={{
-                from: filters?.createdFrom ? new Date(filters?.createdFrom) : undefined,
-                to: filters?.createdTo ? new Date(filters?.createdTo) : undefined,
-              }}
-              onSelect={(range) => onCreationDateRefine?.({ from: range?.from, to: range?.to })}
-            />
-          </Dropdown.Options>
-        </Dropdown>
+        <DatePickerInput
+          mode="range"
+          selected={{
+            from: filters?.createdFrom ? new Date(filters?.createdFrom) : undefined,
+            to: filters?.createdTo ? new Date(filters?.createdTo) : undefined,
+          }}
+          onSelect={(range) => onCreationDateRefine?.({ from: range?.from, to: range?.to })}
+        />
       ),
     },
   ];

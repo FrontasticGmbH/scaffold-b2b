@@ -1,4 +1,36 @@
 
+## Version 4.1.0 (2025-04-07)
+
+** New Features & Improvements **
+
+* Accessible date picker input component
+* Add support for embedding iframes in markdown
+* Fix navigation alignment issues
+* Simplifies datepicker and fixes type issues
+* Dependency upgrade
+* Rule builder adjustments for tier hierarchy
+* Updated cart and shipping info structures to use taxRate instead of taxIncludedInPrice, and enhance shipping method handling
+* B2B end to end tests update
+* Upgrade nextjs to 15.2.3
+* Add image priority settings
+* Enhancements on rule builder & tier hirerarchy rule builder case
+* Remove the Typography component
+
+
+** Bug Fixes **
+
+* Set fixed height for vertical slider container
+* Add Meta import to accessibility docs in Storybook
+* Replace divs to buttons for better semantics and accessibility.
+* Update gh workflows
+* Approval rules issues with tier hierarchy
+* Adapt search placeholder text for mobile
+* B2C, B2B screen reader fixes
+* Remove duplicate slashes in URL when switching locale
+* Fix drawer a11y issues B2C
+* Filter out non matching variants on PDP
+* Filter out non matching variants on PLP
+
 ## Version 4.0.0 (2025-03-17)
 
 

@@ -1,4 +1,11 @@
 
+## Version 2.3.0 (2025-04-07)
+
+** New Features & Improvements **
+
+* Update cart and shipping info structures to use taxRate instead of taxIncludedInPrice, and enhance shipping method handling
+* Add error handling for missing checkout config in B2B and B2C
+
 ## Version 2.2.0 (2025-03-17)
 
 ** New Features & Improvements **

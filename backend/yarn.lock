@@ -1653,16 +1653,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commercetools/platform-sdk@npm:8.1.0":
-  version: 8.1.0
-  resolution: "@commercetools/platform-sdk@npm:8.1.0"
+"@commercetools/platform-sdk@npm:8.7.0":
+  version: 8.7.0
+  resolution: "@commercetools/platform-sdk@npm:8.7.0"
   dependencies:
-    "@commercetools/sdk-client-v2": "npm:^3.0.0"
-    "@commercetools/sdk-middleware-auth": "npm:^7.0.0"
-    "@commercetools/sdk-middleware-http": "npm:^7.0.0"
-    "@commercetools/sdk-middleware-logger": "npm:^3.0.0"
-    "@commercetools/ts-client": "npm:^3.0.1"
-  checksum: 10c0/6f2e501073ccbf2625066825ac4c9d8fb28dc483d268270ec7e2b26be8829730f50627994c5a97a622ede45d608d17d923a604466f2e4b222cf827aef92487a8
+    "@commercetools/ts-client": "npm:^3.2.1"
+  checksum: 10c0/7d3a242a963bba990a50332b0f3b05a82c03694f398eeb779076db1a5e437b7f157ae6d7782135dd82e7be85e7af5707322d85bbea4eb71f6ff3122ab9575381
   languageName: node
   linkType: hard
 
@@ -1676,44 +1672,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commercetools/sdk-client-v2@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@commercetools/sdk-client-v2@npm:3.0.0"
+"@commercetools/ts-client@npm:^3.2.1":
+  version: 3.2.2
+  resolution: "@commercetools/ts-client@npm:3.2.2"
   dependencies:
     buffer: "npm:^6.0.3"
-  checksum: 10c0/33a46c027669617d2b03533ed9e8f78de6cdda26c1ca43ee04db9b7d1ac55f7fb6d24a7e0aedd073844d5a9d05337438b0c68e6208eec14b4138d9f14706a86d
-  languageName: node
-  linkType: hard
-
-"@commercetools/sdk-middleware-auth@npm:^7.0.0":
-  version: 7.0.1
-  resolution: "@commercetools/sdk-middleware-auth@npm:7.0.1"
-  dependencies:
-    node-fetch: "npm:^2.6.7"
-  checksum: 10c0/8abe66a5e695a5d483fe9c171e1d2e4404d05c490f708c71224f75caee31f47109c496ee38c257e15a1c033e9938637b7c2269a268a71fdec09c0f9e50b90538
-  languageName: node
-  linkType: hard
-
-"@commercetools/sdk-middleware-http@npm:^7.0.0":
-  version: 7.0.2
-  resolution: "@commercetools/sdk-middleware-http@npm:7.0.2"
-  checksum: 10c0/41fd80b9e9dd79da81e4b2b3ad49282cf9efe613b90e7b8babf53bebd211d839c509904f04ef3a07a6469c7730474c3a4922980478e64414b759acde1b8dedfd
-  languageName: node
-  linkType: hard
-
-"@commercetools/sdk-middleware-logger@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@commercetools/sdk-middleware-logger@npm:3.0.0"
-  checksum: 10c0/2d05b59d020c4db0d93ff29f658ef1facbae4cf5a0499c453fac7ede533afc65c9ab0d76108e31bf1e6762dd01c7b64c7b36ba0f83efad3fb0fdd9896e74ec6b
-  languageName: node
-  linkType: hard
-
-"@commercetools/ts-client@npm:^3.0.1":
-  version: 3.0.2
-  resolution: "@commercetools/ts-client@npm:3.0.2"
-  dependencies:
-    buffer: "npm:^6.0.3"
-  checksum: 10c0/bf28bce2841e8b225093d8a1330cde35a7c357f556dae27f5755bd0317dcf0926e48dc803eaf230bd1691e25d3c1f25f77aa97b5f01cfc19cbbda3a421f5640a
+  checksum: 10c0/55ee0b7d44f459a5db83c16774631e321cbe8f59bcc6e38851032d1cd3d153ecdf6d7fcaa66ff2ce2b17f2c3fe522abb05473b9391632ca3188c5f0fb9cc91ae
   languageName: node
   linkType: hard
 
@@ -1924,7 +1888,7 @@ __metadata:
     "@babel/plugin-transform-runtime": "npm:^7.16.5"
     "@babel/preset-env": "npm:^7.16.5"
     "@babel/runtime": "npm:^7.16.5"
-    "@commercetools/platform-sdk": "npm:8.1.0"
+    "@commercetools/platform-sdk": "npm:8.7.0"
     "@commercetools/sdk-client-v2": "npm:2.3.0"
     "@frontastic/extension-types": "npm:0.0.13"
     "@sendgrid/mail": "npm:^7.7.0"

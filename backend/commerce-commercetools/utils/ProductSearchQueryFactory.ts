@@ -134,7 +134,7 @@ export class ProductSearchFactory {
     if (productQuery.distributionChannelId) {
       commercetoolsProductSearchRequest.productProjectionParameters.priceChannel = productQuery.distributionChannelId;
     }
-    return commercetoolsProductSearchRequest;
+    return commercetoolsProductSearchRequest as ProductSearchRequest;
   }
 
   /**
@@ -297,7 +297,7 @@ export class ProductSearchFactory {
   }
 
   private static pushToProductSearchRequestQueryAndExpression: (
-    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
   ) => ProductSearchRequest = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
@@ -326,7 +326,7 @@ export class ProductSearchFactory {
   };
 
   private static pushToProductSearchRequestQueryOrExpression: (
-    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
   ) => ProductSearchRequest = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
@@ -355,7 +355,7 @@ export class ProductSearchFactory {
   };
 
   private static pushToProductSearchRequestPostFilterAndExpression: (
-    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
   ) => ProductSearchRequest = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
@@ -729,7 +729,7 @@ export class ProductSearchFactory {
             if ((filter as RangeFilter).max) {
               rangeQuery.range.lte = (filter as RangeFilter).max;
             }
-            productSearchExpressions.push(rangeQuery);
+            productSearchExpressions.push(rangeQuery as SearchNumberRangeExpression);
             break;
         }
       });
@@ -811,7 +811,7 @@ export class ProductSearchFactory {
 
     commercetoolsProductSearchRequest.sort = searchSortings;
 
-    return commercetoolsProductSearchRequest;
+    return commercetoolsProductSearchRequest as ProductSearchRequest;
   };
 
   private static applyFacets: (
@@ -888,7 +888,7 @@ export class ProductSearchFactory {
           if (searchQuery) {
             // Apply filters to PostFilter
             commercetoolsProductSearchRequest = this.pushToProductSearchRequestPostFilterAndExpression(
-              commercetoolsProductSearchRequest,
+              commercetoolsProductSearchRequest as ProductSearchRequest,
               searchQuery,
             );
 
@@ -911,7 +911,7 @@ export class ProductSearchFactory {
       commercetoolsProductSearchRequest.facets = productSearchFacetExpressions;
     }
 
-    return commercetoolsProductSearchRequest;
+    return commercetoolsProductSearchRequest as ProductSearchRequest;
   };
 
   private static hydrateQueryExpressionWithAttributeType = (

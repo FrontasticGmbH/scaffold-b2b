@@ -356,7 +356,7 @@
     "fieldIsRequired": "Dieses Feld ist erforderlich",
     "firstName": "Vorname",
     "free-returns": "Kostenlose Rücksendungen",
-    "from-to": "{von} – {bis} von {totalItems}",
+    "from-to": "{from} – {to} von {totalItems}",
     "general": "Allgemein",
     "header-menu-open": "Seitenmenü öffnen",
     "help-and-support": "Hilfe und Kundenservice",

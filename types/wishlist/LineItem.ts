@@ -3,6 +3,7 @@ import { Variant } from '../product';
 export interface LineItem {
   lineItemId: string;
   productId?: string;
+  productSlug?: string;
   name?: string;
   type?: string;
   addedAt?: Date;

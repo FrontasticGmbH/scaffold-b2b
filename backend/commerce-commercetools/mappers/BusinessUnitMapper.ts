@@ -203,7 +203,15 @@ export default class BusinessUnitMapper {
         case 'ViewOthersOrders':
         case 'ViewOthersQuoteRequests':
         case 'ViewOthersQuotes':
-          return permissions.push(commercetoolsPermission);
+        case 'ViewMyShoppingLists':
+        case 'ViewOthersShoppingLists':
+        case 'CreateMyShoppingLists':
+        case 'CreateOthersShoppingLists':
+        case 'DeleteMyShoppingLists':
+        case 'DeleteOthersShoppingLists':
+        case 'UpdateMyShoppingLists':
+        case 'UpdateOthersShoppingLists':
+          return permissions.push(commercetoolsPermission as Permission);
         default:
           return undefined;
       }

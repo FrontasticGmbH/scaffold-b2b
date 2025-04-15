@@ -11,12 +11,12 @@ const CurrentRefinements = ({ filters, onClearRefinements, onStatusRefine }: Par
   return (
     <div className="mt-5 lg:mt-8">
       <div className="flex flex-wrap gap-3">
-        <div
+        <button
           className="cursor-pointer rounded-md border border-gray-300 px-2 py-[6px] text-14 leading-[20px] text-gray-700"
           onClick={onClearRefinements}
         >
           {translate('dashboard.clear-all')}
-        </div>
+        </button>
         {filters.status.map((state) => (
           <div
             key={state}
@@ -29,12 +29,14 @@ const CurrentRefinements = ({ filters, onClearRefinements, onStatusRefine }: Par
                 translate(`dashboard.quote-status-${state.toLowerCase()}`)
               }
             </span>
-            <CloseIcon
-              className="cursor-pointer text-gray-700"
-              width={16}
-              height={16}
-              onClick={() => onStatusRefine?.(filters.status?.filter((s) => s !== state) ?? [])}
-            />
+            <button onClick={() => onStatusRefine?.(filters.status?.filter((s) => s !== state) ?? [])}>
+              <CloseIcon
+                className="cursor-pointer text-gray-700"
+                width={16}
+                height={16}
+                onClick={() => onStatusRefine?.(filters.status?.filter((s) => s !== state) ?? [])}
+              />
+            </button>
           </div>
         ))}
       </div>

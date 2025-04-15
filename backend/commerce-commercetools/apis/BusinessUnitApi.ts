@@ -8,6 +8,7 @@ import {
   BusinessUnitUpdateAction,
 } from '@commercetools/platform-sdk';
 import { Store } from '@Types/store/Store';
+import { Associate } from '@Types/business-unit/Associate';
 import { Account } from '@Types/account/Account';
 import { AssociateRole } from '@Types/business-unit/Associate';
 import { Address } from '@Types/account';
@@ -316,26 +317,25 @@ export default class BusinessUnitApi extends BaseApi {
     ]);
   }
 
-  async getAssociate(businessUnitKey: string, accountId: string) {
-    const businessUnit = await this.getByKeyForAccount(businessUnitKey, accountId);
-
-    // Get associate from business unit
-    const associate = businessUnit.associates?.find((associate) => associate.accountId === accountId);
-
-    const commercetoolsAssociateRoles = await this.getCommercetoolsAssociatesRoles();
-
-    // Include permissions in the associate roles
-    associate.roles = associate.roles?.map((associateRole) => {
-      const commercetoolsAssociateRole = commercetoolsAssociateRoles.find(
-        (commercetoolsAssociateRole) => commercetoolsAssociateRole.key === associateRole.key,
-      );
-      return {
-        ...associateRole,
-        permissions: BusinessUnitMapper.commercetoolsPermissionsToPermissions(commercetoolsAssociateRole.permissions),
-      };
-    });
-
-    return associate;
+  async getAssociate(businessUnitKey: string, account: Account): Promise<Associate> {
+    return this.requestBuilder()
+      .businessUnits()
+      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: account?.accountId })
+      .get()
+      .execute()
+      .then((response) => {
+        const roles = response.body.associateRoles.map((associate) => ({
+          key: associate.key,
+          permissions: BusinessUnitMapper.commercetoolsPermissionsToPermissions(associate.permissions),
+        }));
+        return {
+          ...account,
+          roles,
+        };
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
   }
 
   async updateAssociate(businessUnitKey: string, accountId: string, associateId: string, associateRoleKeys: string[]) {

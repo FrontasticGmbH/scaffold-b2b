@@ -400,7 +400,7 @@ export const getAssociate: ActionHook = async (request: Request, actionContext: 
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
-    const associate = await businessUnitApi.getAssociate(businessUnitKey, account.accountId);
+    const associate = await businessUnitApi.getAssociate(businessUnitKey, account);
 
     const response: Response = {
       statusCode: 200,

@@ -149,6 +149,7 @@ export default class CartMapper {
       const item: LineItem = {
         lineItemId: commercetoolsLineItem.id,
         productId: commercetoolsLineItem.productId,
+        productSlug: commercetoolsLineItem.productSlug?.[locale.language],
         name: commercetoolsLineItem?.name[locale.language] || '',
         type: 'variant',
         count: commercetoolsLineItem.quantity,

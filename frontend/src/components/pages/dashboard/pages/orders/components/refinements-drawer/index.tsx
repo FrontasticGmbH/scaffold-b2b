@@ -73,16 +73,16 @@ const RefinementsDrawer = ({
       title: 'dashboard.creation-date',
       Component: (
         <div>
-          <div
+          <button
             onClick={onToggleDatePicker}
-            className="rounded-md border border-gray-300 px-3 py-2 text-14 text-gray-600"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-start text-14 text-gray-600"
           >
             {filters?.createdFrom || filters?.createdTo
               ? `${filters.createdFrom ? new Date(filters.createdFrom).toLocaleDateString() : ''} : ${
                   filters.createdTo ? new Date(filters.createdTo).toLocaleDateString() : ''
                 }`
               : 'dd/mm/yy'}
-          </div>
+          </button>
           {isDatePickerOpen && (
             <div>
               <DatePicker
@@ -94,17 +94,17 @@ const RefinementsDrawer = ({
                 onSelect={(range) => onCreationDateRefine?.({ from: range?.from, to: range?.to })}
               />
               <div className="mt-2 flex items-center justify-end gap-8 pr-8">
-                <span className="text-14 font-medium uppercase text-primary" onClick={onCloseDatePicker}>
+                <button className="text-14 font-medium uppercase text-primary" onClick={onCloseDatePicker}>
                   {translate('common.cancel')}
-                </span>
-                <span
+                </button>
+                <button
                   className="text-14 font-medium uppercase text-primary"
                   onClick={() => {
                     onCloseDatePicker();
                   }}
                 >
                   {translate('common.save')}
-                </span>
+                </button>
               </div>
             </div>
           )}

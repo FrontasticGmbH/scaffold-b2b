@@ -34,9 +34,11 @@ import SpacerTastic from './spacer';
 import ApprovalFlowsTastic from './approval-flows';
 import RelatedProductSliderTastic from './related-products-slider';
 import ApprovalFlowDetailsTastic from './approval-flow-details';
+import MarkdownTastic from './markdown';
 import type { TasticRegistry } from './types';
 
 const tastics = {
+  'commercetools/ui/content/markdown': MarkdownTastic,
   'commercetools/ui/content/hero-tile': HeroTileTastic,
   'commercetools/ui/content/content-items': ContentItemsTastic,
   'commercetools/ui/content/content-tiles': ContentTilesTastic,

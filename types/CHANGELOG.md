@@ -1,4 +1,10 @@
 
+## Version 1.18.0 (2025-04-07)
+
+** New Features & Improvements **
+
+* Updated cart and shipping info structures to use taxRate instead of taxIncludedInPrice, and enhance shipping method handling
+
 ## Version 1.17.0 (2025-03-17)
 
 ** New Features & Improvements **

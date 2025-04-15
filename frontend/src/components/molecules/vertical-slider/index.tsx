@@ -10,7 +10,7 @@ const VerticalSlider = ({ ref, children, ...props }: SliderProps) => {
       slidesToShow={4}
       prevArrow={<Arrow position="prev" align="vertical" />}
       nextArrow={<Arrow position="next" align="vertical" />}
-      containerClassName="py-6 navigation-slider"
+      containerClassName="py-6 navigation-slider h-[486px]"
       ref={ref}
       {...props}
     >

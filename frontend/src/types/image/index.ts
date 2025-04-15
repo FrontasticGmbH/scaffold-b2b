@@ -4,6 +4,7 @@ export interface Gravity {
 }
 
 export interface Image {
+  title?: string | Record<string, string>;
   src?: string;
   width?: number;
   height?: number;

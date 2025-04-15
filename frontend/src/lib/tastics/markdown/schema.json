@@ -1,0 +1,17 @@
+{
+  "tasticType": "commercetools/ui/content/markdown",
+  "name": "Markdown",
+  "category": "Content",
+  "schema": [
+    {
+      "name": "Content",
+      "fields": [
+        {
+          "label": "Markdown",
+          "field": "content",
+          "type": "markdown"
+        }
+      ]
+    }
+  ]
+}

@@ -31,6 +31,7 @@ const Select = ({
   disabled = false,
   className,
   defaultValue,
+  testId,
 }: SelectProps) => {
   const translate = useTranslations();
 
@@ -73,6 +74,7 @@ const Select = ({
             'w-full rounded-md border border-gray-300 pl-3 pr-10 text-left text-14 focus:border-neutral-800 focus:outline-none focus:ring-0 active:border-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-200',
           )}
           aria-label={!label ? translate('common.select') : ''}
+          data-testid={testId}
         />
         <ComboboxButton
           aria-label="Dropdown button"

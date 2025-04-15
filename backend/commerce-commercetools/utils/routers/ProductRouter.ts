@@ -20,7 +20,7 @@ export default class ProductRouter {
       const variant = item.variants.find((variant) => variant.isMatchingVariant !== false) ?? item.variants[0];
       return `/${item.slug}/p/${variant.sku}`;
     }
-    return `/slug/p/${item.variant?.sku}`;
+    return `/${item.productSlug}/p/${item.variant?.sku}`;
   }
 
   static identifyFrom(request: Request) {

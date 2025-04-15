@@ -34,6 +34,7 @@ export class WishlistMapper {
     const lineItem: LineItem = {
       lineItemId: commercetoolsLineItem.id,
       productId: commercetoolsLineItem.productId,
+      productSlug: commercetoolsLineItem.productSlug?.[locale.language],
       name: commercetoolsLineItem.name[locale.language],
       type: 'variant',
       addedAt: new Date(commercetoolsLineItem.addedAt),

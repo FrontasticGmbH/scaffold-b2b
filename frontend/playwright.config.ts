@@ -10,12 +10,17 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 dotenv.config({ path: path.resolve(__dirname, '.env.local') });
 
 export default defineConfig({
+  globalSetup: path.resolve(__dirname, 'e2e/setup/global-setup.ts'),
   testDir: './e2e',
   fullyParallel: false,
   retries: 2,
-  workers: process.env.CI ? 2 : undefined,
+  /* Opt out of parallel tests on CI. */
+  workers: 1,
+  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   use: {
+    /* Base URL to use in actions like `await page.goto('/')`. */
+    // baseURL: 'http://127.0.0.1:3000',
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
   },
@@ -34,9 +39,11 @@ export default defineConfig({
     // },
     //
   ],
-  webServer: {
-    command: 'yarn run start',
-    url: 'http://127.0.0.1:3000',
-    reuseExistingServer: !process.env.CI,
-  },
+
+  /* Run your local dev server before starting the tests */
+  // webServer: {
+  //   command: 'yarn run start',
+  //   url: 'http://127.0.0.1:3000',
+  //   reuseExistingServer: true,
+  // },
 });
