@@ -4,22 +4,19 @@ import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { PaginatedResult } from '@Types/result';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
 import { getPath } from '../requestHandlers/Request';
+import queryParamsToSortAttributes from '../requestHandlers/queryParamsToSortAttributes';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
 
 const quoteRegex = /\/quote\/([^\/]+)/;
-const quotePreviewRegex = /\/preview\/.+\/quote\/([^\/]+)/;
 const quoteRequestRegex = /\/quote-request\/([^\/]+)/;
-const quoteRequestPreviewRegex = /\/preview\/.+\/quote-request\/([^\/]+)/;
 const quotesRegex = /\/quotes/;
 const quoteRequestsRegex = /\/quote-requests/;
-const quotesPreviewRegex = /\/preview\/.+\/quotes/;
-const quoteRequestsPreviewRegex = /\/preview\/.+\/quote-requests/;
 
 export default class QuoteRouter {
   static identifyQuoteFrom(request: Request) {
-    if (getPath(request)?.match(quoteRegex) || getPath(request)?.match(quotePreviewRegex)) {
+    if (getPath(request)?.match(quoteRegex)) {
       return true;
     }
 
@@ -27,7 +24,7 @@ export default class QuoteRouter {
   }
 
   static identifyQuoteRequestFrom(request: Request) {
-    if (getPath(request)?.match(quoteRequestRegex) || getPath(request)?.match(quoteRequestPreviewRegex)) {
+    if (getPath(request)?.match(quoteRequestRegex)) {
       return true;
     }
 
@@ -35,7 +32,7 @@ export default class QuoteRouter {
   }
 
   static identifyQuotesFrom(request: Request) {
-    if (getPath(request)?.match(quotesRegex) || getPath(request)?.match(quotesPreviewRegex)) {
+    if (getPath(request)?.match(quotesRegex)) {
       return true;
     }
 
@@ -43,7 +40,7 @@ export default class QuoteRouter {
   }
 
   static identifyQuoteRequestsFrom(request: Request) {
-    if (getPath(request)?.match(quoteRequestsRegex) || getPath(request)?.match(quoteRequestsPreviewRegex)) {
+    if (getPath(request)?.match(quoteRequestsRegex)) {
       return true;
     }
 
@@ -53,13 +50,7 @@ export default class QuoteRouter {
   static loadQuoteFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Quote> => {
     const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
 
-    let urlMatches = getPath(request)?.match(quoteRegex);
-
-    if (urlMatches) {
-      return await quoteApi.getQuote(urlMatches[1]);
-    }
-
-    urlMatches = getPath(request)?.match(quotePreviewRegex);
+    const urlMatches = getPath(request)?.match(quoteRegex);
 
     if (urlMatches) {
       return await quoteApi.getQuote(urlMatches[1]);
@@ -74,13 +65,7 @@ export default class QuoteRouter {
   ): Promise<QuoteRequest> => {
     const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
 
-    let urlMatches = getPath(request)?.match(quoteRequestRegex);
-
-    if (urlMatches) {
-      return await quoteApi.getQuoteRequest(urlMatches[1]);
-    }
-
-    urlMatches = getPath(request)?.match(quoteRequestPreviewRegex);
+    const urlMatches = getPath(request)?.match(quoteRequestRegex);
 
     if (urlMatches) {
       return await quoteApi.getQuoteRequest(urlMatches[1]);
@@ -94,7 +79,7 @@ export default class QuoteRouter {
     commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<QuoteRequest>> => {
     const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
-    const urlMatches = getPath(request)?.match(quotesRegex) ?? getPath(request)?.match(quotesPreviewRegex) ?? null;
+    const urlMatches = getPath(request)?.match(quotesRegex) ?? null;
 
     if (urlMatches) {
       const quoteQuery = this.buildQuoteQuery(request);
@@ -110,8 +95,7 @@ export default class QuoteRouter {
     commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<QuoteRequest>> => {
     const quoteApi = getQuoteApi(request, commercetoolsFrontendContext);
-    const urlMatches =
-      getPath(request)?.match(quoteRequestRegex) ?? getPath(request)?.match(quoteRequestPreviewRegex) ?? null;
+    const urlMatches = getPath(request)?.match(quoteRequestRegex) ?? null;
 
     if (urlMatches) {
       const quoteQuery = this.buildQuoteQuery(request);
@@ -129,7 +113,7 @@ export default class QuoteRouter {
       cursor: request.query?.cursor ?? undefined,
       quoteIds: queryParamsToIds('quoteIds', request.query),
       quoteStates: queryParamsToStates('quoteStates', request.query),
-      // sortAttributes: queryParamsToSortAttributes(request.query),
+      sortAttributes: queryParamsToSortAttributes(request.query),
       query: request.query?.query ?? undefined,
     };
   }

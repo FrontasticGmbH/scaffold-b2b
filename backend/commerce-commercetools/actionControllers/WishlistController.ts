@@ -41,7 +41,7 @@ async function fetchWishlist(request: Request, wishlistApi: WishlistApi): Promis
 
   const storeKey = getStoreKey(request);
 
-  return await wishlistApi.create({ accountId: account.accountId, name: 'Wishlist', store: { key: storeKey } });
+  return await wishlistApi.create(account, storeKey);
 }
 
 export const getWishlist: ActionHook = async (request, actionContext) => {
@@ -108,12 +108,7 @@ export const createWishlist: ActionHook = async (request, actionContext) => {
       throw new ValidationError({ message: 'No storeKey' });
     }
 
-    const wishlist = await wishlistApi.create({
-      accountId: account.accountId,
-      name: body.name ?? 'Wishlist',
-      description: body.description ?? undefined,
-      store: { key: storeKey },
-    });
+    const wishlist = await wishlistApi.create(account, storeKey, body.name, body.description);
 
     return {
       statusCode: 200,
@@ -130,14 +125,7 @@ export const deleteWishlist: ActionHook = async (request, actionContext) => {
     const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
     const wishlist = await WishlistFetcher.fetchWishlist(request, actionContext);
 
-    const storeKey = request.query?.['storeKey'];
-
-    if (!storeKey) {
-      const error = new Error('No storeKey');
-      return handleError(error, request);
-    }
-
-    await wishlistApi.delete(wishlist, storeKey);
+    await wishlistApi.delete(wishlist);
 
     return {
       statusCode: 200,

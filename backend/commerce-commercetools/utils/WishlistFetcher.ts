@@ -3,6 +3,7 @@ import { Wishlist } from '@Types/wishlist/Wishlist';
 import { WishlistQuery } from '@Types/wishlist';
 import { fetchAccountFromSessionEnsureLoggedIn } from './fetchAccountFromSession';
 import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
+import { getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 export class WishlistFetcher {
   static async fetchWishlist(request: Request, actionContext: ActionContext): Promise<Wishlist> {
@@ -11,6 +12,8 @@ export class WishlistFetcher {
     const account = fetchAccountFromSessionEnsureLoggedIn(request);
 
     const wishlistId = request.query?.id ?? request.sessionData?.wishlistId ?? undefined;
+
+    const storeKey = getStoreKey(request);
 
     if (wishlistId !== undefined) {
       const wishlistQuery: WishlistQuery = {
@@ -25,6 +28,6 @@ export class WishlistFetcher {
       }
     }
 
-    return await wishlistApi.create({ accountId: account.accountId, name: 'Wishlist' });
+    return await wishlistApi.create(account, storeKey);
   }
 }

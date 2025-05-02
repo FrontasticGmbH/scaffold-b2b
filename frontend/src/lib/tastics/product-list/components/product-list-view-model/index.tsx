@@ -21,7 +21,7 @@ const ProductListViewModel = ({
   items,
   category,
   facets,
-  totalItems,
+  total,
   categories,
   categoryConfiguration,
   displayIntermediaryPage = false,
@@ -63,7 +63,7 @@ const ProductListViewModel = ({
       ]
     : [
         { name: translate('common.home'), link: '/' },
-        ...slug.map((chunk: string, index: number, arr: string[]) => ({
+        ...(slug ?? []).map((chunk: string, index: number, arr: string[]) => ({
           name: chunk.replace(/[-_]/g, ' '),
           link: `/${arr.slice(0, index + 1).join('/')}`,
         })),
@@ -128,7 +128,7 @@ const ProductListViewModel = ({
       currentSortVector={currentSortVector}
       facets={mappedFacets}
       limit={Math.min(limit, items.length)}
-      total={totalItems}
+      total={total}
       onRefine={onRefine}
       onResetAll={onResetAll}
       onSortValueChange={onSortValueChange}

@@ -2,7 +2,7 @@ import { SDK, ServerOptions } from '@commercetools/frontend-sdk';
 import { ComposableCommerceEventsB2B } from '../../types/events/ComposableCommerceEventsB2B';
 import {
   GetProductAction,
-  GetSearchableProductAttributesAction,
+  GetProductFiltersAction,
   ProductQueryAction,
   QueryProductCategoriesAction,
 } from '../../types/actions/ProductActions';
@@ -14,7 +14,7 @@ export type ProductActions = {
   getProduct: GetProductAction;
   query: ProductQueryAction;
   queryCategories: QueryProductCategoriesAction;
-  getSearchableAttributes: GetSearchableProductAttributesAction;
+  getProductFilters: GetProductFiltersAction;
 };
 
 export const getProductActions = (sdk: SDK<ComposableCommerceEventsB2B>): ProductActions => {
@@ -70,7 +70,7 @@ export const getProductActions = (sdk: SDK<ComposableCommerceEventsB2B>): Produc
       });
       return response;
     },
-    getSearchableAttributes: async (
+    getProductFilters: async (
       options: {
         parallel?: boolean;
         customHeaderValue?: string;
@@ -78,7 +78,7 @@ export const getProductActions = (sdk: SDK<ComposableCommerceEventsB2B>): Produc
       } = {},
     ) => {
       const response = await sdk.callAction<FilterField[]>({
-        actionName: 'product/searchableAttributes',
+        actionName: 'product/productFilters',
         parallel: options.parallel,
         customHeaderValue: options.customHeaderValue,
         serverOptions: options.serverOptions,

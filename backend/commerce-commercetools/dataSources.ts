@@ -6,6 +6,7 @@ import { DataSourcePreviewPayloadElement } from '@frontastic/extension-types/src
 import { ApprovalFlowsQuery, ApprovalRuleQuery } from '@Types/business-unit';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { ValidationError } from './errors/ValidationError';
+import queryParamsToSortAttributes from './utils/requestHandlers/queryParamsToSortAttributes';
 import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
@@ -26,9 +27,7 @@ function productQueryFromContext(context: DataSourceContext, config: DataSourceC
   return { productApi, productQuery };
 }
 
-function orderQueryFromContext(context: DataSourceContext, config: DataSourceConfiguration) {
-  const account = fetchAccountFromSessionEnsureLoggedIn(context.request);
-
+function orderQueryFromContext(context: DataSourceContext) {
   const cartApi = getCartApi(context.request, context.frontasticContext);
 
   const orderQuery = OrderQueryFactory.queryFromParams(context.request);
@@ -45,7 +44,7 @@ function quoteQueryFromContext(context: DataSourceContext) {
     cursor: context.request.query?.cursor ?? undefined,
     quoteIds: queryParamsToIds('quoteIds', context.request.query),
     quoteStates: queryParamsToStates('quoteStates', context.request.query),
-    // sortAttributes: queryParamsToSortAttributes(context.request.query),
+    sortAttributes: queryParamsToSortAttributes(context.request.query),
     query: context.request.query?.query ?? undefined,
   };
 
@@ -209,7 +208,7 @@ const dataSources: DataSourceRegistry = {
     try {
       assertIsAuthenticated(context.request);
 
-      const { cartApi, orderQuery } = orderQueryFromContext(context, config);
+      const { cartApi, orderQuery } = orderQueryFromContext(context);
 
       const queryResult = await cartApi.queryOrders(orderQuery);
 
@@ -229,7 +228,7 @@ const dataSources: DataSourceRegistry = {
     try {
       assertIsAuthenticated(context.request);
 
-      const { cartApi, orderQuery } = orderQueryFromContext(context, config);
+      const { cartApi, orderQuery } = orderQueryFromContext(context);
 
       const queryResult = await cartApi.queryOrders(orderQuery);
 

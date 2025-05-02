@@ -69,6 +69,7 @@ export default class ProductMapper {
       productId: commercetoolsProduct?.productProjection?.id,
       productKey: commercetoolsProduct?.productProjection?.key,
       productRef: commercetoolsProduct?.productProjection?.[productIdField],
+      productTypeId: commercetoolsProduct?.productProjection?.productType?.id,
       version: commercetoolsProduct?.productProjection.version?.toString(),
       name: commercetoolsProduct?.productProjection.name?.[locale.language],
       slug: commercetoolsProduct?.productProjection.slug?.[locale.language],
@@ -331,6 +332,7 @@ export default class ProductMapper {
   static commercetoolsProductTypesToFilterFields(
     commercetoolsProductTypes: CommercetoolsProductType[],
     locale: Locale,
+    defaultLocale: string,
   ): FilterField[] {
     const filterFields: FilterField[] = [];
 
@@ -340,7 +342,7 @@ export default class ProductMapper {
           return;
         }
 
-        filterFields.push(this.commercetoolsAttributeDefinitionToFilterField(attribute, locale));
+        filterFields.push(this.commercetoolsAttributeDefinitionToFilterField(attribute, locale, defaultLocale));
       });
     });
 
@@ -350,6 +352,7 @@ export default class ProductMapper {
   static commercetoolsAttributeDefinitionToFilterField(
     commercetoolsAttributeDefinition: CommercetoolsAttributeDefinition,
     locale: Locale,
+    defaultLocale: string,
   ): FilterField {
     let commercetoolsAttributeTypeName = commercetoolsAttributeDefinition.type.name;
 
@@ -369,27 +372,28 @@ export default class ProductMapper {
     const filterFieldValues: FilterFieldValue[] = [];
 
     for (const value of commercetoolsAttributeValues) {
+      const attributeValueKey = value.key;
       let attributeValueLabel: string;
 
       switch (commercetoolsAttributeTypeName) {
         case 'enum': {
           const enumValue = value as AttributePlainEnumValue;
-          attributeValueLabel = typeof enumValue.label === 'string' ? enumValue.label : value.key;
+          attributeValueLabel = enumValue.label;
           break;
         }
         case 'lenum': {
           const lenumValue = value as AttributeLocalizedEnumValue;
-          const label = lenumValue.label?.[locale.language];
-          attributeValueLabel = typeof label === 'string' ? label : value.key;
+          attributeValueLabel =
+            LocalizedValue.getLocalizedValue(locale, defaultLocale, lenumValue.label) || attributeValueKey;
           break;
         }
         default:
-          attributeValueLabel = value.key;
+          break;
       }
 
       filterFieldValues.push({
-        value: attributeValueLabel,
-        name: attributeValueLabel,
+        value: attributeValueKey,
+        name: attributeValueLabel ?? attributeValueKey,
       });
     }
 
@@ -398,7 +402,9 @@ export default class ProductMapper {
       type: TypeMap.has(commercetoolsAttributeTypeName)
         ? TypeMap.get(commercetoolsAttributeTypeName)
         : commercetoolsAttributeTypeName,
-      label: commercetoolsAttributeDefinition.label?.[locale.language] ?? commercetoolsAttributeDefinition.name,
+      label:
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsAttributeDefinition.label) ||
+        commercetoolsAttributeDefinition.name,
       values: filterFieldValues.length > 0 ? filterFieldValues : undefined,
       translatable: false,
     };

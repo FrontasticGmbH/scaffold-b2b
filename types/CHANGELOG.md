@@ -1,4 +1,11 @@
 
+## Version 1.18.1 (2025-04-15)
+
+
+** Bug Fixes **
+
+* Add productSlug to LineItem type
+
 ## Version 1.18.0 (2025-04-07)
 
 ** New Features & Improvements **

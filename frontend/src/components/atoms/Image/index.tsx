@@ -3,11 +3,11 @@
 import React from 'react';
 import NextImage from 'next/image';
 import { CldImage } from 'next-cloudinary';
+import { useLocale } from 'next-intl';
+import { getLocalizationInfo } from '@/project.config';
 import { ImageProps } from './types';
 import useDimensions from './hooks/useDimensions';
 import defaultLoader from './loaders/default';
-import { useLocale } from 'next-intl';
-import { getLocalizationInfo } from '@/project.config';
 
 const Image = ({ media, ratio, gravity, suffix, src = '', width, height, title, alt = '', ...props }: ImageProps) => {
   const locale = useLocale();

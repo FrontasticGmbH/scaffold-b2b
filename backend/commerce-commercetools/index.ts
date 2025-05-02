@@ -12,6 +12,7 @@ import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { Order } from '@Types/cart/Order';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 import { ApprovalFlow, ApprovalRule } from '@Types/business-unit';
+import { Attributes } from '@Types/product/Attributes';
 import { actions } from './actionControllers';
 import dataSources from './dataSources';
 import CategoryRouter from './utils/routers/CategoryRouter';
@@ -43,42 +44,6 @@ const extensionRegistry: ExtensionRegistry = {
         } as DynamicPageSuccessResult;
       }
 
-      // Identify Product Preview
-      if (ProductRouter.identifyPreviewFrom(request)) {
-        const product: Product = await ProductRouter.loadPreviewFor(request, context.frontasticContext);
-
-        if (product) {
-          return {
-            dynamicPageType: 'frontastic/product-page',
-            dataSourcePayload: {
-              product: product,
-            },
-            pageMatchingPayload: {
-              product: product,
-            },
-          };
-        }
-        return null;
-      }
-
-      // Identify Product
-      if (ProductRouter.identifyFrom(request)) {
-        const product: Product = await ProductRouter.loadFor(request, context.frontasticContext);
-
-        if (product) {
-          return {
-            dynamicPageType: 'frontastic/product-page',
-            dataSourcePayload: {
-              product: product,
-            },
-            pageMatchingPayload: {
-              product: product,
-            },
-          };
-        }
-        return null;
-      }
-
       // Identify Wishlist
       if (WishlistRouter.identifyFrom(request)) {
         const wishlist: PaginatedResult<Wishlist> = await WishlistRouter.loadFor(request, context.frontasticContext);
@@ -97,28 +62,7 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify Preview Wishlist
-      if (WishlistRouter.identifyPreviewFrom(request)) {
-        const wishlist: PaginatedResult<Wishlist> = await WishlistRouter.loadPreviewFor(
-          request,
-          context.frontasticContext,
-        );
-
-        if (wishlist) {
-          return {
-            dynamicPageType: 'frontastic/purchase-list-page',
-            dataSourcePayload: {
-              wishlist: wishlist,
-            },
-            pageMatchingPayload: {
-              wishlist: wishlist,
-            },
-          };
-        }
-        return null;
-      }
-
-      // Identify Order and preview Order
+      // Identify Order
       if (CartRouter.identifyOrderFrom(request)) {
         const order: Order = await CartRouter.loadOrderFor(request, context.frontasticContext);
 
@@ -136,7 +80,7 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify Orders and preview Orders
+      // Identify Orders
       if (CartRouter.identifyOrdersFrom(request)) {
         const result: PaginatedResult<Order> = await CartRouter.loadOrdersFor(request, context.frontasticContext);
 
@@ -150,7 +94,7 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify Quote and Preview Quote
+      // Identify Quote
       if (QuoteRouter.identifyQuoteFrom(request)) {
         const quote: Quote = await QuoteRouter.loadQuoteFor(request, context.frontasticContext);
 
@@ -168,7 +112,7 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify Quote Request and Preview Quote Request
+      // Identify Quote Request
       if (QuoteRouter.identifyQuoteRequestFrom(request)) {
         const quoteRequest: QuoteRequest = await QuoteRouter.loadQuoteRequestFor(request, context.frontasticContext);
 
@@ -186,7 +130,7 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify Quotes and Preview Quotes
+      // Identify Quotes
       if (QuoteRouter.identifyQuotesFrom(request)) {
         const result: PaginatedResult<Quote> = await QuoteRouter.loadQuotesFor(request, context.frontasticContext);
 
@@ -200,7 +144,7 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify Quotes Requests and Preview Quotes
+      // Identify Quotes
       if (QuoteRouter.identifyQuoteRequestsFrom(request)) {
         const result: PaginatedResult<QuoteRequest> = await QuoteRouter.loadQuoteRequestsFor(
           request,
@@ -273,6 +217,45 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
+      // Identify Product
+      if (ProductRouter.identifyFrom(request)) {
+        return ProductRouter.loadFor(request, context.frontasticContext).then((product: Product) => {
+          if (!product) {
+            return null;
+          }
+
+          const sku = ProductRouter.skuFromUrl(request);
+          const matchingAttributes: Attributes = {};
+
+          if (sku) {
+            const selectedVariant = product.variants.find((variant) => variant.sku === sku);
+
+            if (selectedVariant.attributes) {
+              Object.entries(selectedVariant.attributes).forEach(([key, value]) => {
+                // FECL can't match rules on arrays, so we ignore array attributes
+                if (!Array.isArray(value)) {
+                  matchingAttributes[key] = value?.key ?? value;
+                }
+              });
+            }
+          }
+
+          return {
+            dynamicPageType: 'frontastic/product-page',
+            dataSourcePayload: {
+              product: product,
+            },
+            pageMatchingPayload: {
+              productTypeId: product.productTypeId || '',
+              variants: {
+                attributes: matchingAttributes,
+              },
+              categoryRef: product.categories?.map((category) => category.categoryRef),
+            },
+          };
+        });
+      }
+
       // Identify Search
       if (SearchRouter.identifyFrom(request)) {
         const result: ProductPaginatedResult = await SearchRouter.loadFor(request, context.frontasticContext);
@@ -292,61 +275,28 @@ const extensionRegistry: ExtensionRegistry = {
         return null;
       }
 
-      // Identify preview list
-      if (CategoryRouter.identifyPreviewFrom(request)) {
-        const result: ProductPaginatedResult = await CategoryRouter.loadPreviewFor(request, context.frontasticContext);
-
-        if (result) {
-          return {
-            dynamicPageType: 'frontastic/category',
-            dataSourcePayload: {
-              totalItems: result.total,
-              items: result.items,
-              facets: result.facets,
-              previousCursor: result.previousCursor,
-              nextCursor: result.nextCursor,
-              category: getPath(request),
-              isPreview: true,
-            },
-            pageMatchingPayload: {
-              totalItems: result.total,
-              items: result.items,
-              facets: result.facets,
-              previousCursor: result.previousCursor,
-              nextCursor: result.nextCursor,
-              category: getPath(request),
-              isPreview: true,
-            },
-          };
-        }
-        return null;
-      }
-
+      // Identify Category
       if (CategoryRouter.identifyFrom(request)) {
-        const result: ProductPaginatedResult = await CategoryRouter.loadFor(request, context.frontasticContext);
+        return CategoryRouter.loadFor(request, context.frontasticContext).then((category) => {
+          if (!category) {
+            return null;
+          }
 
-        if (result) {
-          return {
-            dynamicPageType: 'frontastic/category',
-            dataSourcePayload: {
-              totalItems: result.total,
-              items: result.items,
-              facets: result.facets,
-              previousCursor: result.previousCursor,
-              nextCursor: result.nextCursor,
-              category: getPath(request),
-            },
-            pageMatchingPayload: {
-              totalItems: result.total,
-              items: result.items,
-              facets: result.facets,
-              previousCursor: result.previousCursor,
-              nextCursor: result.nextCursor,
-              category: getPath(request),
-            },
-          };
-        }
-        return null;
+          return CategoryRouter.loadProductsFor(request, context.frontasticContext, category).then((result) => {
+            if (!result) {
+              return null;
+            }
+
+            return {
+              dynamicPageType: 'frontastic/category',
+              dataSourcePayload: result,
+              pageMatchingPayload: {
+                categoryRef: category.categoryRef,
+                isMainCategory: category.parentId === undefined,
+              },
+            };
+          });
+        });
       }
 
       return null;

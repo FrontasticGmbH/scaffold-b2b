@@ -117,3 +117,49 @@ export const searchableAttributes: ActionHook = async (request: Request, actionC
     return handleError(error, request);
   }
 };
+
+/*
+ * Method used by Studio to dynamically retrieve product filters
+ */
+export const productFilters: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const productApi = getProductApi(request, actionContext.frontasticContext);
+
+    const result = await productApi.getProductFilters();
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(result),
+      sessionData: {
+        ...productApi.getSessionData(),
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+/*
+ * Method used by Studio to dynamically retrieve category filters
+ */
+export const categoryFilters: ActionHook = async (request: Request, actionContext) => {
+  try {
+    const productApi = getProductApi(request, actionContext.frontasticContext);
+
+    const result = await productApi.getCategoryFilters();
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(result),
+      sessionData: {
+        ...productApi.getSessionData(),
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};

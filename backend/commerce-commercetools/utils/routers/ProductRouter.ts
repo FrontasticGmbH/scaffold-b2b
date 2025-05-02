@@ -15,24 +15,29 @@ import {
 import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 
 export default class ProductRouter {
+  private static isProduct(product: Product | LineItem | WishlistItem): product is Product {
+    return (product as Product).variants !== undefined;
+  }
+
   static generateUrlFor(item: Product | LineItem | WishlistItem) {
     if (ProductRouter.isProduct(item)) {
+      // If the item is a product, we want to generate a url for a matching variant or the first variant if no matching variant is found
       const variant = item.variants.find((variant) => variant.isMatchingVariant !== false) ?? item.variants[0];
       return `/${item.slug}/p/${variant.sku}`;
     }
     return `/${item.productSlug}/p/${item.variant?.sku}`;
   }
 
-  static identifyFrom(request: Request) {
-    if (getPath(request)?.match(/\/p\/([^\/]+)/)) {
-      return true;
+  static skuFromUrl = (request: Request) => {
+    const urlMatches = getPath(request)?.match(/\/p\/([^\/]+)/);
+    if (urlMatches) {
+      return urlMatches[1];
     }
+    return undefined;
+  };
 
-    return false;
-  }
-
-  static identifyPreviewFrom(request: Request) {
-    if (getPath(request)?.match(/\/preview\/.+\/p\/([^\/]+)/)) {
+  static identifyFrom(request: Request) {
+    if (ProductRouter.skuFromUrl(request)) {
       return true;
     }
 
@@ -41,11 +46,11 @@ export default class ProductRouter {
 
   static loadFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Product> => {
     const productApi = getProductApi(request, commercetoolsFrontendContext);
-    const urlMatches = getPath(request)?.match(/\/p\/([^\/]+)/);
+    const sku = ProductRouter.skuFromUrl(request);
 
-    if (urlMatches) {
+    if (sku) {
       const productQuery: ProductQuery = {
-        skus: [urlMatches[1]],
+        skus: [sku],
         storeKey: getStoreKey(request),
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
@@ -59,28 +64,4 @@ export default class ProductRouter {
 
     return null;
   };
-
-  static loadPreviewFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Product> => {
-    const productApi = getProductApi(request, commercetoolsFrontendContext);
-    const urlMatches = getPath(request)?.match(/\/preview\/.+\/p\/([^\/]+)/);
-
-    if (urlMatches) {
-      const productQuery: ProductQuery = {
-        skus: [urlMatches[1]],
-        storeKey: getStoreKey(request),
-        distributionChannelId: getDistributionChannelId(request),
-        supplyChannelId: getSupplyChannelId(request),
-        productSelectionId: getProductSelectionId(request),
-        accountGroupId: getAccountGroupId(request),
-      };
-
-      return productApi.getProduct(productQuery);
-    }
-
-    return null;
-  };
-
-  private static isProduct(product: Product | LineItem | WishlistItem): product is Product {
-    return (product as Product).variants !== undefined;
-  }
 }

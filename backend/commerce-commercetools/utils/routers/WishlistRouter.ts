@@ -15,14 +15,6 @@ export default class WishlistRouter {
     return false;
   }
 
-  static identifyPreviewFrom(request: Request) {
-    if (getPath(request)?.match(/\/preview\/.+\/(wishlist|shopping-list|purchase-list)\/([^\/]+)/)) {
-      return true;
-    }
-
-    return false;
-  }
-
   static loadFor = async (
     request: Request,
     commercetoolsFrontendContext: Context,
@@ -30,31 +22,6 @@ export default class WishlistRouter {
     const wishlistApi = getWishlistApi(request, commercetoolsFrontendContext);
 
     const urlMatches = getPath(request)?.match(/\/(wishlist|shopping-list|purchase-list)\/([^\/]+)/);
-
-    const account = fetchAccountFromSession(request);
-
-    if (urlMatches) {
-      const wishlistQuery: WishlistQuery = {
-        name: request.query?.name ?? undefined,
-        accountId: account.accountId,
-        limit: request.query?.limit ?? undefined,
-        cursor: request.query?.cursor ?? undefined,
-        wishlistIds: [urlMatches[2]],
-        query: request.query?.query ?? undefined,
-      };
-      return wishlistApi.queryWishlists(wishlistQuery);
-    }
-
-    return null;
-  };
-
-  static loadPreviewFor = async (
-    request: Request,
-    commercetoolsFrontendContext: Context,
-  ): Promise<PaginatedResult<Wishlist>> => {
-    const wishlistApi = getWishlistApi(request, commercetoolsFrontendContext);
-
-    const urlMatches = getPath(request)?.match(/\/preview\/.+\/(wishlist|shopping-list|purchase-list)\/([^\/]+)/);
 
     const account = fetchAccountFromSession(request);
 

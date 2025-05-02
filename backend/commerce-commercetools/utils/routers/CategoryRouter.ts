@@ -7,14 +7,6 @@ import { ProductQueryFactory } from '../ProductQueryFactory';
 import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 
 export default class CategoryRouter {
-  static identifyPreviewFrom(request: Request) {
-    if (getPath(request)?.match(/\/preview\/(.+)/)) {
-      return true;
-    }
-
-    return false;
-  }
-
   static identifyFrom(request: Request) {
     if (getPath(request)?.match(/[^/]+(?=\/$|$)/)) {
       return true;
@@ -23,7 +15,7 @@ export default class CategoryRouter {
     return false;
   }
 
-  static loadFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<ProductPaginatedResult> => {
+  static loadFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Category> => {
     const productApi = getProductApi(request, commercetoolsFrontendContext);
 
     // We are using the last subdirectory of the path to identify the category slug
@@ -36,44 +28,29 @@ export default class CategoryRouter {
 
       const categoryQueryResult = await productApi.queryCategories(categoryQuery);
 
-      if (categoryQueryResult.items.length == 0) return null;
-      request.query.category = (categoryQueryResult.items[0] as Category).categoryRef;
+      if (categoryQueryResult.items.length == 0) {
+        return null;
+      }
 
-      const productQuery = ProductQueryFactory.queryFromParams({
-        ...request,
-      });
-
-      return await productApi.query(productQuery);
+      return categoryQueryResult.items[0];
     }
 
     return null;
   };
 
-  static loadPreviewFor = async (
+  static loadProductsFor = async (
     request: Request,
     commercetoolsFrontendContext: Context,
+    category: Category,
   ): Promise<ProductPaginatedResult> => {
     const productApi = getProductApi(request, commercetoolsFrontendContext);
 
-    const urlMatches = getPath(request)?.match(/\/preview\/(.+)/);
+    request.query.categories = [category.categoryRef];
 
-    if (urlMatches) {
-      const categoryQuery: CategoryQuery = {
-        slug: urlMatches[1],
-      };
+    const productQuery = ProductQueryFactory.queryFromParams({
+      ...request,
+    });
 
-      const categoryQueryResult = await productApi.queryCategories(categoryQuery);
-
-      if (categoryQueryResult.items.length == 0) return null;
-      request.query.category = (categoryQueryResult.items[0] as Category).categoryId;
-
-      const productQuery = ProductQueryFactory.queryFromParams({
-        ...request,
-      });
-
-      return await productApi.query(productQuery);
-    }
-
-    return null;
+    return await productApi.query(productQuery);
   };
 }

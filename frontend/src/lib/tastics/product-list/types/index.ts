@@ -7,7 +7,6 @@ import { Reference } from '@/types/lib/reference';
 import { FrontasticImage } from '@/types/lib/image';
 
 export interface DataSourceProps {
-  category?: string;
   items: Array<Product>;
   facets: Array<
     Omit<RangeFacet | TermFacet, 'terms'> & {
@@ -26,7 +25,7 @@ export interface DataSourceProps {
       count?: number;
     }
   >;
-  totalItems: number;
+  total: number;
 }
 
 export interface CategoryConfiguration {

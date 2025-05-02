@@ -1,6 +1,9 @@
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { Account } from '@Types/account/Account';
-import { ShoppingListUpdateAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
+import {
+  ShoppingListDraft as shoppingListDraft,
+  ShoppingListUpdateAction,
+} from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shopping-list';
 import { PaginatedResult } from '@Types/result';
 import { WishlistQuery } from '@Types/wishlist';
 import { Context } from '@frontastic/extension-types';
@@ -18,36 +21,46 @@ interface AddToWishlistRequest {
 }
 
 export default class WishlistApi extends BaseApi {
+  protected accountId: string;
   protected distributionChannelId: string;
   protected supplyChannelId: string;
+  protected businessUnitKey: string;
 
   constructor(
     context: Context,
     locale: string | null,
     currency: string | null,
+    accountId?: string,
     distributionChannelId?: string,
     supplyChannelId?: string,
+    businessUnitKey?: string,
   ) {
     super(context, locale, currency);
+    this.accountId = accountId;
     this.distributionChannelId = distributionChannelId;
     this.supplyChannelId = supplyChannelId;
+    this.businessUnitKey = businessUnitKey;
   }
 
   getForAccount = async (account: Account) => {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.requestBuilder()
+    return await this.associateEndpoints(account.accountId, this.businessUnitKey)
       .shoppingLists()
       .get({
         queryArgs: {
-          where: `customer(id="${account.accountId}")`,
           expand: expandVariants,
         },
       })
       .execute()
       .then((response) => {
         return response.body.results.map((shoppingList) =>
-          WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale, this.supplyChannelId),
+          WishlistMapper.commercetoolsShoppingListToWishlist(
+            shoppingList,
+            locale,
+            this.defaultLocale,
+            this.supplyChannelId,
+          ),
         );
       })
       .catch((error) => {
@@ -57,39 +70,21 @@ export default class WishlistApi extends BaseApi {
 
   getByIdForAccount = async (wishlistId: string, account: Account) => {
     const locale = await this.getCommercetoolsLocal();
-    return await this.requestBuilder()
+    return await this.associateEndpoints(account.accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlistId })
       .get({
         queryArgs: {
-          where: `customer(id="${account.accountId}")`,
           expand: expandVariants,
         },
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
-      });
-  };
-
-  getByStoreKeyForAccount = async (storeKey: string, account: Account) => {
-    const locale = await this.getCommercetoolsLocal();
-    return await this.requestBuilder()
-      .inStoreKeyWithStoreKeyValue({ storeKey })
-      .shoppingLists()
-      .get({
-        queryArgs: {
-          where: [`customer(id="${account.accountId}")`],
-          expand: expandVariants,
-        },
-      })
-      .execute()
-      .then((response) => {
-        return response.body.results.map((shoppingList) =>
-          WishlistMapper.commercetoolsShoppingListToWishlist(shoppingList, locale),
+        return WishlistMapper.commercetoolsShoppingListToWishlist(
+          response.body,
+          locale,
+          this.defaultLocale,
+          this.supplyChannelId,
         );
       })
       .catch((error) => {
@@ -97,30 +92,36 @@ export default class WishlistApi extends BaseApi {
       });
   };
 
-  create = async (wishlist: Wishlist) => {
+  create = async (account: Account, storeKey: string, name?: string, description?: string) => {
     const locale = await this.getCommercetoolsLocal();
-    const body = WishlistMapper.wishlistToCommercetoolsShoppingListDraft(wishlist, locale);
-    return await this.requestBuilder()
-      .inStoreKeyWithStoreKeyValue({ storeKey: wishlist?.store?.key })
+
+    const body: shoppingListDraft = {
+      customer: !account.accountId ? undefined : { typeId: 'customer', id: account.accountId },
+      name: { [locale.language]: name || 'Wishlist' },
+      description: { [locale.language]: description || '' },
+      store: !storeKey ? undefined : { typeId: 'store', key: storeKey },
+      businessUnit: { key: this.businessUnitKey, typeId: 'business-unit' },
+    };
+
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .post({
-        body: body,
+        body,
         queryArgs: {
           expand: expandVariants,
         },
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   };
 
-  delete = async (wishlist: Wishlist, storeKey: string) => {
-    await this.requestBuilder()
-      .inStoreKeyWithStoreKeyValue({ storeKey })
+  delete = async (wishlist: Wishlist) => {
+    await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlist.wishlistId })
       .delete({
@@ -137,7 +138,7 @@ export default class WishlistApi extends BaseApi {
   addToWishlist = async (wishlist: Wishlist, request: AddToWishlistRequest) => {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.requestBuilder()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlist.wishlistId })
       .post({
@@ -157,7 +158,12 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(
+          response.body,
+          locale,
+          this.defaultLocale,
+          this.supplyChannelId,
+        );
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -167,7 +173,7 @@ export default class WishlistApi extends BaseApi {
   removeLineItem = async (wishlist: Wishlist, lineItemId: string) => {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.requestBuilder()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlist.wishlistId })
       .post({
@@ -186,7 +192,12 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(
+          response.body,
+          locale,
+          this.defaultLocale,
+          this.supplyChannelId,
+        );
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -196,7 +207,7 @@ export default class WishlistApi extends BaseApi {
   updateLineItemCount = async (wishlist: Wishlist, lineItemId: string, count: number) => {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.requestBuilder()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlist.wishlistId })
       .post({
@@ -216,7 +227,12 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.supplyChannelId);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(
+          response.body,
+          locale,
+          this.defaultLocale,
+          this.supplyChannelId,
+        );
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -246,7 +262,7 @@ export default class WishlistApi extends BaseApi {
       });
     }
 
-    return await this.requestBuilder()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlist.wishlistId })
       .post({
@@ -260,7 +276,7 @@ export default class WishlistApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale);
+        return WishlistMapper.commercetoolsShoppingListToWishlist(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
@@ -293,7 +309,7 @@ export default class WishlistApi extends BaseApi {
       },
     };
 
-    return this.requestBuilder()
+    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .get({
         queryArgs: {
@@ -307,7 +323,12 @@ export default class WishlistApi extends BaseApi {
       .execute()
       .then((response) => {
         const wishlists = response.body.results.map((commercetoolsQuote) => {
-          return WishlistMapper.commercetoolsShoppingListToWishlist(commercetoolsQuote, locale, this.supplyChannelId);
+          return WishlistMapper.commercetoolsShoppingListToWishlist(
+            commercetoolsQuote,
+            locale,
+            this.defaultLocale,
+            this.supplyChannelId,
+          );
         });
 
         return {

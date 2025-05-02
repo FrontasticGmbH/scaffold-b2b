@@ -1,8 +1,0 @@
-{
-  "dynamicPageType": "frontastic/preview/category",
-  "name": "Category preview",
-  "category": "Previews",
-  "icon": "visibility",
-  "dataSourceType": "frontastic/preview/product-list",
-  "isMultiple": true
-}

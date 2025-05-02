@@ -102,7 +102,11 @@ export default class ProductApi extends BaseApi {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
-    const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(response.body.results, locale);
+    const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(
+      response.body.results,
+      locale,
+      this.defaultLocale,
+    );
 
     // Category filter. Not included as commercetools product type.
     filterFields.push({
@@ -128,6 +132,54 @@ export default class ProductApi extends BaseApi {
 
     return filterFields;
   };
+
+  async getProductFilters(): Promise<FilterField[]> {
+    const locale = await this.getCommercetoolsLocal();
+
+    const commercetoolsProductTypes = await this.getCommercetoolsProductTypes();
+
+    const filterFields: FilterField[] = [];
+
+    // Product type filter
+    filterFields.push({
+      field: 'productTypeId',
+      type: FilterFieldTypes.ENUM,
+      label: 'Product type',
+      values: commercetoolsProductTypes.map((item) => {
+        return {
+          value: item.id,
+          name: item.name,
+        };
+      }),
+    });
+
+    // Searchable attributes filter
+    filterFields.push(
+      ...ProductMapper.commercetoolsProductTypesToFilterFields(commercetoolsProductTypes, locale, this.defaultLocale),
+    );
+
+    filterFields.push(...(await this.getCategoryFilters()));
+
+    return filterFields;
+  }
+
+  async getCategoryFilters(): Promise<FilterField[]> {
+    return [
+      {
+        field: 'categoryRef',
+        type: FilterFieldTypes.ENUM,
+        label: 'Category',
+        values: await this.queryCategories({ limit: 250 }).then((result) => {
+          return result.items.map((item) => {
+            return {
+              value: item.categoryRef,
+              name: item.name,
+            };
+          });
+        }),
+      },
+    ];
+  }
 
   queryFacetCategoriesForSubtree: (storeId?: string) => Promise<any> = async (storeId?: string) => {
     const query: ProductSearchRequest = {

@@ -6,10 +6,10 @@ import useOnClickOutside from '@/hooks/useOnClickOutside';
 import useScrollBlock from '@/hooks/useScrollBlock';
 import Button from '@/components/atoms/button';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useTranslations } from 'use-intl';
 import { DrawerProps } from './types';
 import useClassNames from './hooks/useClassNames';
 import Overlay from '../../atoms/overlay';
-import { useTranslations } from 'use-intl';
 
 const Drawer = ({
   className = '',

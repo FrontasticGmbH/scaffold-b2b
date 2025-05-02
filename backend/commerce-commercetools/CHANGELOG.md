@@ -1,4 +1,19 @@
 
+## Version 2.3.1 (2025-04-15)
+
+
+** New Features & Improvements **
+
+* Update permissions
+* Make changes to getAssociate logic
+* Use new endpoint for getAssociate action
+
+
+** Bug Fixes **
+
+* Add productSlug to LineItem mapping
+* Aligend discount code to not  add the cart gift and handle invalid discount codes
+
 ## Version 2.3.0 (2025-04-07)
 
 ** New Features & Improvements **

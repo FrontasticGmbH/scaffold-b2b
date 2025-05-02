@@ -8,9 +8,8 @@ import {
   BusinessUnitUpdateAction,
 } from '@commercetools/platform-sdk';
 import { Store } from '@Types/store/Store';
-import { Associate } from '@Types/business-unit/Associate';
+import { Associate, AssociateRole } from '@Types/business-unit/Associate';
 import { Account } from '@Types/account/Account';
-import { AssociateRole } from '@Types/business-unit/Associate';
 import { Address } from '@Types/account';
 import { ApprovalFlow, ApprovalFlowsQuery, ApprovalRule } from '@Types/business-unit';
 import { PaginatedResult } from '@Types/result';

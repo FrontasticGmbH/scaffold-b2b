@@ -34,13 +34,6 @@
           "type": "text",
           "default": "",
           "translatable": false
-        },
-        {
-          "label": "Product Selection IDs",
-          "field": "productSelectionIds",
-          "type": "text",
-          "default": "",
-          "translatable": false
         }
       ]
     },
@@ -48,10 +41,10 @@
       "name": "Filters",
       "fields": [
         {
-          "label": "Attribute filters",
+          "label": "Product dynamic filters",
           "field": "productFilters",
           "type": "dynamic-filter",
-          "dynamicFilterEndpoint": "/frontastic/action/product/searchableAttributes"
+          "dynamicFilterEndpoint": "/frontastic/action/product/productFilters"
         }
       ]
     }

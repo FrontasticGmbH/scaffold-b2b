@@ -5,21 +5,14 @@ import { getPath } from '../requestHandlers/Request';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 
 const orderRegex = /\/order\/([^\/]+)/;
 const ordersRegex = /\/orders/;
-const orderPreviewRegex = /\/preview\/.+\/order\/([^\/]+)/;
-const ordersPreviewRegex = /\/preview\/.+\/orders/;
 const thankYouRegex = /\/thank-you/;
 
 export default class CartRouter {
   static identifyOrderFrom(request: Request) {
-    if (
-      getPath(request)?.match(orderRegex) ||
-      getPath(request)?.match(orderPreviewRegex) ||
-      getPath(request)?.match(thankYouRegex)
-    ) {
+    if (getPath(request)?.match(orderRegex) || getPath(request)?.match(thankYouRegex)) {
       return true;
     }
 
@@ -27,7 +20,7 @@ export default class CartRouter {
   }
 
   static identifyOrdersFrom(request: Request) {
-    if (getPath(request)?.match(ordersRegex) || getPath(request)?.match(ordersPreviewRegex)) {
+    if (getPath(request)?.match(ordersRegex)) {
       return true;
     }
 
@@ -36,12 +29,6 @@ export default class CartRouter {
 
   static loadOrderFor = async (request: Request, commercetoolsFrontendContext: Context): Promise<Order> => {
     let urlMatches = getPath(request)?.match(orderRegex);
-
-    if (urlMatches) {
-      return await this.getOrder(request, commercetoolsFrontendContext, urlMatches[1]);
-    }
-
-    urlMatches = getPath(request)?.match(orderPreviewRegex);
 
     if (urlMatches) {
       return await this.getOrder(request, commercetoolsFrontendContext, urlMatches[1]);
@@ -59,13 +46,8 @@ export default class CartRouter {
     request: Request,
     commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<Order>> => {
-    let urlMatches = getPath(request)?.match(ordersRegex);
+    const urlMatches = getPath(request)?.match(ordersRegex);
 
-    if (urlMatches) {
-      return await this.getOrders(request, commercetoolsFrontendContext);
-    }
-
-    urlMatches = getPath(request)?.match(ordersPreviewRegex);
     if (urlMatches) {
       return await this.getOrders(request, commercetoolsFrontendContext);
     }
@@ -76,10 +58,6 @@ export default class CartRouter {
   static getOrderPageType(request: Request) {
     if (getPath(request)?.match(orderRegex)) {
       return 'frontastic/order-page';
-    }
-
-    if (getPath(request)?.match(orderPreviewRegex)) {
-      return 'frontastic/preview/order-page';
     }
 
     if (getPath(request)?.match(thankYouRegex)) {

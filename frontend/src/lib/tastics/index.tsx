@@ -35,6 +35,7 @@ import ApprovalFlowsTastic from './approval-flows';
 import RelatedProductSliderTastic from './related-products-slider';
 import ApprovalFlowDetailsTastic from './approval-flow-details';
 import MarkdownTastic from './markdown';
+import BannerTastic from './banner';
 import type { TasticRegistry } from './types';
 
 const tastics = {
@@ -46,6 +47,7 @@ const tastics = {
   'commercetools/ui/dashboard': DashboardTastic,
   'commercetools/ui/not-found': NotFoundTastic,
   'commercetools/ui/content/blog': BlogTastic,
+  'commercetools/ui/content/banner': BannerTastic,
   'commercetools/ui/header': HeaderTastic,
   'commercetools/ui/products/details': ProductDetailsTastic,
   'commercetools/ui/products/product-list': ProductListTastic,

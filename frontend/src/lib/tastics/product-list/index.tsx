@@ -17,10 +17,11 @@ const ProductListTastic = async ({
   searchParams,
   flatCategories = [],
   treeCategories = [],
+  params,
 }: TasticProps<DataSource<DataSourceProps> & Props>) => {
   if (!data.data?.dataSource) return <></>;
 
-  const slug = data.data.dataSource?.category?.split('/')?.at(-1) ?? '';
+  const slug = params.slug?.at(-1) ?? '';
 
   const category = flatCategories.find((c) => c.slug === slug);
   const treeCategory = treeCategories.find((c) => c.slug === slug);

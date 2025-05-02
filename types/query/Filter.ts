@@ -1,8 +1,8 @@
 export enum FilterTypes {
   BOOLEAN = 'boolean',
   ENUM = 'enum',
-  TERM = 'term',
   RANGE = 'range',
+  TERM = 'term',
 }
 
 export interface Filter {

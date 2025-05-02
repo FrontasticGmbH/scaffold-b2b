@@ -39,7 +39,15 @@ export type Permission =
   | 'ViewOthersCarts'
   | 'ViewOthersOrders'
   | 'ViewOthersQuoteRequests'
-  | 'ViewOthersQuotes';
+  | 'ViewOthersQuotes'
+  | 'ViewMyShoppingLists'
+  | 'ViewOthersShoppingLists'
+  | 'CreateMyShoppingLists'
+  | 'CreateOthersShoppingLists'
+  | 'DeleteMyShoppingLists'
+  | 'DeleteOthersShoppingLists'
+  | 'UpdateMyShoppingLists'
+  | 'UpdateOthersShoppingLists'
 
 export interface AssociateRole {
   key?: string;
