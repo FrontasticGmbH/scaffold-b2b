@@ -2,7 +2,6 @@ import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
@@ -14,13 +13,12 @@ export class CartFetcher {
       return cart;
     }
 
-    const account = fetchAccountFromSession(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const storeKey = getStoreKey(request);
 
-    if (!account || !businessUnitKey || !storeKey) {
+    if (!businessUnitKey || !storeKey) {
       throw new ValidationError({
-        message: 'Cart can not be fetch without account, business unit key, and store key',
+        message: 'Cart can not be fetch without business unit key and store key',
       });
     }
 
@@ -29,12 +27,11 @@ export class CartFetcher {
 
   static async fetchActiveCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
     const cartId = request.sessionData?.cartId;
-    const account = fetchAccountFromSession(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const storeKey = getStoreKey(request);
 
-    // In B2B we use associate endpoints so we need to validate the account, business unit key, and store key for the cart
-    if (!account || !businessUnitKey || !storeKey) {
+    // In B2B we use associate endpoints so we need to validate the business unit key and store key for the cart
+    if (!businessUnitKey || !storeKey) {
       return undefined;
     }
 

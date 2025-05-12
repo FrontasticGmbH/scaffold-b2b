@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Dashboard from '@/components/pages/dashboard';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
@@ -15,6 +15,7 @@ import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import useProjectSettings from '@/lib/hooks/useProjectSettings';
 import { mapCountry } from '@/utils/mappers/map-country';
+import { mutate } from 'swr';
 import useBusinessUnit from '../../hooks/useBusinessUnit';
 import useSubPath from '../../hooks/useSubPath';
 import useRefinements from '../../hooks/useRefinements';
@@ -39,14 +40,42 @@ const ApprovalRulesTastic = () => {
 
   const { account } = useAccount();
 
-  const { page, limit, setLimit, cursor, setCursor } = useRefinements();
+  const [activeTab, setActiveTab] = useState<'active' | 'inactive'>('active');
+
+  const activeRefinements = useRefinements();
+  const inactiveRefinements = useRefinements();
+
+  const { page, limit, setLimit, cursor, setCursor } = activeTab === 'active' ? activeRefinements : inactiveRefinements;
+
+  const activeApprovalRules = useApprovalRules({
+    businessUnitKey: activeBusinessUnit?.key,
+    storeKey: activeBusinessUnit.stores?.[0].key,
+    filters: { cursor, limit, statuses: ['Active'] },
+  });
+  const inactiveApprovalRules = useApprovalRules({
+    businessUnitKey: activeBusinessUnit?.key,
+    storeKey: activeBusinessUnit.stores?.[0].key,
+    filters: { cursor, limit, statuses: ['Inactive'] },
+  });
 
   const { approvalRules, isLoading, totalItems, previousCursor, nextCursor, createApprovalRule, updateApprovalRule } =
-    useApprovalRules({
-      businessUnitKey: activeBusinessUnit?.key,
-      storeKey: activeBusinessUnit.stores?.[0].key,
-      filters: { cursor, limit },
-    });
+    activeTab === 'active' ? activeApprovalRules : inactiveApprovalRules;
+
+  const updateApprovalRuleWithMutation = useCallback(
+    async (...params: Parameters<typeof updateApprovalRule>) => {
+      const res = await updateApprovalRule(...params);
+      if (!!res?.approvalRuleId) {
+        mutate(
+          (key) =>
+            Array.isArray(key) &&
+            key?.[0] === '/action/business-unit/queryApprovalRules' &&
+            key?.[1] === activeBusinessUnit?.key,
+        );
+      }
+      return res;
+    },
+    [updateApprovalRule, activeBusinessUnit?.key],
+  );
 
   const { data: rolesData } = useRoles();
 
@@ -58,6 +87,8 @@ const ApprovalRulesTastic = () => {
     initialBusinessUnit: activeBusinessUnit?.key,
     onBusinessUnitChange: onBusinessUnitSelected,
     approvalRules: approvalRules.map((rule) => mapApprovalRule(rule, approvalRulesConfig)),
+    activeTab,
+    onTabChange: setActiveTab,
     loading: isLoading,
     roles: rolesData.map((role) => ({ name: role.name, value: role.key })),
     rulesCriteria: Object.entries(approvalRulesConfig).map(([key, config]) => ({
@@ -74,7 +105,7 @@ const ApprovalRulesTastic = () => {
           key === 'country' || key === 'currency'
             ? value.name
             : // eslint-disable-next-line
-          // @ts-ignore
+              // @ts-ignore
               translate(value.name),
         value: value.value,
       })),
@@ -114,7 +145,9 @@ const ApprovalRulesTastic = () => {
     async onSubmit(approvalRule) {
       const cocoApprovalRule = mapCoCoApprovalRule(approvalRule, approvalRulesConfig);
 
-      const response = await (id ? updateApprovalRule(id, cocoApprovalRule) : createApprovalRule(cocoApprovalRule));
+      const response = await (id
+        ? updateApprovalRuleWithMutation(id, cocoApprovalRule)
+        : createApprovalRule(cocoApprovalRule));
 
       const success = !!response?.approvalRuleId;
 

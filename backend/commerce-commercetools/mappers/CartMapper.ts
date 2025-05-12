@@ -16,6 +16,8 @@ import {
   CartDiscount as CommercetoolsCartDiscount,
   DirectDiscount as CommercetoolsDirectDiscount,
   ShippingRate as CommercetoolsShippingRate,
+  CartDiscountTarget as CommercetoolsCartDiscountTarget,
+  SelectionMode as CommercetoolsSelectionMode,
 } from '@commercetools/platform-sdk';
 import { LineItem, LineItemShippingAddress } from '@Types/cart/LineItem';
 import { Cart, CartOrigin, CartState } from '@Types/cart/Cart';
@@ -60,6 +62,7 @@ import {
   ZoneRate as CommercetoolsZoneRate,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shipping-method';
 import { Payment as CommercetoolsPayment } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
+import { CartDiscountSelectionMode, CartDiscountTarget } from '@Types/cart/Discount';
 import ProductRouter from '../utils/routers/ProductRouter';
 import ProductMapper from './ProductMapper';
 import AccountMapper from './AccountMapper';
@@ -542,7 +545,54 @@ export default class CartMapper {
       discountValue: commercetoolsCartDiscount.value
         ? this.commercetoolsCartDiscountValueToCartDiscountValue(commercetoolsCartDiscount.value, locale)
         : undefined,
+      cartPredicate: commercetoolsCartDiscount.cartPredicate,
+      target: commercetoolsCartDiscount.target
+        ? this.commercetoolsCartDiscountTargetToCartDiscountTarget(commercetoolsCartDiscount.target)
+        : undefined,
     };
+  }
+
+  static commercetoolsCartDiscountTargetToCartDiscountTarget(
+    commercetoolsCartDiscountTarget: CommercetoolsCartDiscountTarget,
+  ): CartDiscountTarget | undefined {
+    switch (commercetoolsCartDiscountTarget.type) {
+      case 'lineItems':
+        return {
+          type: 'lineItems',
+          predicate: commercetoolsCartDiscountTarget.predicate,
+        };
+      case 'pattern':
+        return {
+          type: 'pattern',
+          maxOccurrence: commercetoolsCartDiscountTarget.maxOccurrence,
+          selectionMode: this.commercetoolsSelectionModeToCartDiscountSelectionMode(
+            commercetoolsCartDiscountTarget.selectionMode,
+          ),
+        };
+      case 'shipping':
+        return {
+          type: 'shipping',
+        };
+      case 'totalPrice':
+        return {
+          type: 'totalPrice',
+        };
+      default:
+        return undefined;
+    }
+  }
+
+  static commercetoolsSelectionModeToCartDiscountSelectionMode(
+    commercetoolsSelectionMode: CommercetoolsSelectionMode,
+  ): CartDiscountSelectionMode | undefined {
+    switch (commercetoolsSelectionMode) {
+      case 'Cheapest':
+        return 'Cheapest';
+      case 'MostExpensive':
+        return 'MostExpensive';
+      default:
+        return undefined;
+    }
   }
 
   static commercetoolsDiscountedPricesPerQuantityToDiscountTexts(

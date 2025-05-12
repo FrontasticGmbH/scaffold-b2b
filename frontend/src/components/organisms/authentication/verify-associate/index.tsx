@@ -1,6 +1,5 @@
-import { ChangeEvent, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslations } from 'use-intl';
-import { InputProps } from '@/components/atoms/input/types';
 import toast from '@/components/atoms/toaster/helpers/toast';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
@@ -16,78 +15,70 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
 
   const { validatePassword } = useValidate();
 
-  const [passwordError, setPasswordError] = useState('');
-  const [data, setData] = useState({
-    firstName: '',
-    lastName: '',
-    password: '',
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<VerifyAssociateInput>({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      password: '',
+    },
   });
 
-  const inputArray = [
-    { label: translate('common.firstName'), name: 'firstName' },
-    { label: translate('common.lastName'), name: 'lastName' },
-  ];
-
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = target;
-    if (name === 'password' && passwordError) setPasswordError('');
-    setData({ ...data, [name]: value });
-  };
-
-  const commonProps: InputProps = {
-    onChange: (e) => handleChange(e),
-    containerClassName: 'w-full',
-    className: 'w-full',
-  };
-
-  const handleOnSubmit = () => {
+  const onFormSubmit = async (data: VerifyAssociateInput) => {
     const isValidPassword = validatePassword(data.password);
     if (!isValidPassword) {
-      setPasswordError(translate('error.password-not-valid'));
+      setError('password', { type: 'manual', message: translate('error.password-not-valid') });
       return;
     }
 
-    onSubmit(data)
-      .then(() => {
-        router.refresh();
-      })
-      .catch(() => {
-        toast.error(translate('error.wentWrong'));
-      });
+    try {
+      await onSubmit(data);
+      router.refresh();
+    } catch {
+      toast.error(translate('error.wentWrong'));
+    }
   };
 
   return (
     <AuthLayout image={image} logo={logo} logoLink={logoLink}>
       <AuthForm
-        title={translate('account.account-join-title', {
-          company,
-        })}
-        subtitle={translate('account.account-join-subtitle', {
-          company,
-        })}
+        title={translate('account.account-join-title', { company })}
+        subtitle={translate('account.account-join-subtitle', { company })}
         buttonLabel={translate('account.account-register')}
         footerLabel={translate('account.by-registering')}
         footerLink="/"
         footerLinkLabel={translate('account.terms-of-use')}
-        onSubmit={handleOnSubmit}
+        onSubmit={handleSubmit(onFormSubmit)}
       >
-        {inputArray.map(({ label, name }) => (
-          <Input
-            key={name}
-            name={name}
-            value={data[name as keyof Omit<VerifyAssociateInput, 'password'>]}
-            required
-            label={label}
-            {...commonProps}
-          />
-        ))}
-        <PasswordInput
-          name="password"
-          value={data.password}
-          error={passwordError}
+        <Input
+          label={translate('common.firstName')}
+          containerClassName="w-full"
+          className="w-full"
           required
+          {...register('firstName')}
+          error={errors.firstName?.message}
+        />
+
+        <Input
+          label={translate('common.lastName')}
+          containerClassName="w-full"
+          className="w-full"
+          required
+          {...register('lastName')}
+          error={errors.lastName?.message}
+        />
+
+        <PasswordInput
           label={translate('account.password')}
-          {...commonProps}
+          containerClassName="w-full"
+          className="w-full"
+          required
+          {...register('password')}
+          error={errors.password?.message}
         />
       </AuthForm>
     </AuthLayout>

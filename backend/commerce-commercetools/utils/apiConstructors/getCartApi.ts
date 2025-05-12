@@ -1,6 +1,5 @@
 import { Context, Request } from '@frontastic/extension-types';
 import CartApi from '../../apis/CartApi';
-import { fetchAccountFromSession } from '../fetchAccountFromSession';
 import {
   getBusinessUnitKey,
   getCurrency,
@@ -8,12 +7,10 @@ import {
   getLocale,
   getSupplyChannelId,
 } from '../requestHandlers/Request';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
+import { AccountFetcher } from '../AccountFetcher';
 
 const getCartApi = (request: Request, actionContext: Context): CartApi => {
-  assertIsAuthenticated(request);
-
-  const account = fetchAccountFromSession(request);
+  const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
   const businessUnitKey = getBusinessUnitKey(request);
   const distributionChannelId = getDistributionChannelId(request);
   const supplyChannelId = getSupplyChannelId(request);
@@ -22,7 +19,7 @@ const getCartApi = (request: Request, actionContext: Context): CartApi => {
     actionContext,
     getLocale(request),
     getCurrency(request),
-    account.accountId,
+    accountId,
     businessUnitKey,
     distributionChannelId,
     supplyChannelId,

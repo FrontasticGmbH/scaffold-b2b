@@ -5,10 +5,8 @@ import { ValidationError } from '../errors/ValidationError';
 import { getLocale } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
-import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
+import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BusinessUnitFormatter';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
@@ -16,6 +14,7 @@ import { BusinessUnitDuplicatedError } from '@Commerce-commercetools/errors/Busi
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
 import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
+import { AccountFetcher } from '@Commerce-commercetools/utils/AccountFetcher';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -80,8 +79,8 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
     body: JSON.stringify(loggedInAccount),
     sessionData: {
       ...request.sessionData,
+      ...(loggedInAccount ? { accountId: loggedInAccount.accountId } : {}),
       ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
-      account: loggedInAccount,
       businessUnitKey,
       storeKey,
       storeId,
@@ -92,11 +91,11 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
   };
 }
 
-export const getAccount: ActionHook = async (request: Request) => {
+export const getAccount: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSession(request);
 
-    if (account === undefined) {
+    if (!accountId) {
       return {
         statusCode: 200,
         body: JSON.stringify({
@@ -104,6 +103,9 @@ export const getAccount: ActionHook = async (request: Request) => {
         }),
       };
     }
+
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
+    const account = await accountApi.getById(accountId);
 
     const response: Response = {
       statusCode: 200,
@@ -113,7 +115,6 @@ export const getAccount: ActionHook = async (request: Request) => {
       }),
       sessionData: {
         ...request.sessionData,
-        account: account,
       },
     };
 
@@ -127,11 +128,11 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
   try {
     const locale = getLocale(request);
 
-    const accountData = AccountMapper.requestToAccount(request);
+    const account = AccountMapper.requestToAccount(request);
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    if (accountData.companyName === undefined) {
+    if (account.companyName === undefined) {
       throw new ValidationError({ message: `The account passed doesn't contain a company.` });
     }
 
@@ -140,13 +141,13 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
     let businessUnit = undefined;
 
-    const businessUnitKey = businessUnitKeyFormatter(accountData.companyName);
+    const businessUnitKey = businessUnitKeyFormatter(account.companyName);
     try {
       // Check if the business unit already exists. An error will be thrown if the business unit does not exist.
       businessUnit = await businessUnitApi.getByKey(businessUnitKey);
 
       if (businessUnit !== undefined) {
-        throw new BusinessUnitDuplicatedError({ message: `The company ${accountData.companyName} already exists.` });
+        throw new BusinessUnitDuplicatedError({ message: `The company ${account.companyName} already exists.` });
       }
     } catch (error) {
       // The business unit does not exist, so we can create a new one for the given company name.
@@ -157,63 +158,31 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
 
     const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
 
-    const account = await accountApi.create(accountData, cart);
+    const createdAccount = await accountApi.create(account, cart);
 
     // Create the business unit for the account
-    await businessUnitApi.createForAccount(account);
+    await businessUnitApi.createForAccount(createdAccount.accountId, createdAccount);
 
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, locale);
 
-    emailApi.sendWelcomeCustomerEmail(account);
+    emailApi.sendWelcomeCustomerEmail(createdAccount);
 
-    if (!account.confirmed) {
-      emailApi.sendAccountVerificationEmail(account);
+    if (!createdAccount.confirmed) {
+      emailApi.sendAccountVerificationEmail(createdAccount);
     }
 
     // We are unsetting the confirmationToken to avoid exposing it to the client
-    account.confirmationToken = null;
+    createdAccount.confirmationToken = null;
 
     const response: Response = {
       statusCode: 200,
-      body: JSON.stringify(account),
+      body: JSON.stringify(createdAccount),
       sessionData: {
         ...request.sessionData,
       },
     };
 
     return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const deleteAccount: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
-
-    const accountDeleteBody = parseRequestBody<{ password: string }>(request.body);
-
-    const accountApi = getAccountApi(request, actionContext.frontasticContext);
-
-    account = {
-      email: account.email,
-      password: accountDeleteBody.password,
-    } as Account;
-
-    const { account: loggedInAccount } = await accountApi.login(account, undefined);
-
-    await accountApi.delete(loggedInAccount);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(null),
-      sessionData: {
-        ...request.sessionData,
-        account: null,
-      },
-    };
   } catch (error) {
     return handleError(error, request);
   }
@@ -242,8 +211,8 @@ export const requestConfirmationEmail: ActionHook = async (request: Request, act
         body: JSON.stringify(`Your email address "${loggedInAccount.email}" was verified already.`),
         sessionData: {
           ...accountApi.getSessionData(),
+          ...(loggedInAccount ? { accountId: loggedInAccount.accountId } : {}),
           ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
-          account: loggedInAccount,
         },
       };
 
@@ -285,7 +254,7 @@ export const confirm: ActionHook = async (request: Request, actionContext: Actio
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account: account,
+        ...(account ? { accountId: account.accountId } : {}),
       },
     };
 
@@ -316,7 +285,7 @@ export const logout: ActionHook = async (request: Request) => {
     body: JSON.stringify({}),
     sessionData: {
       ...request.sessionData,
-      account: undefined,
+      accountId: undefined,
       cartId: undefined,
       wishlistId: undefined,
       businessUnitKey: undefined,
@@ -324,6 +293,7 @@ export const logout: ActionHook = async (request: Request) => {
       storeId: undefined,
       distributionChannelId: undefined,
       supplyChannelId: undefined,
+      productSelectionId: undefined,
     },
   } as Response;
 };
@@ -333,16 +303,14 @@ export const logout: ActionHook = async (request: Request) => {
  */
 export const password: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
     const accountChangePasswordBody: AccountChangePasswordBody = JSON.parse(request.body);
 
-    account = await accountApi.updatePassword(
-      account,
+    const account = await accountApi.updatePassword(
+      accountId,
       accountChangePasswordBody.oldPassword,
       accountChangePasswordBody.newPassword,
     );
@@ -352,7 +320,6 @@ export const password: ActionHook = async (request: Request, actionContext: Acti
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     } as Response;
   } catch (error) {
@@ -385,8 +352,7 @@ export const requestReset: ActionHook = async (request: Request, actionContext: 
       body: JSON.stringify({}),
       sessionData: {
         ...request.sessionData,
-        // TODO: should we redirect to logout rather to unset the account?
-        account: undefined,
+        accountId: undefined,
       },
     };
   } catch (error) {
@@ -419,30 +385,27 @@ export const reset: ActionHook = async (request: Request, actionContext: ActionC
 
 export const update: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
     const emailApi = EmailApiFactory.getDefaultApi(actionContext.frontasticContext, getLocale(request));
 
-    account = {
-      ...account,
-      ...AccountMapper.requestToAccount(request),
-    };
+    const account = AccountMapper.requestToAccount(request);
 
-    account = await accountApi.update(account);
+    const updatedAccount = await accountApi.update(accountId, account);
 
-    if (!account.confirmed) {
-      emailApi.sendAccountVerificationEmail(account);
+    if (!updatedAccount.confirmed) {
+      emailApi.sendAccountVerificationEmail(updatedAccount);
     }
+
+    // We are unsetting the confirmationToken to avoid exposing it to the client
+    updatedAccount.confirmationToken = null;
 
     return {
       statusCode: 200,
-      body: JSON.stringify(account),
+      body: JSON.stringify(updatedAccount),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -452,22 +415,19 @@ export const update: ActionHook = async (request: Request, actionContext: Action
 
 export const addAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const address: Address = JSON.parse(request.body).address;
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.addAddress(account, address);
+    const account = await accountApi.addAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -477,22 +437,19 @@ export const addAddress: ActionHook = async (request: Request, actionContext: Ac
 
 export const addShippingAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const address: Address = JSON.parse(request.body).address;
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.addShippingAddress(account, address);
+    const account = await accountApi.addShippingAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -502,22 +459,19 @@ export const addShippingAddress: ActionHook = async (request: Request, actionCon
 
 export const addBillingAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const address: Address = JSON.parse(request.body).address;
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.addBillingAddress(account, address);
+    const account = await accountApi.addBillingAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -527,22 +481,19 @@ export const addBillingAddress: ActionHook = async (request: Request, actionCont
 
 export const updateAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const address: Address = JSON.parse(request.body).address;
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.updateAddress(account, address);
+    const account = await accountApi.updateAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -552,9 +503,7 @@ export const updateAddress: ActionHook = async (request: Request, actionContext:
 
 export const removeAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const body: {
       address?: { id?: string };
@@ -566,14 +515,13 @@ export const removeAddress: ActionHook = async (request: Request, actionContext:
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.removeAddress(account, address);
+    const account = await accountApi.removeAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -583,22 +531,19 @@ export const removeAddress: ActionHook = async (request: Request, actionContext:
 
 export const setDefaultBillingAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const address: Address = JSON.parse(request.body);
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.setDefaultBillingAddress(account, address);
+    const account = await accountApi.setDefaultBillingAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
       },
     };
   } catch (error) {
@@ -608,22 +553,50 @@ export const setDefaultBillingAddress: ActionHook = async (request: Request, act
 
 export const setDefaultShippingAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    let account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const address: Address = JSON.parse(request.body);
 
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    account = await accountApi.setDefaultShippingAddress(account, address);
+    const account = await accountApi.setDefaultShippingAddress(accountId, address);
 
     return {
       statusCode: 200,
       body: JSON.stringify(account),
       sessionData: {
         ...request.sessionData,
-        account,
+      },
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const deleteAccount: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
+
+    const accountDeleteBody = parseRequestBody<{ password: string }>(request.body);
+
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
+
+    const account = {
+      email: (await accountApi.getById(accountId)).email,
+      password: accountDeleteBody.password,
+    } as Account;
+
+    // Try to login the account with the provided password before deleting it
+    const { account: loggedInAccount } = await accountApi.login(account, undefined);
+
+    await accountApi.delete(loggedInAccount);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(null),
+      sessionData: {
+        ...request.sessionData,
+        accountId: undefined,
       },
     };
   } catch (error) {

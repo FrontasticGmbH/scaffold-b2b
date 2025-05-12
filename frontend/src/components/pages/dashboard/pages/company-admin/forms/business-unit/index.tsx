@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
@@ -14,39 +15,34 @@ const BusinessUnitForm = ({
   storeName,
 }: CompanyAdminPageProps) => {
   const translate = useTranslations();
-
   const { showSavedMessage, showFailedMessage } = useEntityToasters('businessunit');
-
   const router = useRouter();
-
   const params = useSearchParams();
-
   const id = params.get('id');
 
-  const defaultValues = (businessUnits.find((associate) => associate.id === id) ?? {}) as Partial<BusinessUnit>;
+  const defaultValues = (businessUnits.find((bu) => bu.id === id) ?? {}) as Partial<BusinessUnitPayload>;
 
-  const [data, setData] = useState<Partial<BusinessUnitPayload>>(defaultValues);
+  const { register, handleSubmit } = useForm<Partial<BusinessUnitPayload>>({
+    defaultValues,
+  });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data],
-  );
+  const onSubmit = async (formData: Partial<BusinessUnitPayload>) => {
+    if (!formData.name || !formData.email) return;
 
-  const handleSubmit = useCallback(async () => {
-    const success = await (id ? onUpdateBusinessUnit?.(data) : onAddBusinessUnit?.(data as BusinessUnitPayload));
+    const success = await (id
+      ? onUpdateBusinessUnit?.(formData)
+      : onAddBusinessUnit?.({ name: formData.name, email: formData.email } as BusinessUnit));
 
     if (success) showSavedMessage();
     else showFailedMessage();
 
     router.back();
-  }, [onAddBusinessUnit, onUpdateBusinessUnit, data, id, router, showSavedMessage, showFailedMessage]);
+  };
 
   return (
     <EntityForm
       translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={router.back}
     >
       <div className="flex flex-col gap-4">
@@ -57,20 +53,17 @@ const BusinessUnitForm = ({
         )}
         {id && <p>{translate('dashboard.entity-update-how-to-delete')}</p>}
         <Input
-          name="name"
           label={translate('common.name')}
           required
-          value={data.name ?? ''}
-          onChange={handleChange}
           containerClassName="max-w-[400px]"
+          {...register('name', { required: true })}
         />
+
         <Input
-          name="email"
           label={translate('common.email')}
           required
-          value={data.email ?? ''}
-          onChange={handleChange}
           containerClassName="max-w-[400px]"
+          {...register('email', { required: true })}
         />
       </div>
     </EntityForm>

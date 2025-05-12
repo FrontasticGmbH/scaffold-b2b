@@ -3,6 +3,7 @@ import { AccountToken } from './AccountToken';
 
 export interface Account {
   accountId?: string;
+  accountVersion?: number;
   email?: string;
   salutation?: string;
   firstName?: string;
@@ -15,7 +16,6 @@ export interface Account {
   addresses?: Address[];
   apiToken?: string;
   vatNumber?: string;
-  version?: number;
   accountGroupId?: string;
 }
 

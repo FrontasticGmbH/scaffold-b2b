@@ -2,9 +2,9 @@ import { Context, Request } from '@frontastic/extension-types';
 import { ApprovalFlow, ApprovalFlowsQuery, ApprovalRule, ApprovalRuleQuery } from '@Types/business-unit';
 import { PaginatedResult } from '@Types/result';
 import getBusinessUnitApi from '../apiConstructors/getBusinessUnitApi';
+import { AccountFetcher } from '../AccountFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 import { getBusinessUnitKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
 import getPathParametersWithRegex from '@Commerce-commercetools/utils/requestHandlers/getPathParametersWithRegex';
@@ -35,7 +35,7 @@ export default class ApprovalRouter {
     request: Request,
     commercetoolsFrontendContext: Context,
   ): Promise<ApprovalFlow> => {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const businessUnitApi = getBusinessUnitApi(request, commercetoolsFrontendContext);
 
@@ -45,7 +45,7 @@ export default class ApprovalRouter {
       const approvalFlowQuery = this.buildApprovalFlowsQuery(request);
       approvalFlowQuery.approvalFlowIds = [urlMatches[1]];
 
-      const response = await businessUnitApi.queryApprovalFlows(businessUnitKey, account.accountId, approvalFlowQuery);
+      const response = await businessUnitApi.queryApprovalFlows(businessUnitKey, accountId, approvalFlowQuery);
 
       return response.items[0];
     }
@@ -57,7 +57,7 @@ export default class ApprovalRouter {
     request: Request,
     commercetoolsFrontendContext: Context,
   ): Promise<ApprovalRule> => {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const businessUnitApi = getBusinessUnitApi(request, commercetoolsFrontendContext);
 
@@ -67,7 +67,7 @@ export default class ApprovalRouter {
       const query = this.buildApprovalRulesQuery(request);
       query.approvalRuleIds = [urlMatches[1]];
 
-      const response = await businessUnitApi.queryApprovalRules(businessUnitKey, account.accountId, query);
+      const response = await businessUnitApi.queryApprovalRules(businessUnitKey, accountId, query);
 
       return response.items[0];
     }
@@ -79,7 +79,7 @@ export default class ApprovalRouter {
     request: Request,
     commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<ApprovalFlow>> => {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const businessUnitApi = getBusinessUnitApi(request, commercetoolsFrontendContext);
 
@@ -88,7 +88,7 @@ export default class ApprovalRouter {
     if (urlMatches) {
       const approvalFlowQuery = this.buildApprovalFlowsQuery(request);
 
-      return await businessUnitApi.queryApprovalFlows(businessUnitKey, account.accountId, approvalFlowQuery);
+      return await businessUnitApi.queryApprovalFlows(businessUnitKey, accountId, approvalFlowQuery);
     }
 
     return null;
@@ -98,7 +98,7 @@ export default class ApprovalRouter {
     request: Request,
     commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<ApprovalRule>> => {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const businessUnitApi = getBusinessUnitApi(request, commercetoolsFrontendContext);
 
@@ -107,7 +107,7 @@ export default class ApprovalRouter {
     if (urlMatches) {
       const approvalRuleQuery = this.buildApprovalRulesQuery(request);
 
-      return await businessUnitApi.queryApprovalRules(businessUnitKey, account.accountId, approvalRuleQuery);
+      return await businessUnitApi.queryApprovalRules(businessUnitKey, accountId, approvalRuleQuery);
     }
 
     return null;

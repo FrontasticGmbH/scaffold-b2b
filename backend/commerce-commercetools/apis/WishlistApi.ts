@@ -42,10 +42,10 @@ export default class WishlistApi extends BaseApi {
     this.businessUnitKey = businessUnitKey;
   }
 
-  getForAccount = async (account: Account) => {
+  getForAccount = async (accountId: string) => {
     const locale = await this.getCommercetoolsLocal();
 
-    return await this.associateEndpoints(account.accountId, this.businessUnitKey)
+    return await this.associateEndpoints(accountId, this.businessUnitKey)
       .shoppingLists()
       .get({
         queryArgs: {
@@ -68,9 +68,9 @@ export default class WishlistApi extends BaseApi {
       });
   };
 
-  getByIdForAccount = async (wishlistId: string, account: Account) => {
+  getByIdForAccount = async (wishlistId: string, accountId: string) => {
     const locale = await this.getCommercetoolsLocal();
-    return await this.associateEndpoints(account.accountId, this.businessUnitKey)
+    return await this.associateEndpoints(accountId, this.businessUnitKey)
       .shoppingLists()
       .withId({ ID: wishlistId })
       .get({
@@ -92,11 +92,11 @@ export default class WishlistApi extends BaseApi {
       });
   };
 
-  create = async (account: Account, storeKey: string, name?: string, description?: string) => {
+  create = async (accountId: string, storeKey: string, name?: string, description?: string) => {
     const locale = await this.getCommercetoolsLocal();
 
     const body: shoppingListDraft = {
-      customer: !account.accountId ? undefined : { typeId: 'customer', id: account.accountId },
+      customer: { typeId: 'customer', id: accountId },
       name: { [locale.language]: name || 'Wishlist' },
       description: { [locale.language]: description || '' },
       store: !storeKey ? undefined : { typeId: 'store', key: storeKey },

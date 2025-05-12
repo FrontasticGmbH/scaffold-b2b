@@ -1,7 +1,7 @@
 'use client';
 
-import { ChangeEvent, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import PasswordInput from '@/components/atoms/password-input';
 import { useTranslations } from 'use-intl';
@@ -12,86 +12,78 @@ import AuthForm from '../layouts/auth-form';
 
 const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordProps) => {
   const router = useCustomRouter();
-
   const searchParams = useSearchParams();
-
+  const translate = useTranslations();
   const { validatePassword } = useValidate();
 
-  const translate = useTranslations();
-
-  const [reset, setReset] = useState(false);
-  const [data, setData] = useState<ResetPasswordData>({
-    password: '',
-    confirmPassword: '',
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<ResetPasswordData>({
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
   });
-  const [validationError, setValidationError] = useState<string>();
 
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = target;
-    setData({ ...data, [name]: value });
-  };
-
-  const handleSubmit = () => {
+  const onFormSubmit = async (data: ResetPasswordData) => {
     const token = searchParams.get('token');
 
-    if (reset) {
-      router.push('/');
+    if (!token) {
+      setError('password', { type: 'manual', message: translate('error.wentWrong') });
+      return;
     }
 
-    if (token && data.password == data.confirmPassword) {
-      const isValidPassword = validatePassword(data.password);
-
-      if (!isValidPassword) {
-        setValidationError(translate('error.password-not-valid'));
-        return;
-      }
-      resetPassword(token, data.password).then(() => {
-        setReset(true);
+    if (data.password !== data.confirmPassword) {
+      setError('confirmPassword', {
+        type: 'manual',
+        message: translate('dashboard.password-not-match'),
       });
-    } else {
-      setValidationError(translate('dashboard.password-not-match'));
+      return;
+    }
+
+    const isValidPassword = validatePassword(data.password);
+    if (!isValidPassword) {
+      setError('password', { type: 'manual', message: translate('error.password-not-valid') });
+      return;
+    }
+
+    try {
+      await resetPassword(token, data.password);
+      router.push('/');
+    } catch {
+      setError('password', { type: 'manual', message: translate('error.wentWrong') });
     }
   };
 
   return (
     <AuthLayout image={image} logo={logo} logoLink={logoLink}>
       <AuthForm
-        onSubmit={handleSubmit}
-        includeCheckIcon={reset}
-        title={
-          reset ? translate('account.password-reset-success-headline') : translate('account.password-reset-headline')
-        }
-        buttonLabel={reset ? translate('account.account-login') : translate('account.password-reset-keyword')}
-        footerLinkLabel={reset ? '' : translate('account.account-back-login')}
+        onSubmit={handleSubmit(onFormSubmit)}
+        title={translate('account.password-reset-headline')}
+        buttonLabel={translate('account.password-reset-keyword')}
+        footerLinkLabel={translate('account.account-back-login')}
         footerLink="/login"
       >
-        {reset ? (
-          <p className="inline text-16 leading-loose text-gray-600">
-            {translate('account.password-reset-success-desc')}
-          </p>
-        ) : (
-          <>
-            <PasswordInput
-              containerClassName="w-full"
-              className="w-full"
-              name="password"
-              label={translate('account.password')}
-              value={data.password}
-              onChange={handleChange}
-              required
-            />
-            <PasswordInput
-              containerClassName="w-full"
-              error={validationError}
-              className="w-full"
-              name="confirmPassword"
-              label={translate('account.password-confirm')}
-              value={data.confirmPassword}
-              onChange={handleChange}
-              required
-            />
-          </>
-        )}
+        <PasswordInput
+          containerClassName="w-full"
+          className="w-full"
+          label={translate('account.password')}
+          required
+          {...register('password')}
+          error={errors.password?.message}
+        />
+
+        <PasswordInput
+          containerClassName="w-full"
+          className="w-full"
+          label={translate('account.password-confirm')}
+          required
+          {...register('confirmPassword')}
+          error={errors.confirmPassword?.message}
+        />
       </AuthForm>
     </AuthLayout>
   );

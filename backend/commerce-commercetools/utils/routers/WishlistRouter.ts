@@ -3,7 +3,7 @@ import { Wishlist } from '@Types/wishlist/Wishlist';
 import { WishlistQuery } from '@Types/wishlist';
 import { PaginatedResult } from '@Types/result';
 import { getPath } from '../requestHandlers/Request';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
+import { AccountFetcher } from '../AccountFetcher';
 import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
 
 export default class WishlistRouter {
@@ -23,12 +23,12 @@ export default class WishlistRouter {
 
     const urlMatches = getPath(request)?.match(/\/(wishlist|shopping-list|purchase-list)\/([^\/]+)/);
 
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     if (urlMatches) {
       const wishlistQuery: WishlistQuery = {
         name: request.query?.name ?? undefined,
-        accountId: account.accountId,
+        accountId,
         limit: request.query?.limit ?? undefined,
         cursor: request.query?.cursor ?? undefined,
         wishlistIds: [urlMatches[2]],

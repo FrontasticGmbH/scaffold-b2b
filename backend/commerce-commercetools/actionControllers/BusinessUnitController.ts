@@ -9,19 +9,18 @@ import { ApprovalFlowsQuery } from '@Types/business-unit/ApprovalFlow';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { OrderState } from '@Types/cart/Order';
 import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHandlers/Request';
-import { fetchAccountFromSession } from '@Commerce-commercetools/utils/fetchAccountFromSession';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
 import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
+import { AccountFetcher } from '@Commerce-commercetools/utils/AccountFetcher';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -34,15 +33,13 @@ export interface BusinessUnitRequestBody {
 
 export const getBusinessUnits: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const expandStores = request.query?.['expandStores'] === 'true';
 
-    const businessUnits = await businessUnitApi.getBusinessUnitsForUser(account.accountId, expandStores);
+    const businessUnits = await businessUnitApi.getBusinessUnitsForUser(accountId, expandStores);
 
     return {
       statusCode: 200,
@@ -85,13 +82,13 @@ export const getBusinessUnitOrders: ActionHook = async (request: Request, action
 
 export const create: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const businessUnitRequestBody: BusinessUnitRequestBody = JSON.parse(request.body);
 
-    const businessUnit = await businessUnitApi.createForAccount(businessUnitRequestBody.account);
+    const businessUnit = await businessUnitApi.createForAccount(accountId, businessUnitRequestBody.account);
 
     const response: Response = {
       statusCode: 200,
@@ -107,9 +104,7 @@ export const create: ActionHook = async (request: Request, actionContext: Action
 
 export const addAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitKey = request.query['businessUnitKey'];
     const locale = getLocale(request);
@@ -117,7 +112,7 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
     const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-    let businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId);
+    let businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, accountId);
 
     if (!businessUnit) {
       throw new ResourceNotFoundError({ message: `Business unit "${businessUnitKey}" not found.` });
@@ -140,7 +135,7 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
 
     businessUnit = await businessUnitApi.addAssociate(
       businessUnitKey,
-      account.accountId,
+      accountId,
       accountAssociate.accountId,
       addAssociateBody.roleKeys,
     );
@@ -161,15 +156,13 @@ export const addAssociate: ActionHook = async (request: Request, actionContext: 
 
 export const removeAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { accountId: associateAccountId } = JSON.parse(request.body);
     const businessUnitKey = request.query['businessUnitKey'];
-    const businessUnit = await businessUnitApi.removeAssociate(businessUnitKey, account.accountId, associateAccountId);
+    const businessUnit = await businessUnitApi.removeAssociate(businessUnitKey, accountId, associateAccountId);
 
     return {
       statusCode: 200,
@@ -183,21 +176,14 @@ export const removeAssociate: ActionHook = async (request: Request, actionContex
 
 export const updateAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { accountId: associateId, roleKeys }: { accountId: string; roleKeys: string[] } = JSON.parse(request.body);
     const businessUnitKey = request.query['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.updateAssociate(
-      businessUnitKey,
-      account.accountId,
-      associateId,
-      roleKeys,
-    );
+    const businessUnit = await businessUnitApi.updateAssociate(businessUnitKey, accountId, associateId, roleKeys);
 
     return {
       statusCode: 200,
@@ -211,9 +197,7 @@ export const updateAssociate: ActionHook = async (request: Request, actionContex
 
 export const updateBusinessUnit: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
@@ -226,7 +210,7 @@ export const updateBusinessUnit: ActionHook = async (request: Request, actionCon
       key: request.query['businessUnitKey'],
     };
 
-    const businessUnit = await businessUnitApi.updateBusinessUnit(businessUnitRequestData, account.accountId);
+    const businessUnit = await businessUnitApi.updateBusinessUnit(businessUnitRequestData, accountId);
 
     return {
       statusCode: 200,
@@ -240,9 +224,7 @@ export const updateBusinessUnit: ActionHook = async (request: Request, actionCon
 
 export const addBusinessUnitAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
@@ -250,7 +232,7 @@ export const addBusinessUnitAddress: ActionHook = async (request: Request, actio
 
     const businessUnitKey = request.query['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.addBusinessUnitAddress(businessUnitKey, account.accountId, address);
+    const businessUnit = await businessUnitApi.addBusinessUnitAddress(businessUnitKey, accountId, address);
 
     return {
       statusCode: 200,
@@ -264,16 +246,15 @@ export const addBusinessUnitAddress: ActionHook = async (request: Request, actio
 
 export const updateBusinessUnitAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
-    const account = fetchAccountFromSession(request);
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { address } = parseRequestBody<{ address: Address }>(request.body);
 
     const businessUnitKey = request.query['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.updateBusinessUnitAddress(businessUnitKey, account.accountId, address);
+    const businessUnit = await businessUnitApi.updateBusinessUnitAddress(businessUnitKey, accountId, address);
 
     return {
       statusCode: 200,
@@ -287,9 +268,8 @@ export const updateBusinessUnitAddress: ActionHook = async (request: Request, ac
 
 export const removeBusinessUnitAddress: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
-    const account = fetchAccountFromSession(request);
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const requestData = parseRequestBody<{ addressId: string }>(request.body);
@@ -297,7 +277,7 @@ export const removeBusinessUnitAddress: ActionHook = async (request: Request, ac
 
     const businessUnitKey = request.query['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.removeBusinessUnitAddress(businessUnitKey, account.accountId, addressId);
+    const businessUnit = await businessUnitApi.removeBusinessUnitAddress(businessUnitKey, accountId, addressId);
 
     return {
       statusCode: 200,
@@ -311,15 +291,13 @@ export const removeBusinessUnitAddress: ActionHook = async (request: Request, ac
 
 export const getBusinessUnit: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const businessUnitKey = request.query?.['businessUnitKey'];
 
-    const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId, true);
+    const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, accountId, true);
 
     return {
       statusCode: 200,
@@ -333,7 +311,7 @@ export const getBusinessUnit: ActionHook = async (request: Request, actionContex
 
 export const getAssociateRoles: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
+    AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
     const associateRoles = await businessUnitApi.getAssociateRoles();
@@ -352,9 +330,7 @@ export const getAssociateRoles: ActionHook = async (request: Request, actionCont
 
 export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const storeKey = getStoreKey(request);
 
@@ -364,7 +340,7 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
-    const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, account.accountId, true);
+    const businessUnit = await businessUnitApi.getByKeyForAccount(businessUnitKey, accountId, true);
 
     const store = businessUnit.stores?.find((store) => store.key === storeKey);
 
@@ -393,14 +369,17 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
 
 export const getAssociate: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
-
-    const account = fetchAccountFromSession(request);
     const businessUnitKey = getBusinessUnitKey(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
-    const associate = await businessUnitApi.getAssociate(businessUnitKey, account);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
+
+    const accountApi = getAccountApi(request, actionContext.frontasticContext);
+
+    const account = await accountApi.getById(accountId);
+
+    const associate = await businessUnitApi.getAssociate(businessUnitKey, accountId, account);
 
     const response: Response = {
       statusCode: 200,
@@ -418,9 +397,8 @@ export const getAssociate: ActionHook = async (request: Request, actionContext: 
 
 export const createApprovalRule: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
 
-    const account = fetchAccountFromSession(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const storeKey = getStoreKey(request);
 
@@ -433,7 +411,7 @@ export const createApprovalRule: ActionHook = async (request: Request, actionCon
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const approvalRule = await businessUnitApi.createApprovalRule(
-      account.accountId,
+      accountId,
       businessUnitKey,
       approvalRuleRequest.approvalRule,
     );
@@ -452,7 +430,7 @@ export const createApprovalRule: ActionHook = async (request: Request, actionCon
 
 export const queryApprovalRules: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
@@ -464,7 +442,7 @@ export const queryApprovalRules: ActionHook = async (request: Request, actionCon
       approvalRuleIds: queryParamsToIds('approvalRuleIds', request.query),
     };
 
-    const queryResult = await businessUnitApi.queryApprovalRules(businessUnitKey, account.accountId, approvalRuleQuery);
+    const queryResult = await businessUnitApi.queryApprovalRules(businessUnitKey, accountId, approvalRuleQuery);
 
     const response: Response = {
       statusCode: 200,
@@ -482,7 +460,7 @@ export const queryApprovalRules: ActionHook = async (request: Request, actionCon
 
 export const updateApprovalRule: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
@@ -493,7 +471,7 @@ export const updateApprovalRule: ActionHook = async (request: Request, actionCon
 
     const approvalRule = await businessUnitApi.updateApprovalRule(
       approvalRuleRequest.approvalRule,
-      account.accountId,
+      accountId,
       businessUnitKey,
     );
 
@@ -509,7 +487,7 @@ export const updateApprovalRule: ActionHook = async (request: Request, actionCon
 
 export const queryApprovalFlows: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
@@ -521,11 +499,7 @@ export const queryApprovalFlows: ActionHook = async (request: Request, actionCon
       approvalFlowIds: queryParamsToIds('approvalFlowIds', request.query),
     };
 
-    const approvalRules = await businessUnitApi.queryApprovalFlows(
-      businessUnitKey,
-      account.accountId,
-      approvalFlowsQuery,
-    );
+    const approvalRules = await businessUnitApi.queryApprovalFlows(businessUnitKey, accountId, approvalFlowsQuery);
 
     const response: Response = {
       statusCode: 200,
@@ -543,14 +517,14 @@ export const queryApprovalFlows: ActionHook = async (request: Request, actionCon
 
 export const approveApprovalFlow: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
 
     const businessUnitApi = getBusinessUnitApi(request, actionContext.frontasticContext);
 
     const { approvalFlowId } = parseRequestBody<{ approvalFlowId: string }>(request.body);
 
-    const approvalFlow = await businessUnitApi.approveApprovalFlow(businessUnitKey, account.accountId, approvalFlowId);
+    const approvalFlow = await businessUnitApi.approveApprovalFlow(businessUnitKey, accountId, approvalFlowId);
 
     return {
       statusCode: 200,
@@ -564,7 +538,7 @@ export const approveApprovalFlow: ActionHook = async (request: Request, actionCo
 
 export const rejectApprovalFlow: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const account = assertIsAuthenticated(request);
+    const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
     const businessUnitKey = getBusinessUnitKey(request);
     const cartApi = getCartApi(request, actionContext.frontasticContext);
 
@@ -572,12 +546,7 @@ export const rejectApprovalFlow: ActionHook = async (request: Request, actionCon
 
     const { approvalFlowId, reason } = parseRequestBody<{ approvalFlowId: string; reason?: string }>(request.body);
 
-    const approvalFlow = await businessUnitApi.rejectApprovalFlow(
-      businessUnitKey,
-      account.accountId,
-      approvalFlowId,
-      reason,
-    );
+    const approvalFlow = await businessUnitApi.rejectApprovalFlow(businessUnitKey, accountId, approvalFlowId, reason);
 
     const order = await cartApi.updateOrderState(approvalFlow.order.orderId, OrderState.Cancelled);
 

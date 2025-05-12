@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Select from '@/components/atoms/select';
 import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';
 import Link from '@/components/atoms/link';
 import InfoBanner from '@/components/molecules/info-banner';
 import EmptyState from '@/components/molecules/empty-state';
+import Tabs from '@/components/organisms/tabs';
 import { ApprovalRulesPageProps } from './types';
 import ApprovalRulesTable from './components/approval-rules-table';
 import DesktopOnly from '../../components/desktop-only';
@@ -18,8 +19,25 @@ const ApprovalRulesPage = ({
   loading,
   pagination,
   onDuplicate,
+  activeTab,
+  onTabChange,
 }: ApprovalRulesPageProps) => {
   const translate = useTranslations();
+
+  const approvalRulesTable = (
+    <>
+      {approvalRules.length > 0 ? (
+        <ApprovalRulesTable
+          approvalRules={approvalRules}
+          onDuplicate={onDuplicate}
+          pagination={pagination}
+          viewOnly={viewOnly}
+        />
+      ) : (
+        <EmptyState isLoading={loading} header={translate('common.no-results-found')} />
+      )}
+    </>
+  );
 
   return (
     <>
@@ -57,16 +75,19 @@ const ApprovalRulesPage = ({
         </div>
 
         <div className="mt-8">
-          {approvalRules.length > 0 ? (
-            <ApprovalRulesTable
-              approvalRules={approvalRules}
-              onDuplicate={onDuplicate}
-              pagination={pagination}
-              viewOnly={viewOnly}
-            />
-          ) : (
-            <EmptyState isLoading={loading} header={translate('common.no-results-found')} />
-          )}
+          <Tabs
+            defaultActiveIndex={activeTab === 'active' ? 0 : 1}
+            onActiveIndexChange={(index) => onTabChange((['active', 'inactive'] as const)[index])}
+          >
+            <Tabs.TabList>
+              <Tabs.Tab>{translate('common.status-active')}</Tabs.Tab>
+              <Tabs.Tab>{translate('common.status-inactive')}</Tabs.Tab>
+            </Tabs.TabList>
+            <Tabs.Panels>
+              <Tabs.Panel>{approvalRulesTable}</Tabs.Panel>
+              <Tabs.Panel>{approvalRulesTable}</Tabs.Panel>
+            </Tabs.Panels>
+          </Tabs>
         </div>
       </div>
       <DesktopOnly />

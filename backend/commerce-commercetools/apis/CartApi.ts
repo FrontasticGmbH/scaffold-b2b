@@ -103,7 +103,9 @@ export default class CartApi extends BaseApi {
         return this.buildCartWithAvailableShippingMethods(response.body, locale);
       })
       .catch((error) => {
-        if (error.code === 404) {
+        // The 400 error is thrown when the cart doesn't belong to the associate or the business unit
+        // The 404 error is thrown when the cart can't be found
+        if (error.code === 400 || error.code === 404) {
           throw new ResourceNotFoundError({ message: error.message });
         }
 

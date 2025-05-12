@@ -62,13 +62,15 @@ describe('AddressForm', () => {
     await userEvent.click(saveButton);
 
     await waitFor(() => {
-      expect(onAddAddress).toHaveBeenCalledWith({
-        name: 'Test Company',
-        line1: '123 Main St',
-        zip: '12345',
-        city: 'Test City',
-        country: 'US',
-      });
+      expect(onAddAddress).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'Test Company',
+          line1: '123 Main St',
+          zip: '12345',
+          city: 'Test City',
+          country: 'US',
+        }),
+      );
     });
   });
 

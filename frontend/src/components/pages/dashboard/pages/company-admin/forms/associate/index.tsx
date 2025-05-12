@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm, Controller } from 'react-hook-form';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
@@ -21,49 +22,48 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
 
   const defaultValues = (associates.find((associate) => associate.id === id) ?? {}) as Partial<Associate>;
 
-  const [data, setData] = useState<Partial<Associate>>(defaultValues);
+  const { register, control, handleSubmit } = useForm<Partial<Associate>>({
+    defaultValues,
+  });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data],
-  );
+  const onSubmit = async (formData: Partial<Associate>) => {
+    if (!formData.email) return;
 
-  const handleRoleChange = useCallback(
-    (roles: string[]) => {
-      setData({ ...data, roles });
-    },
-    [data],
-  );
-
-  const handleSubmit = useCallback(async () => {
-    const success = await (id ? onUpdateAssociate?.(data) : onAddAssociate?.(data as Associate));
+    const success = await (id
+      ? onUpdateAssociate?.(formData)
+      : onAddAssociate?.({ email: formData.email, roles: formData.roles ?? [] } as Associate));
 
     if (success) showSavedMessage();
     else showFailedMessage();
 
     router.back();
-  }, [onAddAssociate, onUpdateAssociate, data, id, router, showSavedMessage, showFailedMessage]);
+  };
 
   return (
     <EntityForm
-      translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}
-      onSubmit={handleSubmit}
+      translations={{
+        cancel: translate('common.cancel'),
+        submit: translate('common.save'),
+      }}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={router.back}
     >
       <div className="flex flex-col gap-4">
         <Input
-          name="email"
           label={translate('common.email')}
           required
-          value={data.email ?? ''}
-          onChange={handleChange}
           containerClassName="max-w-[400px]"
+          {...register('email', { required: true })}
         />
 
         <div className="max-w-[400px]">
-          <MultiSelect value={data.roles} options={roleOptions} onChange={handleRoleChange} />
+          <Controller
+            name="roles"
+            control={control}
+            render={({ field }) => (
+              <MultiSelect value={field.value ?? []} options={roleOptions} onChange={field.onChange} />
+            )}
+          />
         </div>
       </div>
     </EntityForm>

@@ -6,16 +6,14 @@ import {
   getLocale,
   getSupplyChannelId,
 } from '../requestHandlers/Request';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
+import { AccountFetcher } from '../AccountFetcher';
 import WishlistApi from '@Commerce-commercetools/apis/WishlistApi';
-import { fetchAccountFromSession } from '../fetchAccountFromSession';
 
 const getWishlistApi = (request: Request, actionContext: Context): WishlistApi => {
-  assertIsAuthenticated(request);
+  const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
   const distributionChannelId = getDistributionChannelId(request);
   const supplyChannelId = getSupplyChannelId(request);
   const businessUnitKey = getBusinessUnitKey(request);
-  const accountId = fetchAccountFromSession(request).accountId;
 
   return new WishlistApi(
     actionContext,

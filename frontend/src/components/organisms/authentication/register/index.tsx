@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import Input from '@/components/atoms/input';
 import PasswordInput from '@/components/atoms/password-input';
@@ -20,8 +21,17 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
 
   const { validatePassword } = useValidate();
 
-  const [data, setData] = useState<Account>({});
-  const [errors, setErrors] = useState<Account>({});
+  const {
+    register: formRegister,
+    handleSubmit,
+    setError,
+    watch,
+    formState: { errors },
+  } = useForm<Account>({
+    defaultValues: {},
+  });
+
+  const data = watch();
   const [confirmed, setConfirmed] = useState(false);
   const nameValidation = { pattern: namePattern, title: translate('common.name-validation') };
 
@@ -43,36 +53,31 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
     },
   ];
 
-  const commonProps: InputProps = {
-    onChange: (e) => handleChange(e),
-    containerClassName: 'w-full',
-    className: 'w-full',
-  };
-
-  const handleSubmit = () => {
-    const noEmptyFields = data.email && data.password && data.companyName;
+  const onFormSubmit = async (formData: Account) => {
+    const noEmptyFields = formData.email && formData.password && formData.companyName;
 
     if (noEmptyFields) {
-      const isValidPassword = data.password && validatePassword(data.password);
+      const isValidPassword = formData.password && validatePassword(formData.password);
 
       if (!isValidPassword) {
-        setErrors({ password: translate('error.password-not-valid') });
+        setError('password', { type: 'manual', message: translate('error.password-not-valid') });
         return;
       }
 
-      register(data)
-        .then(() => {
-          setConfirmed(true);
-        })
-        .catch((err) => {
-          if (err.message.includes('409')) {
-            if (err.message.includes('account')) {
-              setErrors({ email: translate('error.email-exists') });
-            } else if (err.message.includes('company')) {
-              setErrors({ companyName: translate('error.company-exists') });
-            }
-          } else toast.error(translate('error.account-create-fail'));
-        });
+      try {
+        await register(formData);
+        setConfirmed(true);
+      } catch (err: any) {
+        if (err.message.includes('409')) {
+          if (err.message.includes('account')) {
+            setError('email', { type: 'manual', message: translate('error.email-exists') });
+          } else if (err.message.includes('company')) {
+            setError('companyName', { type: 'manual', message: translate('error.company-exists') });
+          }
+        } else {
+          toast.error(translate('error.account-create-fail'));
+        }
+      }
     }
   };
 
@@ -82,15 +87,9 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
 
   const authProps = useAuthProps({
     confirmed,
-    handleSubmitRegister: handleSubmit,
+    handleSubmitRegister: handleSubmit(onFormSubmit),
     handleLoginRedirect: handleRedirect,
   });
-
-  const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = target;
-    setData({ ...data, [name]: value });
-    setErrors({ ...errors, [name]: undefined });
-  };
 
   return (
     <AuthLayout image={image} logo={logo} logoLink={logoLink}>
@@ -106,25 +105,25 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
             {inputArray.map(({ label, name, pattern, title }) => (
               <Input
                 key={name}
-                name={name}
-                value={(data[name as keyof Account] as string) ?? ''}
-                error={(errors[name as keyof Account] as string) ?? ''}
+                label={label}
                 required
                 pattern={pattern}
                 title={title}
-                type={name === 'email' ? 'email' : 'text'}
-                label={label}
-                {...commonProps}
+                value={(data[name as keyof Account] as string) ?? ''}
+                error={errors[name as keyof Account]?.message}
+                containerClassName="w-full"
+                className="w-full"
+                {...formRegister(name as keyof Account)}
               />
             ))}
             <PasswordInput
-              name="password"
-              value={data.password ?? ''}
-              error={errors['password']}
               label={translate('account.password')}
-              onChange={handleChange}
               required
-              {...commonProps}
+              value={data.password ?? ''}
+              error={errors.password?.message}
+              containerClassName="w-full"
+              className="w-full"
+              {...formRegister('password', { required: true })}
             />
           </>
         )}

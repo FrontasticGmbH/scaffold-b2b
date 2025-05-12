@@ -24,4 +24,6 @@ export interface ApprovalRulesPageProps {
   pagination?: Pagination;
   onSubmit: (approvalRule: ApprovalRule) => Promise<boolean>;
   onDuplicate: (approvalRule: ApprovalRule) => Promise<boolean>;
+  activeTab?: 'active' | 'inactive';
+  onTabChange: (tab: 'active' | 'inactive') => void;
 }

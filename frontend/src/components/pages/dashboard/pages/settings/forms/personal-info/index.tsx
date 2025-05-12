@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
@@ -11,58 +12,42 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
 
   const router = useRouter();
 
-  const [data, setData] = useState<Partial<Account>>(account);
+  const { register, handleSubmit } = useForm<Partial<Account>>({
+    defaultValues: account,
+  });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data],
-  );
-
-  const handleSubmit = useCallback(async () => {
-    await onUpdateAccount?.(data);
-
+  const onSubmit = async (formData: Partial<Account>) => {
+    await onUpdateAccount?.(formData);
     router.back();
-  }, [onUpdateAccount, data, router]);
-
-  const nameValidationProps = { pattern: '[A-Za-z\\s\\.]+', title: translate('common.name-validation') };
+  };
 
   return (
     <EntityForm
       translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={router.back}
     >
       <div className="flex flex-col gap-4">
         <Input
-          name="email"
           label={translate('common.email')}
           required
           type="email"
-          value={data.email ?? ''}
-          onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
+          {...register('email')}
         />
 
         <Input
-          name="firstName"
           label={translate('common.firstName')}
           required
-          value={data.firstName ?? ''}
-          {...nameValidationProps}
-          onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
+          {...register('firstName')}
         />
 
         <Input
-          name="lastName"
           label={translate('common.lastName')}
           required
-          value={data.lastName ?? ''}
-          {...nameValidationProps}
-          onChange={handleChange}
           containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
+          {...register('lastName')}
         />
       </div>
     </EntityForm>

@@ -1,4 +1,5 @@
-import { Fragment, useCallback, useState } from 'react';
+import { Fragment } from 'react';
+import { useForm } from 'react-hook-form';
 import { useTranslations } from 'use-intl';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { PurchaseList } from '@/types/entity/purchase-list';
@@ -15,16 +16,10 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
 
   const { showFailedMessage } = useEntityToasters('purchaselist');
   const { selectedStore } = useStoreAndBusinessUnits();
-  const [data, setData] = useState<Partial<PurchaseList>>({});
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data],
-  );
+  const { register, handleSubmit } = useForm<Partial<PurchaseList>>();
 
-  const handleSubmit = useCallback(async () => {
+  const onSubmit = async (data: Partial<PurchaseList>) => {
     try {
       const listItem = await onAddToNewList?.({ ...(data as PurchaseList), store: selectedStore });
 
@@ -39,7 +34,7 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
     } catch {
       showFailedMessage();
     }
-  }, [onAddToNewList, data, selectedStore, onClose, showFailedMessage]);
+  };
 
   return (
     <Fragment>
@@ -53,26 +48,26 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
           form: 'w-fit m-auto border-none',
           buttonsContainer: 'border-t border-neutral-400 mt-8 pt-5 justify-end',
         }}
-        translations={{ cancel: translate('common.cancel'), submit: translate('product.save-and-add') }}
-        onSubmit={handleSubmit}
+        translations={{
+          cancel: translate('common.cancel'),
+          submit: translate('product.save-and-add'),
+        }}
+        onSubmit={handleSubmit(onSubmit)}
         onCancel={onClose}
       >
         <div className="m-auto flex w-fit flex-col gap-4">
           <Input
-            name="name"
             label={translate('common.name')}
             required
-            value={data.name ?? ''}
-            onChange={handleChange}
             containerClassName="md:w-[350px] lg:w-[400px]"
+            {...register('name', { required: true })}
           />
+
           <TextArea
-            name="description"
             label={translate('common.description')}
             showOptionalLabel
-            value={data.description}
-            onChange={handleChange}
             className="h-[160px] md:w-[350px] lg:w-[400px]"
+            {...register('description')}
           />
         </div>
       </EntityForm>

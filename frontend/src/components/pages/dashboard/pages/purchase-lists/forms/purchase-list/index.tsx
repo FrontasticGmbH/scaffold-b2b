@@ -1,10 +1,11 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
-import { PurchaseList } from '@/types/entity/purchase-list';
 import TextArea from '@/components/atoms/text-area';
+import { PurchaseList } from '@/types/entity/purchase-list';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { Props } from './types';
 
@@ -29,47 +30,44 @@ const PurchaseListForm = ({
 
   const defaultValues = (purchaseLists.find((list) => list.id === id) ?? {}) as Partial<PurchaseList>;
 
-  const [data, setData] = useState<Partial<PurchaseList>>(defaultValues);
+  const { register, handleSubmit } = useForm<Partial<PurchaseList>>({
+    defaultValues,
+  });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data],
-  );
-
-  const handleSubmit = useCallback(async () => {
-    const success = await (id ? onUpdatePurchaseList?.(data) : onAddPurchaseList?.(data as PurchaseList));
+  const onSubmit = async (formData: Partial<PurchaseList>) => {
+    const success = await (id
+      ? onUpdatePurchaseList?.(formData)
+      : onAddPurchaseList?.({ name: formData.name, description: formData.description ?? '' } as PurchaseList));
 
     if (success) showSavedMessage();
     else showFailedMessage();
 
     (onSave ?? router.back)();
-  }, [onUpdatePurchaseList, onAddPurchaseList, data, id, router, onSave, showSavedMessage, showFailedMessage]);
+  };
 
   return (
     <EntityForm
-      translations={{ cancel: translate('common.cancel'), submit: translate('common.save') }}
-      onSubmit={handleSubmit}
+      translations={{
+        cancel: translate('common.cancel'),
+        submit: translate('common.save'),
+      }}
+      onSubmit={handleSubmit(onSubmit)}
       onCancel={onCancel ?? router.back}
       classNames={classNames}
     >
       <div className="flex flex-col gap-4">
         <Input
-          name="name"
           label={translate('common.name')}
           required
-          value={data.name ?? ''}
-          onChange={handleChange}
           containerClassName="md:w-[350px] lg:w-[400px]"
+          {...register('name', { required: true })}
         />
+
         <TextArea
-          name="description"
           label={translate('common.description')}
           showOptionalLabel
-          value={data.description}
-          onChange={handleChange}
           className="h-[160px] md:w-[350px] lg:w-[400px]"
+          {...register('description')}
         />
       </div>
     </EntityForm>

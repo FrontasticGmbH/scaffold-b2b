@@ -200,15 +200,15 @@ export default class AccountApi extends BaseApi {
       });
   }
 
-  async updatePassword(account: Account, oldPassword: string, newPassword: string): Promise<Account> {
-    const accountVersion = await this.fetchAccountVersion(account);
+  async updatePassword(accountId: string, oldPassword: string, newPassword: string): Promise<Account> {
+    const accountVersion = (await this.getById(accountId)).accountVersion;
 
-    account = await this.requestBuilder()
+    return await this.requestBuilder()
       .customers()
       .password()
       .post({
         body: {
-          id: account.accountId,
+          id: accountId,
           version: accountVersion,
           currentPassword: oldPassword,
           newPassword: newPassword,
@@ -221,8 +221,20 @@ export default class AccountApi extends BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
+  }
 
-    return account;
+  async getById(accountId: string): Promise<Account> {
+    return await this.requestBuilder()
+      .customers()
+      .withId({ ID: accountId })
+      .get()
+      .execute()
+      .then((response) => {
+        return AccountMapper.commercetoolsCustomerToAccount(response.body);
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+      });
   }
 
   async getAccountByEmail(email: string): Promise<Account | null> {
@@ -250,7 +262,7 @@ export default class AccountApi extends BaseApi {
       .withId({ ID: account.accountId })
       .delete({
         queryArgs: {
-          version: account.version,
+          version: account.accountVersion,
           dataErasure: true,
         },
       })
@@ -261,7 +273,7 @@ export default class AccountApi extends BaseApi {
       });
   }
 
-  async update(account: Account): Promise<Account> {
+  async update(accountId: string, account: Account): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     if (account.firstName) {
@@ -288,9 +300,7 @@ export default class AccountApi extends BaseApi {
       });
     }
 
-    // TODO: should we also update addresses in this method?
-
-    account = await this.updateAccount(account, customerUpdateActions);
+    account = await this.updateAccount(accountId, customerUpdateActions);
 
     if (!account.confirmed) {
       account.confirmationToken = await this.getConfirmationToken(account);
@@ -299,7 +309,7 @@ export default class AccountApi extends BaseApi {
     return account;
   }
 
-  async addAddress(account: Account, address: Address): Promise<Account> {
+  async addAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
@@ -329,10 +339,10 @@ export default class AccountApi extends BaseApi {
       customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
     }
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
-  async addShippingAddress(account: Account, address: Address): Promise<Account> {
+  async addShippingAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
@@ -359,10 +369,10 @@ export default class AccountApi extends BaseApi {
       customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
     }
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
-  async addBillingAddress(account: Account, address: Address): Promise<Account> {
+  async addBillingAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
@@ -389,10 +399,10 @@ export default class AccountApi extends BaseApi {
       customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressKey: commercetoolsAddress.key });
     }
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
-  async updateAddress(account: Account, address: Address): Promise<Account> {
+  async updateAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     let commercetoolsAddress = AccountMapper.addressToCommercetoolsAddress(address);
@@ -421,10 +431,10 @@ export default class AccountApi extends BaseApi {
       customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressKey: commercetoolsAddress.key });
     }
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
-  async removeAddress(account: Account, address: Address): Promise<Account> {
+  async removeAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     const addressData = AccountMapper.addressToCommercetoolsAddress(address);
@@ -435,27 +445,27 @@ export default class AccountApi extends BaseApi {
 
     customerUpdateActions.push({ action: 'removeAddress', addressId: address.addressId });
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
-  async setDefaultBillingAddress(account: Account, address: Address): Promise<Account> {
+  async setDefaultBillingAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     const addressData = AccountMapper.addressToCommercetoolsAddress(address);
 
     customerUpdateActions.push({ action: 'setDefaultBillingAddress', addressId: addressData.id });
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
-  async setDefaultShippingAddress(account: Account, address: Address): Promise<Account> {
+  async setDefaultShippingAddress(accountId: string, address: Address): Promise<Account> {
     const customerUpdateActions: CustomerUpdateAction[] = [];
 
     const addressData = AccountMapper.addressToCommercetoolsAddress(address);
 
     customerUpdateActions.push({ action: 'setDefaultShippingAddress', addressId: addressData.id });
 
-    return await this.updateAccount(account, customerUpdateActions);
+    return await this.updateAccount(accountId, customerUpdateActions);
   }
 
   protected extractAddresses(account: Account) {
@@ -503,8 +513,8 @@ export default class AccountApi extends BaseApi {
     return commercetoolsAccount.body?.version;
   }
 
-  protected async updateAccount(account: Account, customerUpdateActions: CustomerUpdateAction[]) {
-    const accountVersion = await this.fetchAccountVersion(account);
+  protected async updateAccount(accountId: string, customerUpdateActions: CustomerUpdateAction[]) {
+    const accountVersion = (await this.getById(accountId)).accountVersion;
 
     const customerUpdate: CustomerUpdate = {
       version: accountVersion,
@@ -513,7 +523,7 @@ export default class AccountApi extends BaseApi {
 
     return await this.requestBuilder()
       .customers()
-      .withId({ ID: account.accountId })
+      .withId({ ID: accountId })
       .post({
         body: customerUpdate,
       })

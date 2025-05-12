@@ -1,6 +1,7 @@
 'use client';
 
 import { ChangeEvent, FC, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Input from '@/components/atoms/input';
 import PasswordInput from '@/components/atoms/password-input';
 import { Account } from '@shared/types/account/Account';
@@ -21,7 +22,16 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const translate = useTranslations();
 
-  const [data, setData] = useState<Account & { rememberMe?: boolean }>({});
+  const { handleSubmit, watch, setValue } = useForm<Account & { rememberMe?: boolean }>({
+    defaultValues: {
+      email: '',
+      password: '',
+      rememberMe: false,
+    },
+  });
+
+  const data = watch();
+
   const [resetting, setResetting] = useState(false);
   const [requested, setRequested] = useState(false);
   const [error, setError] = useState<string>();
@@ -41,7 +51,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
     if (error) setError(undefined);
 
     const { name, value, checked } = target;
-    setData({ ...data, [name]: value == 'on' ? checked : value });
+    setValue(name as keyof Account, name === 'rememberMe' ? checked : value);
   };
 
   const handleLoginSubmit = async () => {
@@ -78,8 +88,8 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const { image, logo, logoLink, ...formProps } = useAuthProps({
     ...props,
-    handleLoginSubmit,
-    handleResetSubmit,
+    handleLoginSubmit: handleSubmit(handleLoginSubmit),
+    handleResetSubmit: handleSubmit(handleResetSubmit),
     resetting,
     requested,
     goBackToLogin,
@@ -119,6 +129,7 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
                 className="text-14 text-gray-500"
                 name="rememberMe"
                 label={translate('account.rememberMe')}
+                checked={!!data.rememberMe}
                 onChange={handleChange}
               />
               <Link className="text-14 text-gray-600 underline hover:text-gray-500" href="#" onClick={gotToReset}>

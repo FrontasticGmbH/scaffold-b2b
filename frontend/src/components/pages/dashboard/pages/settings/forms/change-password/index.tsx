@@ -1,87 +1,106 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Button from '@/components/atoms/button';
 import { useTranslations } from 'use-intl';
 import PasswordInput from '@/components/atoms/password-input';
 // import useValidate from '@/hooks/useValidate/useValidate';
 import { Props } from './types';
 
+type FormValues = {
+  oldPassword: string;
+  newPassword: string;
+  confirmedNewPassword: string;
+};
+
 const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
   const translate = useTranslations();
 
   // const { validatePassword } = useValidate();
 
-  const [data, setData] = useState({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
+  const {
+    handleSubmit,
+    register,
+    watch,
+    setValue,
+    setError,
+    reset,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: {
+      oldPassword: '',
+      newPassword: '',
+      confirmedNewPassword: '',
+    },
+  });
+
   const [passwordError, setPasswordError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.name === 'newPassword' && passwordError) setPasswordError('');
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data, passwordError],
-  );
+  const oldPassword = watch('oldPassword');
+  const newPassword = watch('newPassword');
+  const confirmedNewPassword = watch('confirmedNewPassword');
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setIsLoading(true);
+  useEffect(() => {
+    if (passwordError && newPassword) {
+      setPasswordError('');
+    }
+  }, [newPassword, passwordError]);
 
-      //TODO: Need to discuss, there are no restrictions on signup
-      // const isValidPassword = validatePassword(data.newPassword);
-      // if (!isValidPassword) {
-      //   setPasswordError(translate('error.password-not-valid'));
-      //   setIsLoading(false);
-      //   return;
-      // }
+  const onSubmit = async (data: FormValues) => {
+    //TODO: Need to discuss, there are no restrictions on signup
+    // const isValidPassword = validatePassword(data.newPassword);
+    // if (!isValidPassword) {
+    //   setPasswordError(translate('error.password-not-valid'));
+    //   return;
+    // }
 
-      await onChangePassword?.(data.oldPassword, data.newPassword);
-      setData({ oldPassword: '', newPassword: '', confirmedNewPassword: '' });
-      setIsLoading(false);
-    },
-    [data.newPassword, data.oldPassword, onChangePassword],
-  );
+    if (data.newPassword !== data.confirmedNewPassword) {
+      setError('confirmedNewPassword', {
+        type: 'manual',
+        message: translate('dashboard.password-not-match'),
+      });
+      return;
+    }
 
-  const isDisabled =
-    !data.oldPassword ||
-    !data.newPassword ||
-    !data.confirmedNewPassword ||
-    data.confirmedNewPassword !== data.newPassword;
+    await onChangePassword?.(data.oldPassword, data.newPassword);
+
+    setValue('oldPassword', '');
+    setValue('newPassword', '');
+    setValue('confirmedNewPassword', '');
+    reset({
+      oldPassword: '',
+      newPassword: '',
+      confirmedNewPassword: '',
+    });
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col gap-4">
         <PasswordInput
           containerClassName="w-[370px]"
-          name="oldPassword"
           label={translate('dashboard.current-password')}
           required
-          value={data.oldPassword}
-          onChange={handleChange}
+          value={oldPassword}
+          {...register('oldPassword', { required: true })}
         />
 
         <PasswordInput
           containerClassName="w-[370px]"
-          name="newPassword"
           label={translate('dashboard.new-password')}
           required
-          value={data.newPassword}
+          value={newPassword}
           error={passwordError}
-          onChange={handleChange}
+          {...register('newPassword', { required: true })}
         />
 
         <PasswordInput
           containerClassName="w-[370px]"
-          name="confirmedNewPassword"
           label={translate('dashboard.confirm-password')}
           required
-          value={data.confirmedNewPassword}
-          onChange={handleChange}
-          error={
-            data.newPassword && data.confirmedNewPassword && data.newPassword !== data.confirmedNewPassword
-              ? translate('dashboard.password-not-match')
-              : ''
-          }
+          value={confirmedNewPassword}
+          error={errors.confirmedNewPassword?.message}
+          {...register('confirmedNewPassword', { required: true })}
         />
       </div>
 
@@ -93,8 +112,8 @@ const ChangePasswordForm = ({ onCancel, onChangePassword }: Props) => {
           variant="primary"
           size="m"
           type="submit"
-          disabled={isDisabled}
-          loading={isLoading}
+          disabled={!isValid || isSubmitting}
+          loading={isSubmitting}
           className="min-w-[112px]"
         >
           {translate('common.save')}

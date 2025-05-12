@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import useCustomRouter from '@/hooks/useCustomRouter';
 import Button from '@/components/atoms/button';
 import { useTranslations } from 'use-intl';
@@ -8,27 +9,28 @@ import Confirmation from '@/components/organisms/confirmation';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { Props } from './types';
 
+type FormData = {
+  password: string;
+};
+
 const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
   const translate = useTranslations();
 
   const router = useCustomRouter();
-
-  const [data, setData] = useState({ password: '' });
-
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { selectedBusinessUnit } = useStoreAndBusinessUnits();
   const isLastAssociate = selectedBusinessUnit?.associates?.length === 1;
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-    },
-    [data],
-  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm<FormData>({
+    mode: 'onChange',
+    defaultValues: { password: '' },
+  });
 
-  const handleSubmit = useCallback(async () => {
-    setIsLoading(true);
+  const onSubmit = async (data: FormData) => {
     const success = await onDeleteAccount?.(data.password);
     if (success === true) {
       router.push('/login');
@@ -37,27 +39,25 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
         position: 'top-right',
       });
     }
-    setIsLoading(false);
-  }, [onDeleteAccount, data, router, translate]);
-
-  const isDisabled = !data.password;
+  };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <p className="pb-4 text-14 text-gray-700">{translate('dashboard.cannot-regain-access')}</p>
+
       <PasswordInput
         containerClassName="w-[370px]"
-        name="password"
         label={translate('dashboard.password-confirmation')}
         required
-        value={data.password}
-        onChange={handleChange}
+        {...register('password', { required: true })}
+        error={errors.password?.message}
       />
 
       <div className="flex items-center gap-3 pt-6">
         <Button variant="secondary" size="m" onClick={onCancel} type="button" className="min-w-[112px]">
           {translate('common.cancel')}
         </Button>
+
         <Confirmation
           translations={{
             title: translate('account.delete-account'),
@@ -70,14 +70,14 @@ const DeleteAccountForm = ({ onCancel, onDeleteAccount }: Props) => {
           isOpen={isOpen}
           onCancel={() => setIsOpen(false)}
           disabled={isLastAssociate}
-          onConfirm={handleSubmit}
+          onConfirm={handleSubmit(onSubmit)}
         >
           <Button
             variant="warning"
             size="m"
             type="button"
-            disabled={isDisabled}
-            loading={isLoading}
+            disabled={!isValid}
+            loading={isSubmitting}
             onClick={() => setIsOpen(true)}
             className="min-w-[112px]"
           >

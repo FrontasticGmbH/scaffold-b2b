@@ -1,7 +1,6 @@
 import { ActionContext, Request, Response } from '@frontastic/extension-types';
 import { QuoteRequest } from '@Types/quote/QuoteRequest';
 import { QuoteQuery } from '@Types/query/QuoteQuery';
-import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
 import { CartFetcher } from '@Commerce-commercetools/utils/CartFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';

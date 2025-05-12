@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
@@ -9,7 +10,11 @@ import Accordion from '../accordion';
 const DiscountsForm = ({ className, discounts, onSubmit, customError }: DiscountFormProps) => {
   const translate = useTranslations();
 
-  const [code, setCode] = useState('');
+  const { setValue, watch, handleSubmit } = useForm<{ code: string }>({
+    defaultValues: { code: '' },
+  });
+
+  const code = watch('code');
   const [codeIsInvalid, setCodeIsInvalid] = useState(false);
 
   const [processing, setProcessing] = useState(false);
@@ -34,23 +39,18 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
 
     setCodeIsInvalid(!success);
 
-    if (success) setCode('');
+    if (success) setValue('code', '');
 
     setProcessing(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value);
-    setCodeIsInvalid(false);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onApplyDiscount();
   };
 
   const onClearForm = () => {
-    setCode('');
+    setValue('code', '');
     setCodeIsInvalid(false);
   };
 
@@ -61,13 +61,16 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
           {translate('cart.discount-apply')}
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false}>
-          <form className="pt-6" onSubmit={handleSubmit}>
+          <form className="pt-6" onSubmit={onFormSubmit}>
             <Input
               aria-label={translate('cart.discount-code')}
               className={inputClassName}
-              value={code ?? ''}
+              value={code}
               placeholder={translate('cart.discount-enter')}
-              onChange={handleChange}
+              onChange={(e) => {
+                setValue('code', e.target.value);
+                setCodeIsInvalid(false);
+              }}
               disabled={processing}
               icon={
                 codeIsInvalid ? (
@@ -78,7 +81,7 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
             />
           </form>
 
-          {discounts && !!discounts.length && (
+          {discounts && discounts.length > 0 && (
             <div className={discountsContainerClassName}>
               {discounts.map((discount) => (
                 <div

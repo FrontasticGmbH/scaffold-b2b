@@ -7,7 +7,7 @@ import { ApprovalFlowsQuery, ApprovalRuleQuery } from '@Types/business-unit';
 import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { ValidationError } from './errors/ValidationError';
 import queryParamsToSortAttributes from './utils/requestHandlers/queryParamsToSortAttributes';
-import { fetchAccountFromSessionEnsureLoggedIn } from '@Commerce-commercetools/utils/fetchAccountFromSession';
+import { AccountFetcher } from './utils/AccountFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
@@ -15,7 +15,6 @@ import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProd
 import handleError from '@Commerce-commercetools/utils/handleError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
-import { assertIsAuthenticated } from '@Commerce-commercetools/utils/assertIsAuthenticated';
 import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 import { getBusinessUnitKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import ApprovalsQueryFactory from '@Commerce-commercetools/utils/ApprovalsQueryFactory';
@@ -206,7 +205,7 @@ const dataSources: DataSourceRegistry = {
 
   'frontastic/order': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      assertIsAuthenticated(context.request);
+      AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
 
       const { cartApi, orderQuery } = orderQueryFromContext(context);
 
@@ -226,7 +225,7 @@ const dataSources: DataSourceRegistry = {
 
   'frontastic/orders': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      assertIsAuthenticated(context.request);
+      AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
 
       const { cartApi, orderQuery } = orderQueryFromContext(context);
 
@@ -244,16 +243,12 @@ const dataSources: DataSourceRegistry = {
 
   'frontastic/approval-flow': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const account = assertIsAuthenticated(context.request);
+      const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
       const businessUnitKey = getBusinessUnitKey(context.request);
 
       const { businessUnitApi, approvalFlowQuery } = approvalFlowQueryFromContext(context, config);
 
-      const queryResult = await businessUnitApi.queryApprovalFlows(
-        account.accountId,
-        businessUnitKey,
-        approvalFlowQuery,
-      );
+      const queryResult = await businessUnitApi.queryApprovalFlows(accountId, businessUnitKey, approvalFlowQuery);
 
       return {
         dataSourcePayload: {
@@ -269,15 +264,11 @@ const dataSources: DataSourceRegistry = {
 
   'frontastic/approval-rule': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const account = assertIsAuthenticated(context.request);
+      const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
       const businessUnitKey = getBusinessUnitKey(context.request);
       const { businessUnitApi, approvalRuleQuery } = approvalRuleQueryFromContext(context, config);
 
-      const queryResult = await businessUnitApi.queryApprovalRules(
-        account.accountId,
-        businessUnitKey,
-        approvalRuleQuery,
-      );
+      const queryResult = await businessUnitApi.queryApprovalRules(accountId, businessUnitKey, approvalRuleQuery);
 
       return {
         dataSourcePayload: {
@@ -293,16 +284,12 @@ const dataSources: DataSourceRegistry = {
 
   'frontastic/approval-flows': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const account = assertIsAuthenticated(context.request);
+      const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
       const businessUnitKey = getBusinessUnitKey(context.request);
 
       const { businessUnitApi, approvalFlowQuery } = approvalFlowQueryFromContext(context, config);
 
-      const queryResult = await businessUnitApi.queryApprovalFlows(
-        account.accountId,
-        businessUnitKey,
-        approvalFlowQuery,
-      );
+      const queryResult = await businessUnitApi.queryApprovalFlows(accountId, businessUnitKey, approvalFlowQuery);
 
       return {
         dataSourcePayload: queryResult,
@@ -316,16 +303,12 @@ const dataSources: DataSourceRegistry = {
 
   'frontastic/approval-rules': async (config: DataSourceConfiguration, context: DataSourceContext) => {
     try {
-      const account = assertIsAuthenticated(context.request);
+      const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
       const businessUnitKey = getBusinessUnitKey(context.request);
 
       const { businessUnitApi, approvalFlowQuery } = approvalFlowQueryFromContext(context, config);
 
-      const queryResult = await businessUnitApi.queryApprovalRules(
-        account.accountId,
-        businessUnitKey,
-        approvalFlowQuery,
-      );
+      const queryResult = await businessUnitApi.queryApprovalRules(businessUnitKey, accountId, approvalFlowQuery);
 
       return {
         dataSourcePayload: queryResult,

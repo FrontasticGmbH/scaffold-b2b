@@ -17,7 +17,7 @@ import { ApprovalRuleQuery } from '@Types/business-unit/ApprovalRule';
 import { ApprovalFlowRejectAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/approval-flow';
 import BusinessUnitMapper from '../mappers/BusinessUnitMapper';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BussinessUnitFormatter';
+import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BusinessUnitFormatter';
 import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
@@ -29,9 +29,7 @@ import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
 const MAX_LIMIT = 50;
 
 export default class BusinessUnitApi extends BaseApi {
-  async createForAccount(account: Account): Promise<BusinessUnit> {
-    const businessUnitKey = businessUnitKeyFormatter(account.companyName);
-
+  async createForAccount(accountId: string, account: Account): Promise<BusinessUnit> {
     const associateRoleAssignments = this.defaultAssociateRoleKeys.map((associateRoleKey) => {
       const associateRoleAssignment: AssociateRoleAssignmentDraft = {
         associateRole: {
@@ -45,7 +43,7 @@ export default class BusinessUnitApi extends BaseApi {
     });
 
     const businessUnitDraft: BusinessUnitDraft = {
-      key: businessUnitKey,
+      key: businessUnitKeyFormatter(account.companyName),
       name: account.companyName,
       status: BusinessUnitStatus.Active,
       stores: [{ key: this.clientSettings.defaultStoreKey, typeId: 'store' }],
@@ -56,14 +54,14 @@ export default class BusinessUnitApi extends BaseApi {
         {
           associateRoleAssignments,
           customer: {
-            id: account.accountId,
+            id: accountId,
             typeId: 'customer',
           },
         },
       ],
     };
 
-    return this.associateRequestBuilder(account.accountId)
+    return this.associateRequestBuilder(accountId)
       .businessUnits()
       .post({
         body: businessUnitDraft,
@@ -316,10 +314,10 @@ export default class BusinessUnitApi extends BaseApi {
     ]);
   }
 
-  async getAssociate(businessUnitKey: string, account: Account): Promise<Associate> {
+  async getAssociate(businessUnitKey: string, accountId: string, account: Account): Promise<Associate> {
     return this.requestBuilder()
       .businessUnits()
-      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: account?.accountId })
+      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: accountId })
       .get()
       .execute()
       .then((response) => {
