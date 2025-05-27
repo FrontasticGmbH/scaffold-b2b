@@ -1,4 +1,10 @@
 
+## Version 1.19.0 (2025-05-12)
+
+** New Features & Improvements **
+
+- Added target to the discount
+
 ## Version 1.18.1 (2025-04-15)
 
 

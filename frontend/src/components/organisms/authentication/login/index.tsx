@@ -22,7 +22,13 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
 
   const translate = useTranslations();
 
-  const { handleSubmit, watch, setValue } = useForm<Account & { rememberMe?: boolean }>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+    watch,
+  } = useForm<Account & { rememberMe?: boolean }>({
     defaultValues: {
       email: '',
       password: '',
@@ -104,12 +110,12 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
           <Input
             containerClassName="w-full"
             className="w-full"
-            name="email"
-            required
             label={translate('common.emailAddress')}
-            value={data.email ?? ''}
-            onChange={handleChange}
-            error={inputError}
+            error={inputError || errors.email?.message}
+            {...register('email', {
+              required: translate('common.fieldIsRequired'),
+            })}
+            required
           />
         )}
 
@@ -118,11 +124,12 @@ const Login: FC<LoginProps> = ({ login, requestPasswordReset, ...props }) => {
             <PasswordInput
               containerClassName="w-full"
               className="w-full"
-              name="password"
-              required
               label={translate('account.password')}
-              value={data.password ?? ''}
-              onChange={handleChange}
+              error={errors.password?.message}
+              {...register('password', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              required
             />
             <div className="mt-6 flex justify-between">
               <Checkbox

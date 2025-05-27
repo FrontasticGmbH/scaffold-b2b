@@ -46,9 +46,12 @@ const usePurchaseLists = (storeKey?: string) => {
     async ({ wishlistId, name, description }: Partial<Wishlist>) => {
       const res = await sdk.composableCommerce.wishlist.updateWishlist({ name, description }, { id: wishlistId });
 
+      const { wishlistId: itemWishlistId } = res.isError ? {} : res.data;
+
       mutate();
-      globalMutate(['/action/wishlist/getWishlist', wishlistId]);
-      router.refresh();
+      globalMutate(['/action/wishlist/getWishlist', itemWishlistId]);
+
+      router.push(`/purchase-list/${itemWishlistId}`);
 
       return res.isError ? null : res.data;
     },
@@ -63,7 +66,7 @@ const usePurchaseLists = (storeKey?: string) => {
 
       mutate();
 
-      return res.isError ? null : res.data;
+      return res.isError ? null : {};
     },
     [mutate],
   );

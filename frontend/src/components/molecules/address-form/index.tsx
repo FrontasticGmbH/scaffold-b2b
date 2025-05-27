@@ -39,7 +39,13 @@ const AddressForm = ({
     return (addresses.find((a) => a.id === id) ?? {}) as Partial<Address>;
   }, [addresses, id]);
 
-  const { register, control, handleSubmit, watch } = useForm<Partial<Address>>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Partial<Address>>({
     defaultValues: defaultAddress,
   });
 
@@ -80,7 +86,10 @@ const AddressForm = ({
           label={translate('common.company-name')}
           required
           containerClassName="max-w-[400px]"
-          {...register('name')}
+          {...register('name', {
+            required: translate('common.fieldIsRequired'),
+          })}
+          error={errors.name?.message}
         />
 
         <Input
@@ -103,7 +112,7 @@ const AddressForm = ({
         <Controller
           name="country"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: translate('common.fieldIsRequired') }}
           render={({ field }) => (
             <Select
               {...field}
@@ -112,11 +121,20 @@ const AddressForm = ({
               className="max-w-[400px]"
               placeholder={translate('common.select')}
               options={countryOptions}
+              error={errors.country?.message}
             />
           )}
         />
 
-        <Input label={translate('common.address')} required containerClassName="max-w-[400px]" {...register('line1')} />
+        <Input
+          label={translate('common.address')}
+          required
+          containerClassName="max-w-[400px]"
+          {...register('line1', {
+            required: translate('common.fieldIsRequired'),
+          })}
+          error={errors.line1?.message}
+        />
 
         {showLine2 ? (
           <Input
@@ -136,10 +154,20 @@ const AddressForm = ({
             label={translate('common.zipCode')}
             required
             containerClassName="w-[100px] min-w-[100px]"
-            {...register('zip')}
+            {...register('zip', {
+              required: translate('common.fieldIsRequired'),
+            })}
+            error={errors.zip?.message}
           />
           <div className="grow">
-            <Input label={translate('common.city')} required {...register('city')} />
+            <Input
+              label={translate('common.city')}
+              required
+              {...register('city', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              error={errors.city?.message}
+            />
           </div>
         </div>
 

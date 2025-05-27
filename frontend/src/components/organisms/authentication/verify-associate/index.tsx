@@ -58,8 +58,10 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
           label={translate('common.firstName')}
           containerClassName="w-full"
           className="w-full"
+          {...register('firstName', {
+            required: translate('common.fieldIsRequired'),
+          })}
           required
-          {...register('firstName')}
           error={errors.firstName?.message}
         />
 
@@ -67,8 +69,10 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
           label={translate('common.lastName')}
           containerClassName="w-full"
           className="w-full"
+          {...register('lastName', {
+            required: translate('common.fieldIsRequired'),
+          })}
           required
-          {...register('lastName')}
           error={errors.lastName?.message}
         />
 
@@ -76,8 +80,10 @@ const VerifyAssociate = ({ image, logo, logoLink, company, onSubmit }: VerifyAss
           label={translate('account.password')}
           containerClassName="w-full"
           className="w-full"
+          {...register('password', {
+            required: translate('common.fieldIsRequired'),
+          })}
           required
-          {...register('password')}
           error={errors.password?.message}
         />
       </AuthForm>

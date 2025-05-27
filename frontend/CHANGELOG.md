@@ -1,4 +1,22 @@
-## Version 4.2.0 (2025-04-15)
+
+## Version 4.3.0 (2025-05-12)
+
+** New Features & Improvements **
+
+- Have approval rules split into tabs
+- Updating address tests
+- Migration to react hooks form
+- Add category banner component to B2B
+- Iimplemented dynamic filter support for products
+- Implemented dynamic filters for category
+- Using react hooks form for delete account form
+
+
+** Bug Fixes **
+
+- Fix approval rules tabs bug
+- Fix border radius for banner component
+
 
 ** New Features & Improvements **
 

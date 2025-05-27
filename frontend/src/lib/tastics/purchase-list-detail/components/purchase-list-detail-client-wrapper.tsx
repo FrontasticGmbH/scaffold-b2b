@@ -3,11 +3,13 @@
 import React from 'react';
 import { DataSource } from '@/types/lib/datasources';
 import { SWRConfig, unstable_serialize } from 'swr';
-import { DataSourceProps } from '../types';
+import { DataSourceProps, PurchaseListDetailProps } from '../types';
 import PurchaseListDetailViewModel from '../components/purchase-list-detail-view-model';
 import { TasticProps } from '../../types';
 
-const PurchaseListDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSourceProps>>) => {
+const PurchaseListDetailClientWrapper = ({
+  data,
+}: TasticProps<DataSource<DataSourceProps> & PurchaseListDetailProps>) => {
   const wishlist = data?.data?.dataSource?.wishlist.items[0];
 
   if (!wishlist) return;
@@ -23,7 +25,7 @@ const PurchaseListDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSo
         },
       }}
     >
-      <PurchaseListDetailViewModel wishlistId={wishlist.wishlistId as string} />
+      <PurchaseListDetailViewModel image={data.image} wishlistId={wishlist.wishlistId as string} />
     </SWRConfig>
   );
 };

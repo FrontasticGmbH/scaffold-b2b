@@ -21,6 +21,7 @@ export interface Image {
     size?: number;
     tags?: string[];
     _type?: string;
+    alt?: string;
   };
   ratio?: string;
   gravity?: Gravity;

@@ -32,6 +32,7 @@ const Select = ({
   className,
   defaultValue,
   testId,
+  error,
 }: SelectProps) => {
   const translate = useTranslations();
 
@@ -43,6 +44,8 @@ const Select = ({
 
     return options.filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()));
   }, [options, search, enableSearch]);
+
+  const id = typeof label === 'string' ? label.split(' ').join('-').toLocaleLowerCase() : 'select';
 
   return (
     <Combobox
@@ -57,7 +60,12 @@ const Select = ({
       className={classnames('relative', className)}
       disabled={disabled}
     >
-      <Label required={required} requiredStyle={requiredStyle} showOptionalLabel={showOptionalLabel}>
+      <Label
+        htmlFor={`${id}-select`}
+        required={required}
+        requiredStyle={requiredStyle}
+        showOptionalLabel={showOptionalLabel}
+      >
         {label}
       </Label>
 
@@ -72,9 +80,11 @@ const Select = ({
           className={classnames(
             className,
             'w-full rounded-md border border-gray-300 pl-3 pr-10 text-left text-14 focus:border-neutral-800 focus:outline-none focus:ring-0 active:border-neutral-800 disabled:cursor-not-allowed disabled:bg-neutral-200',
+            { 'border-red-500': !!error },
           )}
           aria-label={!label ? translate('common.select') : ''}
           data-testid={testId}
+          id={`${id}-select`}
         />
         <ComboboxButton
           aria-label="Dropdown button"
@@ -84,6 +94,7 @@ const Select = ({
           <ChevronDownIcon className="h-[18px]" aria-hidden="true" />
         </ComboboxButton>
       </div>
+      {error && <span className="mt-3 block text-12 font-medium text-red-500">{error}</span>}
 
       <Transition leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
         <ComboboxOptions

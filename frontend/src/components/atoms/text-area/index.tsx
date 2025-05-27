@@ -52,7 +52,12 @@ const TextArea = ({
 
   return (
     <div>
-      <Label required={required} showOptionalLabel={showOptionalLabel} requiredStyle={requiredStyle}>
+      <Label
+        required={required}
+        showOptionalLabel={showOptionalLabel}
+        requiredStyle={requiredStyle}
+        htmlFor={props.name}
+      >
         {label}
       </Label>
 
@@ -67,6 +72,7 @@ const TextArea = ({
         disabled={disabled}
         required={required}
         onChange={handleChange}
+        id={props.name}
         {...props}
       />
 

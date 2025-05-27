@@ -42,7 +42,7 @@ describe('DiscountsForm', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith(code);
     });
 
-    expect(input).toHaveValue('');
+    expect(input).toHaveValue('SAVE10');
   });
 
   it('displays an error message for invalid discount code', async () => {

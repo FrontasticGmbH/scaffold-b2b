@@ -1,47 +1,52 @@
-import React, { useCallback, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import Input from '@/components/atoms/input';
 import { useTranslations } from 'use-intl';
 
+// this is not being used but still made the changes, but couldnt test it properly
 const PurchaseOrderForm = ({
   defaultValues,
   onChange,
 }: {
   defaultValues: { purchaseOrderNumber?: string; invoiceMemo?: string };
-  onChange?: (data: unknown) => void;
+  onChange?: (data: { purchaseOrderNumber: string; invoiceMemo: string }) => void;
 }) => {
   const translate = useTranslations();
 
-  const [data, setData] = useState({
-    purchaseOrderNumber: defaultValues.purchaseOrderNumber ?? '',
-    invoiceMemo: defaultValues.invoiceMemo ?? '',
+  const {
+    register,
+    watch,
+    formState: { errors },
+  } = useForm<{ purchaseOrderNumber: string; invoiceMemo: string }>({
+    defaultValues: {
+      purchaseOrderNumber: defaultValues.purchaseOrderNumber ?? '',
+      invoiceMemo: defaultValues.invoiceMemo ?? '',
+    },
   });
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setData({ ...data, [e.target.name]: e.target.value });
-      onChange?.({ ...data, [e.target.name]: e.target.value });
-    },
-    [data, onChange],
-  );
+  const watchedValues = watch();
+
+  useEffect(() => {
+    onChange?.(watchedValues);
+  }, [watchedValues, onChange]);
 
   return (
-    <form className="flex flex-col items-stretch gap-4 md:items-start">
+    <form className="flex flex-col items-stretch gap-4 md:items-start" noValidate>
       <Input
         aria-label={translate('checkout.po-number')}
-        name="purchaseOrderNumber"
         className="md:w-[280px]"
         label={translate('checkout.po-number')}
+        error={errors.purchaseOrderNumber?.message}
+        {...register('purchaseOrderNumber', {
+          required: translate('common.fieldIsRequired'),
+        })}
         required
-        value={data.purchaseOrderNumber}
-        onChange={handleChange}
       />
       <Input
-        name="invoiceMemo"
         className="md:w-[280px]"
         label={translate('checkout.invoice-memo')}
         showOptionalLabel
-        value={data.invoiceMemo}
-        onChange={handleChange}
+        {...register('invoiceMemo')}
       />
     </form>
   );

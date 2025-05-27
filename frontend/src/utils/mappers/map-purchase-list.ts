@@ -18,12 +18,24 @@ export const mapPurchaseItem = ({ lineItemId, name, count, variant, _url }: Line
   };
 };
 
-export const mapPurchaseList = ({ wishlistId, name, description, lineItems, store }: Wishlist): PurchaseList => {
+export const mapPurchaseList = ({
+  wishlistId,
+  name,
+  description,
+  lineItems,
+  store,
+  businessUnitKey,
+  account,
+  createdAt,
+}: Wishlist): PurchaseList => {
   return {
     id: wishlistId as string,
     name: name ?? '',
     store: store ? mapStore(store) : undefined,
     description: description ?? '',
     items: (lineItems ?? []).map(mapPurchaseItem),
+    businessUnitKey: businessUnitKey ?? '',
+    account: account,
+    createdAt: createdAt ?? '',
   };
 };

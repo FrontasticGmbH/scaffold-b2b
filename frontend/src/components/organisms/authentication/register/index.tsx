@@ -4,7 +4,6 @@ import useCustomRouter from '@/hooks/useCustomRouter';
 import Input from '@/components/atoms/input';
 import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
-import { InputProps } from '@/components/atoms/input/types';
 import { Account } from '@shared/types/account/Account';
 import { useTranslations } from 'use-intl';
 import { namePattern } from '@/constants/regex';
@@ -33,25 +32,6 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
 
   const data = watch();
   const [confirmed, setConfirmed] = useState(false);
-  const nameValidation = { pattern: namePattern, title: translate('common.name-validation') };
-
-  const inputArray: Array<InputProps> = [
-    {
-      label: translate('common.emailAddress'),
-      name: 'email',
-    },
-    { label: translate('common.companyName'), name: 'companyName' },
-    {
-      label: translate('common.firstName'),
-      name: 'firstName',
-      ...nameValidation,
-    },
-    {
-      label: translate('common.lastName'),
-      name: 'lastName',
-      ...nameValidation,
-    },
-  ];
 
   const onFormSubmit = async (formData: Account) => {
     const noEmptyFields = formData.email && formData.password && formData.companyName;
@@ -102,28 +82,72 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
           </div>
         ) : (
           <>
-            {inputArray.map(({ label, name, pattern, title }) => (
-              <Input
-                key={name}
-                label={label}
-                required
-                pattern={pattern}
-                title={title}
-                value={(data[name as keyof Account] as string) ?? ''}
-                error={errors[name as keyof Account]?.message}
-                containerClassName="w-full"
-                className="w-full"
-                {...formRegister(name as keyof Account)}
-              />
-            ))}
+            <Input
+              label={translate('common.emailAddress')}
+              value={data.email ?? ''}
+              error={errors.email?.message}
+              containerClassName="w-full"
+              className="w-full"
+              {...formRegister('email', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              required
+            />
+
+            <Input
+              label={translate('common.companyName')}
+              value={data.companyName ?? ''}
+              error={errors.companyName?.message}
+              containerClassName="w-full"
+              className="w-full"
+              {...formRegister('companyName', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              required
+            />
+
+            <Input
+              label={translate('common.firstName')}
+              value={data.firstName ?? ''}
+              error={errors.firstName?.message}
+              containerClassName="w-full"
+              className="w-full"
+              {...formRegister('firstName', {
+                required: translate('common.fieldIsRequired'),
+                pattern: {
+                  value: namePattern,
+                  message: translate('common.name-validation'),
+                },
+              })}
+              required
+            />
+
+            <Input
+              label={translate('common.lastName')}
+              value={data.lastName ?? ''}
+              error={errors.lastName?.message}
+              containerClassName="w-full"
+              className="w-full"
+              {...formRegister('lastName', {
+                required: translate('common.fieldIsRequired'),
+                pattern: {
+                  value: namePattern,
+                  message: translate('common.name-validation'),
+                },
+              })}
+              required
+            />
+
             <PasswordInput
               label={translate('account.password')}
-              required
               value={data.password ?? ''}
               error={errors.password?.message}
               containerClassName="w-full"
               className="w-full"
-              {...formRegister('password', { required: true })}
+              {...formRegister('password', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              required
             />
           </>
         )}

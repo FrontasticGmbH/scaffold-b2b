@@ -9,8 +9,10 @@ import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useCart from '@/lib/hooks/useCart';
 import usePurchaseList from '@/lib/hooks/usePurchaseList';
 import useCustomRouter from '@/hooks/useCustomRouter';
+import { ImageProps } from '@/components/atoms/Image/types';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
 
-const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => {
+const PurchaseListDetailViewModel = ({ wishlistId, image }: { wishlistId: string; image: ImageProps }) => {
   const router = useCustomRouter();
 
   const { account } = useAccount();
@@ -22,12 +24,17 @@ const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => 
 
   const { purchaseList: wishlist, removeItem, updateItem } = usePurchaseList(wishlistId);
 
+  const { permissions } = useAccountRoles();
+
   if (!wishlist) return <></>;
 
   return (
     <Dashboard href={DashboardLinks.shoppingLists} userName={account?.firstName}>
       <PurchaseListDetailPage
         purchaseList={mapPurchaseList(wishlist)}
+        image={image}
+        permissions={permissions}
+        accountId={account?.accountId}
         onOrderPurchaseList={async () => {
           if (!wishlist.lineItems?.length) return false;
 
@@ -48,9 +55,11 @@ const PurchaseListDetailViewModel = ({ wishlistId }: { wishlistId: string }) => 
           return !!res?.wishlistId;
         }}
         onDeletePurchaseList={async () => {
-          await deletePurchaseList({ wishlistId: wishlist.wishlistId, store: wishlist.store });
-          router.back();
-          return true;
+          const response = await deletePurchaseList({ wishlistId: wishlist.wishlistId, store: wishlist.store });
+          if (response) {
+            router.back();
+          }
+          return !!response;
         }}
         onRemoveItem={async (id) => {
           const res = await removeItem({ wishlistId: wishlist.wishlistId, store: wishlist.store, lineItemId: id });

@@ -30,6 +30,7 @@ const EntityForm = ({
     <form
       className={classnames({ 'rounded-md border-neutral-400 md:border md:p-5 md:pb-6': !unstyled }, classNames.form)}
       onSubmit={handleSubmit}
+      noValidate
     >
       {children}
       <div

@@ -6,6 +6,7 @@ import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import ProductRouter from '@Commerce-commercetools/utils/routers/ProductRouter';
 import LocalizedValue from '@Commerce-commercetools/utils/LocalizedValue';
+import AccountMapper from './AccountMapper';
 
 export class WishlistMapper {
   static commercetoolsShoppingListToWishlist = (
@@ -18,15 +19,16 @@ export class WishlistMapper {
       wishlistId: commercetoolsShoppingList.id,
       wishlistVersion: commercetoolsShoppingList.version.toString(),
       key: commercetoolsShoppingList?.key,
-      accountId: commercetoolsShoppingList.customer?.id ?? undefined,
-      name: commercetoolsShoppingList.name[locale.language],
-      description: commercetoolsShoppingList.description?.[locale.language],
+      account: AccountMapper.commercetoolsCustomerToAccount(commercetoolsShoppingList.customer?.obj) ?? undefined,
+      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsShoppingList.name),
+      description: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsShoppingList.description),
       lineItems: (commercetoolsShoppingList.lineItems || []).map((lineItem) =>
         this.commercetoolsLineItemToLineItem(lineItem, locale, supplyChannelId),
       ),
       slug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsShoppingList.slug),
       store: this.commercetoolsStoreRefToStore(commercetoolsShoppingList.store),
       businessUnitKey: commercetoolsShoppingList.businessUnit?.key,
+      createdAt: commercetoolsShoppingList.createdAt,
     };
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
 import Input from '@/components/atoms/input';
@@ -12,7 +12,11 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
 
   const router = useRouter();
 
-  const { register, handleSubmit } = useForm<Partial<Account>>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Partial<Account>>({
     defaultValues: account,
   });
 
@@ -28,26 +32,56 @@ const PersonalInfoForm = ({ onUpdateAccount, account }: SettingsPageProps) => {
       onCancel={router.back}
     >
       <div className="flex flex-col gap-4">
-        <Input
-          label={translate('common.email')}
-          required
-          type="email"
-          containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
-          {...register('email')}
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: translate('common.fieldIsRequired'),
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: translate('error.email'),
+            },
+          }}
+          render={({ field }) => (
+            <Input
+              label={translate('common.email')}
+              type="email"
+              containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
+              error={errors.email?.message}
+              required
+              {...field}
+            />
+          )}
         />
 
-        <Input
-          label={translate('common.firstName')}
-          required
-          containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
-          {...register('firstName')}
+        <Controller
+          name="firstName"
+          control={control}
+          rules={{ required: translate('common.fieldIsRequired') }}
+          render={({ field }) => (
+            <Input
+              label={translate('common.firstName')}
+              containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
+              error={errors.firstName?.message}
+              requiredStyle="asterisk"
+              {...field}
+            />
+          )}
         />
 
-        <Input
-          label={translate('common.lastName')}
-          required
-          containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
-          {...register('lastName')}
+        <Controller
+          name="lastName"
+          control={control}
+          rules={{ required: translate('common.fieldIsRequired') }}
+          render={({ field }) => (
+            <Input
+              label={translate('common.lastName')}
+              containerClassName="w-full min-w-[unset] md:w-[350px] lg:w-[400px]"
+              error={errors.lastName?.message}
+              requiredStyle="asterisk"
+              {...field}
+            />
+          )}
         />
       </div>
     </EntityForm>

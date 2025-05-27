@@ -22,7 +22,11 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
 
   const defaultValues = (associates.find((associate) => associate.id === id) ?? {}) as Partial<Associate>;
 
-  const { register, control, handleSubmit } = useForm<Partial<Associate>>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Partial<Associate>>({
     defaultValues,
   });
 
@@ -49,11 +53,25 @@ const AssociateForm = ({ onUpdateAssociate, onAddAssociate, associates, roleOpti
       onCancel={router.back}
     >
       <div className="flex flex-col gap-4">
-        <Input
-          label={translate('common.email')}
-          required
-          containerClassName="max-w-[400px]"
-          {...register('email', { required: true })}
+        <Controller
+          name="email"
+          control={control}
+          rules={{
+            required: translate('common.fieldIsRequired'),
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: translate('error.email'),
+            },
+          }}
+          render={({ field }) => (
+            <Input
+              label={translate('common.email')}
+              containerClassName="max-w-[400px]"
+              error={errors.email?.message}
+              required
+              {...field}
+            />
+          )}
         />
 
         <div className="max-w-[400px]">

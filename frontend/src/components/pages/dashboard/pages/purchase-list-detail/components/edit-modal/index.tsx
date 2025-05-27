@@ -10,6 +10,7 @@ const EditPurchaseListModal = ({
   children,
   purchaseList,
   onUpdatePurchaseList,
+  disabled,
 }: React.PropsWithChildren<PurchaseListDetailPageProps>) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -25,10 +26,12 @@ const EditPurchaseListModal = ({
 
   return (
     <>
-      <div onClick={onOpen}>{children}</div>
-      <ResponsiveModal isOpen={isOpen} onRequestClose={onClose} closeButton className="lg:w-[600px]">
-        <div className="mx-auto p-4 md:p-6 lg:max-w-[400px] lg:p-0 lg:py-6">
-          <h4 className="pb-4 font-semibold text-gray-800 md:text-20">{translate('dashboard.purchase-list-edit')}</h4>
+      <div onClick={disabled ? () => {} : onOpen}>{children}</div>
+      <ResponsiveModal isOpen={isOpen} onRequestClose={onClose} closeButton className="max-w-[500px]">
+        <div className="max-w-[500px]">
+          <h4 className="mt-4 pb-4 pl-6 font-semibold text-gray-800 md:text-20">
+            {translate('dashboard.purchase-list-edit')}
+          </h4>
           <PurchaseListForm
             id={purchaseList.id}
             purchaseLists={[purchaseList]}

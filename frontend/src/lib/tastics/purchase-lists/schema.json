@@ -2,5 +2,28 @@
   "tasticType": "commercetools/ui/purchase-lists",
   "name": "Purchase Lists",
   "Category": "Dashboard",
-  "schema": []
+  "schema": [
+    {
+      "name": "Empty List Image",
+      "fields": [
+        {
+          "label": "Image",
+          "field": "image",
+          "type": "media",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "Permission Image",
+      "fields": [
+        {
+          "label": "Image",
+          "field": "permissionImage",
+          "type": "media",
+          "required": true
+        }
+      ]
+    }
+  ]
 }

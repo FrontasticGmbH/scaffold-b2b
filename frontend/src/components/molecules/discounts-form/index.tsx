@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslations } from 'use-intl';
@@ -10,18 +10,15 @@ import Accordion from '../accordion';
 const DiscountsForm = ({ className, discounts, onSubmit, customError }: DiscountFormProps) => {
   const translate = useTranslations();
 
-  const { setValue, watch, handleSubmit } = useForm<{ code: string }>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<{ code: string }>({
     defaultValues: { code: '' },
   });
-
-  const code = watch('code');
-  const [codeIsInvalid, setCodeIsInvalid] = useState(false);
-
-  const [processing, setProcessing] = useState(false);
-
-  const inputClassName = classnames(
-    codeIsInvalid ? 'border-red-500 text-red-500 focus:border-red-500' : 'border-neutral-300',
-  );
 
   const discountsContainerClassName = classnames(
     'mt-2 flex flex-wrap justify-items-start gap-3',
@@ -30,28 +27,21 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
 
   const containerClassName = classnames('border-t border-neutral-400 py-4 text-16', className);
 
-  const onApplyDiscount = async () => {
-    if (processing || !code) return;
+  const onApplyDiscount = async (data: { code: string }) => {
+    const success = await onSubmit?.(data.code.trim());
 
-    setProcessing(true);
-
-    const success = await onSubmit?.(code);
-
-    setCodeIsInvalid(!success);
-
-    if (success) setValue('code', '');
-
-    setProcessing(false);
-  };
-
-  const onFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onApplyDiscount();
+    if (!success) {
+      setError('code', {
+        type: 'manual',
+        message: customError || translate('cart.codeNotValid'),
+      });
+    } else {
+      setValue('code', '');
+    }
   };
 
   const onClearForm = () => {
     setValue('code', '');
-    setCodeIsInvalid(false);
   };
 
   return (
@@ -61,23 +51,24 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
           {translate('cart.discount-apply')}
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false}>
-          <form className="pt-6" onSubmit={onFormSubmit}>
+          <form className="pt-6" onSubmit={handleSubmit(onApplyDiscount)} noValidate>
             <Input
               aria-label={translate('cart.discount-code')}
-              className={inputClassName}
-              value={code}
+              className={classnames(
+                errors.code ? 'border-red-500 text-red-500 focus:border-red-500' : 'border-neutral-300',
+              )}
               placeholder={translate('cart.discount-enter')}
-              onChange={(e) => {
-                setValue('code', e.target.value);
-                setCodeIsInvalid(false);
-              }}
-              disabled={processing}
+              disabled={isSubmitting}
               icon={
-                codeIsInvalid ? (
+                errors.code ? (
                   <XMarkIcon className="size-[20px] cursor-pointer" onClick={onClearForm} data-testid="clear-input" />
                 ) : null
               }
-              error={codeIsInvalid ? customError || translate('cart.codeNotValid') : undefined}
+              error={errors.code?.message}
+              {...register('code', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              required
             />
           </form>
 

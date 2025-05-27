@@ -13,7 +13,7 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { WishlistMapper } from '@Commerce-commercetools/mappers/WishlistMapper';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
-const expandVariants = ['lineItems[*].variant', 'store'];
+const expandVariants = ['lineItems[*].variant', 'store', 'customer'];
 
 interface AddToWishlistRequest {
   sku: string;
@@ -287,7 +287,7 @@ export default class WishlistApi extends BaseApi {
     const locale = await this.getCommercetoolsLocal();
     const limit = +wishlistQuery.limit || undefined;
 
-    const whereClause = [`customer(id="${wishlistQuery.accountId}")`];
+    const whereClause = [];
 
     if (wishlistQuery.storeKey !== undefined) {
       whereClause.push(`store(key="${wishlistQuery.storeKey}")`);
@@ -295,6 +295,9 @@ export default class WishlistApi extends BaseApi {
 
     if (wishlistQuery.wishlistIds !== undefined && wishlistQuery.wishlistIds.length !== 0) {
       whereClause.push(`id in ("${wishlistQuery.wishlistIds.join('","')}")`);
+    }
+    if (wishlistQuery.businessUnitKey) {
+      whereClause.push(`businessUnit(key="${wishlistQuery.businessUnitKey}")`);
     }
 
     const searchQuery = wishlistQuery.query && wishlistQuery.query;

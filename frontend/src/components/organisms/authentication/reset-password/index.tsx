@@ -71,8 +71,10 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
           containerClassName="w-full"
           className="w-full"
           label={translate('account.password')}
+          {...register('password', {
+            required: translate('common.fieldIsRequired'),
+          })}
           required
-          {...register('password')}
           error={errors.password?.message}
         />
 
@@ -80,8 +82,10 @@ const ResetPassword = ({ image, logo, logoLink, resetPassword }: ResetPasswordPr
           containerClassName="w-full"
           className="w-full"
           label={translate('account.password-confirm')}
+          {...register('confirmPassword', {
+            required: translate('common.fieldIsRequired'),
+          })}
           required
-          {...register('confirmPassword')}
           error={errors.confirmPassword?.message}
         />
       </AuthForm>

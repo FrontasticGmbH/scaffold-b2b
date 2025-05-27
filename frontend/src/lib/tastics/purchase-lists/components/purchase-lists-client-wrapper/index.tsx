@@ -9,16 +9,19 @@ import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
 import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
 import useAccount from '@/lib/hooks/useAccount';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import useSubPath from '../../hooks/useSubPath';
+import { PurchaseListsProps } from '../../types';
 
-const PurchaseListsClientWrapper = () => {
+const PurchaseListsClientWrapper = (data: PurchaseListsProps) => {
   const { account } = useAccount();
 
   const { selectedStore } = useStoreAndBusinessUnits();
 
   const { purchaseLists, isLoading, createPurchaseList } = usePurchaseLists(selectedStore?.key);
+  const { permissions } = useAccountRoles();
 
-  const purchaseListProps = {
+  const purchaseListsProps = {
     purchaseLists: purchaseLists?.items.map(mapPurchaseList),
     loading: isLoading,
     onAddPurchaseList: async (purchaseList) => {
@@ -28,9 +31,12 @@ const PurchaseListsClientWrapper = () => {
 
       return !!res?.wishlistId;
     },
+    image: data.image,
+    permissionImage: data.permissionImage,
+    permissions,
   } as PurchaseListsPageProps;
 
-  const { ActiveSubPath } = useSubPath(purchaseListProps);
+  const { ActiveSubPath } = useSubPath(purchaseListsProps);
 
   return (
     <Dashboard
@@ -38,7 +44,7 @@ const PurchaseListsClientWrapper = () => {
       href={DashboardLinks.shoppingLists}
       userName={account?.firstName}
     >
-      {ActiveSubPath?.Component ?? <PurchaseListsPage {...purchaseListProps} />}
+      {ActiveSubPath?.Component ?? <PurchaseListsPage {...purchaseListsProps} />}
     </Dashboard>
   );
 };

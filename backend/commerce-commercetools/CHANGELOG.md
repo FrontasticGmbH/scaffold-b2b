@@ -1,4 +1,22 @@
 
+## Version 2.4.0 (2025-05-12)
+
+
+** New Features & Improvements **
+
+- Replace account session fetching with AccountFetcher utility and remove deprecated methods
+- Added info to the cart error code and support 400 errors
+- Added target to the discount
+- Remove redundant getByStoreKeyForAccount method
+- Migrated existing shopping list endpoints to new associate shopping list endpoints
+- Implemented dynamic filter support for products
+- Implemented dynamic filters for category
+
+
+** Bug Fixes **
+
+- Validated discount target before map it
+
 ## Version 2.3.1 (2025-04-15)
 
 

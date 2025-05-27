@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import InfoBanner from '@/components/molecules/info-banner';
 import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
@@ -29,8 +30,17 @@ const ApprovalFlowDetailsPage = ({
   const [processing, setProcessing] = useState(false);
 
   const [rejectionReasonTextarea, setRejectionReasonTextarea] = useState(false);
-  const [rejectionReason, setRejectionReason] = useState('');
   const maxRejectionReasonCharacters = 160;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<{ rejectionReason: string }>({
+    defaultValues: {
+      rejectionReason: '',
+    },
+  });
 
   const isInApproverTiers = useCallback((approver: Approver, tier: Group | Rule): boolean => {
     if (tier.type === 'rule') return approver.key === tier.key;
@@ -83,14 +93,14 @@ const ApprovalFlowDetailsPage = ({
     approvalFlow.approvals.some((approval) => !!approval.approver.roles.find((r) => r.key === role.key)),
   );
 
-  const handleRejection = useCallback(async () => {
+  const onSubmit = handleSubmit(async (data) => {
     setProcessing(true);
-    await onReject?.(rejectionReason);
+    await onReject?.(data.rejectionReason);
     setRejectionReasonTextarea(false);
     setProcessing(false);
 
     toast.success(translate('dashboard.approval-flow-rejected'), { position: 'top-right' });
-  }, [onReject, rejectionReason, translate]);
+  });
 
   return (
     <div>
@@ -217,29 +227,25 @@ const ApprovalFlowDetailsPage = ({
 
         <div className="mt-7 flex gap-3">
           {rejectionReasonTextarea ? (
-            <form
-              className="w-full"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                handleRejection();
-              }}
-            >
+            <form className="w-full" onSubmit={onSubmit}>
               <h6 className="mb-3 text-12 font-medium uppercase text-gray-600">
                 {translate('dashboard.approval-flow-rejection-reason')}
               </h6>
+
               <TextArea
-                value={rejectionReason}
+                {...register('rejectionReason', {
+                  maxLength: {
+                    value: maxRejectionReasonCharacters,
+                    message: translate('dashboard.message-too-long', {
+                      maxCharacters: maxRejectionReasonCharacters.toString(),
+                    }),
+                  },
+                })}
                 className="h-[150px] w-full md:h-[65px]"
                 fitContent={false}
-                error={
-                  rejectionReason.length > maxRejectionReasonCharacters
-                    ? translate('dashboard.message-too-long', {
-                        maxCharacters: maxRejectionReasonCharacters.toString(),
-                      })
-                    : ''
-                }
-                onChange={(e) => setRejectionReason(e.target.value)}
+                error={errors.rejectionReason?.message}
               />
+
               <div className="mt-6 flex gap-3">
                 <Button variant="secondary" size="l" onClick={() => setRejectionReasonTextarea(false)}>
                   {translate('common.cancel')}

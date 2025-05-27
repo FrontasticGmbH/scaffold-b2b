@@ -40,7 +40,6 @@ const ApprovalRuleForm = ({
   const {
     control,
     setValue,
-    getValues,
     watch,
     handleSubmit,
     formState: { isSubmitting },
@@ -95,7 +94,7 @@ const ApprovalRuleForm = ({
         {id ? translate('dashboard.approval-rule-edit') : translate('dashboard.approval-rule-add')}
       </h1>
 
-      <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onFormSubmit)} className="flex flex-col gap-4" noValidate>
         <Controller
           control={control}
           name="name"
@@ -131,6 +130,7 @@ const ApprovalRuleForm = ({
               options={roles}
               className="w-full max-w-[400px]"
               value={value?.map((r) => r.key)}
+              required
               onChange={(vals) =>
                 onChange(
                   roles.filter((role) => vals.includes(role.value)).map(({ name, value }) => ({ key: value, name })),
@@ -230,7 +230,7 @@ const ApprovalRuleForm = ({
               confirm: translate('common.leave'),
             }}
           >
-            <Button className="w-full" variant="secondary">
+            <Button className="w-full" variant="secondary" type="button">
               {translate('common.cancel')}
             </Button>
           </Confirmation>

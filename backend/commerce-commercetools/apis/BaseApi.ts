@@ -11,7 +11,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { Context, Request } from '@frontastic/extension-types';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
-import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
+import { TokenCache, TokenStore } from '@commercetools/ts-client';
 import { Token } from '@Types/Token';
 import { ByProjectKeyAsAssociateByAssociateIdRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/as-associate/by-project-key-as-associate-by-associate-id-request-builder';
 import { ByProjectKeyAsAssociateByAssociateIdInBusinessUnitKeyByBusinessUnitKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/in-business-unit/by-project-key-as-associate-by-associate-id-in-business-unit-key-by-business-unit-key-request-builder';

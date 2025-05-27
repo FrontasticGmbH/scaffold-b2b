@@ -6,4 +6,5 @@ export interface WishlistQuery extends PaginatedQuery {
   name?: string;
   query?: string;
   storeKey?: string;
+  businessUnitKey?: string;
 }

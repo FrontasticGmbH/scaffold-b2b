@@ -13,4 +13,5 @@ export interface SelectProps extends DropdownProps, LabelProps {
   options: Option[];
   enableSearch?: boolean;
   testId?: string;
+  error?: string;
 }

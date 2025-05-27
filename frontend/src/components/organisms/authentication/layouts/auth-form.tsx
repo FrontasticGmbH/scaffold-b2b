@@ -46,7 +46,7 @@ const AuthForm = ({
         )}
       </div>
 
-      <form data-testid="auth-form" onSubmit={handleSubmit}>
+      <form data-testid="auth-form" onSubmit={handleSubmit} noValidate>
         {children && (
           <div className="mt-6 grid gap-3 md:mt-9">
             {error && <p className="text-14 font-medium text-red-500">{error}</p>}

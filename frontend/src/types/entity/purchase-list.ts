@@ -1,3 +1,4 @@
+import { Account } from '@shared/types/account';
 import { Currency } from '../currency';
 import { Store } from './business-unit';
 
@@ -25,4 +26,7 @@ export interface PurchaseList {
   store?: Store;
   description: string;
   items: PurchaseListItem[];
+  businessUnitKey?: string;
+  account?: Account;
+  createdAt?: string;
 }

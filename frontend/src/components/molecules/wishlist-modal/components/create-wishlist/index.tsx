@@ -17,7 +17,11 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
   const { showFailedMessage } = useEntityToasters('purchaselist');
   const { selectedStore } = useStoreAndBusinessUnits();
 
-  const { register, handleSubmit } = useForm<Partial<PurchaseList>>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Partial<PurchaseList>>();
 
   const onSubmit = async (data: Partial<PurchaseList>) => {
     try {
@@ -58,9 +62,12 @@ const CreateWishlist = ({ onAddToNewList, onClose }: AddToNewWishlistProps) => {
         <div className="m-auto flex w-fit flex-col gap-4">
           <Input
             label={translate('common.name')}
-            required
             containerClassName="md:w-[350px] lg:w-[400px]"
-            {...register('name', { required: true })}
+            error={errors.name?.message}
+            {...register('name', {
+              required: translate('common.fieldIsRequired'),
+            })}
+            required
           />
 
           <TextArea

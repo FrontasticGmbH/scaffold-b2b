@@ -1,5 +1,6 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
+import { AccountFetcher } from './AccountFetcher';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
@@ -26,12 +27,13 @@ export class CartFetcher {
   }
 
   static async fetchActiveCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
+    const accountId = AccountFetcher.fetchAccountIdFromSession(request);
     const cartId = request.sessionData?.cartId;
     const businessUnitKey = getBusinessUnitKey(request);
     const storeKey = getStoreKey(request);
 
-    // In B2B we use associate endpoints so we need to validate the business unit key and store key for the cart
-    if (!businessUnitKey || !storeKey) {
+    // In B2B we use associate endpoints so we need to validate the accountId, business unit key, and store key for the cart
+    if (!accountId || !businessUnitKey || !storeKey) {
       return undefined;
     }
 

@@ -6,12 +6,9 @@ const RemoveButton = ({ onRemove }: Props) => {
   const translate = useTranslations();
 
   return (
-    <span
-      className="cursor-pointer text-14 font-medium text-gray-700 transition hover:text-gray-500"
-      onClick={onRemove}
-    >
+    <button className="text-14 font-medium text-primary underline transition hover:text-gray-500" onClick={onRemove}>
       {translate('common.remove')}
-    </span>
+    </button>
   );
 };
 
