@@ -546,6 +546,7 @@
     "associate-delete-confirm": "Are you sure you want to permanently delete this associate?",
     "associate-delete-disabled": "To maintain administrative access, you cannot delete the sole admin account associated with this business unit-",
     "associate-edit": "Edit associate",
+    "associate-name-not-specified": "Name not specified yet",
     "associates-view-only-desc": "To add or manage associate roles, please request your company administrator to grant you the necessary permissions",
     "await-reply-from-tier": "Awaiting reply from {tier} tier",
     "awaiting-reply-from-seller": "Awaiting reply from seller",

@@ -36,4 +36,5 @@ export interface ApprovalFlowsQuery extends PaginatedQuery {
   approvalFlowStatus?: ApprovalFlowStatus[];
   approvalFlowRejection?: ApprovalFlowRejection[];
   sortAttributes?: SortAttributes;
+  orderIds?: string[]
 }

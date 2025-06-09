@@ -55,7 +55,7 @@ export default class QuoteApi extends BaseApi {
         return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -75,11 +75,11 @@ export default class QuoteApi extends BaseApi {
         return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
-        if (error.code === 404) {
+        if (error.statusCode === 404) {
           throw new ResourceNotFoundError({ message: error.message });
         }
 
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -99,11 +99,11 @@ export default class QuoteApi extends BaseApi {
         return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
-        if (error.code === 404) {
+        if (error.statusCode === 404) {
           throw new ResourceNotFoundError({ message: error.message });
         }
 
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -168,7 +168,7 @@ export default class QuoteApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -239,7 +239,7 @@ export default class QuoteApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -269,7 +269,7 @@ export default class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
     });
   }
@@ -300,7 +300,7 @@ export default class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteToQuote(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
     });
   }
@@ -328,7 +328,7 @@ export default class QuoteApi extends BaseApi {
           return QuoteMapper.commercetoolsQuoteRequestToQuoteRequest(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
     });
   }
@@ -364,7 +364,7 @@ export default class QuoteApi extends BaseApi {
           return CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
     });
   }

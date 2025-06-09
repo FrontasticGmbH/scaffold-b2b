@@ -1,3 +1,4 @@
+import { ApprovalFlowStatus } from '../business-unit';
 import { Cart } from './Cart';
 
 export interface ReturnLineItem {
@@ -42,4 +43,5 @@ export interface Order extends Cart {
   purchaseOrderNumber?: string;
   quoteId?: string;
   shipmentState?: ShipmentState;
+  approvalFlowStatus?: ApprovalFlowStatus
 }

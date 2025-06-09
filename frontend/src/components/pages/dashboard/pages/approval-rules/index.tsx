@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import Select from '@/components/atoms/select';
 import { useTranslations } from 'use-intl';
 import Button from '@/components/atoms/button';

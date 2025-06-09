@@ -64,4 +64,5 @@ export interface CheckoutProps {
     purchase?: string;
     review?: string;
   };
+  callbackUrl?: string;
 }

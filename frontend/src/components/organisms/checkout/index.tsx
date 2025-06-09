@@ -26,6 +26,7 @@ const Checkout = ({
   translations = {},
   buyerCanAddComment = false,
   enableCtCheckout = false,
+  callbackUrl,
 }: CheckoutProps) => {
   const translate = useTranslations();
 
@@ -59,6 +60,7 @@ const Checkout = ({
             paymentMethods={paymentMethods}
             onCompletePayment={onCompletePayment}
             translations={translations}
+            callbackUrl={callbackUrl}
           />
         </div>
 

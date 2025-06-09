@@ -546,6 +546,7 @@
     "associate-delete-confirm": "Tem certeza de que deseja excluir permanentemente este associado?",
     "associate-delete-disabled": "Para manter o acesso administrativo, você não pode excluir a conta de administrador exclusiva associada a esta unidade de negócios.",
     "associate-edit": "Editar associado",
+    "associate-name-not-specified": "Nome ainda não especificado",
     "associates-view-only-desc": "Para adicionar ou gerenciar funções de associados, solicite ao administrador da empresa que lhe conceda as permissões necessárias",
     "await-reply-from-tier": "Aguardando resposta da camada {tier}",
     "awaiting-reply-from-seller": "Aguardando resposta do vendedor",

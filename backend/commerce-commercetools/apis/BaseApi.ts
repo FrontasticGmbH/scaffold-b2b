@@ -534,7 +534,7 @@ export default abstract class BaseApi {
         return productTypes;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -553,7 +553,7 @@ export default abstract class BaseApi {
       .get()
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
     const project = response.body;
 
@@ -591,7 +591,7 @@ export default abstract class BaseApi {
         return associateRoles;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -721,7 +721,7 @@ export default abstract class BaseApi {
         return response.json();
       })
       .catch((error: any) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error });
       });
 
     if (response?.errors) {

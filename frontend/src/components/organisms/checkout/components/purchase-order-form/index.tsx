@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import Input from '@/components/atoms/input';
 import { useTranslations } from 'use-intl';
 
-// this is not being used but still made the changes, but couldnt test it properly
 const PurchaseOrderForm = ({
   defaultValues,
   onChange,
@@ -15,7 +14,7 @@ const PurchaseOrderForm = ({
 
   const {
     register,
-    watch,
+    control,
     formState: { errors },
   } = useForm<{ purchaseOrderNumber: string; invoiceMemo: string }>({
     defaultValues: {
@@ -24,11 +23,14 @@ const PurchaseOrderForm = ({
     },
   });
 
-  const watchedValues = watch();
+  const values = useWatch({ control, name: ['purchaseOrderNumber', 'invoiceMemo'] });
 
   useEffect(() => {
-    onChange?.(watchedValues);
-  }, [watchedValues, onChange]);
+    onChange?.({
+      purchaseOrderNumber: values[0],
+      invoiceMemo: values[1],
+    });
+  }, [values[0], values[1]]);
 
   return (
     <form className="flex flex-col items-stretch gap-4 md:items-start" noValidate>

@@ -4,7 +4,7 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 
 export default class StoreApi extends BaseApi {
-  get: (key: string) => Promise<Store> = async (key: string): Promise<Store> => {
+  async get(key: string): Promise<Store> {
     const locale = await this.getCommercetoolsLocal();
 
     return this.requestBuilder()
@@ -16,14 +16,11 @@ export default class StoreApi extends BaseApi {
         return StoreMapper.mapCommercetoolsStoreToStore(response.body, locale.language);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
-  };
+  }
 
-  query: (where: string, expand?: string | string[]) => Promise<any> = async (
-    where: string,
-    expand?: string | string[],
-  ): Promise<Store[]> => {
+  async query(where: string, expand?: string | string[]): Promise<Store[]> {
     const locale = await this.getCommercetoolsLocal();
 
     return this.requestBuilder()
@@ -39,7 +36,7 @@ export default class StoreApi extends BaseApi {
         return response.body.results.map((store) => StoreMapper.mapCommercetoolsStoreToStore(store, locale.language));
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
-  };
+  }
 }

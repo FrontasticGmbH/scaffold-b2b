@@ -53,7 +53,7 @@ export const queryWishlists: ActionHook = async (request, actionContext) => {
     const wishlistApi = getWishlistApi(request, actionContext.frontasticContext);
 
     const accountId = AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(request);
-
+    const storeKey = getStoreKey(request);
     const businessUnitKey = getBusinessUnitKey(request);
 
     const wishlistQuery: WishlistQuery = {
@@ -61,7 +61,7 @@ export const queryWishlists: ActionHook = async (request, actionContext) => {
       accountId,
       limit: request.query?.limit ?? undefined,
       cursor: request.query?.cursor ?? undefined,
-      storeKey: request.query?.storeKey ?? undefined,
+      storeKey,
       businessUnitKey,
       wishlistIds: queryParamsToIds('wishlistIds', request.query),
       query: request.query?.query ?? undefined,

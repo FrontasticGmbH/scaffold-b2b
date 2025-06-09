@@ -15,31 +15,31 @@ const useSubPath = ({ ...props }: CompanyAdminPageProps & { selectedStore?: Stor
   const ActiveSubPath = useMemo(() => {
     const components = {
       'edit-general-info': {
-        title: 'dashboard.general.info.edit',
+        title: 'dashboard.general-info-edit',
         Component: <GeneralInfoForm {...props} />,
       },
       'add-address': {
-        title: 'dashboard.address.add',
+        title: 'dashboard.address-add',
         Component: <AddressForm {...props} />,
       },
       'edit-address': {
-        title: 'dashboard.address.edit',
+        title: 'dashboard.address-edit',
         Component: <AddressForm {...props} />,
       },
       'add-associate': {
-        title: 'dashboard.associate.add',
+        title: 'dashboard.associate-add',
         Component: <AssociateForm {...props} />,
       },
       'edit-associate': {
-        title: 'dashboard.associate.edit',
+        title: 'dashboard.associate-edit',
         Component: <AssociateForm {...props} />,
       },
       'add-business-unit': {
-        title: 'dashboard.business.unit.add',
+        title: 'dashboard.business-unit-add',
         Component: <BusinessUnitForm {...props} />,
       },
       'edit-business-unit': {
-        title: 'dashboard.business.unit.edit',
+        title: 'dashboard.business-unit-edit',
         Component: <BusinessUnitForm {...props} />,
       },
     };

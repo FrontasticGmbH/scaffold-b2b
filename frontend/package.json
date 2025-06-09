@@ -1,8 +1,8 @@
 {
   "name": "@b2bdev/poc-frontend",
-  "version": "4.3.0",
+  "version": "4.4.0",
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "license": "MIT",
   "main": "index.js",

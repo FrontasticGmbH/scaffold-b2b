@@ -2,11 +2,11 @@ import { Wishlist } from '@Types/wishlist/Wishlist';
 import { ShoppingList, ShoppingListLineItem, StoreKeyReference } from '@commercetools/platform-sdk';
 import { Store } from '@Types/store/Store';
 import { LineItem } from '@Types/wishlist';
+import AccountMapper from './AccountMapper';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import ProductRouter from '@Commerce-commercetools/utils/routers/ProductRouter';
 import LocalizedValue from '@Commerce-commercetools/utils/LocalizedValue';
-import AccountMapper from './AccountMapper';
 
 export class WishlistMapper {
   static commercetoolsShoppingListToWishlist = (

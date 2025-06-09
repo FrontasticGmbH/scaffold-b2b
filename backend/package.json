@@ -6,7 +6,7 @@
   "main": "./index.ts",
   "packageManager": "yarn@4.4.1",
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "scripts": {
     "extensions:watch": "tsup --env.NODE_ENV dev",
@@ -21,7 +21,7 @@
   "dependencies": {
     "@babel/runtime": "^7.16.5",
     "@commercetools/platform-sdk": "8.7.0",
-    "@commercetools/ts-client": "^3.3.1",
+    "@commercetools/ts-client": "^3.4.0",
     "@sendgrid/mail": "^7.7.0",
     "axios": "^0.24.0",
     "contentful": "^9.3.7",

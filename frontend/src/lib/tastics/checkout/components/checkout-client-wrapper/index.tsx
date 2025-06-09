@@ -137,11 +137,12 @@ const CheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
         if (orderId) {
           mutateAllApprovalFlows();
-          router.push(`/thank-you?orderId=${orderId}`);
+          router.push(`${data.callbackUrl}?orderId=${orderId}`);
         } else toast.error(translate('common.something-went-wrong'), { position: 'top-right' });
 
         return !!orderId;
       }}
+      callbackUrl={data.callbackUrl}
     />
   );
 };

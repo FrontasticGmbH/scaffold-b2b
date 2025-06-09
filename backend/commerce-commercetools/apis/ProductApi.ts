@@ -17,7 +17,7 @@ import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 
 export default class ProductApi extends BaseApi {
-  query: (productQuery: ProductQuery) => Promise<ProductPaginatedResult> = async (productQuery: ProductQuery) => {
+  async query(productQuery: ProductQuery): Promise<ProductPaginatedResult> {
     const locale = await this.getCommercetoolsLocal();
     productQuery.categories = await this.hydrateCategories(productQuery);
     productQuery.filters = await this.hydrateFilters(productQuery);
@@ -77,11 +77,11 @@ export default class ProductApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
-  };
+  }
 
-  getProduct: (productQuery: ProductQuery) => Promise<Product> = async (productQuery: ProductQuery) => {
+  async getProduct(productQuery: ProductQuery): Promise<Product> {
     try {
       const result = await this.query(productQuery);
 
@@ -89,9 +89,9 @@ export default class ProductApi extends BaseApi {
     } catch (error) {
       throw error;
     }
-  };
+  }
 
-  getSearchableAttributes: () => Promise<FilterField[]> = async () => {
+  async getSearchableAttributes(): Promise<FilterField[]> {
     const locale = await this.getCommercetoolsLocal();
 
     const response = await this.requestBuilder()
@@ -99,7 +99,7 @@ export default class ProductApi extends BaseApi {
       .get()
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
 
     const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(
@@ -131,7 +131,7 @@ export default class ProductApi extends BaseApi {
     });
 
     return filterFields;
-  };
+  }
 
   async getProductFilters(): Promise<FilterField[]> {
     const locale = await this.getCommercetoolsLocal();
@@ -181,7 +181,7 @@ export default class ProductApi extends BaseApi {
     ];
   }
 
-  queryFacetCategoriesForSubtree: (storeId?: string) => Promise<any> = async (storeId?: string) => {
+  async queryFacetCategoriesForSubtree(storeId?: string): Promise<any> {
     const query: ProductSearchRequest = {
       ...(storeId && {
         query: {
@@ -220,7 +220,7 @@ export default class ProductApi extends BaseApi {
       ?.map((b) => b.key);
 
     return res;
-  };
+  }
 
   async queryCategories(categoryQuery: CategoryQuery, buckets?: string[]): Promise<PaginatedResult<Category>> {
     const locale = await this.getCommercetoolsLocal();
@@ -273,18 +273,18 @@ export default class ProductApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
-  protected getOffsetFromCursor = (cursor: string): number | undefined => {
+  protected getOffsetFromCursor(cursor: string): number | undefined {
     if (cursor === undefined) {
       return undefined;
     }
 
     const offsetMach = cursor.match(/(?<=offset:).+/);
     return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
-  };
+  }
 
   protected async hydrateCategories(productQuery: ProductQuery): Promise<string[]> {
     if (productQuery.categories !== undefined && productQuery.categories.length !== 0) {
@@ -361,7 +361,7 @@ export default class ProductApi extends BaseApi {
       .get(methodArgs)
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -371,7 +371,7 @@ export default class ProductApi extends BaseApi {
       .get(methodArgs)
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 }

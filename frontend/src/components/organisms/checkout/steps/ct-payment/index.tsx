@@ -17,7 +17,9 @@ const CommercetoolsPayment = ({
   isCompleted,
   translations,
   onCompletePayment,
-}: Pick<CheckoutProps, 'translations' | 'onCompletePayment'> & Pick<StepProps, 'isActive' | 'isCompleted'>) => {
+  callbackUrl,
+}: Pick<CheckoutProps, 'translations' | 'onCompletePayment' | 'callbackUrl'> &
+  Pick<StepProps, 'isActive' | 'isCompleted'>) => {
   const router = useCustomRouter();
 
   const initiatedCheckout = useRef(false);
@@ -93,7 +95,7 @@ const CommercetoolsPayment = ({
 
               const { order } = message.payload as { order: { id: string } };
 
-              router.push(`${process.env.NEXT_PUBLIC_COMMERCETOOLS_CHECKOUT_CALLBACK_URL}?orderId=${order.id}`);
+              window.location.href = `${locale}${callbackUrl}/?orderId=${order.id}`;
 
               break;
           }
@@ -110,6 +112,7 @@ const CommercetoolsPayment = ({
     router,
     setCheckoutIsProcessing,
     translate,
+    callbackUrl,
   ]);
 
   useEffect(() => {

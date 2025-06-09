@@ -47,6 +47,7 @@ import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPay
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 
 const CART_EXPANDS = [
   'lineItems[*].discountedPricePerQuantity[*].discountedPrice.includedDiscounts[*].discount',
@@ -66,6 +67,7 @@ export default class CartApi extends BaseApi {
   protected storeKey: string;
   protected distributionChannelId: string;
   protected supplyChannelId: string;
+  protected request: Request;
 
   constructor(
     context: Context,
@@ -82,6 +84,7 @@ export default class CartApi extends BaseApi {
     this.businessUnitKey = businessUnitKey;
     this.distributionChannelId = distributionChannelId;
     this.supplyChannelId = supplyChannelId;
+    this.request = request;
   }
 
   async getById(cartId: string): Promise<Cart> {
@@ -105,11 +108,11 @@ export default class CartApi extends BaseApi {
       .catch((error) => {
         // The 400 error is thrown when the cart doesn't belong to the associate or the business unit
         // The 404 error is thrown when the cart can't be found
-        if (error.code === 400 || error.code === 404) {
+        if (error.statusCode === 400 || error.statusCode === 404) {
           throw new ResourceNotFoundError({ message: error.message });
         }
 
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -151,7 +154,7 @@ export default class CartApi extends BaseApi {
         return [];
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.status, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -183,7 +186,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then(async (response) => await this.buildCartWithAvailableShippingMethods(response.body, locale))
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -371,7 +374,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -389,7 +392,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -421,7 +424,7 @@ export default class CartApi extends BaseApi {
         .execute()
         .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
     });
   }
@@ -453,7 +456,7 @@ export default class CartApi extends BaseApi {
         .execute()
         .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
     });
   }
@@ -483,11 +486,11 @@ export default class CartApi extends BaseApi {
         );
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
-  getAvailableShippingMethods: (cart: Cart) => Promise<ShippingMethod[]> = async (cart: Cart) => {
+  async getAvailableShippingMethods(cart: Cart): Promise<ShippingMethod[]> {
     const locale = await this.getCommercetoolsLocal();
 
     return await this.requestBuilder()
@@ -506,9 +509,9 @@ export default class CartApi extends BaseApi {
         );
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
-  };
+  }
 
   async addPayment(cart: Cart, payment: Payment): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
@@ -608,7 +611,7 @@ export default class CartApi extends BaseApi {
         return CartMapper.commercetoolsPaymentToPayment(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -665,7 +668,7 @@ export default class CartApi extends BaseApi {
         return CartMapper.commercetoolsPaymentToPayment(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -748,22 +751,18 @@ export default class CartApi extends BaseApi {
     return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
   }
 
-  assertCartForBusinessUnitAndStore: (cart: Cart, businessUnitKey?: string, storeKey?: string) => boolean = (
-    cart: Cart,
-    businessUnitKey?: string,
-    storeKey?: string,
-  ) => {
+  assertCartForBusinessUnitAndStore(cart: Cart, businessUnitKey?: string, storeKey?: string): boolean {
     return (
       !!cart.businessUnitKey &&
       !!cart.storeKey &&
       cart.businessUnitKey === businessUnitKey &&
       cart.storeKey === storeKey
     );
-  };
+  }
 
-  assertCartIsActive: (cart: Cart) => boolean = (cart: Cart) => {
+  assertCartIsActive(cart: Cart): boolean {
     return cart.cartState === CartState.Active;
-  };
+  }
 
   async replicateCart(orderId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
@@ -905,7 +904,7 @@ export default class CartApi extends BaseApi {
       whereClause.push(`createdAt < "${orderQuery.created.to.toISOString()}"`);
     }
 
-    return await this.associateEndpoints(this.accountId, this.businessUnitKey)
+    const queryResult = await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
       .get({
         queryArgs: {
@@ -922,7 +921,6 @@ export default class CartApi extends BaseApi {
         const orders = response.body.results.map((commercetoolsOrder) => {
           return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, this.defaultLocale);
         });
-
         return {
           total: response.body.total,
           items: orders,
@@ -933,8 +931,23 @@ export default class CartApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
+
+    const businessUnitApi = getBusinessUnitApi(this.request, this.commercetoolsFrontendContext);
+
+    const approvalFlows = await businessUnitApi.queryApprovalFlows(this.businessUnitKey, this.accountId, {
+      orderIds: queryResult.items.map((order) => order.orderId),
+    });
+
+    queryResult.items.forEach((order) => {
+      const approvalFlow = approvalFlows.items.find((approvalFlow) => approvalFlow.order.orderId === order.orderId);
+      if (approvalFlow) {
+        order.approvalFlowStatus = approvalFlow.approvalFlowStatus;
+      }
+    });
+
+    return queryResult;
   }
 
   async getCheckoutSessionToken(cartId: string): Promise<Token> {
@@ -1103,7 +1116,7 @@ export default class CartApi extends BaseApi {
         return response.body;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -1124,7 +1137,7 @@ export default class CartApi extends BaseApi {
         return response.body;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 

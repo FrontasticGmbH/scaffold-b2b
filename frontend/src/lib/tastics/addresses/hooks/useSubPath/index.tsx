@@ -11,7 +11,7 @@ const useSubPath = (props: AddressesPageProps) => {
   const ActiveSubPath = useMemo(() => {
     const components = {
       'add-address': {
-        title: 'dashboard.address.add',
+        title: 'dashboard.address-add',
         Component: (
           <AddressForm
             {...({
@@ -23,7 +23,7 @@ const useSubPath = (props: AddressesPageProps) => {
         ),
       },
       'edit-address': {
-        title: 'dashboard.address.edit',
+        title: 'dashboard.address-edit',
         Component: (
           <AddressForm
             {...({

@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/nextjs';
+import path from 'path';
 
 const config: StorybookConfig = {
   stories: ['./docs/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
@@ -29,7 +30,7 @@ const config: StorybookConfig = {
     }
     config.resolve.alias = {
       ...config.resolve.alias,
-      'next/navigation': require.resolve('../__mocks__/next/navigation'),
+      'next/navigation': path.resolve('./__mocks__/next/navigation'),
     };
 
     return config;

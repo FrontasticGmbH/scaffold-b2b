@@ -1671,12 +1671,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commercetools/ts-client@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "@commercetools/ts-client@npm:3.3.1"
+"@commercetools/ts-client@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@commercetools/ts-client@npm:3.4.0"
   dependencies:
     buffer: "npm:^6.0.3"
-  checksum: 10c0/59b5a8387478840ac7f5026c4b1ea7e4e74523c4775ad5f2c9a731eacd48632cf6a07f7b0b69600b9ae07a4f8cf409a6cb63ba0c48d0a2f0fa36c9fb3bf346bd
+  checksum: 10c0/defb13bd00af42fbff8ffcdd15a0aac2004084d27308d018bd046cca52438182413f63b893e4cfc60b0be9876bdf8f7fcceca1afe93fe1a9f7783c45d35cb93a
   languageName: node
   linkType: hard
 
@@ -1888,7 +1888,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.16.5"
     "@babel/runtime": "npm:^7.16.5"
     "@commercetools/platform-sdk": "npm:8.7.0"
-    "@commercetools/ts-client": "npm:^3.3.1"
+    "@commercetools/ts-client": "npm:^3.4.0"
     "@frontastic/extension-types": "npm:0.0.13"
     "@sendgrid/mail": "npm:^7.7.0"
     "@types/axios": "npm:^0.14.0"

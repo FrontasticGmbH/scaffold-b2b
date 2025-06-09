@@ -471,6 +471,9 @@ export default class CartMapper {
         discounts: commercetoolsDiscountCode.cartDiscounts.map((commercetoolsCartDiscount) => {
           return {
             cartDiscountId: commercetoolsCartDiscount.id,
+            target: commercetoolsCartDiscount.obj?.target
+              ? this.commercetoolsCartDiscountTargetToCartDiscountTarget(commercetoolsCartDiscount.obj?.target)
+              : undefined,
           };
         }),
       };
@@ -555,7 +558,7 @@ export default class CartMapper {
   static commercetoolsCartDiscountTargetToCartDiscountTarget(
     commercetoolsCartDiscountTarget: CommercetoolsCartDiscountTarget,
   ): CartDiscountTarget | undefined {
-    switch (commercetoolsCartDiscountTarget.type) {
+    switch (commercetoolsCartDiscountTarget?.type) {
       case 'lineItems':
         return {
           type: 'lineItems',

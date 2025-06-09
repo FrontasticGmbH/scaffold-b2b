@@ -71,7 +71,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -91,7 +91,7 @@ export default class BusinessUnitApi extends BaseApi {
           return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         }),
     );
   }
@@ -106,7 +106,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -127,11 +127,11 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
       })
       .catch((error) => {
-        if (error.code === 404) {
+        if (error.statusCode === 404) {
           throw new ResourceNotFoundError({ message: `Business unit "${businessUnitKey}" not found for this account` });
         }
 
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
 
     if (expandStores) {
@@ -169,7 +169,7 @@ export default class BusinessUnitApi extends BaseApi {
         });
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
 
     if (expandStores) {
@@ -209,7 +209,7 @@ export default class BusinessUnitApi extends BaseApi {
           .map((associateRole) => BusinessUnitMapper.commercetoolsAssociateRoleToAssociateRole(associateRole));
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -331,7 +331,7 @@ export default class BusinessUnitApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -417,21 +417,21 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
   async queryApprovalRules(
     businessUnitKey: string,
     accountId: string,
-    approvalRuleQuery: ApprovalRuleQuery,
+    approvalFlowQuery: ApprovalRuleQuery,
   ): Promise<PaginatedResult<ApprovalRule>> {
-    const limit = +approvalRuleQuery.limit || undefined;
+    const limit = +approvalFlowQuery.limit || undefined;
     const sortAttributes: string[] = [];
 
-    if (approvalRuleQuery.sortAttributes !== undefined) {
-      Object.keys(approvalRuleQuery.sortAttributes).map((field, directionIndex) => {
-        sortAttributes.push(`${field} ${Object.values(approvalRuleQuery.sortAttributes)[directionIndex]}`);
+    if (approvalFlowQuery.sortAttributes !== undefined) {
+      Object.keys(approvalFlowQuery.sortAttributes).map((field, directionIndex) => {
+        sortAttributes.push(`${field} ${Object.values(approvalFlowQuery.sortAttributes)[directionIndex]}`);
       });
     } else {
       // default sort
@@ -440,12 +440,12 @@ export default class BusinessUnitApi extends BaseApi {
 
     const whereClause = [];
 
-    if (approvalRuleQuery.approvalRuleIds !== undefined && approvalRuleQuery.approvalRuleIds.length !== 0) {
-      whereClause.push(`id in ("${approvalRuleQuery.approvalRuleIds.join('","')}")`);
+    if (approvalFlowQuery.approvalRuleIds !== undefined && approvalFlowQuery.approvalRuleIds.length !== 0) {
+      whereClause.push(`id in ("${approvalFlowQuery.approvalRuleIds.join('","')}")`);
     }
 
-    if (approvalRuleQuery.approvalRuleStatus !== undefined && approvalRuleQuery.approvalRuleStatus.length > 0) {
-      whereClause.push(`status in ("${approvalRuleQuery.approvalRuleStatus.join('","')}")`);
+    if (approvalFlowQuery.approvalRuleStatus !== undefined && approvalFlowQuery.approvalRuleStatus.length > 0) {
+      whereClause.push(`status in ("${approvalFlowQuery.approvalRuleStatus.join('","')}")`);
     }
 
     return this.associateRequestBuilder(accountId)
@@ -455,7 +455,7 @@ export default class BusinessUnitApi extends BaseApi {
         queryArgs: {
           where: whereClause,
           limit: limit,
-          offset: getOffsetFromCursor(approvalRuleQuery.cursor),
+          offset: getOffsetFromCursor(approvalFlowQuery.cursor),
           sort: sortAttributes,
         },
       })
@@ -475,7 +475,7 @@ export default class BusinessUnitApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -490,7 +490,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -576,7 +576,7 @@ export default class BusinessUnitApi extends BaseApi {
             return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
           })
           .catch((error) => {
-            throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+            throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
           }),
     );
   }
@@ -584,15 +584,15 @@ export default class BusinessUnitApi extends BaseApi {
   async queryApprovalFlows(
     businessUnitKey: string,
     accountId: string,
-    approvalRuleQuery: ApprovalFlowsQuery,
+    approvalFlowQuery: ApprovalFlowsQuery,
   ): Promise<PaginatedResult<ApprovalFlow>> {
-    const limit = +approvalRuleQuery.limit || undefined;
+    const limit = +approvalFlowQuery.limit || undefined;
     const sortAttributes: string[] = [];
     const locale = await this.getCommercetoolsLocal();
 
-    if (approvalRuleQuery.sortAttributes !== undefined) {
-      Object.keys(approvalRuleQuery.sortAttributes).map((field, directionIndex) => {
-        sortAttributes.push(`${field} ${Object.values(approvalRuleQuery.sortAttributes)[directionIndex]}`);
+    if (approvalFlowQuery.sortAttributes !== undefined) {
+      Object.keys(approvalFlowQuery.sortAttributes).map((field, directionIndex) => {
+        sortAttributes.push(`${field} ${Object.values(approvalFlowQuery.sortAttributes)[directionIndex]}`);
       });
     } else {
       // default sort
@@ -601,12 +601,17 @@ export default class BusinessUnitApi extends BaseApi {
 
     const whereClause = [];
 
-    if (approvalRuleQuery.approvalFlowIds !== undefined && approvalRuleQuery.approvalFlowIds.length !== 0) {
-      whereClause.push(`id in ("${approvalRuleQuery.approvalFlowIds.join('","')}")`);
+    if (approvalFlowQuery.approvalFlowIds !== undefined && approvalFlowQuery.approvalFlowIds.length !== 0) {
+      whereClause.push(`id in ("${approvalFlowQuery.approvalFlowIds.join('","')}")`);
     }
 
-    if (approvalRuleQuery.approvalFlowStatus !== undefined && approvalRuleQuery.approvalFlowStatus.length > 0) {
-      whereClause.push(`status in ("${approvalRuleQuery.approvalFlowStatus.join('","')}")`);
+    if (approvalFlowQuery.approvalFlowStatus !== undefined && approvalFlowQuery.approvalFlowStatus.length > 0) {
+      whereClause.push(`status in ("${approvalFlowQuery.approvalFlowStatus.join('","')}")`);
+    }
+
+    if (approvalFlowQuery.orderIds !== undefined && approvalFlowQuery.orderIds.length !== 0) {
+      const orderIds = approvalFlowQuery.orderIds.map((orderId) => `"${orderId}"`).join(', ');
+      whereClause.push(`order(id in (${orderIds}))`);
     }
 
     return this.associateRequestBuilder(accountId)
@@ -617,7 +622,7 @@ export default class BusinessUnitApi extends BaseApi {
           where: whereClause,
           expand: ['order', 'approvals[*].approver.customer'],
           limit: limit,
-          offset: getOffsetFromCursor(approvalRuleQuery.cursor),
+          offset: getOffsetFromCursor(approvalFlowQuery.cursor),
           sort: sortAttributes,
         },
       })
@@ -638,7 +643,7 @@ export default class BusinessUnitApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -658,7 +663,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
   }
 
@@ -689,7 +694,7 @@ export default class BusinessUnitApi extends BaseApi {
           return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         }),
     );
   }

@@ -546,6 +546,7 @@
     "associate-delete-confirm": "Weet u zeker dat u deze medewerker definitief wilt verwijderen?",
     "associate-delete-disabled": "Om de beheerdersrechten te behouden, kunt u het enige beheerdersaccount dat aan deze bedrijfseenheid is gekoppeld, niet verwijderen.",
     "associate-edit": "Partner bewerken",
+    "associate-name-not-specified": "Naam nog niet gespecificeerd",
     "associates-view-only-desc": "Als u partnerrollen wilt toevoegen of beheren, vraagt u uw bedrijfsbeheerder om u de benodigde machtigingen te verlenen",
     "await-reply-from-tier": "In afwachting van antwoord van niveau {tier}",
     "awaiting-reply-from-seller": "In afwachting van antwoord van de verkoper",

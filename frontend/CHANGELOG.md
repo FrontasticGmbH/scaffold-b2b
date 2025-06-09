@@ -1,4 +1,35 @@
 
+## Version 4.4.0 (2025-05-27)
+
+
+** New Features & Improvements **
+
+- Update translations(b2b)
+- Modify shopping list delete functionality
+- Add required asterisk without browser validation
+- Fix form accessiblity errors
+- Fix more lint errors
+- Fix lint errors
+- Add copy and modal changes
+- Update permissions
+- Error message handling for purchase list add form
+- Error message handling for purchase list add form
+- Error message handling for company admin associate form
+- Error message handling for company admin business unit form
+- Error message handling for company admin general info form
+- Error message handling for purchase list form
+- Error message handling for personal info form
+- Error message handling for purchase order form
+- Error message handling for discount form
+- Error message handling for login form
+- Error message handling for register form
+- Error message handling for reset password form
+- Error message handling for associate verification form
+- Add create and edit permission handling
+- Error message handling for approval flows
+- Update shopping list creation logic
+- Implement shopping list ui changes
+
 ## Version 4.3.0 (2025-05-12)
 
 ** New Features & Improvements **

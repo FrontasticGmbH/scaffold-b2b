@@ -18,6 +18,7 @@ const useSteps = ({
   shippingMethods = [],
   paymentMethods = [],
   translations,
+  callbackUrl,
 }: Omit<CheckoutProps, 'transaction' | 'products' | 'discounts' | 'onSubmitPurchase'>) => {
   const { isCtCheckoutEnabled } = useCheckout();
 
@@ -53,7 +54,12 @@ const useSteps = ({
         title: 'common.payment',
         Component: ({ isActive, isCompleted }: Pick<StepProps, 'isActive' | 'isCompleted'>) =>
           isCtCheckoutEnabled ? (
-            <CommercetoolsPayment translations={translations} isActive={isActive} isCompleted={isCompleted} />
+            <CommercetoolsPayment
+              translations={translations}
+              isActive={isActive}
+              isCompleted={isCompleted}
+              callbackUrl={callbackUrl}
+            />
           ) : (
             <PaymentStep
               isActive={isActive}
@@ -78,6 +84,7 @@ const useSteps = ({
     onCompleteShipping,
     paymentMethods,
     onCompletePayment,
+    callbackUrl,
   ]);
 
   return { steps };

@@ -546,6 +546,7 @@
     "associate-delete-confirm": "Sind Sie sicher, dass Sie diesen Partner dauerhaft löschen möchten?",
     "associate-delete-disabled": "Um den Administratorzugriff aufrechtzuerhalten, können Sie das einzige Administratorkonto, das dieser Geschäftseinheit zugeordnet ist, nicht löschen.",
     "associate-edit": "Mitarbeiter bearbeiten",
+    "associate-name-not-specified": "Name noch nicht festgelegt",
     "associates-view-only-desc": "Um Associate-Rollen hinzuzufügen oder zu verwalten, bitten Sie Ihren Unternehmensadministrator, Ihnen die erforderlichen Berechtigungen zu erteilen",
     "await-reply-from-tier": "Warte auf Antwort von {tier} Tier",
     "awaiting-reply-from-seller": "Warten auf Antwort vom Verkäufer",

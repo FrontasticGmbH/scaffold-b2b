@@ -1,4 +1,13 @@
 
+## Version 1.20.0 (2025-05-27)
+
+
+** New Features & Improvements **
+
+- View all wishlists for associates in same business units
+- Add createdAt property in queryWishlists response
+- Show full acount information in queryWishlists response
+
 ## Version 1.19.0 (2025-05-12)
 
 ** New Features & Improvements **

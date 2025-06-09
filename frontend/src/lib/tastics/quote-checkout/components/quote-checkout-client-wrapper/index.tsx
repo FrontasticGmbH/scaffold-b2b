@@ -47,7 +47,6 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
   return (
     <Checkout
-      enableCtCheckout={data.enableCtCheckout}
       initialData={{
         shippingAddress:
           cart?.shippingAddress && !isEmptyObject(cart.shippingAddress)

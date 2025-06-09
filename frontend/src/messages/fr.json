@@ -546,6 +546,7 @@
     "associate-delete-confirm": "Etes-vous sûr de vouloir supprimer définitivement cet associé ?",
     "associate-delete-disabled": "Pour conserver l'accès administratif, vous ne pouvez pas supprimer le seul compte administrateur associé à cette unité commerciale.",
     "associate-edit": "Modifier l'associé",
+    "associate-name-not-specified": "Nom non spécifié pour le moment",
     "associates-view-only-desc": "Pour ajouter ou gérer des rôles d'associé, veuillez demander à l'administrateur de votre entreprise de vous accorder les autorisations nécessaires.",
     "await-reply-from-tier": "En attente de réponse du niveau {tier}",
     "awaiting-reply-from-seller": "En attente de réponse du vendeur",
