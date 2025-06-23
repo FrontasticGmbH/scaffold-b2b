@@ -129,8 +129,9 @@ export class ProductSearchFactory {
       commercetoolsProductSearchRequest.productProjectionParameters.storeProjection = productQuery.storeKey;
     }
 
-    if (productQuery.accountGroupId) {
-      commercetoolsProductSearchRequest.productProjectionParameters.priceCustomerGroup = productQuery.accountGroupId;
+    if (productQuery.accountGroupIds?.length) {
+      commercetoolsProductSearchRequest.productProjectionParameters.priceCustomerGroupAssignments =
+        productQuery.accountGroupIds;
     }
 
     if (productQuery.distributionChannelId) {

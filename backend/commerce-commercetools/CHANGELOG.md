@@ -1,4 +1,21 @@
 
+## Version 2.5.0 (2025-06-09)
+
+** New Features & Improvements **
+
+- Get storeKey using the method to look into the query and the session
+- Switch method to standard class method for uniformity
+- View all wishlists for associates in same business units
+- Show full acount information on wishlist
+- Migrate from commercetools/sdk-client-v2 to commercetools/ts-client
+- Added approvalStatus for orders with approval flow
+- Validated accountId before we build cart api
+
+
+** Bug Fixes **
+
+- Get the error code from statusCode instead of code
+
 ## Version 2.4.0 (2025-05-12)
 
 

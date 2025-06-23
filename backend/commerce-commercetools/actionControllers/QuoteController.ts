@@ -30,7 +30,7 @@ export const createQuoteRequest: ActionHook = async (request: Request, actionCon
       purchaseOrderNumber: quoteBody.purchaseOrderNumber,
     };
 
-    const cart = await CartFetcher.fetchCart(request, actionContext);
+    const cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
 
     quoteRequest = await quoteApi.createQuoteRequest(quoteRequest, cart);
 

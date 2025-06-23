@@ -12,8 +12,8 @@ import {
   getStoreId,
   getStoreKey,
   getSupplyChannelId,
-  getAccountGroupId,
   getProductSelectionId,
+  getAccountGroupIds,
 } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 export class ProductQueryFactory {
@@ -135,10 +135,14 @@ export class ProductQueryFactory {
       productFiltersData.map((productFilterData: any) => {
         switch (true) {
           case productFilterData.field === 'categoryRef':
-            productQuery.categories = productFilterData.values;
+            productQuery.categories = Array.isArray(productFilterData.values)
+              ? productFilterData.values
+              : [productFilterData.values];
             break;
           case productFilterData.field === 'productTypeId':
-            productQuery.productTypeId = productFilterData.values[0];
+            productQuery.productTypeId = Array.isArray(productFilterData.values)
+              ? productFilterData.values[0]
+              : productFilterData.values;
             break;
           case productFilterData.field.startsWith('attributes.'):
             productQuery.filters.push(this.productFiltersDataToProductFilter(productFilterData));
@@ -205,9 +209,9 @@ export class ProductQueryFactory {
     productQuery.cursor = queryParams?.cursor || undefined;
 
     /**
-     * Map accountGroupId
+     * Map accountGroupIds
      */
-    productQuery.accountGroupId = queryParams?.accountGroupId || getAccountGroupId(request) || undefined;
+    productQuery.accountGroupIds = queryParams?.accountGroupIds || getAccountGroupIds(request) || undefined;
 
     return productQuery;
   }

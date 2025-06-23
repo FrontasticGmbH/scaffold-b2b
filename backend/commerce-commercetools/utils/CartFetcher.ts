@@ -1,4 +1,4 @@
-import { ActionContext, Request } from '@frontastic/extension-types';
+import { Context, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { AccountFetcher } from './AccountFetcher';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
@@ -7,8 +7,8 @@ import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/r
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 export class CartFetcher {
-  static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> {
-    const cart = await this.fetchActiveCartFromSession(request, actionContext);
+  static async fetchCart(request: Request, context: Context): Promise<Cart> {
+    const cart = await this.fetchActiveCartFromSession(request, context);
 
     if (cart) {
       return cart;
@@ -23,10 +23,10 @@ export class CartFetcher {
       });
     }
 
-    return await getCartApi(request, actionContext.frontasticContext).createCartInStore(storeKey);
+    return await getCartApi(request, context).createCartInStore(storeKey);
   }
 
-  static async fetchActiveCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
+  static async fetchActiveCartFromSession(request: Request, context: Context): Promise<Cart | undefined> {
     const accountId = AccountFetcher.fetchAccountIdFromSession(request);
     const cartId = request.sessionData?.cartId;
     const businessUnitKey = getBusinessUnitKey(request);
@@ -37,7 +37,7 @@ export class CartFetcher {
       return undefined;
     }
 
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
+    const cartApi = getCartApi(request, context);
 
     try {
       if (cartId) {

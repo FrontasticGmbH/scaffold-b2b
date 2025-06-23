@@ -1,4 +1,19 @@
 
+## Version 4.5.0 (2025-06-09)
+
+** New Features & Improvements **
+
+- Added aria-label for associate name and new translation for unspecified names
+- Update storybook config 
+- Replace environment variable with a variable in component schema
+
+** Bug Fixes **
+
+- Updated label for checkout url
+- Remove enableCtCheckout from Quotes checkout
+- Refresh page on checkout
+- Fix dashboard translated titles
+
 ## Version 4.4.0 (2025-05-27)
 
 

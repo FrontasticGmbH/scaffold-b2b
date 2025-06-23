@@ -314,10 +314,10 @@ export default class BusinessUnitApi extends BaseApi {
     ]);
   }
 
-  async getAssociate(businessUnitKey: string, accountId: string, account: Account): Promise<Associate> {
+  async getAssociate(businessUnitKey: string, account: Account): Promise<Associate> {
     return this.requestBuilder()
       .businessUnits()
-      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: accountId })
+      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: account.accountId })
       .get()
       .execute()
       .then((response) => {

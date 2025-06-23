@@ -7,8 +7,9 @@ import { mapLineItem } from './map-lineitem';
 
 const orderStatus = (order: Order): OrderStatus => {
   if (order.shipmentState === 'Delivered' || order.orderState === 'Complete') return 'Delivered';
-  else if (order.orderState === 'Open') return 'Pending';
-  else if (order.orderState === 'Confirmed') return order.shipmentState === 'Shipped' ? 'Shipped' : 'Confirmed';
+  else if (order.orderState === 'Open') {
+    return order.approvalFlowStatus || 'Placed';
+  } else if (order.orderState === 'Confirmed') return order.shipmentState === 'Shipped' ? 'Shipped' : 'Confirmed';
   else return 'Returned';
 };
 

@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { Request } from '@frontastic/extension-types';
 import { register } from '../commerce-commercetools/actionControllers/AccountController';
 
@@ -56,7 +57,7 @@ const commercetoolsFrontendSession =
   'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2NvdW50Ijp7ImFjY291bnRJZCI6IjlkOWZlMTQ1LTA0M2UtNDhhNi1iODA2LTZiYTg0ZWRlY2U5YiIsImVtYWlsIjoiY2FybG9zLm1vdXJ1bGxvKzEyM0Bjb21tZXJjZXRvb2xzLmNvbSIsImZpcnN0TmFtZSI6IkNlbGluZSIsImxhc3ROYW1lIjoiQmVja2VyIiwiYmlydGhkYXkiOiIyMDAxLTAxLTI2VDAwOjAwOjAwLjAwMFoiLCJjb25maXJtZWQiOnRydWUsImFkZHJlc3NlcyI6W3siYWRkcmVzc0lkIjoibU5ySWxBbGYiLCJmaXJzdE5hbWUiOiJBeWRlbiIsImxhc3ROYW1lIjoiSGVsbGVyIiwic3RyZWV0TmFtZSI6IkFudG9uaW8gSXNsZSIsInN0cmVldE51bWJlciI6IjUwNCIsInBvc3RhbENvZGUiOiIxNDYiLCJjaXR5IjoiRGF2aWUiLCJjb3VudHJ5IjoiU1MiLCJwaG9uZSI6Ijc4My02NzktNTQ5MSIsImlzRGVmYXVsdEJpbGxpbmdBZGRyZXNzIjp0cnVlLCJpc0RlZmF1bHRTaGlwcGluZ0FkZHJlc3MiOnRydWV9XX19.VKO7laTyKomyyLP95pSlIMKRTh9K_4r4ALf1cJ8jpg4';
 
 const generateFakeEmailAddress = () => {
-  const username = Math.random().toString(36).substring(2, 10);
+  const username = randomBytes(6).toString('base64url').substring(0, 8);
   return `${username}@test.com`;
 };
 

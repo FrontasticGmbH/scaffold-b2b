@@ -12,6 +12,7 @@ import fetchAssociate from '@/utils/server/fetch-associate';
 import fetchProjectSettings from '@/utils/server/fetch-project-settings';
 import { isRedirectResponse } from '@/lib/utils/is-redirect-response';
 import fetchCategories from '@/utils/server/fetch-categories';
+import { getSeoInfoFromPageResponse } from '@/utils/lib/seo-tools';
 
 /* Start of Route Segments */
 
@@ -32,7 +33,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     return {};
   }
 
-  const { seoTitle, seoDescription, seoKeywords } = response.data.pageFolder?.configuration ?? {};
+  const { seoTitle, seoDescription, seoKeywords } = getSeoInfoFromPageResponse(response.data, params);
 
   return {
     title: seoTitle ?? '',

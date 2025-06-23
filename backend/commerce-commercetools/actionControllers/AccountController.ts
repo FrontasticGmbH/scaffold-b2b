@@ -47,7 +47,7 @@ type AccountChangePasswordBody = {
 async function loginAccount(request: Request, actionContext: ActionContext, account: Account): Promise<Response> {
   const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-  const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
+  const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext.frontasticContext);
 
   const { account: loggedInAccount, cart: loggedInCart } = await accountApi.login(account, cart);
 
@@ -79,7 +79,9 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
     body: JSON.stringify(loggedInAccount),
     sessionData: {
       ...request.sessionData,
-      ...(loggedInAccount ? { accountId: loggedInAccount.accountId } : {}),
+      ...(loggedInAccount
+        ? { accountId: loggedInAccount.accountId, accountGroupIds: loggedInAccount.accountGroupIds }
+        : {}),
       ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
       businessUnitKey,
       storeKey,
@@ -156,7 +158,7 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
       }
     }
 
-    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
+    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext.frontasticContext);
 
     const createdAccount = await accountApi.create(account, cart);
 
@@ -201,7 +203,7 @@ export const requestConfirmationEmail: ActionHook = async (request: Request, act
       password: accountLoginBody.password,
     } as Account;
 
-    const cart = await CartFetcher.fetchCart(request, actionContext);
+    const cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
 
     const { account: loggedInAccount, cart: loggedInCart } = await accountApi.login(account, cart);
 
@@ -279,22 +281,11 @@ export const login: ActionHook = async (request: Request, actionContext: ActionC
   }
 };
 
-export const logout: ActionHook = async (request: Request) => {
+export const logout: ActionHook = async () => {
   return {
     statusCode: 200,
     body: JSON.stringify({}),
-    sessionData: {
-      ...request.sessionData,
-      accountId: undefined,
-      cartId: undefined,
-      wishlistId: undefined,
-      businessUnitKey: undefined,
-      storeKey: undefined,
-      storeId: undefined,
-      distributionChannelId: undefined,
-      supplyChannelId: undefined,
-      productSelectionId: undefined,
-    },
+    sessionData: {},
   } as Response;
 };
 

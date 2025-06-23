@@ -469,12 +469,10 @@ export default class CartMapper {
         description:
           LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsDiscountCode.description) || undefined,
         discounts: commercetoolsDiscountCode.cartDiscounts.map((commercetoolsCartDiscount) => {
-          return {
-            cartDiscountId: commercetoolsCartDiscount.id,
-            target: commercetoolsCartDiscount.obj?.target
-              ? this.commercetoolsCartDiscountTargetToCartDiscountTarget(commercetoolsCartDiscount.obj?.target)
-              : undefined,
-          };
+          if (this.isCartDiscountReferenceExpanded(commercetoolsCartDiscount)) {
+            return this.commercetoolsCartDiscountToCartDiscount(commercetoolsCartDiscount.obj, locale, defaultLocale);
+          }
+          return undefined;
         }),
       };
     }
@@ -579,6 +577,17 @@ export default class CartMapper {
       case 'totalPrice':
         return {
           type: 'totalPrice',
+        };
+      case 'multiBuyLineItems':
+        return {
+          type: 'multiBuyLineItems',
+          predicate: commercetoolsCartDiscountTarget.predicate,
+          selectionMode: this.commercetoolsSelectionModeToCartDiscountSelectionMode(
+            commercetoolsCartDiscountTarget.selectionMode,
+          ),
+          triggerQuantity: commercetoolsCartDiscountTarget.triggerQuantity,
+          discountedQuantity: commercetoolsCartDiscountTarget.discountedQuantity,
+          maxOccurrence: commercetoolsCartDiscountTarget.maxOccurrence,
         };
       default:
         return undefined;

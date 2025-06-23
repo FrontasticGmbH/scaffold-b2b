@@ -1,4 +1,10 @@
 
+## Version 1.21.0 (2025-06-09)
+
+** New Features & Improvements **
+
+- Add approvalStatus for orders with approval flow
+
 ## Version 1.20.0 (2025-05-27)
 
 

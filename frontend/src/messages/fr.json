@@ -777,7 +777,7 @@
     "status-confirmed": "Inscrit",
     "status-delivered": "Livré",
     "status-open": "En attente",
-    "status-pending": "En attente",
+    "status-pending": "En attente de validation",
     "status-returned": "Revenu",
     "status-shipped": "Inscrit",
     "subtotal": "Total",

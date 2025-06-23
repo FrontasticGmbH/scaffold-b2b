@@ -54,6 +54,7 @@ const CART_EXPANDS = [
   'lineItems[*].price.discounted.discount',
   'discountCodes[*].discountCode',
   'discountOnTotalPrice.includedDiscounts[*].discount',
+  'discountCodes[*].discountCode.cartDiscounts[*]',
   'paymentInfo.payments[*]',
   'shippingInfo.discountedPrice.includedDiscounts[*].discount',
   'customerGroup',

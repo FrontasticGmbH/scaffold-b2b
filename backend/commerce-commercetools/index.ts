@@ -209,7 +209,7 @@ const extensionRegistry: ExtensionRegistry = {
 
         if (result) {
           return {
-            dynamicPageType: 'frontastic/approval-flows-page',
+            dynamicPageType: 'frontastic/approval-rules-page',
             dataSourcePayload: result,
             pageMatchingPayload: result,
           };

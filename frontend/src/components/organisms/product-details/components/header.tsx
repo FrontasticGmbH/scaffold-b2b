@@ -3,9 +3,11 @@ import Breadcrumb from '@/components/molecules/breadcrumb';
 import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { PDPHeaderProps } from '../types';
+import { useParams } from 'next/navigation';
 
 const Header = ({ className, product }: PDPHeaderProps) => {
   const translate = useTranslations();
+  const { locale } = useParams();
 
   const headerClassName = classnames('border-b border-neutral-400 pb-4 pt-3 md:pt-4 lg:pt-6', className);
 
@@ -18,7 +20,7 @@ const Header = ({ className, product }: PDPHeaderProps) => {
           </Link>
 
           {product.categories.map((category) => (
-            <Link key={category.categoryId} href={`/${category.path}`} className="capitalize">
+            <Link key={category.categoryId} href={`${category.paths[locale]}`} className="capitalize">
               {category.name}
             </Link>
           ))}
