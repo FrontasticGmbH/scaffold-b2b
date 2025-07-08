@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useCookies } from 'next-client-cookies';
 import { Option } from '@/components/atoms/select/types';
 import usePath from '@/hooks/usePath';
 import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
@@ -20,6 +21,7 @@ const ShipAndLanguageProvider = ({
   projectSettings,
 }: React.PropsWithChildren<{ projectSettings?: ProjectSettings }>) => {
   const { path } = usePath();
+  const cookies = useCookies();
 
   const { flatCategories } = useCategories();
 
@@ -54,8 +56,9 @@ const ShipAndLanguageProvider = ({
 
     if (pathToGo.startsWith('/')) pathToGo = pathToGo.slice(1);
 
-    // Added to cause a full page reload
-    window.location.href = `/${language}/${pathToGo}`;
+    cookies.set('locale', language);
+
+    window.location.assign(`/${language}/${pathToGo}`);
   };
 
   const onLocationSelect = (location: string) => {

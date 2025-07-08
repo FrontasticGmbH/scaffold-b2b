@@ -1,4 +1,21 @@
 
+## Version 2.6.0 (2025-06-24)
+
+** New Features & Improvements **
+
+- update account login response
+- rename variable, pass in accountGroupIds into session
+- add support for multiple customer groups
+- add if check for discount and include missing field
+- use commercetoolsCartDiscountToCartDiscount and add more properties for multiBuyLineItems
+- discount target fix and mapping update
+- removed usage of streamId and replace by the new dataSourceId field
+
+** Bug Fixes **
+
+- returned correct dynamic page type for approval rules page
+- handle single value on product filter query
+
 ## Version 2.5.0 (2025-06-09)
 
 ** New Features & Improvements **

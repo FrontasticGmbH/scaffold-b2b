@@ -1,4 +1,19 @@
 
+## Version 4.6.0 (2025-06-24)
+
+** New Features & Improvements **
+
+- Order status enchancements
+- Seo information for dynamic pages
+
+
+** Bug Fixes **
+
+- update message for returned orders
+- seo meta info bug
+- type issues for storybook
+- use localized path for categories in Breadcrumbs
+
 ## Version 4.5.0 (2025-06-09)
 
 ** New Features & Improvements **

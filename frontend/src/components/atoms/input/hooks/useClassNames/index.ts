@@ -15,11 +15,11 @@ const useClassNames = (variant: InputVariant, isFocused: boolean, unStyled: bool
   });
 
   const inputClassName = classnames('w-full border-none bg-transparent text-14 focus:outline-none focus:ring-0', {
-    'px-3 py-[10px]': !unStyled,
+    'px-3 py-2': !unStyled,
   });
 
   const containerClassName = classnames({
-    'flex rounded-sm border focus:outline-none focus:ring-0': !unStyled,
+    'flex rounded-md border focus:outline-none focus:ring-0': !unStyled,
     [resolveVariant(variant) as string]: !unStyled,
   });
 

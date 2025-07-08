@@ -1,3 +1,12 @@
+## Version 1.22.0 (2025-06-24)
+
+** New Features & Improvements **
+
+- rename variable, pass in accountGroupIds into session
+- add support for multiple customer groups
+- add if check for discount and include missing field
+- use commercetoolsCartDiscountToCartDiscount and add more properties for multiBuyLineItems
+- discount target fix and mapping update
 
 ## Version 1.21.0 (2025-06-09)
 

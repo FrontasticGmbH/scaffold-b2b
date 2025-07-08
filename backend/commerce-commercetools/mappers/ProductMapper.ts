@@ -192,7 +192,7 @@ export default class ProductMapper {
     commercetoolsCategoryReferences.forEach((commercetoolsCategory) => {
       let category: Category = {
         categoryId: commercetoolsCategory.id,
-      } as any;
+      };
 
       if (commercetoolsCategory.obj) {
         category = this.commercetoolsCategoryToCategory(commercetoolsCategory.obj, categoryIdField, locale);
@@ -415,7 +415,6 @@ export default class ProductMapper {
     locale: Locale,
   ): FacetDefinition[] {
     const facetDefinitionsIndex: { [key: string]: FacetDefinition } = {};
-    const facetDefinitions: FacetDefinition[] = [];
 
     commercetoolsProductTypes?.forEach((productType) => {
       productType.attributes?.forEach((attribute) => {
@@ -439,11 +438,7 @@ export default class ProductMapper {
       });
     });
 
-    for (const [attributeId, facetDefinition] of Object.entries(facetDefinitionsIndex)) {
-      facetDefinitions.push(facetDefinition);
-    }
-
-    return facetDefinitions;
+    return Object.values(facetDefinitionsIndex);
   }
 
   static commercetoolsFacetResultsToFacets(

@@ -1,7 +1,5 @@
-// @ts-ignore
 import * as crypto from 'crypto';
-// @ts-ignore
-import fetch from 'node-fetch';
+import fetch, { Response } from 'node-fetch';
 import {
   ApiRoot,
   AssociateRole as CommercetoolsAssociateRole,
@@ -427,7 +425,7 @@ export default abstract class BaseApi {
   protected clientHashKey: string;
   protected token: Token;
   protected currency: string;
-  protected sessionData: any | null;
+  protected sessionData: Request['sessionData'];
   protected checkoutHashKey: string;
   protected commercetoolsFrontendContext: Context;
 
@@ -458,7 +456,7 @@ export default abstract class BaseApi {
     this.sessionData = request?.sessionData ?? {};
   }
 
-  getSessionData(): any | null {
+  getSessionData(): Request['sessionData'] | null {
     return this.sessionData;
   }
 
@@ -717,11 +715,11 @@ export default abstract class BaseApi {
     };
 
     const response = await fetch(url, requestOptions)
-      .then((response: any) => {
+      .then((response: Response) => {
         return response.json();
       })
-      .catch((error: any) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error });
+      .catch((error: { statusCode: number; message: string }) => {
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: JSON.stringify(error) });
       });
 
     if (response?.errors) {

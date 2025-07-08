@@ -3,7 +3,7 @@ import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
 import { ToggleProps } from './types';
 
-const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange }: ToggleProps) => {
+const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange, disabled }: ToggleProps) => {
   const [checked, setChecked] = useControllableState(checkedProp, defaultChecked);
 
   const handleChange = useCallback(
@@ -17,18 +17,25 @@ const Toggle = ({ label, checked: checkedProp, defaultChecked = false, onChange 
   return (
     <label className="inline-flex cursor-pointer select-none items-center gap-3">
       {label && <div className="font-medium text-gray-700">{label}</div>}
-      <div className="relative">
-        <input type="checkbox" checked={checked} onChange={(e) => handleChange(e.target.checked)} className="sr-only" />
+      <div className={classnames('relative', { 'cursor-not-allowed': disabled })}>
+        <input
+          type="checkbox"
+          checked={checked}
+          disabled={disabled}
+          onChange={(e) => handleChange(e.target.checked)}
+          className="sr-only"
+        />
         <div
           className={classnames(
             'block h-8 w-14 rounded-full border border-neutral-400',
-            checked ? 'bg-secondary' : 'bg-white',
+            disabled ? 'bg-neutral-200' : checked ? 'bg-secondary' : 'bg-white',
           )}
         ></div>
         <div
           className={classnames(
             'absolute left-1 top-1 flex size-6 items-center justify-center rounded-full bg-neutral-100 transition',
             { 'translate-x-full': checked },
+            { 'bg-neutral-500': disabled },
           )}
         >
           <span data-testid="checked-icon" className={!checked ? 'hidden' : 'block'}>

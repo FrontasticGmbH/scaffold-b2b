@@ -301,16 +301,6 @@ export default class WishlistApi extends BaseApi {
 
     const searchQuery = wishlistQuery.query && wishlistQuery.query;
 
-    const request = {
-      queryArgs: {
-        where: whereClause,
-        expand: expandVariants,
-        limit: limit,
-        offset: getOffsetFromCursor(wishlistQuery.cursor),
-        [`text.${locale.language}`]: searchQuery,
-      },
-    };
-
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .shoppingLists()
       .get({

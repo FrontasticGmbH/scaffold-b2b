@@ -10,6 +10,7 @@ export interface Props {
     addSubgroup?: string;
     groupHeaderLabel?: string;
   };
+  viewOnly?: boolean;
   includeGroupHeader?: boolean;
   allowedCombinators?: GroupProps['allowedCombinators'];
   showCombinators?: GroupProps['showCombinators'];

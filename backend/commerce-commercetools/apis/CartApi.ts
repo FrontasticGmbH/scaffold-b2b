@@ -468,14 +468,13 @@ export default class CartApi extends BaseApi {
     const methodArgs = {
       queryArgs: {
         expand: SHIPPING_METHOD_EXPANDS,
-        country: undefined as unknown | any,
+        country: onlyMatching ? locale.country : undefined,
       },
     };
 
     let requestBuilder = this.requestBuilder().shippingMethods().get(methodArgs);
 
     if (onlyMatching) {
-      methodArgs.queryArgs.country = locale.country;
       requestBuilder = this.requestBuilder().shippingMethods().matchingLocation().get(methodArgs);
     }
 
@@ -616,7 +615,7 @@ export default class CartApi extends BaseApi {
       });
   }
 
-  async getPayment(paymentId: string): Promise<any> {
+  async getPayment(paymentId: string) {
     return await this.requestBuilder()
       .payments()
       .withId({
@@ -626,7 +625,7 @@ export default class CartApi extends BaseApi {
       .execute();
   }
 
-  async updateOrderPayment(paymentId: string, paymentDraft: Payment): Promise<any> {
+  async updateOrderPayment(paymentId: string, paymentDraft: Payment) {
     const paymentUpdateActions: PaymentUpdateAction[] = [];
 
     if (paymentDraft.paymentMethod) {

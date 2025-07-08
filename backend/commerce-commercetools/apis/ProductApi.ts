@@ -153,6 +153,13 @@ export default class ProductApi extends BaseApi {
       }),
     });
 
+    // Variants price filter. Not included as commercetools product type.
+    filterFields.push({
+      field: 'variants.prices',
+      type: FilterFieldTypes.MONEY,
+      label: 'Variants price',
+    });
+
     // Searchable attributes filter
     filterFields.push(
       ...ProductMapper.commercetoolsProductTypesToFilterFields(commercetoolsProductTypes, locale, this.defaultLocale),
@@ -181,7 +188,7 @@ export default class ProductApi extends BaseApi {
     ];
   }
 
-  async queryFacetCategoriesForSubtree(storeId?: string): Promise<any> {
+  async queryFacetCategoriesForSubtree(storeId?: string) {
     const query: ProductSearchRequest = {
       ...(storeId && {
         query: {

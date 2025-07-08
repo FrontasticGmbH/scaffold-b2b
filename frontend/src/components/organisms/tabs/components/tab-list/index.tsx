@@ -17,7 +17,7 @@ const TabList = ({ children }: React.PropsWithChildren) => {
         );
 
         return (
-          <div
+          <button
             className={tabClassName}
             onClick={() => {
               setActiveTabIndex(index);
@@ -25,7 +25,7 @@ const TabList = ({ children }: React.PropsWithChildren) => {
             }}
           >
             {Child}
-          </div>
+          </button>
         );
       })}
     </div>

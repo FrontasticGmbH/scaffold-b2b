@@ -18,25 +18,25 @@
  * queryParamsToIds('userIds', queryParams); // returns ["123", "456"]
  */
 
-function queryParamsToIds(param: string, queryParams: any) {
-  const paramIds: string[] = [];
+function queryParamsToIds(param: string, queryParams: Record<string, string>): string[] {
+  const ids: string[] = [];
 
   const requestParamIds = queryParams?.[param];
 
   if (requestParamIds) {
     if (Array.isArray(requestParamIds)) {
-      paramIds.push(...requestParamIds);
+      ids.push(...requestParamIds);
     } else {
       const params = requestParamIds.split(',');
       if (params.length > 1) {
-        paramIds.push(...params);
+        ids.push(...params);
       } else {
-        paramIds.push(requestParamIds);
+        ids.push(requestParamIds);
       }
     }
   }
 
-  return paramIds;
+  return ids;
 }
 
 export default queryParamsToIds;

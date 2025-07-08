@@ -1,12 +1,2 @@
-const parseQueryParams = <T>(query: any): T => {
-  const queryParams: T = {} as T;
-
-  for (const key in query) {
-    if (query.hasOwnProperty(key)) {
-      queryParams[key] = query[key] as unknown as T[keyof T];
-    }
-  }
-
-  return queryParams;
-};
+const parseQueryParams = <T extends object>(query: T): T => ({ ...query });
 export default parseQueryParams;

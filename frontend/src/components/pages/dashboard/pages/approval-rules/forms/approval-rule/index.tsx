@@ -100,7 +100,13 @@ const ApprovalRuleForm = ({
           name="name"
           rules={{ required: true }}
           render={({ field }) => (
-            <Input {...field} label={translate('dashboard.rule-name')} required containerClassName="max-w-[400px]" />
+            <Input
+              {...field}
+              label={translate('dashboard.rule-name')}
+              required
+              containerClassName="max-w-[400px]"
+              disabled={viewOnly}
+            />
           )}
         />
 
@@ -113,6 +119,7 @@ const ApprovalRuleForm = ({
               label={translate('common.description')}
               showOptionalLabel
               containerClassName="max-w-[400px]"
+              disabled={viewOnly}
             />
           )}
         />
@@ -131,6 +138,7 @@ const ApprovalRuleForm = ({
               className="w-full max-w-[400px]"
               value={value?.map((r) => r.key)}
               required
+              disabled={viewOnly}
               onChange={(vals) =>
                 onChange(
                   roles.filter((role) => vals.includes(role.value)).map(({ name, value }) => ({ key: value, name })),
@@ -149,6 +157,7 @@ const ApprovalRuleForm = ({
                 ? translate('dashboard.rules-setup-incomplete')
                 : ''
             }
+            viewOnly={viewOnly}
             criteria={rulesCriteria}
             tiers={data.rules as Group[]}
             addRule={addRule.rules}
@@ -177,6 +186,7 @@ const ApprovalRuleForm = ({
                 ? translate('dashboard.tiers-setup-incomplete')
                 : ''
             }
+            viewOnly={viewOnly}
             criteria={approversCriteria}
             includeGroupHeader
             singleMode
@@ -214,6 +224,7 @@ const ApprovalRuleForm = ({
                 label={translate('dashboard.set-rule-as-active')}
                 defaultChecked={value === 'active'}
                 onChange={(checked) => onChange(checked ? 'active' : 'inactive')}
+                disabled={viewOnly}
               />
             )}
           />
