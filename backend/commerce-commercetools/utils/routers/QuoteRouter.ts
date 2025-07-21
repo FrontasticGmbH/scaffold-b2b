@@ -7,7 +7,7 @@ import { getPath } from '../requestHandlers/Request';
 import queryParamsToSortAttributes from '../requestHandlers/queryParamsToSortAttributes';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
-import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
+import getQuoteApi from '@Commerce-commercetools/utils/apiFactories/getQuoteApi';
 
 const quoteRegex = /\/quote\/([^\/]+)/;
 const quoteRequestRegex = /\/quote-request\/([^\/]+)/;

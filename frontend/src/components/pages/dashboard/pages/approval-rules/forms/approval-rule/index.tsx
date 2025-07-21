@@ -42,6 +42,7 @@ const ApprovalRuleForm = ({
     setValue,
     watch,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useForm<ApprovalRule>({
     defaultValues: initialData ?? {
@@ -57,11 +58,11 @@ const ApprovalRuleForm = ({
 
   useEffect(() => {
     if (initialData) {
-      for (const [key, value] of Object.entries(initialData)) {
-        setValue(key as keyof ApprovalRule, value);
-      }
+      reset(initialData);
+      setAddRule({ rules: !!initialData, approvers: !!initialData });
+      setIsPreviewing({ rules: !!initialData, approvers: !!initialData });
     }
-  }, [initialData, setValue]);
+  }, [initialData, reset]);
 
   const isValidGroup = (group?: Group) => {
     if (!group?.rules?.length) return false;
@@ -222,7 +223,7 @@ const ApprovalRuleForm = ({
             render={({ field: { value, onChange } }) => (
               <Toggle
                 label={translate('dashboard.set-rule-as-active')}
-                defaultChecked={value === 'active'}
+                checked={value === 'active'}
                 onChange={(checked) => onChange(checked ? 'active' : 'inactive')}
                 disabled={viewOnly}
               />

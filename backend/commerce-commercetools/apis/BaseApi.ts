@@ -1,5 +1,4 @@
 import * as crypto from 'crypto';
-import fetch, { Response } from 'node-fetch';
 import {
   ApiRoot,
   AssociateRole as CommercetoolsAssociateRole,

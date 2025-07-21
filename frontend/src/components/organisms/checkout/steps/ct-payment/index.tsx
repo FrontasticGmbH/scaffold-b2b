@@ -134,16 +134,18 @@ const CommercetoolsPayment = ({
       <div data-ctc />
 
       {!isCompleted && (
-        <Button
-          type="submit"
-          className="mt-9 w-full md:w-fit"
-          size="l"
-          variant="primary"
-          loading={loading}
-          data-ctc-selector="confirmMethod"
-        >
-          {translations?.review ?? translate('checkout.review-quote')}
-        </Button>
+        <div className="mr-3 flex justify-end">
+          <Button
+            type="submit"
+            className="mt-4 w-full md:w-fit"
+            size="l"
+            variant="primary"
+            loading={loading}
+            data-ctc-selector="confirmMethod"
+          >
+            {translations?.review ?? translate('checkout.review-quote')}
+          </Button>
+        </div>
       )}
     </div>
   );

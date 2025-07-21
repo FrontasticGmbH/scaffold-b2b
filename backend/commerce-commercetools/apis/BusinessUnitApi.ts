@@ -22,7 +22,7 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import Guid from '@Commerce-commercetools/utils/Guid';
-import getStoreApi from '@Commerce-commercetools/utils/apiConstructors/getStoreApi';
+import getStoreApi from '@Commerce-commercetools/utils/apiFactories/getStoreApi';
 import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
 

@@ -2,7 +2,7 @@ import { Context, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { AccountFetcher } from './AccountFetcher';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 

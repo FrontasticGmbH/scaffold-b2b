@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
@@ -8,9 +8,9 @@ import Checkbox from '@/components/atoms/checkbox';
 import { useForm, Controller } from 'react-hook-form';
 import { Address } from '@/types/entity/address';
 import useEntityToasters from '@/hooks/useEntityToasters';
-import { AddressFormProps } from './types';
+import { AddressFormProps } from '@/components/molecules/address-form/types';
 
-const AddressForm = ({
+const CheckoutAddressForm = ({
   onAddAddress,
   onUpdateAddress,
   addresses,
@@ -23,8 +23,8 @@ const AddressForm = ({
   showPhoneField = true,
   showCancelButton = true,
   showSubmitButton = true,
-  showDefaultCheckBoxes = true,
-}: AddressFormProps) => {
+  addressType,
+}: AddressFormProps & { addressType?: 'shipping' | 'billing' }) => {
   const translate = useTranslations();
 
   const { showSavedMessage, showFailedMessage } = useEntityToasters('address');
@@ -49,11 +49,12 @@ const AddressForm = ({
     defaultValues: defaultAddress,
   });
 
+  const [sameAsBilling, setSameAsBilling] = useState(false);
   const watchCountry = watch('country');
   const selectedCountry = countryOptions.find((c) => c.value === watchCountry);
 
   const onFormSubmit = async (formData: Partial<Address>) => {
-    const success = await (id ? onUpdateAddress?.(formData) : onAddAddress?.(formData as Address));
+    const success = await (id ? onUpdateAddress?.(formData) : onAddAddress?.(formData as Address, sameAsBilling));
 
     if (toasters) {
       if (success) {
@@ -71,37 +72,31 @@ const AddressForm = ({
       unstyled={unstyled}
       translations={{
         cancel: translations.cancel ?? translate('common.cancel'),
-        submit: translations.submit ?? translate('dashboard.save-address'),
+        submit: translations.submit ?? translate('checkout.add-and-continue'),
       }}
       showSubmitButton={showSubmitButton}
       showCancelButton={showCancelButton}
       onSubmit={handleSubmit(onFormSubmit)}
       onCancel={onCancel ?? router.back}
-      classNames={{ buttonsContainer: '-mt-[9px]' }}
+      classNames={{ buttonsContainer: 'justify-end' }}
     >
       <div className="flex flex-col gap-4">
         <Input
           label={translate('common.company-name')}
           required
-          containerClassName="max-w-[400px]"
           {...register('name', {
             required: translate('common.fieldIsRequired'),
           })}
           error={errors.name?.message}
         />
 
-        <Input
-          label={translate('common.care-of')}
-          showOptionalLabel
-          containerClassName="max-w-[400px]"
-          {...register('careOf')}
-        />
+        <Input label={translate('common.care-of')} showOptionalLabel {...register('careOf')} />
 
         {showPhoneField && (
           <Input
             label={translate('common.phone')}
+            optionalLabel={translate('common.optional-for-order-updates')}
             showOptionalLabel
-            containerClassName="max-w-[400px]"
             {...register('phone')}
           />
         )}
@@ -115,16 +110,16 @@ const AddressForm = ({
               {...field}
               label={translate('common.country')}
               required
-              className="max-w-[400px]"
               placeholder={translate('common.select')}
               options={countryOptions}
               error={errors.country?.message}
+              defaultValue=""
             />
           )}
         />
 
-        <div className="flex max-w-[400px] flex-col gap-4 md:flex-row">
-          <div className="md:w-1/3">
+        <div className="flex flex-col gap-4 md:flex-row">
+          <div className="md:max-w-[120px]">
             <Input
               label={translate('common.street-number')}
               required
@@ -147,24 +142,22 @@ const AddressForm = ({
           </div>
         </div>
 
-        <Input
-          label={translate('common.building-business')}
-          showOptionalLabel
-          containerClassName="max-w-[400px]"
-          {...register('building')}
-        />
+        <Input label={translate('common.building-business')} showOptionalLabel {...register('building')} />
 
-        <div className="flex max-w-[400px] flex-col gap-4 md:flex-row">
-          <Input
-            label={translate('common.zipCode')}
-            required
-            containerClassName="w-full  md:min-w-[100px]"
-            {...register('zip', {
-              required: translate('common.fieldIsRequired'),
-            })}
-            error={errors.zip?.message}
-          />
-          <div className="grow">
+        <div className="flex w-full flex-col gap-4 md:flex-row">
+          <div className="w-full md:basis-1/2">
+            <Input
+              label={translate('common.zipCode')}
+              required
+              containerClassName="w-full basis-1/2 grow"
+              {...register('zip', {
+                required: translate('common.fieldIsRequired'),
+              })}
+              error={errors.zip?.message}
+            />
+          </div>
+
+          <div className="w-full md:basis-1/2">
             <Input
               label={translate('common.city')}
               required
@@ -185,18 +178,33 @@ const AddressForm = ({
                 {...field}
                 label={translate('common.state')}
                 required
-                className="max-w-[400px]"
                 placeholder={translate('common.state')}
                 options={selectedCountry.states}
+                defaultValue=""
               />
             )}
           />
         )}
 
-        {showDefaultCheckBoxes && (
+        {addressType === 'billing' && (
+          <div className="flex items-center gap-5">
+            <Controller
+              name="isDefaultBilling"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  checked={field.value ?? false}
+                  onChecked={field.onChange}
+                  label={translate('account.address-setDefault-billing')}
+                />
+              )}
+            />
+          </div>
+        )}
+
+        {addressType === 'shipping' && (
           <>
-            <p className="mt-[7px] text-14 font-medium text-gray-700">{`${translate('dashboard.save-as-default')}?`}</p>
-            <div className="-mt-1 flex items-center gap-5">
+            <div className="flex flex-col gap-5 md:flex-row">
               <Controller
                 name="isDefaultShipping"
                 control={control}
@@ -204,20 +212,17 @@ const AddressForm = ({
                   <Checkbox
                     checked={field.value ?? false}
                     onChecked={field.onChange}
-                    label={translate('common.address-shipping')}
+                    label={translate('checkout.save-as-default-shipping')}
+                    name="isDefaultShipping"
                   />
                 )}
               />
-              <Controller
-                name="isDefaultBilling"
-                control={control}
-                render={({ field }) => (
-                  <Checkbox
-                    checked={field.value ?? false}
-                    onChecked={field.onChange}
-                    label={translate('common.address-billing')}
-                  />
-                )}
+
+              <Checkbox
+                checked={sameAsBilling}
+                onChecked={() => setSameAsBilling(!sameAsBilling)}
+                label={translate('checkout.use-as-billing')}
+                name="sameAsBilling"
               />
             </div>
           </>
@@ -227,4 +232,4 @@ const AddressForm = ({
   );
 };
 
-export default AddressForm;
+export default CheckoutAddressForm;

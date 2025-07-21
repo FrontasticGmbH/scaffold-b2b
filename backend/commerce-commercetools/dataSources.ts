@@ -11,11 +11,11 @@ import { AccountFetcher } from './utils/AccountFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
-import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
-import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
-import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
+import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
+import getQuoteApi from '@Commerce-commercetools/utils/apiFactories/getQuoteApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
 import { getBusinessUnitKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import ApprovalsQueryFactory from '@Commerce-commercetools/utils/ApprovalsQueryFactory';
 

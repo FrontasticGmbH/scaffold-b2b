@@ -2,7 +2,7 @@ import { Context, Request } from '@frontastic/extension-types';
 import { ProductPaginatedResult } from '@Types/result';
 import { ProductQueryFactory } from '../ProductQueryFactory';
 import { getPath } from '../requestHandlers/Request';
-import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
 
 export default class SearchRouter {
   static identifyFrom(request: Request) {

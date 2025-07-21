@@ -4,7 +4,7 @@ import { WishlistQuery } from '@Types/wishlist';
 import { PaginatedResult } from '@Types/result';
 import { getPath } from '../requestHandlers/Request';
 import { AccountFetcher } from '../AccountFetcher';
-import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
+import getWishlistApi from '@Commerce-commercetools/utils/apiFactories/getWishlistApi';
 
 export default class WishlistRouter {
   static identifyFrom(request: Request) {

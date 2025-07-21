@@ -6,12 +6,13 @@ export const mapAddress = ({
   firstName,
   lastName,
   streetName,
+  streetNumber,
+  building,
   additionalStreetInfo,
   city,
   state,
   postalCode,
   country,
-  streetNumber,
   isDefaultBillingAddress,
   isDefaultShippingAddress,
 }: Partial<Address>): EntityAddress => {
@@ -20,6 +21,7 @@ export const mapAddress = ({
     name: firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName || '',
     streetName: streetName ?? '',
     streetNumber: streetNumber ?? '',
+    building: building ?? '',
     line2: additionalStreetInfo ?? '',
     city,
     state,
@@ -43,6 +45,8 @@ export const mapCoCoAddress = ({
   streetNumber,
   isDefaultBilling,
   isDefaultShipping,
+  building,
+  apartment,
 }: Partial<EntityAddress>): Address => {
   const firstSpaceIndex = name.indexOf(' ');
 
@@ -54,8 +58,10 @@ export const mapCoCoAddress = ({
     firstName,
     lastName,
     streetName: streetName || line1,
-    streetNumber,
+    streetNumber: streetNumber ?? '',
     additionalAddressInfo: line2,
+    building: building ?? '',
+    apartment: apartment ?? '',
     city,
     state,
     postalCode: zip,

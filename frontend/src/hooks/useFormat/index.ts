@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Currency } from '@/types/currency';
 import { Address } from '@/types/entity/address';
+import { mapCountry } from '@/utils/mappers/map-country';
 
 const useFormat = () => {
   const formatCurrency = useCallback((price: number, currency: Currency) => {
@@ -11,9 +12,10 @@ const useFormat = () => {
   }, []);
 
   const formatAddress = useCallback((address: Partial<Address>) => {
-    return `${address.name}${address.careOf ? ` (c/o ${address.careOf})` : ''}\n${address.line1}\n${address.zip} ${
-      address.city
-    }, ${address.country}`.replace(/[^\S\r\n]+/g, ' ');
+    const countryName = mapCountry(address.country as string)?.name || address.country;
+    return `${address.name}${address.careOf ? ` (c/o ${address.careOf})` : ''}\n${address.streetName ?? ''} ${address.streetNumber ?? ''}\n${address.zip} ${
+      address.city ?? ''
+    }, ${countryName}`.replace(/[^\S\r\n]+/g, ' ');
   }, []);
 
   const formatLocalDate = useCallback((date: Date | string) => {

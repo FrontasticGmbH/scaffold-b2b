@@ -13,7 +13,7 @@ import handleError from '@Commerce-commercetools/utils/handleError';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
-import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 

@@ -39,14 +39,14 @@ const useClassNames = (variant: SearchVariant, focused: boolean, disabled: boole
     lg: classnames('w-6', focused ? 'text-white' : 'text-gray-600'),
   });
 
-  const searchBarClassNames = classnames('flex', resolveSearchBar(variant) as string);
+  const searchBarClassNames = classnames('flex relative', resolveSearchBar(variant) as string);
 
   const searchInputClassNames = classnames(
     'box-content w-full rounded-sm border-none pl-3 transition focus:outline-none disabled:bg-neutral-200',
     resolveSearchInput(variant) as string,
   );
-
-  const searchButtonClassNames = classnames('z-[5] shrink-0 transition', resolveSearchButton(variant) as string);
+  const searchButtonContainerClassNames = classnames('absolute flex right-0 z-[5] shrink-0');
+  const searchButtonClassNames = classnames('transition', resolveSearchButton(variant) as string);
 
   const searchIconClassNames = classnames(resolveSearchIcon(variant) as string);
 
@@ -55,6 +55,7 @@ const useClassNames = (variant: SearchVariant, focused: boolean, disabled: boole
     searchInputClassNames,
     searchButtonClassNames,
     searchIconClassNames,
+    searchButtonContainerClassNames,
   };
 };
 

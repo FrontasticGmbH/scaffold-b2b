@@ -20,7 +20,7 @@ const Label = ({
         <label aria-label={htmlFor} data-testid="label" htmlFor={htmlFor} className="block text-14">
           <span className="text-gray-700">{children}</span>{' '}
           {!required && showOptionalLabel && (
-            <span className="lowercase text-gray-500">({optionalLabel ?? translate('common.optional')})</span>
+            <span className="lowercase text-gray-400">({optionalLabel ?? translate('common.optional')})</span>
           )}
           {required && requiredStyle === 'asterisk' && <span>*</span>}
         </label>

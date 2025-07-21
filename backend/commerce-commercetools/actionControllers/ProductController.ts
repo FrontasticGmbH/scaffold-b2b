@@ -3,7 +3,7 @@ import { ProductQuery } from '@Types/query/ProductQuery';
 import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
 import { ProductQueryFactory } from '../utils/ProductQueryFactory';
 import handleError from '@Commerce-commercetools/utils/handleError';
-import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
 import { getStoreId } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;

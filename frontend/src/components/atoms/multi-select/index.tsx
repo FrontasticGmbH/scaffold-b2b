@@ -15,6 +15,7 @@ import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import { SelectProps } from './types';
 import Label from '../label';
 import Checkbox from '../checkbox';
+import useControllableState from '@/hooks/useControllableState';
 
 const MultiSelect = ({
   label,
@@ -24,17 +25,16 @@ const MultiSelect = ({
   options = [],
   placeholder = '',
   enableSearch = false,
-
   disabled,
   className,
   onChange,
-  value = [],
+  value,
   defaultValue,
 }: SelectProps) => {
   const translate = useTranslations();
 
   const [search, setSearch] = useState('');
-  const [dropdownValue, setDropdownValue] = useState(defaultValue || value);
+  const [dropdownValue, setDropdownValue] = useControllableState(value, defaultValue);
 
   const filteredOptions = useMemo(() => {
     if (!enableSearch || !search) return options;

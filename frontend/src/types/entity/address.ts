@@ -11,6 +11,8 @@ export interface Address {
   country: string;
   streetName?: string;
   streetNumber?: string;
+  building?: string;
+  apartment?: string;
   isDefaultShipping?: boolean;
   isDefaultBilling?: boolean;
 }

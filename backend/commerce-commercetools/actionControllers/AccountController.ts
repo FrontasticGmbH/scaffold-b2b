@@ -12,8 +12,8 @@ import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/pars
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import { BusinessUnitDuplicatedError } from '@Commerce-commercetools/errors/BusinessUnitDuplicatedError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
+import getAccountApi from '@Commerce-commercetools/utils/apiFactories/getAccountApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
 import { AccountFetcher } from '@Commerce-commercetools/utils/AccountFetcher';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;

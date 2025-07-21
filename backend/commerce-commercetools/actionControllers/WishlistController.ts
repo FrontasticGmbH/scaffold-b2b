@@ -5,7 +5,7 @@ import { WishlistFetcher } from '@Commerce-commercetools/utils/WishlistFetcher';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
+import getWishlistApi from '@Commerce-commercetools/utils/apiFactories/getWishlistApi';
 import WishlistApi from '@Commerce-commercetools/apis/WishlistApi';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { AccountFetcher } from '@Commerce-commercetools/utils/AccountFetcher';

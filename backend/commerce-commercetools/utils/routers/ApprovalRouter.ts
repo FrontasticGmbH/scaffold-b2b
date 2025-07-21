@@ -1,7 +1,7 @@
 import { Context, Request } from '@frontastic/extension-types';
 import { ApprovalFlow, ApprovalFlowsQuery, ApprovalRule, ApprovalRuleQuery } from '@Types/business-unit';
 import { PaginatedResult } from '@Types/result';
-import getBusinessUnitApi from '../apiConstructors/getBusinessUnitApi';
+import getBusinessUnitApi from '../apiFactories/getBusinessUnitApi';
 import { AccountFetcher } from '../AccountFetcher';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';

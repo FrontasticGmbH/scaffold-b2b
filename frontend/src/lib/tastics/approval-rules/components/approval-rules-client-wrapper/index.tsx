@@ -157,7 +157,12 @@ const ApprovalRulesTastic = () => {
     },
   } as ApprovalRulesPageProps;
 
-  const { ActiveSubPath } = useSubPath(approvalRulesPageProps);
+  const { ActiveSubPath } = useSubPath({
+    ...approvalRulesPageProps,
+    approvalRules: [...activeApprovalRules.approvalRules, ...inactiveApprovalRules.approvalRules].map((rule) =>
+      mapApprovalRule(rule, approvalRulesConfig),
+    ),
+  });
 
   return (
     <Dashboard title={ActiveSubPath?.title} href={DashboardLinks.approvalRules} userName={account?.firstName}>

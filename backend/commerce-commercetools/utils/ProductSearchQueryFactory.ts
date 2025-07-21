@@ -299,13 +299,10 @@ export class ProductSearchFactory {
     return searchQuery;
   }
 
-  private static pushToProductSearchRequestQueryAndExpression: (
+  private static pushToProductSearchRequestQueryAndExpression(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
-  ) => ProductSearchRequest = (
-    commercetoolsProductSearchRequest: ProductSearchRequest,
-    expression: SearchQuery | SearchQuery[],
-  ) => {
+  ): ProductSearchRequest {
     if ('and' in commercetoolsProductSearchRequest.query) {
       if (Array.isArray(expression)) {
         commercetoolsProductSearchRequest.query.and.push(...expression);
@@ -326,15 +323,12 @@ export class ProductSearchFactory {
       }
     }
     return commercetoolsProductSearchRequest;
-  };
+  }
 
-  private static pushToProductSearchRequestQueryOrExpression: (
+  private static pushToProductSearchRequestQueryOrExpression(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
-  ) => ProductSearchRequest = (
-    commercetoolsProductSearchRequest: ProductSearchRequest,
-    expression: SearchQuery | SearchQuery[],
-  ) => {
+  ): ProductSearchRequest {
     if ('or' in commercetoolsProductSearchRequest.query) {
       if (Array.isArray(expression)) {
         commercetoolsProductSearchRequest.query.or.push(...expression);
@@ -355,15 +349,12 @@ export class ProductSearchFactory {
       }
     }
     return commercetoolsProductSearchRequest;
-  };
+  }
 
-  private static pushToProductSearchRequestPostFilterAndExpression: (
+  private static pushToProductSearchRequestPostFilterAndExpression(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
-  ) => ProductSearchRequest = (
-    commercetoolsProductSearchRequest: ProductSearchRequest,
-    expression: SearchQuery | SearchQuery[],
-  ) => {
+  ): ProductSearchRequest {
     if ('and' in commercetoolsProductSearchRequest.postFilter) {
       if (Array.isArray(expression)) {
         commercetoolsProductSearchRequest.postFilter.and.push(...expression);
@@ -384,15 +375,12 @@ export class ProductSearchFactory {
       }
     }
     return commercetoolsProductSearchRequest;
-  };
+  }
 
-  private static pushToProductSearchFacetExpressionFilterAndExpression: (
+  private static pushToProductSearchFacetExpressionFilterAndExpression(
     productSearchFacetExpression: Writeable<ProductSearchFacetExpression>,
     expression: SearchQuery | SearchQuery[],
-  ) => ProductSearchFacetExpression = (
-    productSearchFacetExpression: ProductSearchFacetExpression,
-    expression: SearchQuery | SearchQuery[],
-  ) => {
+  ): ProductSearchFacetExpression {
     switch (true) {
       case 'count' in productSearchFacetExpression:
         (productSearchFacetExpression as Writeable<ProductSearchFacetCountExpression>).count.filter =
@@ -418,12 +406,12 @@ export class ProductSearchFactory {
     }
 
     return productSearchFacetExpression;
-  };
+  }
 
-  private static pushToSeachQueryAndExpresion: (
+  private static pushToSeachQueryAndExpresion(
     filter: Writeable<_SearchQuery>,
     expression: SearchQuery | SearchQuery[],
-  ) => _SearchQuery = (filter: _SearchQuery, expression: SearchQuery | SearchQuery[]) => {
+  ): _SearchQuery {
     if (filter && 'and' in filter) {
       if (Array.isArray(expression)) {
         filter.and.push(...expression);
@@ -445,7 +433,7 @@ export class ProductSearchFactory {
     }
 
     return filter;
-  };
+  }
 
   private static applyQueryString: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
@@ -760,17 +748,12 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   }
 
-  private static applySortAttributes: (
+  private static applySortAttributes(
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ) => ProductSearchRequest = (
-    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
-    productQuery: ProductQuery,
-    facetDefinitions: FacetDefinition[],
-    locale: Locale,
-  ) => {
+  ): ProductSearchRequest {
     const searchSortings: SearchSorting[] = [];
 
     switch (true) {
@@ -831,19 +814,14 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest.sort = searchSortings;
 
     return commercetoolsProductSearchRequest as ProductSearchRequest;
-  };
+  }
 
-  private static applyFacets: (
+  private static applyFacets(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ) => ProductSearchRequest = (
-    commercetoolsProductSearchRequest: ProductSearchRequest,
-    productQuery: ProductQuery,
-    facetDefinitions: FacetDefinition[],
-    locale: Locale,
-  ) => {
+  ): ProductSearchRequest {
     commercetoolsProductSearchRequest = this.applyFacetDefinitionsToFacets(
       commercetoolsProductSearchRequest,
       productQuery,
@@ -851,19 +829,14 @@ export class ProductSearchFactory {
       locale,
     );
     return commercetoolsProductSearchRequest;
-  };
+  }
 
-  private static applyFacetDefinitionsToFacets: (
-    commercetoolsProductSearchRequest: ProductSearchRequest,
-    productQuery: ProductQuery,
-    facetDefinitions: FacetDefinition[],
-    locale: Locale,
-  ) => ProductSearchRequest = (
+  private static applyFacetDefinitionsToFacets(
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ) => {
+  ): ProductSearchRequest {
     const productSearchFacetExpressions = this.facetDefinitionsToProductSearchFacetExpressions(
       facetDefinitions,
       locale,
@@ -937,7 +910,7 @@ export class ProductSearchFactory {
     }
 
     return commercetoolsProductSearchRequest as ProductSearchRequest;
-  };
+  }
 
   private static hydrateQueryExpressionWithAttributeType = (
     facet: _ProductSearchFacetExpression,

@@ -1,7 +1,7 @@
 import { ActionContext, Request } from '@frontastic/extension-types';
 import { Wishlist } from '@Types/wishlist/Wishlist';
 import { WishlistQuery } from '@Types/wishlist';
-import getWishlistApi from '@Commerce-commercetools/utils/apiConstructors/getWishlistApi';
+import getWishlistApi from '@Commerce-commercetools/utils/apiFactories/getWishlistApi';
 import { getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { AccountFetcher } from '@Commerce-commercetools/utils/AccountFetcher';
 

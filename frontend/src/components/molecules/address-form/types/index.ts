@@ -14,7 +14,7 @@ export interface AddressFormProps {
   showCancelButton?: boolean;
   showSubmitButton?: boolean;
   showDefaultCheckBoxes?: boolean;
-  onAddAddress?: (address: Address) => Promise<boolean>;
+  onAddAddress?: (address: Address, sameAsBilling?: boolean) => Promise<boolean>;
   onUpdateAddress?: (address: Partial<Address>) => Promise<boolean>;
   onSave?: () => void;
   onCancel?: () => void;

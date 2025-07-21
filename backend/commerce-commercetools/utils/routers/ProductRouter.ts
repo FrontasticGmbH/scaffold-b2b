@@ -12,7 +12,7 @@ import {
   getStoreKey,
   getSupplyChannelId,
 } from '../requestHandlers/Request';
-import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
 
 export default class ProductRouter {
   private static isProduct(product: Product | LineItem | WishlistItem): product is Product {

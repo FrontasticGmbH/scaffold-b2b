@@ -4,7 +4,7 @@ import { PaginatedResult } from '@Types/result';
 import { getPath } from '../requestHandlers/Request';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
 
 const orderRegex = /\/order\/([^\/]+)/;
 const ordersRegex = /\/orders/;

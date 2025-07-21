@@ -12,11 +12,11 @@ import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHand
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
-import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
+import getAccountApi from '@Commerce-commercetools/utils/apiFactories/getAccountApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';

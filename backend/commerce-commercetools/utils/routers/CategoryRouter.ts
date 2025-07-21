@@ -4,7 +4,7 @@ import { Category } from '@Types/product/Category';
 import { ProductPaginatedResult } from '@Types/result';
 import { getPath } from '../requestHandlers/Request';
 import { ProductQueryFactory } from '../ProductQueryFactory';
-import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
 
 export default class CategoryRouter {
   static identifyFrom(request: Request) {

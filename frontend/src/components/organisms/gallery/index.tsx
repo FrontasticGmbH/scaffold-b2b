@@ -35,7 +35,7 @@ const Gallery = ({ className, images }: GalleryProps) => {
     focusOnSelect: true,
   };
 
-  const galleryClassName = classnames('w-full', className);
+  const galleryClassName = classnames('w-full overflow-y-hidden', className);
 
   const verticalSliderClassName = classnames('w-[110px]', {
     'h-[450px] overflow-hidden': isDesktop && images.length <= 4,

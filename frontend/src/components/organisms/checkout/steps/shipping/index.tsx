@@ -87,15 +87,17 @@ const ShippingStep = ({
           ))}
         </div>
       </div>
-      <Button
-        className="mt-9 w-full md:w-fit"
-        size="l"
-        variant="primary"
-        loading={loading}
-        onClick={handleStepCompletion}
-      >
-        {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-payment')}
-      </Button>
+      <div className="flex justify-end">
+        <Button
+          className="mt-9 w-full md:w-fit"
+          size="l"
+          variant="primary"
+          loading={loading}
+          onClick={handleStepCompletion}
+        >
+          {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-payment')}
+        </Button>
+      </div>
     </div>
   );
 };

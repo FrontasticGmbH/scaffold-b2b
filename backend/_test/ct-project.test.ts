@@ -3,10 +3,30 @@ import { Context, Request, Response } from '@frontastic/extension-types';
 import { getProjectSettings } from '../commerce-commercetools/actionControllers/ProjectController';
 import { dummyAccount, dummyActionContext } from './data-provider';
 
-jest.mock('node-fetch', () => jest.fn());
-
 describe.skip('commerce-commercetools:: Project Functionalities', () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+  });
+
   it('should test getProjectSettings | should succeed', async function () {
+    const mockResponse: Response = {
+      statusCode: 200,
+      body: JSON.stringify({
+        name: 'Commercetools Frontend Demo',
+        countries: ['DE', 'US', 'CA', 'AU'],
+        currencies: ['EUR', 'USD'],
+        languages: ['en', 'de'],
+      }),
+      sessionData: '',
+    };
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: async () => JSON.parse(mockResponse.body),
+      text: async () => mockResponse.body,
+    });
+
     const request: Request = {
       body: JSON.stringify(dummyAccount),
       sessionData: '',
@@ -18,18 +38,9 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       query: '',
     };
 
-    const res: Response = {
-      statusCode: 200,
-      body: JSON.stringify({
-        name: 'Commercetools Frontend Demo',
-        countries: ['DE', 'US', 'CA', 'AU'],
-        currencies: ['EUR', 'USD'],
-        languages: ['en', 'de'],
-      }),
-      sessionData: '',
-    };
-    await expect(getProjectSettings(request, dummyActionContext)).resolves.toEqual(res);
+    await expect(getProjectSettings(request, dummyActionContext)).resolves.toEqual(mockResponse);
   });
+
   it('should test getProjectSettings | should fail', async function () {
     const request: Request = {
       body: JSON.stringify(dummyAccount),
@@ -41,6 +52,7 @@ describe.skip('commerce-commercetools:: Project Functionalities', () => {
       method: 'POST',
       query: '',
     };
+
     const ctx = {
       environment: 'dev',
       project: {},

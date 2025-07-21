@@ -47,7 +47,7 @@ import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPay
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
 
 const CART_EXPANDS = [
   'lineItems[*].discountedPricePerQuantity[*].discountedPrice.includedDiscounts[*].discount',

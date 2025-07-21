@@ -14,7 +14,7 @@ const OrderStatusTag = ({ status }: OrderStatusTagProps) => {
     Confirmed: 'light',
     Cancelled: 'danger',
     Rejected: 'danger',
-    Returned: 'secondary',
+    Returned: 'danger',
     Delivered: 'success',
     Shipped: 'light',
   } as Record<OrderStatus, TagVariant>;

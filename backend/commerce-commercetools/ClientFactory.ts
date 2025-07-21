@@ -11,17 +11,12 @@ import {
 import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
 
 export class ClientFactory {
-  static factor: (
+  static factor(
     clientConfig: ClientConfig,
     environment: string | undefined,
     tokenCache: TokenCache | undefined,
     refreshToken?: string,
-  ) => Client = (
-    clientConfig: ClientConfig,
-    environment: string | undefined,
-    tokenCache: TokenCache | undefined,
-    refreshToken?: string,
-  ) => {
+  ): Client {
     const httpMiddlewareOptions: HttpMiddlewareOptions = {
       host: clientConfig.hostUrl,
       includeOriginalRequest: true,
@@ -63,7 +58,7 @@ export class ClientFactory {
     }
 
     return clientBuilder.build();
-  };
+  }
 
   private static getClientBuilderWithRefreshTokenFlow(
     clientConfig: ClientConfig,

@@ -33,6 +33,7 @@ import {
   AttributeLocalizedEnumValue,
   AttributeSetType,
   ProductType as CommercetoolsProductType,
+  AttributeType,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-type';
 import { FilterField, FilterFieldTypes, FilterFieldValue } from '@Types/product/FilterField';
 import { RangeFacet, Term, TermFacet } from '@Types/result';
@@ -413,6 +414,7 @@ export default class ProductMapper {
   static commercetoolsProductTypesToFacetDefinitions(
     commercetoolsProductTypes: CommercetoolsProductType[],
     locale: Locale,
+    defaultLocale: string,
   ): FacetDefinition[] {
     const facetDefinitionsIndex: { [key: string]: FacetDefinition } = {};
 
@@ -427,10 +429,17 @@ export default class ProductMapper {
             ? (attribute.type as AttributeSetType)?.elementType.name
             : attribute.type.name,
           attributeId: `variants.attributes.${attribute.name}`,
-          attributeLabel:
-            attribute.label[locale.language] !== undefined && attribute.label[locale.language].length > 0
-              ? attribute.label[locale.language]
-              : attribute.name,
+          attributeLabel: LocalizedValue.getLocalizedValue(locale, defaultLocale, attribute.label) || attribute.name,
+          attributeValues:
+            this.isAttributeEnumType(attribute.type) && attribute.type.values.length > 0
+              ? attribute.type.values.map((value) => ({
+                  key: value.key,
+                  label:
+                    typeof value.label === 'string'
+                      ? value.label
+                      : LocalizedValue.getLocalizedValue(locale, defaultLocale, value.label) || value.key,
+                }))
+              : undefined,
         };
 
         // Store facets by attributeId to avoid duplicated attributes
@@ -486,6 +495,7 @@ export default class ProductMapper {
             return this.commercetoolsFacetResultBucketToTermFacet(
               commercetoolsFacetResult as ProductSearchFacetResultBucket,
               commercetoolsFacetExpression as ProductSearchFacetDistinctExpression,
+              facetDefinitions,
               facetLabel,
               facetQuery as QueryTermFacet | undefined,
             );
@@ -548,6 +558,7 @@ export default class ProductMapper {
   static commercetoolsFacetResultBucketToTermFacet = (
     commercetoolsFacetResultBucket: ProductSearchFacetResultBucket,
     commercetoolsFacetDistinctExpression: ProductSearchFacetDistinctExpression,
+    facetDefinitions: FacetDefinition[],
     facetLabel: string,
     facetQuery: QueryTermFacet | undefined,
   ): TermFacet => {
@@ -559,9 +570,15 @@ export default class ProductMapper {
       key: commercetoolsFacetResultBucket.name,
       selected: facetQuery !== undefined,
       terms: commercetoolsFacetResultBucket.buckets.map((facetResultTerm) => {
+        const label =
+          facetDefinitions
+            .find((facetDefinition) => facetDefinition.attributeId === commercetoolsFacetResultBucket.name)
+            ?.attributeValues?.find((attributeValue) => attributeValue.key === facetResultTerm.key.toString())?.label ||
+          facetResultTerm.key.toString();
+
         const term: Term = {
           identifier: facetResultTerm.key.toString(),
-          label: facetResultTerm.key.toString(),
+          label,
           count: facetResultTerm.count,
           key: facetResultTerm.key.toString(),
           selected: facetQuery !== undefined && facetQuery.terms?.includes(facetResultTerm.key.toString()),
@@ -703,5 +720,11 @@ export default class ProductMapper {
     }
 
     return undefined;
+  }
+
+  static isAttributeEnumType(
+    attributeType: AttributeType,
+  ): attributeType is AttributeEnumType | AttributeLocalizedEnumType {
+    return attributeType && 'values' in attributeType;
   }
 }
