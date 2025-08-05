@@ -6,6 +6,7 @@ import { Address } from '@Types/account/Address';
 import { DiscountCode, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
 import { Token } from '@Types/Token';
+import { RecurrencePolicyQuery } from '@Types/query';
 import { EmailApiFactory } from '../utils/EmailApiFactory';
 import { CartFetcher } from '../utils/CartFetcher';
 import { getLocale } from '../utils/requestHandlers/Request';
@@ -14,6 +15,7 @@ import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFacto
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
+import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -553,6 +555,32 @@ export const getCheckoutSessionToken: ActionHook = async (request: Request, acti
       body: checkoutSessionToken ? JSON.stringify(checkoutSessionToken) : '',
       sessionData: {
         ...cartApi.getSessionData(),
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const getRecurrencePolicies: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const recurrencePolicyQuery: RecurrencePolicyQuery = {
+      limit: request.query?.limit ?? undefined,
+      cursor: request.query?.cursor ?? undefined,
+      recurrencePolicyIds: queryParamsToIds('recurrencePolicyIds', request.query),
+      keys: queryParamsToIds('keys', request.query),
+    };
+    const recurrencePolicies = await cartApi.getRecurrencePolicies(recurrencePolicyQuery);
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(recurrencePolicies),
+      sessionData: {
+        ...request.sessionData,
       },
     };
 

@@ -13,6 +13,8 @@ const ProductDetails = ({
   shippingMethods,
   addToCart,
   getWishlists,
+  canAddToOwnWishlist,
+  canAddToOthersWishlist,
   addToWishlists,
   removeFromWishlists,
   onChangeVariant,
@@ -47,6 +49,8 @@ const ProductDetails = ({
           addToWishlists={addToWishlists}
           onChangeVariant={onChangeVariant}
           addToNewWishlist={addToNewWishlist}
+          canAddToOwnWishlist={canAddToOwnWishlist}
+          canAddToOthersWishlist={canAddToOthersWishlist}
         />
       </div>
 

@@ -78,6 +78,8 @@ const AddressesStep = ({
     [onCompleteAddresses, nextStep, visitedAllSteps, goToLastStep],
   );
 
+  const canAddAddress = !!onAddAddress;
+
   // Step is done
   if (isCompleted) {
     const preview = [
@@ -123,7 +125,11 @@ const AddressesStep = ({
           addresses={[]}
           countryOptions={countryOptions}
           onAddAddress={async (address, sameAsBilling) => {
-            const success = await onAddAddress?.(address);
+            if (!canAddAddress) {
+              return false;
+            }
+
+            const success = await onAddAddress(address);
 
             if (success && sameAsBilling) {
               setSelectedAddresses({ shipping: address, billing: address });
@@ -162,7 +168,7 @@ const AddressesStep = ({
   }
 
   // Unsaved addresses flow
-  if (addresses.length === 0) {
+  if (addresses.length === 0 && canAddAddress) {
     return (
       <div>
         <div>
@@ -257,6 +263,10 @@ const AddressesStep = ({
     );
   }
 
+  if (addresses.length === 0 && !canAddAddress) {
+    return <p className="text-gray-600">{translate('account.no-address-creation-permission')}</p>;
+  }
+
   // Default select addresses flow
   return (
     <div>
@@ -276,12 +286,14 @@ const AddressesStep = ({
               <h5 className="text-14 font-medium uppercase text-gray-700">
                 {translate(`common.address-${key as 'shipping' | 'billing'}`)}
               </h5>
-              <button
-                className="hidden text-left text-14 text-gray-600 underline underline-offset-2 lg:block"
-                onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
-              >
-                {translate(`checkout.address-${key as 'shipping' | 'billing'}-add`)} +
-              </button>
+              {canAddAddress && (
+                <button
+                  className="hidden text-left text-14 text-gray-600 underline underline-offset-2 lg:block"
+                  onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
+                >
+                  {translate(`checkout.address-${key as 'shipping' | 'billing'}-add`)} +
+                </button>
+              )}
             </div>
             <h6 className="mt-4 text-14 text-gray-700"></h6>
             <Select

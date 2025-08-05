@@ -4,7 +4,7 @@ import { CategoryQuery, CategoryQueryFormat } from '@Types/query/CategoryQuery';
 import { ProductQueryFactory } from '../utils/ProductQueryFactory';
 import handleError from '@Commerce-commercetools/utils/handleError';
 import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
-import { getStoreId } from '@Commerce-commercetools/utils/requestHandlers/Request';
+import { getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -23,12 +23,6 @@ export const getProduct: ActionHook = async (request: Request, actionContext: Ac
     if ('key' in request.query) {
       productQuery = {
         productKeys: [request.query['key']],
-      };
-    }
-
-    if ('ref' in request.query) {
-      productQuery = {
-        productRefs: [request.query['ref']],
       };
     }
 
@@ -81,13 +75,11 @@ export const queryCategories: ActionHook = async (request: Request, actionContex
       cursor: request.query?.cursor ?? undefined,
       slug: request.query?.slug ?? undefined,
       parentId: request.query?.parentId ?? undefined,
+      storeKey: getStoreKey(request),
       format: request.query?.format ?? CategoryQueryFormat.FLAT,
     };
 
-    const storeId = getStoreId(request);
-
-    const buckets = await productApi.queryFacetCategoriesForSubtree(storeId);
-    const queryResult = await productApi.queryCategories(categoryQuery, buckets);
+    const queryResult = await productApi.queryCategories(categoryQuery);
     const response: Response = {
       statusCode: 200,
       body: JSON.stringify(queryResult),

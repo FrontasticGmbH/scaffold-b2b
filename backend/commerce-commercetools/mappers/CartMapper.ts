@@ -18,6 +18,11 @@ import {
   ShippingRate as CommercetoolsShippingRate,
   CartDiscountTarget as CommercetoolsCartDiscountTarget,
   SelectionMode as CommercetoolsSelectionMode,
+  RecurrencePolicy as CommercetoolsRecurrencePolicy,
+  RecurrencePolicySchedule as CommercetoolsRecurrencePolicySchedule,
+  IntervalUnit as CommercetoolsIntervalUnit,
+  LineItemRecurrenceInfo as CommercetoolsLineItemRecurrenceInfo,
+  PriceSelectionMode as CommercetoolsPriceSelectionMode,
 } from '@commercetools/platform-sdk';
 import { LineItem, LineItemShippingAddress } from '@Types/cart/LineItem';
 import { Cart, CartOrigin, CartState } from '@Types/cart/Cart';
@@ -56,6 +61,8 @@ import {
   TaxPortion,
   TaxRate,
   DirectDiscount,
+  RecurrencePolicy,
+  LineItemRecurrenceInfo,
 } from '@Types/cart';
 import {
   ShippingMethod as CommercetoolsShippingMethod,
@@ -63,6 +70,7 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shipping-method';
 import { Payment as CommercetoolsPayment } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { CartDiscountSelectionMode, CartDiscountTarget } from '@Types/cart/Discount';
+import { IntervalUnit, PriceSelectionMode, RecurrencePolicySchedule } from '@Types/cart/RecurringOrder';
 import ProductRouter from '../utils/routers/ProductRouter';
 import ProductMapper from './ProductMapper';
 import AccountMapper from './AccountMapper';
@@ -189,12 +197,45 @@ export default class CartMapper {
           }),
           valid: commercetoolsLineItem.shippingDetails?.valid,
         },
+        recurrenceInfo:
+          commercetoolsLineItem?.recurrenceInfo !== undefined
+            ? this.commercetoolsLineItemRecurrenceInfoToLineItemRecurrenceInfo(
+                commercetoolsLineItem?.recurrenceInfo,
+                locale,
+                defaultLocale,
+              )
+            : undefined,
       };
       item._url = ProductRouter.generateUrlFor(item);
       lineItems.push(item);
     });
 
     return lineItems;
+  }
+
+  static commercetoolsLineItemRecurrenceInfoToLineItemRecurrenceInfo(
+    commercetoolLineItemRecurrenceInfo: CommercetoolsLineItemRecurrenceInfo,
+    locale: Locale,
+    defaultLocale: string,
+  ): LineItemRecurrenceInfo {
+    let lineItemRecurrenceInfo: LineItemRecurrenceInfo = {
+      priceSelectionMode: this.commercetoolsPriceSelectionModeToPriceSelectionMode(
+        commercetoolLineItemRecurrenceInfo?.priceSelectionMode,
+      ),
+    };
+
+    if (commercetoolLineItemRecurrenceInfo.recurrencePolicy.obj) {
+      lineItemRecurrenceInfo = {
+        ...lineItemRecurrenceInfo,
+        recurrencePolicy: this.commercetoolsRecurrencePolicyToRecurrencePolicy(
+          commercetoolLineItemRecurrenceInfo.recurrencePolicy.obj,
+          locale,
+          defaultLocale,
+        ),
+      };
+    }
+
+    return lineItemRecurrenceInfo;
   }
 
   static commercetoolsAddressToAddress(commercetoolsAddress: CommercetoolsAddress): Address {
@@ -303,6 +344,72 @@ export default class CartMapper {
     };
   }
 
+  static commercetoolsRecurrencePolicyToRecurrencePolicy(
+    commercetoolsRecurrencePolicy: CommercetoolsRecurrencePolicy,
+    locale: Locale,
+    defaultLocale: string,
+  ): RecurrencePolicy {
+    return {
+      recurrencePolicyId: commercetoolsRecurrencePolicy?.id,
+      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsRecurrencePolicy?.name) || undefined,
+      key: commercetoolsRecurrencePolicy?.key,
+      description:
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsRecurrencePolicy?.description) ||
+        undefined,
+      schedule: this.commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
+        commercetoolsRecurrencePolicy?.schedule,
+      ),
+    };
+  }
+
+  static commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
+    commercetoolsRecurrencePolicySchedule: CommercetoolsRecurrencePolicySchedule,
+  ): RecurrencePolicySchedule {
+    switch (commercetoolsRecurrencePolicySchedule?.type) {
+      case 'dayOfMonth':
+        return {
+          type: 'dayOfMonth',
+          day: commercetoolsRecurrencePolicySchedule?.day,
+        };
+
+      case 'standard':
+        return {
+          type: 'standard',
+          value: commercetoolsRecurrencePolicySchedule?.value,
+          intervalUnit: this.commercetoolsIntervalUnitsToIntervalUnits(
+            commercetoolsRecurrencePolicySchedule?.intervalUnit,
+          ),
+        };
+      default:
+        return undefined;
+    }
+  }
+
+  static commercetoolsPriceSelectionModeToPriceSelectionMode(
+    mode: CommercetoolsPriceSelectionMode,
+  ): PriceSelectionMode {
+    switch (mode) {
+      case 'Fixed':
+        return PriceSelectionMode.Fixed;
+      case 'Dynamic':
+        return PriceSelectionMode.Dynamic;
+      default:
+        return undefined;
+    }
+  }
+
+  static commercetoolsIntervalUnitsToIntervalUnits(unit: CommercetoolsIntervalUnit): IntervalUnit {
+    switch (unit) {
+      case 'Days':
+        return 'Days';
+      case 'Months':
+        return 'Months';
+      case 'Weeks':
+        return 'Weeks';
+      default:
+        return undefined;
+    }
+  }
   static commercetoolsShippingInfoToShippingInfo(
     commercetoolsShippingInfo: CommercetoolsShippingInfo | undefined,
     locale: Locale,

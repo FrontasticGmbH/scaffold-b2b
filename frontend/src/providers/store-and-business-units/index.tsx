@@ -26,7 +26,7 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
     async (key: string) => {
       const businessUnit = businessUnits.find((bu) => bu.key === key);
 
-      if (businessUnit && businessUnit.stores?.[0]) {
+      if (businessUnit && businessUnit.stores?.[0]?.key) {
         await setBusinessUnitAndStoreSessionKeys(key, businessUnit.stores[0].key);
 
         localStorage.setItem('bu-key', key);
@@ -60,8 +60,8 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
     const buInStorage = businessUnits.find((bu) => bu.key === localStorage.getItem('bu-key'));
     const stInStorage = buInStorage?.stores?.find((bu) => bu.key === localStorage.getItem('st-key'));
 
-    if (buInStorage && stInStorage) {
-      setSelectedBusinessUnitKey(buInStorage.key as string);
+    if (buInStorage?.key && stInStorage?.key) {
+      setSelectedBusinessUnitKey(buInStorage.key);
       setSelectedStoreKey(stInStorage.key);
     }
   }, [businessUnits]);

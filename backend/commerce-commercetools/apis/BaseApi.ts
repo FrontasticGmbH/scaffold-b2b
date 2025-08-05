@@ -5,6 +5,7 @@ import {
   createApiBuilderFromCtpClient,
   ProductType as CommercetoolsProductType,
   Project as CommercetoolsProject,
+  Store as CommercetoolsStore,
 } from '@commercetools/platform-sdk';
 import { Context, Request } from '@frontastic/extension-types';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
@@ -21,6 +22,7 @@ import { ValidationError } from '@Commerce-commercetools/errors/ValidationError'
 import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import { ConfigurationError } from '@Commerce-commercetools/errors/ConfigurationError';
+import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 const defaultCurrency = 'USD';
 
@@ -351,6 +353,10 @@ const productTypesCache: {
   [projectKey: string]: { productTypes: CommercetoolsProductType[]; expiryTime: number };
 } = {};
 
+const storeCache: {
+  [storeIdOrKey: string]: { store: CommercetoolsStore; expiryTime: number };
+} = {};
+
 const pickCandidate = (candidates: string[], availableOptions: string[]): string | undefined => {
   for (const candidate of candidates) {
     const found = availableOptions.find((option) => option.toLowerCase() === candidate.toLowerCase());
@@ -416,6 +422,7 @@ export default abstract class BaseApi {
   protected environment: string;
   protected projectKey: string;
   protected productIdField: string;
+  protected storeRefField: string;
   protected categoryIdField: string;
   protected defaultAssociateRoleKeys: string[];
   protected locale: string;
@@ -447,6 +454,7 @@ export default abstract class BaseApi {
     this.projectKey = this.clientSettings.projectKey;
     this.productIdField = this.clientSettings?.productIdField || 'key';
     this.categoryIdField = this.clientSettings?.categoryIdField || 'key';
+    this.storeRefField = this.clientSettings?.storeRefField || 'key';
     this.defaultAssociateRoleKeys = this.clientSettings?.defaultAssociateRoleKeys || ['admin'];
     this.token = clientTokensStored.get(this.getClientHashKey());
     this.checkoutHashKey = null;
@@ -590,6 +598,74 @@ export default abstract class BaseApi {
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
+  }
+
+  protected async getCommercetoolsStoreById(id: string): Promise<CommercetoolsStore> {
+    const now = Date.now();
+
+    if (id in storeCache) {
+      const cacheEntry = storeCache[id];
+
+      if (now < cacheEntry.expiryTime) {
+        return cacheEntry.store;
+      }
+    }
+
+    const response = await this.requestBuilder()
+      .stores()
+      .withId({ ID: id })
+      .get()
+      .execute()
+      .catch((error) => {
+        if (error.statusCode === 404) {
+          throw new ResourceNotFoundError({ message: 'Store not found' });
+        }
+
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
+
+    const store = response.body;
+
+    storeCache[id] = {
+      store,
+      expiryTime: cacheTtlMilliseconds + now,
+    };
+
+    return store;
+  }
+
+  protected async getCommercetoolsStoreByKey(key: string): Promise<CommercetoolsStore> {
+    const now = Date.now();
+
+    if (key in storeCache) {
+      const cacheEntry = storeCache[key];
+
+      if (now < cacheEntry.expiryTime) {
+        return cacheEntry.store;
+      }
+    }
+
+    const response = await this.requestBuilder()
+      .stores()
+      .withKey({ key })
+      .get()
+      .execute()
+      .catch((error) => {
+        if (error.statusCode === 404) {
+          throw new ResourceNotFoundError({ message: 'Store not found' });
+        }
+
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
+
+    const store = response.body;
+
+    storeCache[key] = {
+      store,
+      expiryTime: cacheTtlMilliseconds + now,
+    };
+
+    return store;
   }
 
   protected associateRequestBuilder(accountId: string): ByProjectKeyAsAssociateByAssociateIdRequestBuilder {

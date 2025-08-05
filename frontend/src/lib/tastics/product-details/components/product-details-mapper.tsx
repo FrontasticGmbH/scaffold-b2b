@@ -26,6 +26,8 @@ const ProductDetailsMapper = ({ product }: ProductDetailsMapperProps) => {
       currentSpecs={currentSpecs}
       shippingMethods={shippingMethods}
       addToCartDisabled={!permissions.UpdateMyCarts}
+      canAddToOwnWishlist={permissions.UpdateMyShoppingLists}
+      canAddToOthersWishlist={permissions.UpdateOthersShoppingLists}
       addToCart={addToCart}
       getWishlists={getWishlists}
       addToWishlists={addToWishlists}

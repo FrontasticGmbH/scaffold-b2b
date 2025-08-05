@@ -53,6 +53,23 @@
           "required": false
         },
         {
+          "label": "Store Reference Field",
+          "field": "EXTENSION_COMMERCETOOLS_STORE_REF_FIELD",
+          "type": "enum",
+          "values": [
+            {
+              "value": "id",
+              "name": "ID"
+            },
+            {
+              "value": "key",
+              "name": "Key"
+            }
+          ],
+          "default": "key",
+          "required": true
+        },
+        {
           "label": "Session URL",
           "field": "EXTENSION_COMMERCETOOLS_SESSION_URL",
           "type": "string",

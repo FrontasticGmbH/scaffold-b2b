@@ -6,6 +6,6 @@ const getBusinessUnitApi = (request: Request, actionContext: Context): BusinessU
   const locale = getLocale(request);
   const currency = getCurrency(request);
 
-  return new BusinessUnitApi(actionContext, locale, currency);
+  return new BusinessUnitApi(actionContext, locale, currency, request);
 };
 export default getBusinessUnitApi;

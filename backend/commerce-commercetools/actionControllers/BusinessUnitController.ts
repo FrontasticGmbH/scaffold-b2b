@@ -357,7 +357,6 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
         ...request.sessionData,
         businessUnitKey,
         storeKey,
-        storeId: store.storeId,
         distributionChannelId: store?.distributionChannels?.[0]?.channelId, // Use only the first distribution channel
         supplyChannelId: store?.supplyChannels?.[0]?.channelId, // Use only the first supply channel
       },

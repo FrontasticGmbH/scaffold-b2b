@@ -21,6 +21,7 @@ import useProjectSettings from '@/lib/hooks/useProjectSettings';
 import { mapCountry } from '@/utils/mappers/map-country';
 import { Props } from '../../types';
 import usePaymentMethods from '../../hooks/usePaymentMethods';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
 
 const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   const router = useCustomRouter();
@@ -28,6 +29,7 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   const { projectSettings } = useProjectSettings();
 
   const { account } = useAccount();
+  const { permissions } = useAccountRoles();
 
   const translate = useTranslations();
 
@@ -44,6 +46,7 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<(typeof paymentMethods)[0]>();
   const [paymentData, setPaymentData] = useState<unknown>({});
+  const canAddAddress = permissions.UpdateBusinessUnitDetails;
 
   return (
     <Checkout
@@ -95,12 +98,19 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
         states: states.map(({ name, code }) => ({ name, value: code })),
       }))}
       termsAndConditionsLink={resolveReference(data.termsAndConditionsLink)}
-      onAddAddress={async (address) => {
-        if (!selectedBusinessUnit?.key) return false;
+      onAddAddress={
+        canAddAddress
+          ? async (address) => {
+              if (!selectedBusinessUnit?.key) return false;
 
-        const response = await addAddress({ ...mapCoCoAddress(address), businessUnitKey: selectedBusinessUnit?.key });
-        return !!response.businessUnitId;
-      }}
+              const response = await addAddress({
+                ...mapCoCoAddress(address),
+                businessUnitKey: selectedBusinessUnit?.key,
+              });
+              return !!response.businessUnitId;
+            }
+          : undefined
+      }
       onApplyDiscount={async (code) => {
         const res = await redeemDiscount(code);
         return !!res.cartId;

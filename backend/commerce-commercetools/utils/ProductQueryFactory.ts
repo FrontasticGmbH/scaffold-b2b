@@ -5,7 +5,6 @@ import { TermFacet } from '@Types/query/TermFacet';
 import { RangeFacet } from '@Types/query/RangeFacet';
 import {
   getDistributionChannelId,
-  getStoreId,
   getStoreKey,
   getSupplyChannelId,
   getProductSelectionId,
@@ -183,8 +182,9 @@ export class ProductQueryFactory {
     /**
      * Map store
      */
-    productQuery.storeKey = queryParams?.storeKey || getStoreKey(request) || undefined;
-    productQuery.storeId = queryParams?.storeId || getStoreId(request) || undefined;
+    productQuery.store = {
+      key: queryParams?.storeKey || getStoreKey(request) || undefined,
+    };
 
     /**
      * Map distributionChannelId

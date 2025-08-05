@@ -8,7 +8,6 @@ import {
   getDistributionChannelId,
   getPath,
   getProductSelectionId,
-  getStoreId,
   getStoreKey,
   getSupplyChannelId,
 } from '../requestHandlers/Request';
@@ -51,10 +50,11 @@ export default class ProductRouter {
     if (sku) {
       const productQuery: ProductQuery = {
         skus: [sku],
-        storeKey: getStoreKey(request),
+        store: {
+          key: getStoreKey(request),
+        },
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
-        storeId: getStoreId(request),
         productSelectionId: getProductSelectionId(request),
         accountGroupIds: getAccountGroupIds(request),
       };

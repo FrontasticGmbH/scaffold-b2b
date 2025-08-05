@@ -28,13 +28,15 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/cart';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { PaginatedResult } from '@Types/result';
-import { DiscountCode, Payment, ShippingMethod } from '@Types/cart';
+import { DiscountCode, Payment, RecurrencePolicy, ShippingMethod } from '@Types/cart';
 import {
   PaymentDraft,
   PaymentUpdateAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { Context, Request } from '@frontastic/extension-types';
 import { Token } from '@Types/Token';
+import { RecurrencePolicyQuery } from '@Types/query';
+import { PriceSelectionMode } from '@Types/cart/RecurringOrder';
 import CartMapper from '../mappers/CartMapper';
 import { isReadyForCheckout } from '../utils/Cart';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
@@ -52,6 +54,7 @@ import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBu
 const CART_EXPANDS = [
   'lineItems[*].discountedPricePerQuantity[*].discountedPrice.includedDiscounts[*].discount',
   'lineItems[*].price.discounted.discount',
+  'lineItems[*].recurrenceInfo.recurrencePolicy',
   'discountCodes[*].discountCode',
   'discountOnTotalPrice.includedDiscounts[*].discount',
   'discountCodes[*].discountCode.cartDiscounts[*]',
@@ -199,6 +202,7 @@ export default class CartApi extends BaseApi {
     };
 
     lineItems.map((lineItem) => {
+      const recurrencePolicy = lineItem?.recurrenceInfo?.recurrencePolicy;
       cartUpdate.actions.push({
         action: 'addLineItem',
         ...(this.distributionChannelId && {
@@ -209,8 +213,19 @@ export default class CartApi extends BaseApi {
         }),
         sku: lineItem.variant.sku,
         quantity: +lineItem.count,
+        ...(lineItem?.recurrenceInfo &&
+          recurrencePolicy?.recurrencePolicyId && {
+            recurrenceInfo: {
+              recurrencePolicy: {
+                typeId: 'recurrence-policy',
+                id: recurrencePolicy.recurrencePolicyId,
+              },
+              priceSelectionMode: PriceSelectionMode.Fixed,
+            },
+          }),
       });
     });
+
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
     return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
@@ -1166,5 +1181,54 @@ export default class CartApi extends BaseApi {
     }
 
     return commercetoolsCart.country !== locale.country || commercetoolsCart.locale !== locale.language;
+  }
+
+  async getRecurrencePolicies(
+    recurrencePolicyQuery: RecurrencePolicyQuery,
+  ): Promise<PaginatedResult<RecurrencePolicy>> {
+    const locale = await this.getCommercetoolsLocal();
+    const limit = +recurrencePolicyQuery.limit || undefined;
+    const whereClause: string[] = [];
+
+    if (
+      recurrencePolicyQuery.recurrencePolicyIds !== undefined &&
+      recurrencePolicyQuery.recurrencePolicyIds.length !== 0
+    ) {
+      whereClause.push(`id in ("${recurrencePolicyQuery.recurrencePolicyIds.join('","')}")`);
+    }
+
+    if (recurrencePolicyQuery.keys !== undefined && recurrencePolicyQuery.keys.length !== 0) {
+      whereClause.push(`key in ("${recurrencePolicyQuery.keys.join('","')}")`);
+    }
+
+    return await this.requestBuilder()
+      .recurrencePolicies()
+      .get({
+        queryArgs: {
+          limit,
+          where: whereClause,
+        },
+      })
+      .execute()
+      .then((response) => {
+        const recurrencePolicies = response.body.results.map((recurrencePolicy) => {
+          return CartMapper.commercetoolsRecurrencePolicyToRecurrencePolicy(
+            recurrencePolicy,
+            locale,
+            this.defaultLocale,
+          );
+        });
+        return {
+          total: response.body.total,
+          items: recurrencePolicies,
+          count: response.body.count,
+          previousCursor: ProductMapper.calculatePreviousCursor(response.body.offset, response.body.count),
+          nextCursor: ProductMapper.calculateNextCursor(response.body.offset, response.body.count, response.body.total),
+          query: recurrencePolicyQuery,
+        };
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
   }
 }

@@ -69,7 +69,6 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
   // By default, we'll select the first business unit and store for the user.
   const businessUnitKey = businessUnits?.[0]?.key;
   const storeKey = businessUnits?.[0]?.stores?.[0]?.key;
-  const storeId = businessUnits?.[0]?.stores?.[0]?.storeId;
   const distributionChannelId = businessUnits?.[0]?.stores?.[0]?.distributionChannels?.[0]?.channelId;
   const supplyChannelId = businessUnits?.[0]?.stores?.[0]?.supplyChannels?.[0]?.channelId;
   const productSelectionId = businessUnits?.[0]?.stores?.[0]?.productSelectionIds?.[0];
@@ -85,7 +84,6 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
       ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
       businessUnitKey,
       storeKey,
-      storeId,
       distributionChannelId,
       supplyChannelId,
       productSelectionId,

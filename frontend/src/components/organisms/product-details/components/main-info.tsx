@@ -17,6 +17,8 @@ const MainInfo = ({
   shippingMethods,
   addToCart,
   getWishlists,
+  canAddToOwnWishlist,
+  canAddToOthersWishlist,
   addToWishlists,
   removeFromWishlists,
   onChangeVariant,
@@ -86,6 +88,8 @@ const MainInfo = ({
           removeFromWishlists={removeFromWishlists}
           addToNewWishlist={(list) => addToNewWishlist(list, quantity)}
           addToWishlists={(wishlistIds) => addToWishlists(wishlistIds, quantity)}
+          canAddToOwnWishlist={canAddToOwnWishlist}
+          canAddToOthersWishlist={canAddToOthersWishlist}
         />
 
         <Shipping shippingMethods={shippingMethods} currency={product.currency} />

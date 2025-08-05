@@ -8,6 +8,8 @@ import WishlistToast from './wishlist-toast';
 
 const ShoppingListCTA = ({
   getWishlists,
+  canAddToOwnWishlist,
+  canAddToOthersWishlist,
   addToWishlists,
   removeFromWishlists,
   addToNewWishlist,
@@ -30,8 +32,11 @@ const ShoppingListCTA = ({
   };
 
   const fetchLists = useCallback(async () => {
-    const shoppingLists = await getWishlists();
-    setLists(shoppingLists ?? []);
+    const shoppingLists = ((await getWishlists()) ?? []).filter((shoppingList) =>
+      shoppingList.isOwnWishlist ? canAddToOwnWishlist : canAddToOthersWishlist,
+    );
+
+    setLists(shoppingLists);
 
     const checkedBoxes = shoppingLists?.reduce(
       (acc, list) => {

@@ -11,16 +11,27 @@ import {
   ProductSearchFacetResultBucket,
   ProductSearchRequest,
 } from '@commercetools/platform-sdk';
+import { Store } from '@Types/store/Store';
+import { Context, Request } from '@frontastic/extension-types';
 import ProductMapper from '../mappers/ProductMapper';
 import { ProductSearchFactory } from '@Commerce-commercetools/utils/ProductSearchQueryFactory';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import BaseApi from '@Commerce-commercetools/apis/BaseApi';
+import getProjectApi from '@Commerce-commercetools/utils/apiFactories/getProjectApi';
 
 export default class ProductApi extends BaseApi {
+  protected request: Request;
+
+  constructor(context: Context, locale: string | null, currency: string | null, request?: Request | null) {
+    super(context, locale, currency, request);
+    this.request = request;
+  }
+
   async query(productQuery: ProductQuery): Promise<ProductPaginatedResult> {
     const locale = await this.getCommercetoolsLocal();
     productQuery.categories = await this.hydrateCategories(productQuery);
     productQuery.filters = await this.hydrateFilters(productQuery);
+    productQuery.store = await this.hydrateStore(productQuery);
 
     const facetDefinitions: FacetDefinition[] = [
       ...ProductMapper.commercetoolsProductTypesToFacetDefinitions(
@@ -192,52 +203,10 @@ export default class ProductApi extends BaseApi {
     ];
   }
 
-  async queryFacetCategoriesForSubtree(storeId?: string) {
-    const query: ProductSearchRequest = {
-      ...(storeId && {
-        query: {
-          exact: {
-            field: 'stores',
-            value: storeId,
-          },
-        },
-      }),
-      facets: [
-        {
-          distinct: {
-            name: 'categoriesSubTree',
-            field: 'categoriesSubTree',
-            level: 'products',
-            limit: 200,
-          },
-        },
-      ],
-    };
-
-    const result = await this.requestBuilder()
-      .products()
-      .search()
-      .post({
-        body: query,
-      })
-      .execute();
-
-    const res = (
-      result?.body.facets?.find(
-        (r: ProductSearchFacetResult) => r.name === 'categoriesSubTree',
-      ) as ProductSearchFacetResultBucket
-    )?.buckets
-      ?.filter((b) => b.count > 0)
-      ?.map((b) => b.key);
-
-    return res;
-  }
-
-  async queryCategories(categoryQuery: CategoryQuery, buckets?: string[]): Promise<PaginatedResult<Category>> {
+  async queryCategories(categoryQuery: CategoryQuery): Promise<PaginatedResult<Category>> {
     const locale = await this.getCommercetoolsLocal();
     const defaultLocale = this.defaultLocale;
 
-    // TODO: get default from constant
     const limit = +categoryQuery.limit || 24;
     const where: string[] = [];
 
@@ -249,8 +218,18 @@ export default class ProductApi extends BaseApi {
       where.push(`parent(id="${categoryQuery.parentId}")`);
     }
 
-    if (buckets?.length) {
-      where.push(`id in (${buckets.map((b) => `"${b}"`).join(',')})`);
+    // Some categories are only available for a specific store. If the storeKey is provided,
+    // we need to filter the categories by store.
+    if (categoryQuery.storeKey) {
+      const store = await getProjectApi(this.request, this.commercetoolsFrontendContext).getStoreByKey(
+        categoryQuery.storeKey,
+      );
+
+      const storeCategoryIds = await this.getCategoryIdsForStore(store.storeId);
+
+      if (storeCategoryIds?.length) {
+        where.push(`id in ("${storeCategoryIds.join('","')}")`);
+      }
     }
 
     const methodArgs = {
@@ -324,6 +303,28 @@ export default class ProductApi extends BaseApi {
     return [];
   }
 
+  protected async hydrateStore(productQuery: ProductQuery): Promise<Store | undefined> {
+    const projectApi = getProjectApi(this.request, this.commercetoolsFrontendContext);
+
+    // We give priority to storeRef as this is set by the seller in Studio
+    if (productQuery.storeRef) {
+      switch (this.storeRefField) {
+        case 'key':
+          return await projectApi.getStoreByKey(productQuery.storeRef);
+        case 'id':
+          return await projectApi.getStoreById(productQuery.storeRef);
+        default:
+          break;
+      }
+    }
+
+    if (productQuery?.store?.key) {
+      return await projectApi.getStoreByKey(productQuery.store.key);
+    }
+
+    return undefined;
+  }
+
   protected async hydrateFilters(productQuery: ProductQuery): Promise<Filter[]> {
     if (productQuery.filters !== undefined && productQuery.filters.length !== 0) {
       const categoryIds = productQuery.filters
@@ -364,6 +365,49 @@ export default class ProductApi extends BaseApi {
       return productQuery.filters;
     }
     return [];
+  }
+
+  protected async getCategoryIdsForStore(storeId: string): Promise<string[] | undefined> {
+    const productSearchRequest: ProductSearchRequest = {
+      query: {
+        exact: {
+          field: 'stores',
+          value: storeId, // CoCo uses IDs to filter products by store
+        },
+      },
+      facets: [
+        {
+          distinct: {
+            name: 'categoriesSubTree',
+            field: 'categoriesSubTree',
+            level: 'products',
+            limit: 200,
+          },
+        },
+      ],
+    };
+
+    return await this.requestBuilder()
+      .products()
+      .search()
+      .post({
+        body: productSearchRequest,
+      })
+      .execute()
+      .then((response) => {
+        const categoriesSubTreeFacet = response.body.facets?.find(
+          (facetResult: ProductSearchFacetResult) => facetResult.name === 'categoriesSubTree',
+        ) as ProductSearchFacetResultBucket;
+
+        if (!categoriesSubTreeFacet?.buckets) {
+          return undefined;
+        }
+
+        return categoriesSubTreeFacet.buckets.filter((bucket) => bucket.count > 0).map((bucket) => bucket.key);
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
   }
 
   protected async getCommercetoolsCategoryPagedQueryResponse(methodArgs: object) {

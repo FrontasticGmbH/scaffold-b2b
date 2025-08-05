@@ -130,13 +130,12 @@ export default class BusinessUnitMapper {
 
   static expandStores(stores: Store[], allStores: Store[]): Store[] {
     return stores?.map((store) => {
-      const storeObj = allStores.find((s) => s.key === store.key);
+      const storeObj = allStores.find((storeObj) => storeObj.key === store.key);
       return storeObj
         ? {
+            storeId: storeObj.storeId,
             name: storeObj.name,
             key: storeObj.key,
-            typeId: 'store',
-            storeId: storeObj.storeId,
             distributionChannels: storeObj?.distributionChannels,
             supplyChannels: storeObj?.supplyChannels,
             productSelectionIds: storeObj?.productSelectionIds,

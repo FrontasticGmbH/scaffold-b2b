@@ -7,6 +7,7 @@ export type Wishlist = {
   id: string;
   lineItemId?: string;
   productIsInWishlist?: boolean;
+  isOwnWishlist?: boolean;
 };
 
 export type WishlistToastProps = {
@@ -33,6 +34,8 @@ export type SpecsVariantsProps = {
 };
 
 export type ShoppingListCTAProps = {
+  canAddToOwnWishlist?: boolean;
+  canAddToOthersWishlist?: boolean;
   getWishlists: () => Promise<Array<Wishlist> | undefined>;
   addToWishlists: (wishlistIds: string[], count?: number) => Promise<Wishlist[]>;
   removeFromWishlists: (wishlists: { wishlistId: string; lineItemId: string }[]) => Promise<Wishlist[]>;
@@ -74,6 +77,8 @@ export type PDPMainInfoProps = Omit<CartCTAProps, 'countChange'> &
     product: Product;
     className?: string;
     onChangeVariant: (variant: 'color' | 'model', value: string) => void;
+    canAddToOwnWishlist?: boolean;
+    canAddToOthersWishlist?: boolean;
   };
 
 export type PDPHeaderProps = {

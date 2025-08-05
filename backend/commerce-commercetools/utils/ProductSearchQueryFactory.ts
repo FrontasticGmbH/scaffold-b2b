@@ -43,7 +43,7 @@ type Writeable<T> = { -readonly [P in keyof T]: Writeable<T[P]> };
 type ProductSearchFactoryUtilMethod = (
   commercetoolsProductSearchRequest: ProductSearchRequest,
   productQuery: ProductQuery,
-  locale: Locale,
+  locale?: Locale,
 ) => ProductSearchRequest;
 
 export class ProductSearchFactory {
@@ -70,7 +70,7 @@ export class ProductSearchFactory {
       productIdField,
     );
     commercetoolsProductSearchRequest = this.applyQueryProductTypeId(commercetoolsProductSearchRequest, productQuery);
-    commercetoolsProductSearchRequest = this.applyStore(commercetoolsProductSearchRequest, productQuery, locale);
+    commercetoolsProductSearchRequest = this.applyStore(commercetoolsProductSearchRequest, productQuery);
     commercetoolsProductSearchRequest = this.applyProductSelection(
       commercetoolsProductSearchRequest,
       productQuery,
@@ -125,8 +125,8 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest.limit = +productQuery.limit || 24;
     commercetoolsProductSearchRequest.offset = this.getOffsetFromCursor(productQuery.cursor);
 
-    if (productQuery.storeKey) {
-      commercetoolsProductSearchRequest.productProjectionParameters.storeProjection = productQuery.storeKey;
+    if (productQuery.store?.key) {
+      commercetoolsProductSearchRequest.productProjectionParameters.storeProjection = productQuery.store.key;
     }
 
     if (productQuery.accountGroupIds?.length) {
@@ -619,23 +619,24 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   }
 
-  private static applyStore: ProductSearchFactoryUtilMethod = (
+  private static applyStore(
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-  ) => {
-    if (productQuery.storeId) {
+  ): ProductSearchRequest {
+    if (productQuery.store?.storeId) {
       commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
         commercetoolsProductSearchRequest,
         {
           exact: {
             field: 'stores',
-            value: productQuery.storeId,
+            value: productQuery.store.storeId,
           },
         },
       );
     }
+
     return commercetoolsProductSearchRequest;
-  };
+  }
 
   private static applyQueryProductTypeId(
     commercetoolsProductSearchRequest: ProductSearchRequest,

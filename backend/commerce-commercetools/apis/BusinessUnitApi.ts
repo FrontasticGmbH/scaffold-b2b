@@ -15,6 +15,7 @@ import { ApprovalFlow, ApprovalFlowsQuery, ApprovalRule } from '@Types/business-
 import { PaginatedResult } from '@Types/result';
 import { ApprovalRuleQuery } from '@Types/business-unit/ApprovalRule';
 import { ApprovalFlowRejectAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/approval-flow';
+import { Context, Request } from '@frontastic/extension-types';
 import BusinessUnitMapper from '../mappers/BusinessUnitMapper';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BusinessUnitFormatter';
@@ -22,13 +23,20 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import Guid from '@Commerce-commercetools/utils/Guid';
-import getStoreApi from '@Commerce-commercetools/utils/apiFactories/getStoreApi';
 import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
+import getProjectApi from '@Commerce-commercetools/utils/apiFactories/getProjectApi';
 
 const MAX_LIMIT = 50;
 
 export default class BusinessUnitApi extends BaseApi {
+  protected request: Request;
+
+  constructor(context: Context, locale: string | null, currency: string | null, request?: Request | null) {
+    super(context, locale, currency, request);
+    this.request = request;
+  }
+
   async createForAccount(accountId: string, account: Account): Promise<BusinessUnit> {
     const associateRoleAssignments = this.defaultAssociateRoleKeys.map((associateRoleKey) => {
       const associateRoleAssignment: AssociateRoleAssignmentDraft = {
@@ -140,10 +148,10 @@ export default class BusinessUnitApi extends BaseApi {
         businessUnit.stores = await this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
       }
 
-      const storeApi = getStoreApi(this.commercetoolsFrontendContext, this.locale, this.currency);
+      const projectApi = getProjectApi(this.request, this.commercetoolsFrontendContext);
       const storeKeys = businessUnit?.stores?.map((store) => `"${store.key}"`).join(' ,');
 
-      const allStores = storeKeys ? await storeApi.query(`key in (${storeKeys})`) : [];
+      const allStores = storeKeys ? await projectApi.queryStores(`key in (${storeKeys})`) : [];
 
       businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);
     }
@@ -180,7 +188,7 @@ export default class BusinessUnitApi extends BaseApi {
         }
       }
 
-      const storeApi = getStoreApi(this.commercetoolsFrontendContext, this.locale, this.currency);
+      const projectApi = getProjectApi(this.request, this.commercetoolsFrontendContext);
 
       const storeKeys = businessUnits
         .reduce((prev: Store[], curr) => {
@@ -190,7 +198,7 @@ export default class BusinessUnitApi extends BaseApi {
         ?.map((store) => `"${store.key}"`)
         .join(' ,');
 
-      const allStores = storeKeys ? await storeApi.query(`key in (${storeKeys})`) : [];
+      const allStores = storeKeys ? await projectApi.queryStores(`key in (${storeKeys})`) : [];
 
       businessUnits.map((businessUnit) => {
         businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);

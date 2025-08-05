@@ -4,9 +4,12 @@ import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { Wishlist as SharedWishlist } from '@shared/types/wishlist';
 import { Wishlist } from '@/components/organisms/product-details/types';
 import { Product } from '@/types/entity/product';
+import useAccount from '@/lib/hooks/useAccount';
 
 const usePDPWishlists = (product: Product) => {
   const { selectedStore } = useStoreAndBusinessUnits();
+
+  const { account } = useAccount();
 
   const {
     purchaseLists: wishlists,
@@ -59,6 +62,7 @@ const usePDPWishlists = (product: Product) => {
         id: wishlist.wishlistId,
         label: wishlist.name,
         productIsInWishlist: !!wishlist.lineItems?.find((item) => item.productId === product.id),
+        isOwnWishlist: wishlist.account?.accountId === account?.accountId,
       })) as Array<Wishlist>;
 
       return shoppingLists;

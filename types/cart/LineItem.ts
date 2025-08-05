@@ -3,6 +3,7 @@ import { Variant } from '../product/Variant';
 import { Money } from '../product/Money';
 import { Tax } from './Tax';
 import { TaxRate } from './TaxRate';
+import { LineItemRecurrenceInfo } from './RecurringOrder';
 
 export interface LineItemShippingAddress {
   addressKey: string;
@@ -29,4 +30,5 @@ export interface LineItem {
     shippingAddresses?: LineItemShippingAddress[];
     valid: boolean; // true if the quantity of the Line Item is equal to the sum of the sub-quantities in shippingAddresses, else it is false.
   };
+  recurrenceInfo?: LineItemRecurrenceInfo;
 }

@@ -5,8 +5,8 @@ import { Channel } from '@Types/store/Channel';
 export default class StoreMapper {
   static mapCommercetoolsStoreToStore(store: CommercetoolsStore, locale: string): Store {
     return {
-      name: store.name?.[locale],
       storeId: store.id,
+      name: store.name?.[locale],
       key: store.key,
       distributionChannels: store.distributionChannels.map((commercetoolsChannel) => {
         const channel: Channel = {
