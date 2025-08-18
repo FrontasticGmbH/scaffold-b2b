@@ -11,6 +11,7 @@ export enum CartOrigin {
   Customer = 'Customer',
   Merchant = 'Merchant',
   Quote = 'Quote',
+  RecurringOrder = 'RecurringOrder',
 }
 
 export enum CartState {

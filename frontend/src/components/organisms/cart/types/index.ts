@@ -40,11 +40,12 @@ export type CartProps = {
   onUpdateQuantity: (id: string, qty: number) => Promise<void>;
   onDiscountRedeem?: (code: string) => Promise<boolean>;
   onClear?: () => Promise<void>;
+  onClearItem?: (id: string) => void;
 } & { transaction?: Transaction } & Pick<CartItemProps, 'onAddToNewWishlist'>;
 
 export type CartContentProps = Pick<
   CartProps,
-  'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'lineItems' | 'loading'
+  'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'lineItems' | 'loading' | 'onClearItem'
 > & {
   className?: string;
 };
@@ -75,7 +76,8 @@ export interface CartItemProps {
     sku?: string,
     qty?: number,
   ) => Promise<Wishlist | null>;
+  onClearItem?: (id: string) => void;
 }
 
 export type CartItemsListProps = Pick<CartContentProps, 'lineItems'> &
-  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist'>;
+  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'onClearItem'>;

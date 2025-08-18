@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, screen, waitFor } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import DiscountsForm from './';
@@ -42,7 +41,7 @@ describe('DiscountsForm', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith(code);
     });
 
-    expect(input).toHaveValue('SAVE10');
+    expect(input).toHaveValue('');
   });
 
   it('displays an error message for invalid discount code', async () => {

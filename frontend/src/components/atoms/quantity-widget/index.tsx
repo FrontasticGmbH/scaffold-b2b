@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslations } from 'use-intl';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
-import { Props } from './types';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'use-intl';
 import Input from '../input';
+import { Props } from './types';
 
 const QuantityWidget = ({
   value: valueProp,
@@ -56,7 +56,6 @@ const QuantityWidget = ({
   const buttonClassName = classnames(
     'border-gray-300 bg-white transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:hover:bg-white',
   );
-
   return (
     <div className="flex items-center gap-3">
       {showLabel && <span className="text-14 text-gray-700">{translate('common.quantity-shorthand')}</span>}

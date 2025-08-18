@@ -33,7 +33,7 @@ const Cart = ({
 
   const allItemsAreDeleted = !lineItems?.filter((item) => !item.deleted).length;
 
-  const containsOutOfStockItem = lineItems?.some((item) => !item.inStock);
+  const containsOutOfStockItem = lineItemsProp?.some((item) => !item.inStock);
 
   useEffect(() => {
     if (!lineItemsProp) return;
@@ -54,6 +54,10 @@ const Cart = ({
       ];
     });
   }, [lineItemsProp]);
+
+  const onClearItem = (itemId: string) => {
+    setLineItems((items) => items?.filter((item) => item.id !== itemId));
+  };
 
   const closeFlyouts = useCloseFlyouts();
 
@@ -110,6 +114,7 @@ const Cart = ({
           loading={loading}
           lineItems={lineItems ?? []}
           className="grow bg-white px-4 py-3 md:px-6 lg:rounded-lg lg:p-9"
+          onClearItem={onClearItem}
           {...props}
         />
 

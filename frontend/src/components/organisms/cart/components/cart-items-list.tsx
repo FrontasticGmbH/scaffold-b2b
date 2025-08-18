@@ -2,7 +2,14 @@ import { useTranslations } from 'use-intl';
 import CartItem from './cart-item';
 import { CartItemsListProps } from '../types';
 
-const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd, onAddToNewWishlist }: CartItemsListProps) => {
+const CartItemsList = ({
+  lineItems,
+  onUpdateQuantity,
+  onRemove,
+  onAdd,
+  onAddToNewWishlist,
+  onClearItem,
+}: CartItemsListProps) => {
   const translate = useTranslations();
 
   const inStockItems = lineItems?.filter((item) => !!item.inStock) ?? [];
@@ -21,6 +28,7 @@ const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd, onAddToNe
               qty === 0 ? onRemove(lineItem.id as string) : onUpdateQuantity(lineItem.id as string, qty)
             }
             onRemove={() => onRemove(lineItem.id as string)}
+            onClearItem={onClearItem}
           />
         </div>
       ))}
@@ -39,6 +47,7 @@ const CartItemsList = ({ lineItems, onUpdateQuantity, onRemove, onAdd, onAddToNe
                     qty === 0 ? onRemove(lineItem.id as string) : onUpdateQuantity(lineItem.id as string, qty)
                   }
                   onRemove={() => onRemove(lineItem.id as string)}
+                  onUndoRemove={() => onAdd(lineItem.sku as string, lineItem.quantity ?? 1)}
                 />
               </div>
             ))}

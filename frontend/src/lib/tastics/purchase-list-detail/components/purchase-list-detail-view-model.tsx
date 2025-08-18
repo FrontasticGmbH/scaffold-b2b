@@ -1,16 +1,15 @@
-import React from 'react';
-import PurchaseListDetailPage from '@/components/pages/dashboard/pages/purchase-list-detail';
+import { ImageProps } from '@/components/atoms/Image/types';
 import Dashboard from '@/components/pages/dashboard';
-import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
-import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
+import PurchaseListDetailPage from '@/components/pages/dashboard/pages/purchase-list-detail';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import useAccount from '@/lib/hooks/useAccount';
-import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import useCart from '@/lib/hooks/useCart';
 import usePurchaseList from '@/lib/hooks/usePurchaseList';
-import useCustomRouter from '@/hooks/useCustomRouter';
-import { ImageProps } from '@/components/atoms/Image/types';
-import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
+import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
 
 const PurchaseListDetailViewModel = ({ wishlistId, image }: { wishlistId: string; image: ImageProps }) => {
   const router = useCustomRouter();
@@ -35,12 +34,11 @@ const PurchaseListDetailViewModel = ({ wishlistId, image }: { wishlistId: string
         image={image}
         permissions={permissions}
         accountId={account?.accountId}
-        onOrderPurchaseList={async () => {
+        onAddPurchaseListToCart={async () => {
           if (!wishlist.lineItems?.length) return false;
-
           const res = await addItemToCart(
             wishlist.lineItems.map((lineItem) => ({
-              sku: lineItem.variant?.sku as string,
+              sku: lineItem.variant?.sku ?? '',
               count: lineItem.count ?? 1,
             })),
           );

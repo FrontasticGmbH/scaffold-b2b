@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import useCustomRouter from '@/hooks/useCustomRouter';
 import Input from '@/components/atoms/input';
 import PasswordInput from '@/components/atoms/password-input';
 import toast from '@/components/atoms/toaster/helpers/toast';
-import { Account } from '@shared/types/account/Account';
-import { useTranslations } from 'use-intl';
 import { namePattern } from '@/constants/regex';
+import useCustomRouter from '@/hooks/useCustomRouter';
 import useValidate from '@/hooks/useValidate/useValidate';
-import AuthLayout from '../layouts/auth-layout';
-import { RegisterProps } from './types';
+import { Account } from '@shared/types/account/Account';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslations } from 'use-intl';
 import AuthForm from '../layouts/auth-form';
+import AuthLayout from '../layouts/auth-layout';
 import useAuthProps from './hooks/useAuthProps';
+import { RegisterProps } from './types';
 
 const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
   const translate = useTranslations();
@@ -90,6 +90,10 @@ const Register = ({ image, logo, logoLink, register }: RegisterProps) => {
               className="w-full"
               {...formRegister('email', {
                 required: translate('common.fieldIsRequired'),
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i,
+                  message: translate('error.email'),
+                },
               })}
               required
             />

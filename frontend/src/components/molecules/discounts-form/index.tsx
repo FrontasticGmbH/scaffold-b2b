@@ -1,23 +1,30 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { useTranslations } from 'use-intl';
-import { classnames } from '@/utils/classnames/classnames';
 import Input from '@/components/atoms/input';
-import { DiscountFormProps } from './types';
+import { classnames } from '@/utils/classnames/classnames';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useController, useForm } from 'react-hook-form';
+import { useTranslations } from 'use-intl';
 import Accordion from '../accordion';
+import { DiscountFormProps } from './types';
 
 const DiscountsForm = ({ className, discounts, onSubmit, customError }: DiscountFormProps) => {
   const translate = useTranslations();
 
   const {
-    register,
     handleSubmit,
-    setValue,
     setError,
+    reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<{ code: string }>({
     defaultValues: { code: '' },
+  });
+
+  const {
+    field: { value, onChange, onBlur, ref },
+  } = useController({
+    name: 'code',
+    control,
+    rules: { required: translate('common.fieldIsRequired') },
   });
 
   const discountsContainerClassName = classnames(
@@ -36,12 +43,12 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
         message: customError || translate('cart.codeNotValid'),
       });
     } else {
-      setValue('code', '');
+      reset({ code: '' });
     }
   };
 
   const onClearForm = () => {
-    setValue('code', '');
+    reset({ code: '' });
   };
 
   return (
@@ -53,6 +60,10 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
         <Accordion.Panel defaultSpacing={false}>
           <form className="pt-6" onSubmit={handleSubmit(onApplyDiscount)} noValidate>
             <Input
+              ref={ref}
+              value={value}
+              onChange={onChange}
+              onBlur={onBlur}
               aria-label={translate('cart.discount-code')}
               className={classnames(
                 errors.code ? 'border-red-500 text-red-500 focus:border-red-500' : 'border-neutral-300',
@@ -65,9 +76,6 @@ const DiscountsForm = ({ className, discounts, onSubmit, customError }: Discount
                 ) : null
               }
               error={errors.code?.message}
-              {...register('code', {
-                required: translate('common.fieldIsRequired'),
-              })}
               required
             />
           </form>

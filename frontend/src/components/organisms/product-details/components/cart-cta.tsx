@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import Button from '@/components/atoms/button';
 import QuantityWidget from '@/components/atoms/quantity-widget';
+import { useState } from 'react';
 import { useTranslations } from 'use-intl';
 import { CartCTAProps } from '../types';
 

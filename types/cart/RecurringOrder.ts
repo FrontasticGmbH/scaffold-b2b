@@ -1,32 +1,26 @@
-export type IntervalUnit = 'Days' | 'Months' | 'Weeks';
+import { Account } from "../account";
+import { RecurrencePolicySchedule } from "./RecurrencePolicy";
 
-interface StandardSchedule {
-  type: 'standard';
-  value: number;
-  intervalUnit: IntervalUnit;
-}
+export type RecurringOrderState =
+  | 'Active'
+  | 'Canceled'
+  | 'Expired'
+  | 'Failed'
+  | 'Paused';
 
-interface DayOfMonthSchedule {
-  type: 'dayOfMonth';
-  day: number;
-}
-
-export enum PriceSelectionMode {
-  Fixed = 'Fixed',
-  Dynamic = 'Dynamic',
-}
-
-export type RecurrencePolicySchedule = StandardSchedule | DayOfMonthSchedule;
-
-export interface RecurrencePolicy {
-  recurrencePolicyId?: string;
-  name?: string;
+export interface RecurringOrder {
+  recurringOrderId: string;
   key?: string;
-  description?: string;
+  storeKey?: string;
+  businessUnitKey?: string;
+  recurringOrderState?: RecurringOrderState;
   schedule?: RecurrencePolicySchedule;
-}
-
-export interface LineItemRecurrenceInfo {
-  recurrencePolicy?: RecurrencePolicy;
-  priceSelectionMode?: PriceSelectionMode;
+  cartId?: string;
+  account?: Account;
+  originOrderId: string;
+  startsAt?: string;
+  nextOrderAt?: string;
+  lastOrderAt?: string;
+  resumesAt?: string;
+  createdAt?: string;
 }

@@ -27,6 +27,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
   const mutateAll = useCallback(() => {
     mutateGlobal((key: string[]) => key?.[0].startsWith('/action/cart/getCart'), undefined, { revalidate: true });
   }, [mutateGlobal]);
+
   const isLoading = !(businessUnitKey && storeKey) || response.isLoading;
 
   const isQuotationCart = data?.origin === 'Quote';
@@ -72,7 +73,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         storeKey: storeKey as string,
       });
 
-      if (!result.isError) mutate(result.data, { revalidate: false });
+      mutate();
 
       return result.isError ? {} : result.data;
     },

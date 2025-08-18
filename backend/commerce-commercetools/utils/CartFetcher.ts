@@ -44,7 +44,8 @@ export class CartFetcher {
         const cart = await cartApi.getById(cartId);
         if (
           cartApi.assertCartIsActive(cart) &&
-          cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)
+          cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey) &&
+          cartApi.assertCartOrigin(cart)
         ) {
           return cart;
         }

@@ -4,34 +4,48 @@ import QuantityWidget from '@/components/atoms/quantity-widget';
 import Link from '@/components/atoms/link';
 import { useTranslations } from 'use-intl';
 import { ArrowUturnLeftIcon as UndoIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/solid';
 import Button from '@/components/atoms/button';
 import useFormat from '@/hooks/useFormat';
 import CartItemHeader from './cart-item-header';
 import CartItemFooter from './cart-item-footer';
 import { CartItemProps } from '../types';
 
-const CartItem = ({ item, onUpdateQuantity, onRemove, onUndoRemove, onAddToNewWishlist }: CartItemProps) => {
+const CartItem = ({
+  item,
+  onUpdateQuantity,
+  onRemove,
+  onUndoRemove,
+  onAddToNewWishlist,
+  onClearItem,
+}: CartItemProps) => {
   const { formatCurrency } = useFormat();
 
   const translate = useTranslations();
 
-  if (item.deleted)
+  if (item.deleted) {
     return (
-      <div className="flex flex-col items-center px-4 py-8">
-        <p className="pb-8 text-center text-gray-600">
-          <Link href={item.url ?? '#'} className="inline text-primary underline">
-            {item.name}
-          </Link>{' '}
-          {translate('cart.item-was-removed')}
-        </p>
-        <Button variant="secondary" size="m" Icon={UndoIcon} onClick={onUndoRemove}>
-          {translate('common.undo')}
-        </Button>
+      <div className="relative">
+        <button className="absolute right-0 top-1.5 block" onClick={() => onClearItem?.(item.id)}>
+          <XMarkIcon className="size-5 shrink-0 text-gray-600" />
+        </button>
+
+        <div className="flex flex-col items-center px-4 py-8">
+          <p className="mb-4 text-center text-gray-600">
+            <Link href={item.url ?? '#'} className="inline text-primary underline">
+              {item.name}
+            </Link>
+            {` ${translate('cart.item-was-removed')}.`}
+          </p>
+          <Button variant="secondary" size="s" Icon={UndoIcon} onClick={onUndoRemove}>
+            {translate('common.undo')}
+          </Button>
+        </div>
       </div>
     );
-
+  }
   return (
-    <div className="pt-5 md:py-8 lg:gap-12">
+    <div className="pt-5 md:py-6">
       <CartItemHeader className="md:hidden" item={item} />
 
       <div className="mt-10 flex max-w-full items-stretch justify-start md:mt-0 md:gap-10">

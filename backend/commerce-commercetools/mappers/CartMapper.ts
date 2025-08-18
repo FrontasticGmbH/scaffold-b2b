@@ -23,6 +23,8 @@ import {
   IntervalUnit as CommercetoolsIntervalUnit,
   LineItemRecurrenceInfo as CommercetoolsLineItemRecurrenceInfo,
   PriceSelectionMode as CommercetoolsPriceSelectionMode,
+  RecurringOrder as CommercetoolsRecurringOrder,
+  RecurringOrderState as CommercetoolsRecurringOrderState,
 } from '@commercetools/platform-sdk';
 import { LineItem, LineItemShippingAddress } from '@Types/cart/LineItem';
 import { Cart, CartOrigin, CartState } from '@Types/cart/Cart';
@@ -70,7 +72,8 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shipping-method';
 import { Payment as CommercetoolsPayment } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { CartDiscountSelectionMode, CartDiscountTarget } from '@Types/cart/Discount';
-import { IntervalUnit, PriceSelectionMode, RecurrencePolicySchedule } from '@Types/cart/RecurringOrder';
+import { RecurringOrder, RecurringOrderState } from '@Types/cart/RecurringOrder';
+import { IntervalUnit, PriceSelectionMode, RecurrencePolicySchedule } from '@Types/cart/RecurrencePolicy';
 import ProductRouter from '../utils/routers/ProductRouter';
 import ProductMapper from './ProductMapper';
 import AccountMapper from './AccountMapper';
@@ -341,6 +344,54 @@ export default class CartMapper {
       returnInfo: this.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
       shipmentState: this.commercetoolsShipmentStateToShipmentState(commercetoolsOrder.shipmentState),
       accountGroup: AccountMapper.commercetoolsCustomerGroupToAccountGroup(commercetoolsOrder.customerGroup?.obj),
+      recurringOrder:
+        commercetoolsOrder.recurringOrder?.obj !== undefined
+          ? this.commercetoolsRecurringOrderToRecurringOrder(commercetoolsOrder.recurringOrder?.obj)
+          : undefined,
+    };
+  }
+
+  static commercetoolsRecurringOrderStateToRecurringOrderState(
+    state: CommercetoolsRecurringOrderState,
+  ): RecurringOrderState {
+    switch (state) {
+      case 'Active':
+        return 'Active';
+      case 'Expired':
+        return 'Expired';
+      case 'Canceled':
+        return 'Canceled';
+      case 'Failed':
+        return 'Failed';
+      case 'Paused':
+        return 'Paused';
+      default:
+        return undefined;
+    }
+  }
+
+  static commercetoolsRecurringOrderToRecurringOrder(
+    commercetoolsRecurringOrder: CommercetoolsRecurringOrder,
+  ): RecurringOrder {
+    return {
+      recurringOrderId: commercetoolsRecurringOrder?.id,
+      key: commercetoolsRecurringOrder?.key,
+      schedule: this.commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
+        commercetoolsRecurringOrder?.schedule,
+      ),
+      recurringOrderState: this.commercetoolsRecurringOrderStateToRecurringOrderState(
+        commercetoolsRecurringOrder?.recurringOrderState,
+      ),
+      businessUnitKey: commercetoolsRecurringOrder?.businessUnit?.key,
+      storeKey: commercetoolsRecurringOrder?.store?.key,
+      cartId: commercetoolsRecurringOrder?.cart?.id,
+      account: AccountMapper.commercetoolsCustomerToAccount(commercetoolsRecurringOrder?.customer?.obj),
+      originOrderId: commercetoolsRecurringOrder?.originOrder?.id,
+      nextOrderAt: commercetoolsRecurringOrder?.nextOrderAt,
+      resumesAt: commercetoolsRecurringOrder?.resumesAt,
+      lastOrderAt: commercetoolsRecurringOrder?.lastOrderAt,
+      startsAt: commercetoolsRecurringOrder?.startsAt,
+      createdAt: commercetoolsRecurringOrder?.createdAt,
     };
   }
 
@@ -840,10 +891,11 @@ export default class CartMapper {
       case commercetoolsCartOrigin === 'Quote':
         cartOrigin = CartOrigin.Quote;
         break;
-      case commercetoolsCartOrigin === 'Customer':
+      case commercetoolsCartOrigin === 'RecurringOrder':
+        cartOrigin = CartOrigin.RecurringOrder;
+        break;
       default:
         cartOrigin = CartOrigin.Customer;
-        break;
     }
 
     return cartOrigin;

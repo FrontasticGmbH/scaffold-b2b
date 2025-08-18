@@ -3,7 +3,7 @@ import { Variant } from '../product/Variant';
 import { Money } from '../product/Money';
 import { Tax } from './Tax';
 import { TaxRate } from './TaxRate';
-import { LineItemRecurrenceInfo } from './RecurringOrder';
+import { LineItemRecurrenceInfo } from './RecurrencePolicy';
 
 export interface LineItemShippingAddress {
   addressKey: string;

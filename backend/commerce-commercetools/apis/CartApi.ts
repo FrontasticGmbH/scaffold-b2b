@@ -1,4 +1,4 @@
-import { Cart, CartState } from '@Types/cart/Cart';
+import { Cart, CartOrigin, CartState } from '@Types/cart/Cart';
 import { LineItem } from '@Types/cart/LineItem';
 import { Address } from '@Types/account/Address';
 import { Order, OrderState, ReturnLineItem } from '@Types/cart/Order';
@@ -28,15 +28,15 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/cart';
 import { OrderQuery } from '@Types/query/OrderQuery';
 import { PaginatedResult } from '@Types/result';
-import { DiscountCode, Payment, RecurrencePolicy, ShippingMethod } from '@Types/cart';
+import { DiscountCode, Payment, RecurrencePolicy, RecurringOrder, ShippingMethod } from '@Types/cart';
 import {
   PaymentDraft,
   PaymentUpdateAction,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { Context, Request } from '@frontastic/extension-types';
 import { Token } from '@Types/Token';
-import { RecurrencePolicyQuery } from '@Types/query';
-import { PriceSelectionMode } from '@Types/cart/RecurringOrder';
+import { RecurrencePolicyQuery, RecurringOrderQuery } from '@Types/query';
+import { PriceSelectionMode } from '@Types/cart/RecurrencePolicy';
 import CartMapper from '../mappers/CartMapper';
 import { isReadyForCheckout } from '../utils/Cart';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
@@ -62,7 +62,8 @@ const CART_EXPANDS = [
   'shippingInfo.discountedPrice.includedDiscounts[*].discount',
   'customerGroup',
 ];
-const ORDER_EXPANDS = [...CART_EXPANDS, 'orderState'];
+const ORDER_EXPANDS = [...CART_EXPANDS, 'orderState', 'recurringOrder'];
+const RECURRING_ORDER_EXPANDS = ['customer'];
 const SHIPPING_METHOD_EXPANDS = ['zoneRates[*].zone'];
 
 export default class CartApi extends BaseApi {
@@ -138,7 +139,12 @@ export default class CartApi extends BaseApi {
   }
 
   async getAllActiveCartsInStore(storeKey: string): Promise<CommercetoolsCart[]> {
-    const where = [`cartState="Active"`, `store(key="${storeKey}")`, `customerId="${this.accountId}"`];
+    const where = [
+      `cartState="Active"`,
+      `store(key="${storeKey}")`,
+      `customerId="${this.accountId}"`,
+      `origin in ("${CartOrigin.Customer}", "${CartOrigin.Merchant}")`,
+    ];
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
@@ -779,6 +785,10 @@ export default class CartApi extends BaseApi {
     return cart.cartState === CartState.Active;
   }
 
+  assertCartOrigin(cart: Cart): boolean {
+    return cart.origin === CartOrigin.Customer || cart.origin === CartOrigin.Merchant;
+  }
+
   async replicateCart(orderId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
@@ -967,6 +977,123 @@ export default class CartApi extends BaseApi {
 
   async getCheckoutSessionToken(cartId: string): Promise<Token> {
     return await this.generateCheckoutSessionToken(cartId);
+  }
+
+  async getRecurrencePolicies(
+    recurrencePolicyQuery: RecurrencePolicyQuery,
+  ): Promise<PaginatedResult<RecurrencePolicy>> {
+    const locale = await this.getCommercetoolsLocal();
+    const limit = +recurrencePolicyQuery.limit || undefined;
+    const whereClause: string[] = [];
+
+    if (
+      recurrencePolicyQuery.recurrencePolicyIds !== undefined &&
+      recurrencePolicyQuery.recurrencePolicyIds.length !== 0
+    ) {
+      whereClause.push(`id in ("${recurrencePolicyQuery.recurrencePolicyIds.join('","')}")`);
+    }
+
+    if (recurrencePolicyQuery.keys !== undefined && recurrencePolicyQuery.keys.length !== 0) {
+      whereClause.push(`key in ("${recurrencePolicyQuery.keys.join('","')}")`);
+    }
+
+    return await this.requestBuilder()
+      .recurrencePolicies()
+      .get({
+        queryArgs: {
+          limit,
+          where: whereClause,
+        },
+      })
+      .execute()
+      .then((response) => {
+        const recurrencePolicies = response.body.results.map((recurrencePolicy) => {
+          return CartMapper.commercetoolsRecurrencePolicyToRecurrencePolicy(
+            recurrencePolicy,
+            locale,
+            this.defaultLocale,
+          );
+        });
+        return {
+          total: response.body.total,
+          items: recurrencePolicies,
+          count: response.body.count,
+          previousCursor: ProductMapper.calculatePreviousCursor(response.body.offset, response.body.count),
+          nextCursor: ProductMapper.calculateNextCursor(response.body.offset, response.body.count, response.body.total),
+          query: recurrencePolicyQuery,
+        };
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
+  }
+
+  async queryRecurringOrders(recurringOrderQuery: RecurringOrderQuery): Promise<PaginatedResult<RecurringOrder>> {
+    const limit = +recurringOrderQuery.limit || undefined;
+    const sortAttributes: string[] = [];
+    const whereClause: string[] = [];
+
+    const recurringOrderQuerySort = recurringOrderQuery.sortAttributes;
+
+    if (recurringOrderQuerySort && Object.keys(recurringOrderQuerySort).length > 0) {
+      Object.entries(recurringOrderQuerySort).forEach(([field, direction]) => {
+        sortAttributes.push(`${field} ${direction}`);
+      });
+    } else {
+      sortAttributes.push('createdAt desc');
+    }
+
+    if (recurringOrderQuery.recurringOrderIds !== undefined && recurringOrderQuery.recurringOrderIds.length !== 0) {
+      whereClause.push(`id in ("${recurringOrderQuery.recurringOrderIds.join('","')}")`);
+    }
+
+    if (recurringOrderQuery.recurringOrderStates !== undefined && recurringOrderQuery.recurringOrderStates.length > 0) {
+      whereClause.push(`recurringOrderState in ("${recurringOrderQuery.recurringOrderStates.join('","')}")`);
+    }
+
+    if (recurringOrderQuery.businessUnitKey !== undefined) {
+      whereClause.push(`businessUnit(key="${recurringOrderQuery.businessUnitKey}")`);
+    }
+
+    if (recurringOrderQuery.accountId !== undefined) {
+      whereClause.push(`customer(id="${recurringOrderQuery.accountId}")`);
+    }
+
+    if (recurringOrderQuery.startsAt !== undefined) {
+      whereClause.push(`startsAt="${recurringOrderQuery.startsAt}"`);
+    }
+
+    if (recurringOrderQuery.createdAt !== undefined) {
+      whereClause.push(`createdAt="${recurringOrderQuery.createdAt}"`);
+    }
+
+    return await this.requestBuilder()
+      .recurringOrders()
+      .get({
+        queryArgs: {
+          limit,
+          where: whereClause,
+          sort: sortAttributes,
+          expand: RECURRING_ORDER_EXPANDS,
+        },
+      })
+      .execute()
+      .then((response) => {
+        const recurringOrders = response.body.results.map((recurringOrders) => {
+          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(recurringOrders);
+        });
+        return {
+          total: response.body.total,
+          items: recurringOrders,
+          count: response.body.count,
+          previousCursor: ProductMapper.calculatePreviousCursor(response.body.offset, response.body.count),
+          nextCursor: ProductMapper.calculateNextCursor(response.body.offset, response.body.count, response.body.total),
+          query: recurringOrderQuery,
+        };
+      })
+      .catch((error) => {
+        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
   }
 
   protected async setOrderNumber(order: Order): Promise<Order> {
@@ -1181,54 +1308,5 @@ export default class CartApi extends BaseApi {
     }
 
     return commercetoolsCart.country !== locale.country || commercetoolsCart.locale !== locale.language;
-  }
-
-  async getRecurrencePolicies(
-    recurrencePolicyQuery: RecurrencePolicyQuery,
-  ): Promise<PaginatedResult<RecurrencePolicy>> {
-    const locale = await this.getCommercetoolsLocal();
-    const limit = +recurrencePolicyQuery.limit || undefined;
-    const whereClause: string[] = [];
-
-    if (
-      recurrencePolicyQuery.recurrencePolicyIds !== undefined &&
-      recurrencePolicyQuery.recurrencePolicyIds.length !== 0
-    ) {
-      whereClause.push(`id in ("${recurrencePolicyQuery.recurrencePolicyIds.join('","')}")`);
-    }
-
-    if (recurrencePolicyQuery.keys !== undefined && recurrencePolicyQuery.keys.length !== 0) {
-      whereClause.push(`key in ("${recurrencePolicyQuery.keys.join('","')}")`);
-    }
-
-    return await this.requestBuilder()
-      .recurrencePolicies()
-      .get({
-        queryArgs: {
-          limit,
-          where: whereClause,
-        },
-      })
-      .execute()
-      .then((response) => {
-        const recurrencePolicies = response.body.results.map((recurrencePolicy) => {
-          return CartMapper.commercetoolsRecurrencePolicyToRecurrencePolicy(
-            recurrencePolicy,
-            locale,
-            this.defaultLocale,
-          );
-        });
-        return {
-          total: response.body.total,
-          items: recurrencePolicies,
-          count: response.body.count,
-          previousCursor: ProductMapper.calculatePreviousCursor(response.body.offset, response.body.count),
-          nextCursor: ProductMapper.calculateNextCursor(response.body.offset, response.body.count, response.body.total),
-          query: recurrencePolicyQuery,
-        };
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
   }
 }

@@ -1,5 +1,6 @@
 import { ApprovalFlowStatus } from '../business-unit';
 import { Cart } from './Cart';
+import { RecurringOrder } from './RecurringOrder';
 
 export interface ReturnLineItem {
   returnLineItemId?: string;
@@ -44,4 +45,5 @@ export interface Order extends Cart {
   quoteId?: string;
   shipmentState?: ShipmentState;
   approvalFlowStatus?: ApprovalFlowStatus
+  recurringOrder?: RecurringOrder
 }

@@ -16,6 +16,7 @@ import { ValidationError } from '@Commerce-commercetools/errors/ValidationError'
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
 import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
+import { RecurringOrderFactory } from '@Commerce-commercetools/utils/RecurringOrderQueryFactory';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
@@ -579,6 +580,28 @@ export const getRecurrencePolicies: ActionHook = async (request: Request, action
     const response: Response = {
       statusCode: 200,
       body: JSON.stringify(recurrencePolicies),
+      sessionData: {
+        ...request.sessionData,
+      },
+    };
+
+    return response;
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const queryRecurringOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const recurringOrderQuery = RecurringOrderFactory.queryFromParams(request);
+
+    const recurringOrders = await cartApi.queryRecurringOrders(recurringOrderQuery);
+
+    const response: Response = {
+      statusCode: 200,
+      body: JSON.stringify(recurringOrders),
       sessionData: {
         ...request.sessionData,
       },

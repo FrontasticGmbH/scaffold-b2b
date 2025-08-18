@@ -11,6 +11,7 @@ const CartContent = ({
   onRemove,
   onAdd,
   onAddToNewWishlist,
+  onClearItem,
 }: CartContentProps) => {
   const translate = useTranslations();
 
@@ -35,6 +36,7 @@ const CartContent = ({
             onUpdateQuantity={onUpdateQuantity}
             onRemove={onRemove}
             onAddToNewWishlist={onAddToNewWishlist}
+            onClearItem={onClearItem}
           />
         </>
       ) : (
