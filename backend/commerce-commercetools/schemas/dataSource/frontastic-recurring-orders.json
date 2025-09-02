@@ -1,0 +1,8 @@
+{
+    "customDataSourceType": "frontastic/recurring-orders",
+    "name": "Recurring orders",
+    "category": "Recurring order",
+    "icon": "view_list",
+    "schema": []
+  }
+  

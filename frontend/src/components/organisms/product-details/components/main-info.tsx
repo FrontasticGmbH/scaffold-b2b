@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import useFormat from '@/hooks/useFormat';
 import { useAddToCartOverlay } from '@/providers/add-to-cart-overlay';
+import { classnames } from '@/utils/classnames/classnames';
 import { useTranslations } from 'use-intl';
 import { PDPMainInfoProps } from '../types';
 import ColoredVariants from './color-variants';
@@ -53,8 +54,13 @@ const MainInfo = ({
             </h2>
           </div>
         ) : (
-          <h2 className="text-18 font-bold leading-loose text-gray-700 md:text-20 lg:text-24">
-            {formatCurrency(product.price, product.currency)}
+          <h2
+            className={classnames('text-18 font-bold leading-loose md:text-20 lg:text-24', {
+              'text-red-500': !product.price,
+              'text-gray-700': !!product.price,
+            })}
+          >
+            {!product.price ? translate('common.not-available') : formatCurrency(product.price, product.currency)}
           </h2>
         )}
 
@@ -73,14 +79,14 @@ const MainInfo = ({
             onChangeSpecs={(value) => onChangeVariant('model', value)}
           />
         )}
-        {(!product.inStock || !product.price) && (
+        {!product.inStock && product.price && (
           <p className="text-18 leading-loose text-red-500 md:text-16 lg:text-18">{translate('common.out-of-stock')}</p>
         )}
         <CartCTA
           product={product}
           countChange={handleQuantityChange}
           addToCart={handleOnAddToCart}
-          addToCartDisabled={addToCartDisabled || product.maxQuantity === 0}
+          addToCartDisabled={addToCartDisabled || product.maxQuantity === 0 || !product.price}
         />
 
         <ShoppingListCTA
@@ -90,6 +96,7 @@ const MainInfo = ({
           addToWishlists={(wishlistIds) => addToWishlists(wishlistIds, quantity)}
           canAddToOwnWishlist={canAddToOwnWishlist}
           canAddToOthersWishlist={canAddToOthersWishlist}
+          addToWishlistDisabled={!product.price || product.maxQuantity === 0}
         />
 
         <Shipping shippingMethods={shippingMethods} currency={product.currency} />

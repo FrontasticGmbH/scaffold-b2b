@@ -26,7 +26,7 @@ export const mapProduct = (
     ) ??
     product.variants[0];
 
-  const cheapeastVariant = product.variants.reduce(
+  const cheapestVariant = product.variants.reduce(
     (a, b) => ((a.price?.centAmount ?? Number.MAX_VALUE) < (b.price?.centAmount ?? Number.MAX_VALUE) ? a : b),
     {
       price: { centAmount: Number.MAX_VALUE },
@@ -53,11 +53,11 @@ export const mapProduct = (
   const specifications = mapMasterAttributes(variant);
 
   const priceRange =
-    cheapeastVariant &&
+    cheapestVariant &&
     mostExpensiveVariant &&
-    cheapeastVariant.price?.centAmount !== mostExpensiveVariant.price?.centAmount
+    cheapestVariant.price?.centAmount !== mostExpensiveVariant.price?.centAmount
       ? ([
-          (cheapeastVariant.price?.centAmount ?? 0) / Math.pow(10, cheapeastVariant.price?.fractionDigits ?? 2),
+          (cheapestVariant.price?.centAmount ?? 0) / Math.pow(10, cheapestVariant.price?.fractionDigits ?? 2),
           (mostExpensiveVariant.price?.centAmount ?? 0) / Math.pow(10, mostExpensiveVariant.price?.fractionDigits ?? 2),
         ] as [number, number])
       : undefined;

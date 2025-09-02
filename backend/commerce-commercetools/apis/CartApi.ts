@@ -5,6 +5,7 @@ import { Order, OrderState, ReturnLineItem } from '@Types/cart/Order';
 import {
   Cart as CommercetoolsCart,
   Order as CommercetoolsOrder,
+  RecurringOrder as CommercetoolsRecurringOrder,
   CartAddPaymentAction,
   CartDraft,
   CartRemoveDiscountCodeAction,
@@ -13,6 +14,8 @@ import {
   CartSetShippingMethodAction,
   OrderFromCartDraft,
   OrderUpdate,
+  RecurringOrderUpdate,
+  RecurringOrderUpdateAction,
 } from '@commercetools/platform-sdk';
 import {
   CartAddDiscountCodeAction,
@@ -1031,7 +1034,7 @@ export default class CartApi extends BaseApi {
   async queryRecurringOrders(recurringOrderQuery: RecurringOrderQuery): Promise<PaginatedResult<RecurringOrder>> {
     const limit = +recurringOrderQuery.limit || undefined;
     const sortAttributes: string[] = [];
-    const whereClause: string[] = [];
+    const whereClause: string[] = [`customer(id="${this.accountId}")`];
 
     const recurringOrderQuerySort = recurringOrderQuery.sortAttributes;
 
@@ -1053,10 +1056,6 @@ export default class CartApi extends BaseApi {
 
     if (recurringOrderQuery.businessUnitKey !== undefined) {
       whereClause.push(`businessUnit(key="${recurringOrderQuery.businessUnitKey}")`);
-    }
-
-    if (recurringOrderQuery.accountId !== undefined) {
-      whereClause.push(`customer(id="${recurringOrderQuery.accountId}")`);
     }
 
     if (recurringOrderQuery.startsAt !== undefined) {
@@ -1093,6 +1092,87 @@ export default class CartApi extends BaseApi {
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+      });
+  }
+
+  async pauseRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    try {
+      return this.updateRecurringOrder(recurringOrderId, [
+        {
+          action: 'setRecurringOrderState',
+          recurringOrderState: {
+            type: 'paused',
+          },
+        },
+      ])
+        .then((commercetoolsRecurringOrder) => {
+          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+        })
+        .catch((error) => {
+          throw new ExternalError({
+            statusCode: error.statusCode,
+            message: error.message,
+            body: error.body,
+          });
+        });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async resumeRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    try {
+      return this.updateRecurringOrder(recurringOrderId, [
+        {
+          action: 'setRecurringOrderState',
+          recurringOrderState: {
+            type: 'active',
+          },
+        },
+      ]).then((commercetoolsRecurringOrder) => {
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async cancelRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    try {
+      return this.updateRecurringOrder(recurringOrderId, [
+        {
+          action: 'setRecurringOrderState',
+          recurringOrderState: {
+            type: 'canceled',
+          },
+        },
+      ]).then((commercetoolsRecurringOrder) => {
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async skipRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    return this.updateRecurringOrder(recurringOrderId, [
+      {
+        action: 'setOrderSkipConfiguration',
+        skipConfiguration: {
+          type: 'counter',
+          totalToSkip: 1,
+        },
+      },
+    ])
+      .then((commercetoolsRecurringOrder) => {
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+      })
+      .catch((error) => {
+        throw new ExternalError({
+          statusCode: error.statusCode,
+          message: error.message,
+          body: error.body,
+        });
       });
   }
 
@@ -1308,5 +1388,43 @@ export default class CartApi extends BaseApi {
     }
 
     return commercetoolsCart.country !== locale.country || commercetoolsCart.locale !== locale.language;
+  }
+
+  protected async updateRecurringOrder(
+    recurringOrderId: string,
+    recurringOrderUpdateActions: RecurringOrderUpdateAction[],
+  ): Promise<CommercetoolsRecurringOrder> {
+    return this.queryRecurringOrders({ recurringOrderIds: [recurringOrderId] })
+      .then((result) => {
+        const recurringOrder = result.items[0];
+
+        if (!recurringOrder) {
+          throw new ResourceNotFoundError({
+            message: `Recurring order with ID ${recurringOrderId} not found`,
+          });
+        }
+
+        const recurringOrderUpdate: RecurringOrderUpdate = {
+          version: +recurringOrder.recurringOrderVersion,
+          actions: recurringOrderUpdateActions,
+        };
+
+        return this.requestBuilder()
+          .recurringOrders()
+          .withId({ ID: recurringOrderId })
+          .post({
+            body: recurringOrderUpdate,
+            queryArgs: { expand: RECURRING_ORDER_EXPANDS },
+          })
+          .execute();
+      })
+      .then((response) => response.body)
+      .catch((error) => {
+        throw new ExternalError({
+          statusCode: error.statusCode,
+          message: error.message,
+          body: error.body,
+        });
+      });
   }
 }

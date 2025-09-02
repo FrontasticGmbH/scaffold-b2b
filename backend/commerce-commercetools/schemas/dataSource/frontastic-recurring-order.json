@@ -1,0 +1,19 @@
+{
+    "customDataSourceType": "frontastic/recurring-order",
+    "name": "Recurring order",
+    "category": "Recurring order",
+    "icon": "picture_in_picture",
+    "schema": [
+        {
+            "name": "Recurring order detail",
+            "fields": [
+                {
+                    "label": "Recurring order ID",
+                    "field": "recurringOrderId",
+                    "type": "text",
+                    "translatable": false
+                }
+            ]
+        }
+    ]
+}

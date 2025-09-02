@@ -40,23 +40,30 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
   );
 
   const handleStoreSelection = useCallback(
-    (key: string) => {
+    async (key: string) => {
       if (selectedBusinessUnit) {
         const store = selectedBusinessUnit.stores?.find((st) => st.key === key);
 
         if (!store) return;
 
-        setBusinessUnitAndStoreSessionKeys(selectedBusinessUnit.key as string, key);
-
-        localStorage.setItem('st-key', key);
+        await setBusinessUnitAndStoreSessionKeys(selectedBusinessUnit.key as string, key);
 
         setSelectedStoreKey(key);
+        localStorage.setItem('st-key', key);
+
+        window.location.reload();
       }
     },
     [setBusinessUnitAndStoreSessionKeys, selectedBusinessUnit],
   );
 
   useEffect(() => {
+    const storedBusinessUnitKey = localStorage.getItem('bu-key');
+
+    if (!storedBusinessUnitKey) {
+      localStorage.setItem('bu-key', defaultBusinessUnit?.key ?? '');
+    }
+
     const buInStorage = businessUnits.find((bu) => bu.key === localStorage.getItem('bu-key'));
     const stInStorage = buInStorage?.stores?.find((bu) => bu.key === localStorage.getItem('st-key'));
 

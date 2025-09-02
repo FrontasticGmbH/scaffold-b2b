@@ -13,6 +13,7 @@ import { Order } from '@Types/cart/Order';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 import { ApprovalFlow, ApprovalRule } from '@Types/business-unit';
 import { Attributes } from '@Types/product/Attributes';
+import { RecurringOrder } from '@Types/cart';
 import { actions } from './actionControllers';
 import dataSources from './dataSources';
 import CategoryRouter from './utils/routers/CategoryRouter';
@@ -87,6 +88,44 @@ const extensionRegistry: ExtensionRegistry = {
         if (result) {
           return {
             dynamicPageType: 'frontastic/orders-page',
+            dataSourcePayload: result,
+            pageMatchingPayload: result,
+          };
+        }
+        return null;
+      }
+
+      // Identify Recurring Order
+      if (CartRouter.identifyRecurringOrderFrom(request)) {
+        const recurringOrder: RecurringOrder = await CartRouter.loadRecurringOrderFor(
+          request,
+          context.frontasticContext,
+        );
+
+        if (recurringOrder) {
+          return {
+            dynamicPageType: CartRouter.getRecurringOrderPageType(request),
+            dataSourcePayload: {
+              recurringOrder,
+            },
+            pageMatchingPayload: {
+              recurringOrder,
+            },
+          };
+        }
+        return null;
+      }
+
+      // Identify Recurring Orders
+      if (CartRouter.identifyRecurringOrdersFrom(request)) {
+        const result: PaginatedResult<RecurringOrder> = await CartRouter.loadRecurringOrdersFor(
+          request,
+          context.frontasticContext,
+        );
+
+        if (result) {
+          return {
+            dynamicPageType: 'frontastic/recurring-orders-page',
             dataSourcePayload: result,
             pageMatchingPayload: result,
           };

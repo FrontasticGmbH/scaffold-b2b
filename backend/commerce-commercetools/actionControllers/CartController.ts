@@ -612,3 +612,83 @@ export const queryRecurringOrders: ActionHook = async (request: Request, actionC
     return handleError(error, request);
   }
 };
+
+export const pauseRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+    }>(request.body);
+
+    const response = await cartApi.pauseRecurringOrder(body.recurringOrderId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const resumeRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+    }>(request.body);
+
+    const response = await cartApi.resumeRecurringOrder(body.recurringOrderId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const cancelRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+    }>(request.body);
+
+    const response = await cartApi.cancelRecurringOrder(body.recurringOrderId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const skipRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+    }>(request.body);
+
+    const response = await cartApi.skipRecurringOrder(body.recurringOrderId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};

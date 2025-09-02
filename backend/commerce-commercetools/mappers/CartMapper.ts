@@ -375,6 +375,7 @@ export default class CartMapper {
   ): RecurringOrder {
     return {
       recurringOrderId: commercetoolsRecurringOrder?.id,
+      recurringOrderVersion: commercetoolsRecurringOrder?.version,
       key: commercetoolsRecurringOrder?.key,
       schedule: this.commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
         commercetoolsRecurringOrder?.schedule,

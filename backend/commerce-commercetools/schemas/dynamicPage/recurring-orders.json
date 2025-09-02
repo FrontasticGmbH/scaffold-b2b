@@ -1,0 +1,9 @@
+{
+    "dynamicPageType": "frontastic/recurring-orders-page",
+    "name": "Recurring orders",
+    "category": "Recurring order",
+    "icon": "shopping_cart",
+    "dataSourceType": "frontastic/recurring-orders",
+    "isMultiple": true
+  }
+  

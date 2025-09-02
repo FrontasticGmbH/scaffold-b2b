@@ -10,7 +10,6 @@ export interface RecurringOrderQuery extends PaginatedQuery {
   recurringOrderIds?: string[];
   recurringOrderStates?: RecurringOrderState[];
   businessUnitKey?: string;
-  accountId?: string;
   startsAt?: string;
   createdAt?: string;
   sortAttributes?: SortAttributes

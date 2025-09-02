@@ -3,6 +3,7 @@ import { RecurringOrderQuery } from '@Types/query';
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
 import queryParamsToIds from './requestHandlers/queryParamsToIds';
 import queryParamsToStates from './requestHandlers/queryParamsToState';
+import { getBusinessUnitKey } from './requestHandlers/Request';
 
 export class RecurringOrderFactory {
   static queryFromParams(request: Request): RecurringOrderQuery {
@@ -11,8 +12,7 @@ export class RecurringOrderFactory {
       cursor: request.query?.cursor ?? undefined,
       recurringOrderIds: queryParamsToIds('recurringOrderIds', request.query),
       recurringOrderStates: queryParamsToStates('recurringOrderStates', request.query),
-      businessUnitKey: request.query?.businessUnitKey ?? undefined,
-      accountId: request.query?.accountId ?? undefined,
+      businessUnitKey: getBusinessUnitKey(request),
       startsAt: request.query?.startsAt ?? undefined,
       createdAt: request.query?.createdAt ?? undefined,
       sortAttributes: RecurringOrderFactory.queryParamsToSortAttributes(request.query),

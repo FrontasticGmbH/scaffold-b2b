@@ -52,6 +52,7 @@ const ProductTile = ({
   const descriptionItems = (specifications ?? []).filter((item) => !!item.value);
 
   const maxDescriptionItems = 3;
+  const hasPriceAndIsInStock = !!price && inStock;
 
   return (
     <div
@@ -75,7 +76,11 @@ const ProductTile = ({
           'md:hidden': variant === 'list-item',
         })}
       >
-        <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
+        {price ? (
+          <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
+        ) : (
+          <span className="text-red-500">{translate('common.not-available')}</span>
+        )}
       </div>
 
       <Link href={url ?? '#'}>
@@ -132,7 +137,11 @@ const ProductTile = ({
         )}
       >
         <div className={classnames('hidden justify-end', { 'md:flex': variant === 'list-item' })}>
-          <StockIndicator inStock={inStock && Boolean(price)} restockableInDays={restockableInDays} />
+          {price ? (
+            <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
+          ) : (
+            <span className="text-red-500">{translate('common.not-available')}</span>
+          )}
         </div>
 
         <div
@@ -147,7 +156,7 @@ const ProductTile = ({
               onChange={setQuantity}
               minValue={1}
               maxValue={maxQuantity}
-              disabled={!inStock || addToCartDisabled}
+              disabled={!hasPriceAndIsInStock || addToCartDisabled}
             />
           </div>
 
@@ -190,7 +199,7 @@ const ProductTile = ({
                 minValue={Math.min(1, maxQuantity ?? Infinity)}
                 maxValue={maxQuantity}
                 showLabel={false}
-                disabled={!inStock || addToCartDisabled}
+                disabled={!hasPriceAndIsInStock || addToCartDisabled}
               />
             </div>
 
@@ -200,7 +209,7 @@ const ProductTile = ({
               className="grow truncate"
               onClick={handleAddToCart}
               loading={addingToCart}
-              disabled={!inStock || addToCartDisabled || maxQuantity === 0}
+              disabled={!hasPriceAndIsInStock || addToCartDisabled || maxQuantity === 0}
             >
               {translate('cart.add')}
             </Button>

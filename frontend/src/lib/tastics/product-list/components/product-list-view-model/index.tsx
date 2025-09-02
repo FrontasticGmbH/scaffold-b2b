@@ -116,12 +116,9 @@ const ProductListViewModel = ({
       products={mappedProducts}
       breadcrumb={categoriesBreadcrumb}
       sortValues={[
-        // { name: translate('product.featured'), value: 'featured' },
         { name: `${translate('product.relevance')}`, value: '', vector: 'desc' },
         { name: `${translate('product.price')} (Asc)`, value: 'price', vector: 'asc' },
         { name: `${translate('product.price')} (Desc)`, value: 'price', vector: 'desc' },
-        // { name: translate('product.best-selling'), value: 'best-selling' },
-        // { name: translate('product.newest'), value: 'newest' },
       ]}
       addToCartDisabled={!permissions.UpdateMyCarts}
       currentSortValue={currentSortValue}

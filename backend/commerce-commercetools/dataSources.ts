@@ -8,6 +8,7 @@ import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { ValidationError } from './errors/ValidationError';
 import queryParamsToSortAttributes from './utils/requestHandlers/queryParamsToSortAttributes';
 import { AccountFetcher } from './utils/AccountFetcher';
+import { RecurringOrderFactory } from './utils/RecurringOrderQueryFactory';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
@@ -32,6 +33,14 @@ function orderQueryFromContext(context: DataSourceContext) {
   const orderQuery = OrderQueryFactory.queryFromParams(context.request);
 
   return { cartApi, orderQuery };
+}
+
+function recurringOrderQueryFromContext(context: DataSourceContext) {
+  const cartApi = getCartApi(context.request, context.frontasticContext);
+
+  const recurringOrderQuery = RecurringOrderFactory.queryFromParams(context.request);
+
+  return { cartApi, recurringOrderQuery };
 }
 
 function quoteQueryFromContext(context: DataSourceContext) {
@@ -228,6 +237,44 @@ const dataSources: DataSourceRegistry = {
       const { cartApi, orderQuery } = orderQueryFromContext(context);
 
       const queryResult = await cartApi.queryOrders(orderQuery);
+
+      return {
+        dataSourcePayload: queryResult,
+      };
+    } catch (error) {
+      return {
+        dataSourcePayload: handleError(error, context.request),
+      };
+    }
+  },
+
+  'frontastic/recurring-order': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+    try {
+      AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
+
+      const { cartApi, recurringOrderQuery } = recurringOrderQueryFromContext(context);
+
+      const queryResult = await cartApi.queryRecurringOrders(recurringOrderQuery);
+
+      return {
+        dataSourcePayload: {
+          order: queryResult.items[0],
+        },
+      };
+    } catch (error) {
+      return {
+        dataSourcePayload: handleError(error, context.request),
+      };
+    }
+  },
+
+  'frontastic/recurring-orders': async (config: DataSourceConfiguration, context: DataSourceContext) => {
+    try {
+      AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
+
+      const { cartApi, recurringOrderQuery } = recurringOrderQueryFromContext(context);
+
+      const queryResult = await cartApi.queryRecurringOrders(recurringOrderQuery);
 
       return {
         dataSourcePayload: queryResult,

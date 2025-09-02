@@ -43,6 +43,7 @@ export type ShoppingListCTAProps = {
     list: Pick<SharedWishlist, 'name' | 'description' | 'store'>,
     count?: number,
   ) => Promise<SharedWishlist | null>;
+  addToWishlistDisabled?: boolean;
 };
 
 export type ShippingMethod = {

@@ -10,6 +10,7 @@ export type RecurringOrderState =
 
 export interface RecurringOrder {
   recurringOrderId: string;
+  recurringOrderVersion?: number;
   key?: string;
   storeKey?: string;
   businessUnitKey?: string;
@@ -24,3 +25,4 @@ export interface RecurringOrder {
   resumesAt?: string;
   createdAt?: string;
 }
+
