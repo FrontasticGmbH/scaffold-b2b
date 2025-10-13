@@ -117,7 +117,7 @@ export const updateLineItem: ActionHook = async (request: Request, actionContext
     };
 
     let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
-    cart = await cartApi.updateLineItem(cart, lineItem);
+    cart = await cartApi.updateLineItems(cart, [lineItem]);
 
     const cartId = cart.cartId;
 
@@ -682,6 +682,56 @@ export const skipRecurringOrder: ActionHook = async (request: Request, actionCon
     }>(request.body);
 
     const response = await cartApi.skipRecurringOrder(body.recurringOrderId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const updateRecurringOrderLineItems: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+      lineItems: LineItem[];
+    }>(request.body);
+
+    if (!body.recurringOrderId) {
+      throw new ValidationError({ message: `recurringOrderId is required` });
+    }
+
+    if (!body.lineItems || body.lineItems.length === 0) {
+      throw new ValidationError({ message: `lineItems array is required and must not be empty` });
+    }
+
+    const response = await cartApi.updateRecurringOrderLineItems(body.recurringOrderId, body.lineItems);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};
+
+export const updateRecurringOrderSchedule: ActionHook = async (request: Request, actionContext: ActionContext) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+      recurrencePolicyId: string;
+    }>(request.body);
+
+    const response = await cartApi.updateRecurringOrderSchedule(body.recurringOrderId, body.recurrencePolicyId);
 
     return {
       statusCode: 200,

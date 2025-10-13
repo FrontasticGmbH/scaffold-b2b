@@ -52,6 +52,7 @@ import { CartPaymentNotFoundError } from '@Commerce-commercetools/errors/CartPay
 import { CartRedeemDiscountCodeError } from '@Commerce-commercetools/errors/CartRedeemDiscountCodeError';
 import { CartNotCompleteError } from '@Commerce-commercetools/errors/CartNotCompleteError';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
+import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
 
 const CART_EXPANDS = [
@@ -66,7 +67,7 @@ const CART_EXPANDS = [
   'customerGroup',
 ];
 const ORDER_EXPANDS = [...CART_EXPANDS, 'orderState', 'recurringOrder'];
-const RECURRING_ORDER_EXPANDS = ['customer'];
+const RECURRING_ORDER_EXPANDS = ['customer', 'cart', 'cart.lineItems[*].recurrenceInfo.recurrencePolicy'];
 const SHIPPING_METHOD_EXPANDS = ['zoneRates[*].zone'];
 
 export default class CartApi extends BaseApi {
@@ -240,18 +241,16 @@ export default class CartApi extends BaseApi {
     return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
   }
 
-  async updateLineItem(cart: Cart, lineItem: LineItem): Promise<Cart> {
+  async updateLineItems(cart: Cart, lineItems: LineItem[]): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
-      actions: [
-        {
-          action: 'changeLineItemQuantity',
-          lineItemId: lineItem.lineItemId,
-          quantity: +lineItem.count,
-        },
-      ],
+      actions: lineItems.map((lineItem) => ({
+        action: 'changeLineItemQuantity',
+        lineItemId: lineItem.lineItemId,
+        quantity: +lineItem.count,
+      })),
     };
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
@@ -1005,6 +1004,7 @@ export default class CartApi extends BaseApi {
       .get({
         queryArgs: {
           limit,
+          offset: getOffsetFromCursor(recurrencePolicyQuery.cursor),
           where: whereClause,
         },
       })
@@ -1032,6 +1032,7 @@ export default class CartApi extends BaseApi {
   }
 
   async queryRecurringOrders(recurringOrderQuery: RecurringOrderQuery): Promise<PaginatedResult<RecurringOrder>> {
+    const locale = await this.getCommercetoolsLocal();
     const limit = +recurringOrderQuery.limit || undefined;
     const sortAttributes: string[] = [];
     const whereClause: string[] = [`customer(id="${this.accountId}")`];
@@ -1062,8 +1063,12 @@ export default class CartApi extends BaseApi {
       whereClause.push(`startsAt="${recurringOrderQuery.startsAt}"`);
     }
 
-    if (recurringOrderQuery.createdAt !== undefined) {
-      whereClause.push(`createdAt="${recurringOrderQuery.createdAt}"`);
+    if (recurringOrderQuery.created?.from !== undefined) {
+      whereClause.push(`createdAt > "${recurringOrderQuery.created.from.toISOString()}"`);
+    }
+
+    if (recurringOrderQuery.created?.to !== undefined) {
+      whereClause.push(`createdAt < "${recurringOrderQuery.created.to.toISOString()}"`);
     }
 
     return await this.requestBuilder()
@@ -1071,6 +1076,7 @@ export default class CartApi extends BaseApi {
       .get({
         queryArgs: {
           limit,
+          offset: getOffsetFromCursor(recurringOrderQuery.cursor),
           where: whereClause,
           sort: sortAttributes,
           expand: RECURRING_ORDER_EXPANDS,
@@ -1079,7 +1085,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         const recurringOrders = response.body.results.map((recurringOrders) => {
-          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(recurringOrders);
+          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(recurringOrders, locale, this.defaultLocale);
         });
         return {
           total: response.body.total,
@@ -1096,6 +1102,8 @@ export default class CartApi extends BaseApi {
   }
 
   async pauseRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    const locale = await this.getCommercetoolsLocal();
+
     try {
       return this.updateRecurringOrder(recurringOrderId, [
         {
@@ -1106,7 +1114,11 @@ export default class CartApi extends BaseApi {
         },
       ])
         .then((commercetoolsRecurringOrder) => {
-          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
+            commercetoolsRecurringOrder,
+            locale,
+            this.defaultLocale,
+          );
         })
         .catch((error) => {
           throw new ExternalError({
@@ -1121,6 +1133,8 @@ export default class CartApi extends BaseApi {
   }
 
   async resumeRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    const locale = await this.getCommercetoolsLocal();
+
     try {
       return this.updateRecurringOrder(recurringOrderId, [
         {
@@ -1130,7 +1144,11 @@ export default class CartApi extends BaseApi {
           },
         },
       ]).then((commercetoolsRecurringOrder) => {
-        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
+          commercetoolsRecurringOrder,
+          locale,
+          this.defaultLocale,
+        );
       });
     } catch (error) {
       throw error;
@@ -1138,6 +1156,8 @@ export default class CartApi extends BaseApi {
   }
 
   async cancelRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    const locale = await this.getCommercetoolsLocal();
+
     try {
       return this.updateRecurringOrder(recurringOrderId, [
         {
@@ -1147,7 +1167,11 @@ export default class CartApi extends BaseApi {
           },
         },
       ]).then((commercetoolsRecurringOrder) => {
-        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
+          commercetoolsRecurringOrder,
+          locale,
+          this.defaultLocale,
+        );
       });
     } catch (error) {
       throw error;
@@ -1155,6 +1179,8 @@ export default class CartApi extends BaseApi {
   }
 
   async skipRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
+    const locale = await this.getCommercetoolsLocal();
+
     return this.updateRecurringOrder(recurringOrderId, [
       {
         action: 'setOrderSkipConfiguration',
@@ -1165,7 +1191,11 @@ export default class CartApi extends BaseApi {
       },
     ])
       .then((commercetoolsRecurringOrder) => {
-        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(commercetoolsRecurringOrder);
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
+          commercetoolsRecurringOrder,
+          locale,
+          this.defaultLocale,
+        );
       })
       .catch((error) => {
         throw new ExternalError({
@@ -1174,6 +1204,57 @@ export default class CartApi extends BaseApi {
           body: error.body,
         });
       });
+  }
+
+  async updateRecurringOrderLineItems(recurringOrderId: string, lineItems: LineItem[]): Promise<RecurringOrder> {
+    // Get the recurring order to access its cart
+    const recurringOrderResult = await this.queryRecurringOrders({ recurringOrderIds: [recurringOrderId] });
+
+    if (!recurringOrderResult.items[0]) {
+      throw new ResourceNotFoundError({
+        message: `Recurring order with ID ${recurringOrderId} not found`,
+      });
+    }
+
+    const recurringOrder = recurringOrderResult.items[0];
+
+    if (!recurringOrder.cart?.cartId) {
+      throw new ValidationError({
+        message: `Recurring order ${recurringOrderId} does not have an associated cart`,
+      });
+    }
+
+    // Update the line items in the associated cart
+    await this.updateLineItems(recurringOrder.cart, lineItems);
+
+    // Fetch the updated recurring order
+    const updatedRecurringOrderResult = await this.queryRecurringOrders({ recurringOrderIds: [recurringOrderId] });
+
+    return updatedRecurringOrderResult.items[0];
+  }
+
+  async updateRecurringOrderSchedule(recurringOrderId: string, recurrencePolicyId: string): Promise<RecurringOrder> {
+    const locale = await this.getCommercetoolsLocal();
+
+    try {
+      return this.updateRecurringOrder(recurringOrderId, [
+        {
+          action: 'setSchedule',
+          recurrencePolicy: {
+            typeId: 'recurrence-policy',
+            id: recurrencePolicyId,
+          },
+        },
+      ]).then((commercetoolsRecurringOrder) => {
+        return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
+          commercetoolsRecurringOrder,
+          locale,
+          this.defaultLocale,
+        );
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
   protected async setOrderNumber(order: Order): Promise<Order> {

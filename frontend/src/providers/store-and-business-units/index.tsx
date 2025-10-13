@@ -33,7 +33,7 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
         localStorage.setItem('st-key', businessUnit.stores[0].key);
 
         setSelectedBusinessUnitKey(key);
-        setSelectedStoreKey(businessUnit.stores[0].key);
+        window.location.reload();
       }
     },
     [businessUnits, setBusinessUnitAndStoreSessionKeys],

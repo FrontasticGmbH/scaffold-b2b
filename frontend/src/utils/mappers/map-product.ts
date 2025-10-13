@@ -6,6 +6,7 @@ import { Locale } from '@/project.config';
 import { mapMasterAttributes } from './map-master-attributes';
 import { mapCategory } from './map-category';
 import { mapAttribute } from './map-attribute';
+import { Facet } from '@shared/types/result';
 
 export const mapProduct = (
   product: Product,
@@ -15,6 +16,7 @@ export const mapProduct = (
     locale = 'en-us',
     filterOutNonMatchingVariants = true,
   }: { variantIndex?: number; cart?: Cart; locale?: Locale; filterOutNonMatchingVariants?: boolean } = {},
+  facets?: Facet[],
 ): EntityProduct => {
   const variant =
     product.variants[variantIndex] ??
@@ -50,7 +52,7 @@ export const mapProduct = (
     .map((v) => mapAttribute({ label: v.attributes?.model, key: v.attributes?.model }))
     .filter(Boolean) as Attribute[];
 
-  const specifications = mapMasterAttributes(variant);
+  const specifications = mapMasterAttributes(variant, facets);
 
   const priceRange =
     cheapestVariant &&

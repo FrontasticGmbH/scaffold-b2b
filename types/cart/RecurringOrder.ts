@@ -1,4 +1,5 @@
 import { Account } from "../account";
+import { Cart } from "./Cart";
 import { RecurrencePolicySchedule } from "./RecurrencePolicy";
 
 export type RecurringOrderState =
@@ -16,7 +17,7 @@ export interface RecurringOrder {
   businessUnitKey?: string;
   recurringOrderState?: RecurringOrderState;
   schedule?: RecurrencePolicySchedule;
-  cartId?: string;
+  cart?: Cart;
   account?: Account;
   originOrderId: string;
   startsAt?: string;

@@ -5,6 +5,7 @@ import Confirmation from '@/components/organisms/confirmation';
 import useEntityToasters from '@/hooks/useEntityToasters';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { InformationCircleIcon } from '@heroicons/react/24/solid';
+
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { Tooltip } from 'react-tooltip';

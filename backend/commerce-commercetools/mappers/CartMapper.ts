@@ -97,6 +97,7 @@ export default class CartMapper {
         defaultLocale,
         supplyChannelId,
       ),
+      totalLineItemQuantity: commercetoolsCart?.totalLineItemQuantity,
       email: commercetoolsCart?.customerEmail,
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsCart.totalPrice),
       shippingAddress: this.commercetoolsAddressToAddress(commercetoolsCart.shippingAddress),
@@ -346,7 +347,11 @@ export default class CartMapper {
       accountGroup: AccountMapper.commercetoolsCustomerGroupToAccountGroup(commercetoolsOrder.customerGroup?.obj),
       recurringOrder:
         commercetoolsOrder.recurringOrder?.obj !== undefined
-          ? this.commercetoolsRecurringOrderToRecurringOrder(commercetoolsOrder.recurringOrder?.obj)
+          ? this.commercetoolsRecurringOrderToRecurringOrder(
+              commercetoolsOrder.recurringOrder?.obj,
+              locale,
+              defaultLocale,
+            )
           : undefined,
     };
   }
@@ -372,6 +377,8 @@ export default class CartMapper {
 
   static commercetoolsRecurringOrderToRecurringOrder(
     commercetoolsRecurringOrder: CommercetoolsRecurringOrder,
+    locale: Locale,
+    defaultLocale: string,
   ): RecurringOrder {
     return {
       recurringOrderId: commercetoolsRecurringOrder?.id,
@@ -385,7 +392,7 @@ export default class CartMapper {
       ),
       businessUnitKey: commercetoolsRecurringOrder?.businessUnit?.key,
       storeKey: commercetoolsRecurringOrder?.store?.key,
-      cartId: commercetoolsRecurringOrder?.cart?.id,
+      cart: this.commercetoolsCartToCart(commercetoolsRecurringOrder?.cart?.obj, locale, defaultLocale),
       account: AccountMapper.commercetoolsCustomerToAccount(commercetoolsRecurringOrder?.customer?.obj),
       originOrderId: commercetoolsRecurringOrder?.originOrder?.id,
       nextOrderAt: commercetoolsRecurringOrder?.nextOrderAt,

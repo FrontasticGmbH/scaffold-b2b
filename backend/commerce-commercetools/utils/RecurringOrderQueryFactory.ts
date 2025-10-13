@@ -14,7 +14,10 @@ export class RecurringOrderFactory {
       recurringOrderStates: queryParamsToStates('recurringOrderStates', request.query),
       businessUnitKey: getBusinessUnitKey(request),
       startsAt: request.query?.startsAt ?? undefined,
-      createdAt: request.query?.createdAt ?? undefined,
+      created: {
+        from: request.query?.createdFrom ? new Date(request.query?.createdFrom) : undefined,
+        to: request.query?.createdTo ? new Date(request.query?.createdTo) : undefined,
+      },
       sortAttributes: RecurringOrderFactory.queryParamsToSortAttributes(request.query),
     };
 

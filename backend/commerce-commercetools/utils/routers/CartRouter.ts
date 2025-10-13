@@ -97,7 +97,7 @@ export default class CartRouter {
     request: Request,
     commercetoolsFrontendContext: Context,
   ): Promise<PaginatedResult<RecurringOrder>> => {
-    const urlMatches = getPath(request)?.match(recurringOrderRegex);
+    const urlMatches = getPath(request)?.match(recurringOrdersRegex);
 
     if (urlMatches) {
       return await this.getRecurringOrders(request, commercetoolsFrontendContext);
@@ -119,7 +119,7 @@ export default class CartRouter {
   }
 
   static getRecurringOrderPageType(request: Request) {
-    if (getPath(request)?.match(recurringOrdersRegex)) {
+    if (getPath(request)?.match(recurringOrderRegex)) {
       return 'frontastic/recurring-order-page';
     }
 

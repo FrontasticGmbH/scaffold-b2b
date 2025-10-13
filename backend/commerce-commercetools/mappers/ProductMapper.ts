@@ -177,7 +177,10 @@ export default class ProductMapper {
     const attributes: Attributes = {};
 
     commercetoolsAttributes?.forEach((commercetoolsAttribute) => {
-      attributes[commercetoolsAttribute.name] = this.extractAttributeValue(commercetoolsAttribute.value, locale);
+      attributes[this.generateAttributeIdFromAttributeName(commercetoolsAttribute.name)] = this.extractAttributeValue(
+        commercetoolsAttribute.value,
+        locale,
+      );
     });
 
     return attributes;
@@ -428,7 +431,7 @@ export default class ProductMapper {
           attributeType: attribute.type?.hasOwnProperty('elementType')
             ? (attribute.type as AttributeSetType)?.elementType.name
             : attribute.type.name,
-          attributeId: `variants.attributes.${attribute.name}`,
+          attributeId: this.generateAttributeIdFromAttributeName(attribute.name),
           attributeLabel: LocalizedValue.getLocalizedValue(locale, defaultLocale, attribute.label) || attribute.name,
           attributeValues:
             this.isAttributeEnumType(attribute.type) && attribute.type.values.length > 0
@@ -726,5 +729,9 @@ export default class ProductMapper {
     attributeType: AttributeType,
   ): attributeType is AttributeEnumType | AttributeLocalizedEnumType {
     return attributeType && 'values' in attributeType;
+  }
+
+  static generateAttributeIdFromAttributeName(name: string) {
+    return `variants.attributes.${name}`;
   }
 }

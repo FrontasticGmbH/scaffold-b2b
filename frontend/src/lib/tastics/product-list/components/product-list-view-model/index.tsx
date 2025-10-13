@@ -38,7 +38,7 @@ const ProductListViewModel = ({
 
   const currency = useCurrency();
 
-  const mappedProducts = useMappedProducts({ items });
+  const mappedProducts = useMappedProducts({ items, facets });
 
   const mappedFacets = useMappedFacets({ facets, categories });
 

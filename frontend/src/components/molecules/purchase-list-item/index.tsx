@@ -1,37 +1,24 @@
-import React, { useCallback, useState } from 'react';
 import Image from '@/components/atoms/Image';
 import Button from '@/components/atoms/button';
-import useFormat from '@/hooks/useFormat';
+import Link from '@/components/atoms/link';
 import QuantityWidget from '@/components/atoms/quantity-widget';
 import StockIndicator from '@/components/atoms/stock-indicator';
+import useFormat from '@/hooks/useFormat';
+import { Fragment, useCallback, useState } from 'react';
 import { useTranslations } from 'use-intl';
-import Link from '@/components/atoms/link';
-import { PurchaseListItemProps } from './types';
+import ProductAttributes from '../product-attributes';
 import ShowMore from '../show-more';
 import RemoveButton from './components/remove-button';
+import { PurchaseListItemProps } from './types';
 
 const PurchaseListItem = ({
-  item: {
-    name,
-    inStock,
-    manufacturer,
-    sku,
-    url,
-    pressure,
-    price,
-    partNumber,
-    currency,
-    image,
-    quantity,
-    weight,
-    maxQuantity,
-  },
+  item: { name, inStock, sku, url, price, currency, image, quantity, maxQuantity, specifications },
   onRemove,
   onAddToCart,
   onQuantityChange,
 }: PurchaseListItemProps) => {
   const translate = useTranslations();
-
+  const maxDescriptionItems = 3;
   const [addingToCart, setAddingToCart] = useState(false);
 
   const handleAddToCart = useCallback(async () => {
@@ -74,22 +61,22 @@ const PurchaseListItem = ({
           </div>
         </div>
 
-        <div className="mt-3 text-14 leading-[200%] text-gray-700">
-          <p>
-            {translate('common.manufacturer')} - <span className="font-semibold">{manufacturer}</span>
-          </p>
-          <p>
-            {translate('common.part-number')} - <span className="font-semibold">{partNumber}</span>
-          </p>
-          {(pressure || weight) && (
-            <ShowMore>
-              <p>
-                {translate('common.pressure')} - <span className="font-semibold">{pressure}</span>
-              </p>
-              <p>
-                {translate('common.weight')} - <span className="font-semibold">{weight}</span>
-              </p>
-            </ShowMore>
+        <div className="mt-6 text-14 text-gray-700">
+          {specifications && (
+            <Fragment>
+              <ProductAttributes
+                className="mb-2 grid gap-2 leading-[135%]"
+                attributes={specifications.slice(0, maxDescriptionItems)}
+              />
+              {specifications.length > maxDescriptionItems && (
+                <ShowMore>
+                  <ProductAttributes
+                    className="mb-3 grid gap-2 leading-[135%]"
+                    attributes={specifications.slice(maxDescriptionItems)}
+                  />
+                </ShowMore>
+              )}
+            </Fragment>
           )}
         </div>
       </div>

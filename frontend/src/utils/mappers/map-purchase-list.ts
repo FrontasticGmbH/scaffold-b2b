@@ -1,7 +1,8 @@
-import { Wishlist } from '@shared/types/wishlist/Wishlist';
-import { LineItem } from '@shared/types/wishlist/LineItem';
-import { PurchaseList, PurchaseListItem } from '@/types/entity/purchase-list';
 import { Currency } from '@/types/currency';
+import { PurchaseList, PurchaseListItem } from '@/types/entity/purchase-list';
+import { LineItem } from '@shared/types/wishlist/LineItem';
+import { Wishlist } from '@shared/types/wishlist/Wishlist';
+import { mapMasterAttributes } from './map-master-attributes';
 import { mapStore } from './map-store';
 
 export const mapPurchaseItem = ({ lineItemId, name, count, variant, _url }: LineItem): PurchaseListItem => {
@@ -15,6 +16,7 @@ export const mapPurchaseItem = ({ lineItemId, name, count, variant, _url }: Line
     price: (variant?.price?.centAmount ?? 0) / Math.pow(10, variant?.price?.fractionDigits ?? 2),
     currency: (variant?.price?.currencyCode ?? 'AUD') as Currency,
     inStock: !!variant?.isOnStock,
+    specifications: variant ? mapMasterAttributes(variant) : [],
   };
 };
 
