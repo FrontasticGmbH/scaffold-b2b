@@ -1,6 +1,5 @@
 {
-  "name": "@b2bdev/poc-frontend",
-  "version": "4.6.0",
+  "name": "@commercetools-frontend/b2b-launchpad-frontend",
   "engines": {
     "node": ">=24"
   },

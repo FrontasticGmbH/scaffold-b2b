@@ -742,3 +742,35 @@ export const updateRecurringOrderSchedule: ActionHook = async (request: Request,
     return handleError(error, request);
   }
 };
+
+export const updateRecurringOrderShippingAddress: ActionHook = async (
+  request: Request,
+  actionContext: ActionContext,
+) => {
+  try {
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
+
+    const body = parseRequestBody<{
+      recurringOrderId: string;
+      shippingAddress: Address;
+    }>(request.body);
+
+    if (!body.recurringOrderId) {
+      throw new ValidationError({ message: `recurringOrderId is required` });
+    }
+
+    if (!body.shippingAddress) {
+      throw new ValidationError({ message: `shippingAddress is required and must not be empty` });
+    }
+
+    const response = await cartApi.updateRecurringOrderShippingAddress(body.recurringOrderId, body.shippingAddress);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response),
+      sessionData: request.sessionData,
+    };
+  } catch (error) {
+    return handleError(error, request);
+  }
+};

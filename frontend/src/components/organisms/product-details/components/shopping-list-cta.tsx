@@ -23,6 +23,7 @@ const ShoppingListCTA = ({
   const [lists, setLists] = useState<Array<Wishlist>>([]);
 
   const [checkedBoxes, setCheckedBoxes] = useState<Record<string, boolean>>({});
+  const [savedItemsIds, setSavedItemsIds] = useState<string[]>([]);
 
   const selectedIds = useMemo(() => Object.keys(checkedBoxes).filter((key) => !!checkedBoxes[key]), [checkedBoxes]);
 
@@ -49,7 +50,9 @@ const ShoppingListCTA = ({
     );
 
     setCheckedBoxes(checkedBoxes ?? {});
-  }, [getWishlists]);
+    const saved = shoppingLists.filter((l) => !!l.productIsInWishlist).map((l) => l.id);
+    setSavedItemsIds(saved);
+  }, [canAddToOthersWishlist, canAddToOwnWishlist, getWishlists]);
 
   const toastAddedLists = (addedWishlists: string[]) => {
     addedWishlists.forEach((addedWishlistsId) => {
@@ -85,6 +88,9 @@ const ShoppingListCTA = ({
       toastAddedLists(addedWishlists);
     }
 
+    // Persist new baseline for savedItemsIds after successful submit
+    setSavedItemsIds(selectedIds);
+
     onClose();
   };
 
@@ -114,6 +120,7 @@ const ShoppingListCTA = ({
         onClose={onClose}
         handleChange={handleChange}
         selectedIds={selectedIds}
+        savedItemsIds={savedItemsIds}
       />
     </div>
   );

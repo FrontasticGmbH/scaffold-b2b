@@ -1,5 +1,6 @@
 import React from 'react';
 import { fireEvent, render, screen, waitFor, act } from '@test/utils';
+import { within } from '@testing-library/react';
 import MoveToList from '@/components/molecules/move-to-list';
 import { MoveToListProps } from '@/components/molecules/move-to-list/types';
 import userEvent from '@testing-library/user-event';
@@ -43,10 +44,10 @@ describe('MoveToList', () => {
 
     await act(async () => userEvent.click(screen.getByText('Move to list')));
 
-    const checkbox = screen.getByLabelText<HTMLInputElement>('Wishlist-1');
-    await act(async () => userEvent.click(checkbox));
+    const row = screen.getByTestId('list-row-Wishlist-1');
+    await act(async () => userEvent.click(within(row).getByTestId('add-to-list-Wishlist-1')));
 
-    await act(async () => userEvent.click(screen.getByText('Move')));
+    await act(async () => userEvent.click(screen.getByTestId('confirm')));
 
     expect(defaultProps.onSubmit).toHaveBeenCalledWith(['Wishlist-1']);
   });
@@ -57,22 +58,22 @@ describe('MoveToList', () => {
     expect(screen.getByText('Move to list')).toBeDisabled();
   });
 
-  it('handles list checkbox changes correctly', () => {
+  it('handles list add/remove button interactions correctly', async () => {
     render(<MoveToList {...defaultProps} />);
 
     fireEvent.click(screen.getByText('Move to list'));
 
-    const checkbox1 = screen.getByLabelText<HTMLInputElement>('Wishlist-1');
-    const checkbox2 = screen.getByLabelText<HTMLInputElement>('Wishlist-2');
+    const row1 = screen.getByTestId('list-row-Wishlist-1');
+    const row2 = screen.getByTestId('list-row-Wishlist-2');
 
-    fireEvent.click(checkbox1);
-    expect(checkbox1.checked).toBe(true);
+    await act(async () => userEvent.click(within(row1).getByRole('button', { name: /add/i })));
+    expect(within(row1).getByRole('button', { name: /remove/i })).toBeInTheDocument();
 
-    fireEvent.click(checkbox2);
-    expect(checkbox2.checked).toBe(true);
+    await act(async () => userEvent.click(within(row2).getByRole('button', { name: /add/i })));
+    expect(within(row2).getByRole('button', { name: /remove/i })).toBeInTheDocument();
 
-    fireEvent.click(checkbox1);
-    expect(checkbox1.checked).toBe(false);
+    await act(async () => userEvent.click(within(row1).getByRole('button', { name: /remove/i })));
+    expect(within(row1).getByRole('button', { name: /add/i })).toBeInTheDocument();
   });
 
   it('calls onAddNewList when the add new list button is clicked', async () => {

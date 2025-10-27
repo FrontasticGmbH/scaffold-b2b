@@ -8,6 +8,7 @@ const WishlistModal = ({
   isOpen,
   onSubmit,
   selectedIds,
+  savedItemsIds,
   loading,
   onClose,
   onAddToNewList,
@@ -28,6 +29,7 @@ const WishlistModal = ({
           onSubmit={onSubmit}
           onClose={onClose}
           selectedIds={selectedIds}
+          savedItemsIds={savedItemsIds}
           loading={loading}
         />
       ) : (

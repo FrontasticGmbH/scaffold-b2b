@@ -1257,6 +1257,33 @@ export default class CartApi extends BaseApi {
     }
   }
 
+  async updateRecurringOrderShippingAddress(
+    recurringOrderId: string,
+    shippingAddress: Address,
+  ): Promise<RecurringOrder> {
+    const recurringOrderResult = await this.queryRecurringOrders({ recurringOrderIds: [recurringOrderId] });
+
+    if (!recurringOrderResult.items[0]) {
+      throw new ResourceNotFoundError({
+        message: `Recurring order with ID ${recurringOrderId} not found`,
+      });
+    }
+
+    const recurringOrder = recurringOrderResult.items[0];
+
+    if (!recurringOrder.cart?.cartId) {
+      throw new ValidationError({
+        message: `Recurring order ${recurringOrderId} does not have an associated cart`,
+      });
+    }
+
+    await this.setShippingAddress(recurringOrder.cart, shippingAddress);
+
+    const updatedRecurringOrderResult = await this.queryRecurringOrders({ recurringOrderIds: [recurringOrderId] });
+
+    return updatedRecurringOrderResult.items[0];
+  }
+
   protected async setOrderNumber(order: Order): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
 
