@@ -244,13 +244,42 @@ export default class CartApi extends BaseApi {
   async updateLineItems(cart: Cart, lineItems: LineItem[]): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
 
+    const actions: CartUpdate['actions'] = [];
+
+    lineItems.forEach((lineItem) => {
+      // Always update quantity if count is provided
+      if (lineItem.count !== undefined) {
+        actions.push({
+          action: 'changeLineItemQuantity',
+          lineItemId: lineItem.lineItemId,
+          quantity: +lineItem.count,
+        });
+      }
+
+      // Handle recurrence info if explicitly provided (including removal)
+      if (lineItem.recurrenceInfo !== undefined) {
+        const recurrencePolicyId = lineItem.recurrenceInfo?.recurrencePolicy?.recurrencePolicyId;
+        actions.push({
+          action: 'setLineItemRecurrenceInfo',
+          lineItemId: lineItem.lineItemId,
+          ...(recurrencePolicyId
+            ? {
+                recurrenceInfo: {
+                  recurrencePolicy: {
+                    typeId: 'recurrence-policy',
+                    id: recurrencePolicyId,
+                  },
+                  priceSelectionMode: PriceSelectionMode.Fixed,
+                },
+              }
+            : {}),
+        });
+      }
+    });
+
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
-      actions: lineItems.map((lineItem) => ({
-        action: 'changeLineItemQuantity',
-        lineItemId: lineItem.lineItemId,
-        quantity: +lineItem.count,
-      })),
+      actions,
     };
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);

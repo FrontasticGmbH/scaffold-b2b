@@ -120,6 +120,7 @@
   "resolutions": {
     "esbuild": "0.17.19",
     "@types/react": "19.0.8",
-    "cookie": "^0.7.0"
+    "cookie": "^0.7.0",
+    "nanoid": "3.3.8"
   }
 }

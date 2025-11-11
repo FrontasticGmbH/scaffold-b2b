@@ -3,7 +3,7 @@ import { LineItem } from '@Types/cart/LineItem';
 import { OrderState, ReturnLineItem } from '@Types/cart/Order';
 import { Cart } from '@Types/cart/Cart';
 import { Address } from '@Types/account/Address';
-import { DiscountCode, ShippingMethod } from '@Types/cart';
+import { DiscountCode, LineItemRecurrenceInfo, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
 import { Token } from '@Types/Token';
 import { RecurrencePolicyQuery } from '@Types/query';
@@ -109,11 +109,21 @@ export const updateLineItem: ActionHook = async (request: Request, actionContext
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
 
-    const body = parseRequestBody<{ lineItem?: { id?: string; count: number } }>(request.body);
+    const body = parseRequestBody<{
+      lineItem?: { id?: string; count?: number; recurrenceInfo?: LineItemRecurrenceInfo };
+    }>(request.body);
 
     const lineItem: LineItem = {
       lineItemId: body.lineItem?.id,
-      count: +body.lineItem?.count || 1,
+      count: body.lineItem?.count !== undefined ? +body.lineItem?.count : undefined,
+      recurrenceInfo:
+        body.lineItem?.recurrenceInfo !== undefined
+          ? body.lineItem.recurrenceInfo?.recurrencePolicy?.recurrencePolicyId !== undefined
+            ? {
+                recurrencePolicy: body.lineItem.recurrenceInfo.recurrencePolicy,
+              }
+            : {}
+          : undefined,
     };
 
     let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);

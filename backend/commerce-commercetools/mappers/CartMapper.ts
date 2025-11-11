@@ -218,26 +218,25 @@ export default class CartMapper {
   }
 
   static commercetoolsLineItemRecurrenceInfoToLineItemRecurrenceInfo(
-    commercetoolLineItemRecurrenceInfo: CommercetoolsLineItemRecurrenceInfo,
+    commercetoolsLineItemRecurrenceInfo: CommercetoolsLineItemRecurrenceInfo,
     locale: Locale,
     defaultLocale: string,
   ): LineItemRecurrenceInfo {
-    let lineItemRecurrenceInfo: LineItemRecurrenceInfo = {
+    const lineItemRecurrenceInfo: LineItemRecurrenceInfo = {
       priceSelectionMode: this.commercetoolsPriceSelectionModeToPriceSelectionMode(
-        commercetoolLineItemRecurrenceInfo?.priceSelectionMode,
+        commercetoolsLineItemRecurrenceInfo?.priceSelectionMode,
       ),
+      recurrencePolicy: {
+        recurrencePolicyId: commercetoolsLineItemRecurrenceInfo.recurrencePolicy.id,
+        ...(commercetoolsLineItemRecurrenceInfo.recurrencePolicy.obj && {
+          ...this.commercetoolsRecurrencePolicyToRecurrencePolicy(
+            commercetoolsLineItemRecurrenceInfo.recurrencePolicy.obj,
+            locale,
+            defaultLocale,
+          ),
+        }),
+      },
     };
-
-    if (commercetoolLineItemRecurrenceInfo.recurrencePolicy.obj) {
-      lineItemRecurrenceInfo = {
-        ...lineItemRecurrenceInfo,
-        recurrencePolicy: this.commercetoolsRecurrencePolicyToRecurrencePolicy(
-          commercetoolLineItemRecurrenceInfo.recurrencePolicy.obj,
-          locale,
-          defaultLocale,
-        ),
-      };
-    }
 
     return lineItemRecurrenceInfo;
   }
