@@ -27,25 +27,27 @@ describe('Costs Component', () => {
     expect(screen.getByText('Subtotal')).toBeInTheDocument();
     expect(screen.getByText('USD 100.00')).toBeInTheDocument();
 
-    expect(screen.getByText('Est- Shipping')).toBeInTheDocument();
+    expect(screen.getByText('Shipping')).toBeInTheDocument();
     expect(screen.getByText('USD 10.00')).toBeInTheDocument();
 
     expect(screen.getByText('Tax')).toBeInTheDocument();
     expect(screen.getByText('USD 15.00')).toBeInTheDocument();
 
-    expect(screen.getByText('Discount')).toBeInTheDocument();
-    expect(screen.getByText('USD -5.00')).toBeInTheDocument();
+    expect(screen.getByText('Discounts')).toBeInTheDocument();
+    expect(screen.getByText('-USD 5.00')).toBeInTheDocument();
 
-    expect(screen.getByText('Total:')).toBeInTheDocument();
+    expect(screen.getByText('Total', { exact: true })).toBeInTheDocument();
     expect(screen.getByText('USD 110.00')).toBeInTheDocument();
   });
 
-  it('does not render costs with a value of 0', () => {
-    render(<Costs {...defaultProps} shipping={0} tax={0} discount={0} />);
+  it('Renders the cost with value of 0 correctly', () => {
+    render(<Costs {...defaultProps} shipping={undefined} tax={undefined} discount={0} />);
 
-    expect(screen.queryByText('Est- Shipping')).not.toBeInTheDocument();
-    expect(screen.queryByText('Tax')).not.toBeInTheDocument();
-    expect(screen.queryByText('Discount')).not.toBeInTheDocument();
+    expect(screen.queryByText('Shipping')).toBeInTheDocument();
+    expect(screen.queryByText('Tax')).toBeInTheDocument();
+    expect(screen.queryAllByText('Calculated later').length).toBe(2);
+
+    expect(screen.queryByText('Discounts')).not.toBeInTheDocument();
 
     expect(screen.getByText('Subtotal')).toBeInTheDocument();
     expect(screen.getByText('USD 100.00')).toBeInTheDocument();

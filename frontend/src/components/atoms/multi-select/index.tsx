@@ -12,10 +12,10 @@ import {
   ComboboxOption,
 } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import useControllableState from '@/hooks/useControllableState';
 import { SelectProps } from './types';
 import Label from '../label';
 import Checkbox from '../checkbox';
-import useControllableState from '@/hooks/useControllableState';
 
 const MultiSelect = ({
   label,

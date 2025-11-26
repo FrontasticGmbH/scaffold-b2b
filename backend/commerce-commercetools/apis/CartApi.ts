@@ -98,6 +98,7 @@ export default class CartApi extends BaseApi {
 
   async getById(cartId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
@@ -112,7 +113,7 @@ export default class CartApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return this.buildCartWithAvailableShippingMethods(response.body, locale);
+        return this.buildCartWithAvailableShippingMethods(response.body, locale, defaultLocale);
       })
       .catch((error) => {
         // The 400 error is thrown when the cart doesn't belong to the associate or the business unit
@@ -129,11 +130,11 @@ export default class CartApi extends BaseApi {
     this.invalidateSessionCheckoutData();
 
     const locale = await this.getCommercetoolsLocal();
-
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const allCarts = await this.getAllActiveCartsInStore(storeKey);
 
     if (allCarts.length >= 1) {
-      const cart = await this.buildCartWithAvailableShippingMethods(allCarts[0], locale);
+      const cart = await this.buildCartWithAvailableShippingMethods(allCarts[0], locale, defaultLocale);
       if (this.assertCartForBusinessUnitAndStore(cart, this.businessUnitKey, storeKey)) {
         return cart;
       }
@@ -176,6 +177,7 @@ export default class CartApi extends BaseApi {
     this.invalidateSessionCheckoutData();
 
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartDraft: CartDraft = {
       currency: locale.currency,
@@ -198,7 +200,7 @@ export default class CartApi extends BaseApi {
         body: cartDraft,
       })
       .execute()
-      .then(async (response) => await this.buildCartWithAvailableShippingMethods(response.body, locale))
+      .then(async (response) => await this.buildCartWithAvailableShippingMethods(response.body, locale, defaultLocale))
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
@@ -206,6 +208,7 @@ export default class CartApi extends BaseApi {
 
   async addToCart(cart: Cart, lineItems: LineItem[]): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
       actions: [],
@@ -238,11 +241,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async updateLineItems(cart: Cart, lineItems: LineItem[]): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const actions: CartUpdate['actions'] = [];
 
@@ -284,11 +288,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async setCustomerId(cart: Cart, customerId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -302,11 +307,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async removeLineItem(cart: Cart, lineItem: LineItem): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -320,11 +326,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async setEmail(cart: Cart, email: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -338,11 +345,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async setShippingAddress(cart: Cart, address: Address): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -356,11 +364,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async setBillingAddress(cart: Cart, address: Address): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -374,11 +383,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async setShippingMethod(cart: Cart, shippingMethod: ShippingMethod): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -395,11 +405,12 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async order(cart: Cart, purchaseOrderNumber?: string): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const date = new Date();
 
     const orderFromCartDraft: OrderFromCartDraft = {
@@ -425,7 +436,7 @@ export default class CartApi extends BaseApi {
         body: orderFromCartDraft,
       })
       .execute()
-      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
+      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
@@ -433,6 +444,7 @@ export default class CartApi extends BaseApi {
 
   async getOrder(orderId: string): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .orders()
@@ -443,7 +455,7 @@ export default class CartApi extends BaseApi {
         },
       })
       .execute()
-      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
+      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
@@ -451,6 +463,7 @@ export default class CartApi extends BaseApi {
 
   async updateOrderState(orderId: string, orderState: string): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return await this.getOrder(orderId).then(async (order) => {
       if (order.orderState === OrderState.Complete) {
@@ -475,7 +488,7 @@ export default class CartApi extends BaseApi {
           },
         })
         .execute()
-        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
+        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
         .catch((error) => {
           throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
@@ -484,6 +497,7 @@ export default class CartApi extends BaseApi {
 
   async returnItems(orderId: string, returnLineItems: ReturnLineItem[]): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const returnItems = CartMapper.returnLineItemToCommercetoolsReturnItemDraft(returnLineItems);
 
     return await this.getOrder(orderId).then(async (order) => {
@@ -507,7 +521,7 @@ export default class CartApi extends BaseApi {
           },
         })
         .execute()
-        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, this.defaultLocale))
+        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
         .catch((error) => {
           throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
@@ -516,6 +530,7 @@ export default class CartApi extends BaseApi {
 
   async getShippingMethods(onlyMatching: boolean): Promise<ShippingMethod[]> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const methodArgs = {
       queryArgs: {
@@ -534,7 +549,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         return response.body.results.map((shippingMethod) =>
-          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale, this.defaultLocale),
+          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale, defaultLocale),
         );
       })
       .catch((error) => {
@@ -544,6 +559,7 @@ export default class CartApi extends BaseApi {
 
   async getAvailableShippingMethods(cart: Cart): Promise<ShippingMethod[]> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return await this.requestBuilder()
       .shippingMethods()
@@ -557,7 +573,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         return response.body.results.map((shippingMethod) =>
-          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale, this.defaultLocale),
+          CartMapper.commercetoolsShippingMethodToShippingMethod(shippingMethod, locale, defaultLocale),
         );
       })
       .catch((error) => {
@@ -567,6 +583,7 @@ export default class CartApi extends BaseApi {
 
   async addPayment(cart: Cart, payment: Payment): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     // TODO: create and use custom a payment field to include details for the payment integration
 
@@ -609,7 +626,7 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async updatePayment(cart: Cart, payment: Payment): Promise<Payment> {
@@ -726,6 +743,7 @@ export default class CartApi extends BaseApi {
 
   async redeemDiscountCode(cart: Cart, code: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -779,11 +797,12 @@ export default class CartApi extends BaseApi {
         throw error;
       });
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   async removeDiscountCode(cart: Cart, discount: DiscountCode): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartUpdate: CartUpdate = {
       version: +cart.cartVersion,
@@ -800,7 +819,7 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+    return this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
   }
 
   assertCartForBusinessUnitAndStore(cart: Cart, businessUnitKey?: string, storeKey?: string): boolean {
@@ -822,6 +841,8 @@ export default class CartApi extends BaseApi {
 
   async replicateCart(orderId: string): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
+
     return await this.associateEndpoints(this.accountId, this.businessUnitKey)
       .carts()
       .replicate()
@@ -834,7 +855,7 @@ export default class CartApi extends BaseApi {
         },
       })
       .execute()
-      .then(async (response) => await this.buildCartWithAvailableShippingMethods(response.body, locale))
+      .then(async (response) => await this.buildCartWithAvailableShippingMethods(response.body, locale, defaultLocale))
       .catch((error) => {
         throw new ExternalError({ statusCode: 400, message: error.message, body: error.body });
       });
@@ -860,6 +881,7 @@ export default class CartApi extends BaseApi {
     shippingAddresses?: { address: Address; count: number }[],
   ): Promise<Cart> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const cartItemsShippingAddresses = cart.itemShippingAddresses || [];
     const remainingAddresses = shippingAddresses
@@ -906,7 +928,7 @@ export default class CartApi extends BaseApi {
     if (cartUpdate.actions.length) {
       const commercetoolsCart = await this.updateCart(cart.cartId, cartUpdate);
 
-      cart = await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale);
+      cart = await this.buildCartWithAvailableShippingMethods(commercetoolsCart, locale, defaultLocale);
     }
 
     return cart;
@@ -914,6 +936,7 @@ export default class CartApi extends BaseApi {
 
   async queryOrders(orderQuery: OrderQuery): Promise<PaginatedResult<Order>> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const limit = +orderQuery.limit || undefined;
     const sortAttributes: string[] = [];
 
@@ -975,7 +998,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         const orders = response.body.results.map((commercetoolsOrder) => {
-          return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, this.defaultLocale);
+          return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, defaultLocale);
         });
         return {
           total: response.body.total,
@@ -1014,6 +1037,7 @@ export default class CartApi extends BaseApi {
     recurrencePolicyQuery: RecurrencePolicyQuery,
   ): Promise<PaginatedResult<RecurrencePolicy>> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const limit = +recurrencePolicyQuery.limit || undefined;
     const whereClause: string[] = [];
 
@@ -1040,11 +1064,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         const recurrencePolicies = response.body.results.map((recurrencePolicy) => {
-          return CartMapper.commercetoolsRecurrencePolicyToRecurrencePolicy(
-            recurrencePolicy,
-            locale,
-            this.defaultLocale,
-          );
+          return CartMapper.commercetoolsRecurrencePolicyToRecurrencePolicy(recurrencePolicy, locale, defaultLocale);
         });
         return {
           total: response.body.total,
@@ -1062,6 +1082,7 @@ export default class CartApi extends BaseApi {
 
   async queryRecurringOrders(recurringOrderQuery: RecurringOrderQuery): Promise<PaginatedResult<RecurringOrder>> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     const limit = +recurringOrderQuery.limit || undefined;
     const sortAttributes: string[] = [];
     const whereClause: string[] = [`customer(id="${this.accountId}")`];
@@ -1114,7 +1135,7 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         const recurringOrders = response.body.results.map((recurringOrders) => {
-          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(recurringOrders, locale, this.defaultLocale);
+          return CartMapper.commercetoolsRecurringOrderToRecurringOrder(recurringOrders, locale, defaultLocale);
         });
         return {
           total: response.body.total,
@@ -1132,6 +1153,7 @@ export default class CartApi extends BaseApi {
 
   async pauseRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     try {
       return this.updateRecurringOrder(recurringOrderId, [
@@ -1146,7 +1168,7 @@ export default class CartApi extends BaseApi {
           return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
             commercetoolsRecurringOrder,
             locale,
-            this.defaultLocale,
+            defaultLocale,
           );
         })
         .catch((error) => {
@@ -1163,6 +1185,7 @@ export default class CartApi extends BaseApi {
 
   async resumeRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     try {
       return this.updateRecurringOrder(recurringOrderId, [
@@ -1176,7 +1199,7 @@ export default class CartApi extends BaseApi {
         return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
           commercetoolsRecurringOrder,
           locale,
-          this.defaultLocale,
+          defaultLocale,
         );
       });
     } catch (error) {
@@ -1186,6 +1209,7 @@ export default class CartApi extends BaseApi {
 
   async cancelRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     try {
       return this.updateRecurringOrder(recurringOrderId, [
@@ -1199,7 +1223,7 @@ export default class CartApi extends BaseApi {
         return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
           commercetoolsRecurringOrder,
           locale,
-          this.defaultLocale,
+          defaultLocale,
         );
       });
     } catch (error) {
@@ -1209,6 +1233,7 @@ export default class CartApi extends BaseApi {
 
   async skipRecurringOrder(recurringOrderId: string): Promise<RecurringOrder> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return this.updateRecurringOrder(recurringOrderId, [
       {
@@ -1223,7 +1248,7 @@ export default class CartApi extends BaseApi {
         return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
           commercetoolsRecurringOrder,
           locale,
-          this.defaultLocale,
+          defaultLocale,
         );
       })
       .catch((error) => {
@@ -1264,6 +1289,7 @@ export default class CartApi extends BaseApi {
 
   async updateRecurringOrderSchedule(recurringOrderId: string, recurrencePolicyId: string): Promise<RecurringOrder> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     try {
       return this.updateRecurringOrder(recurringOrderId, [
@@ -1278,7 +1304,7 @@ export default class CartApi extends BaseApi {
         return CartMapper.commercetoolsRecurringOrderToRecurringOrder(
           commercetoolsRecurringOrder,
           locale,
-          this.defaultLocale,
+          defaultLocale,
         );
       });
     } catch (error) {
@@ -1315,6 +1341,7 @@ export default class CartApi extends BaseApi {
 
   protected async setOrderNumber(order: Order): Promise<Order> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     // By default, the order number is generated using the order creation date
     const date = new Date(order.createdAt);
@@ -1332,12 +1359,16 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsOrder = await this.updateOrder(order.orderId, orderUpdate);
 
-    return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, this.defaultLocale);
+    return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, defaultLocale);
   }
 
-  protected async assertCorrectLocale(commercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {
+  protected async assertCorrectLocale(
+    commercetoolsCart: CommercetoolsCart,
+    locale: Locale,
+    defaultLocale: Locale,
+  ): Promise<Cart> {
     if (commercetoolsCart.totalPrice.currencyCode !== locale.currency.toLocaleUpperCase()) {
-      return this.recreate(commercetoolsCart, locale);
+      return this.recreate(commercetoolsCart, locale, defaultLocale);
     }
 
     if (this.doesCartNeedLocaleUpdate(commercetoolsCart, locale)) {
@@ -1358,15 +1389,14 @@ export default class CartApi extends BaseApi {
       commercetoolsCart = await this.updateCart(commercetoolsCart.id, cartUpdate);
     }
 
-    return CartMapper.commercetoolsCartToCart(
-      commercetoolsCart,
-      locale,
-      this.defaultLocale,
-      this.supplyChannelId,
-    ) as Cart;
+    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, defaultLocale, this.supplyChannelId);
   }
 
-  protected async recreate(primaryCommercetoolsCart: CommercetoolsCart, locale: Locale): Promise<Cart> {
+  protected async recreate(
+    primaryCommercetoolsCart: CommercetoolsCart,
+    locale: Locale,
+    defaultLocale: Locale,
+  ): Promise<Cart> {
     const lineItems = primaryCommercetoolsCart.lineItems;
 
     const cartDraft: CartDraft = {
@@ -1450,12 +1480,7 @@ export default class CartApi extends BaseApi {
     // Delete previous cart
     await this.deleteCart(primaryCart);
 
-    return CartMapper.commercetoolsCartToCart(
-      replicatedCommercetoolsCart,
-      locale,
-      this.defaultLocale,
-      this.supplyChannelId,
-    );
+    return CartMapper.commercetoolsCartToCart(replicatedCommercetoolsCart, locale, defaultLocale, this.supplyChannelId);
   }
 
   protected async updateCart(cartId: string, cartUpdate: CartUpdate): Promise<CommercetoolsCart> {
@@ -1503,8 +1528,9 @@ export default class CartApi extends BaseApi {
   protected async buildCartWithAvailableShippingMethods(
     commercetoolsCart: CommercetoolsCart,
     locale: Locale,
+    defaultLocale: Locale,
   ): Promise<Cart> {
-    const cart = await this.assertCorrectLocale(commercetoolsCart, locale);
+    const cart = await this.assertCorrectLocale(commercetoolsCart, locale, defaultLocale);
 
     // It would not be possible to get available shipping method
     // if the shipping address has not been set.

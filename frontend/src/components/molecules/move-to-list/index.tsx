@@ -55,7 +55,7 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
       <Button
         size="fit"
         variant="ghost"
-        className="flex-1 text-center text-14 font-medium text-gray-700 md:flex-[unset] md:text-start"
+        className="flex-1 text-center text-14 font-medium text-primary md:flex-[unset] md:text-start"
         onClick={() => {
           openSnapshotRef.current = { ...checkedBoxes };
           onOpen();

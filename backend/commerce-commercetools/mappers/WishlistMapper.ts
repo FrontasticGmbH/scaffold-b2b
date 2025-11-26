@@ -12,7 +12,7 @@ export class WishlistMapper {
   static commercetoolsShoppingListToWishlist = (
     commercetoolsShoppingList: ShoppingList,
     locale: Locale,
-    defaultLocale: string,
+    defaultLocale: Locale,
     supplyChannelId?: string,
   ): Wishlist => {
     return {
@@ -23,7 +23,7 @@ export class WishlistMapper {
       name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsShoppingList.name),
       description: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsShoppingList.description),
       lineItems: (commercetoolsShoppingList.lineItems || []).map((lineItem) =>
-        this.commercetoolsLineItemToLineItem(lineItem, locale, supplyChannelId),
+        this.commercetoolsLineItemToLineItem(lineItem, locale, defaultLocale, supplyChannelId),
       ),
       slug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsShoppingList.slug),
       store: this.commercetoolsStoreRefToStore(commercetoolsShoppingList.store),
@@ -35,19 +35,21 @@ export class WishlistMapper {
   static commercetoolsLineItemToLineItem(
     commercetoolsLineItem: ShoppingListLineItem,
     locale: Locale,
+    defaultLocale: Locale,
     supplyChannelId?: string,
   ): LineItem {
     const lineItem: LineItem = {
       lineItemId: commercetoolsLineItem.id,
       productId: commercetoolsLineItem.productId,
-      productSlug: commercetoolsLineItem.productSlug?.[locale.language],
-      name: commercetoolsLineItem.name[locale.language],
+      productSlug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsLineItem.productSlug),
+      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsLineItem.name) || '',
       type: 'variant',
       addedAt: new Date(commercetoolsLineItem.addedAt),
       count: commercetoolsLineItem.quantity,
       variant: ProductMapper.commercetoolsProductVariantToVariant(
         commercetoolsLineItem.variant,
         locale,
+        defaultLocale,
         supplyChannelId,
       ),
     };

@@ -4,4 +4,5 @@ export interface Props {
   termsAndConditionsLink: Reference;
   enableCtCheckout: boolean;
   callbackUrl: string;
+  codeApplied: string;
 }

@@ -30,9 +30,17 @@ const EXPANDS = [
   'categories[*].ancestors[*]',
   'categories[*].parent',
   'masterVariant.price.discounted.discount',
+  'masterVariant.price.recurrencePolicy',
   'masterVariant.prices[*].discounted.discount',
+  'masterVariant.prices[*].recurrencePolicy',
+  'masterVariant.recurrencePrices[*].discounted.discount',
+  'masterVariant.recurrencePrices[*].recurrencePolicy',
   'variants[*].price.discounted.discount',
+  'variants[*].price.recurrencePolicy',
   'variants[*].prices[*].discounted.discount',
+  'variants[*].prices[*].recurrencePolicy',
+  'variants[*].recurrencePrices[*].discounted.discount',
+  'variants[*].recurrencePrices[*].recurrencePolicy',
   'productType',
 ];
 const LOCALIZED_FULLTEXT_QUERY_FIELDS = ['name', 'description', 'slug', 'searchKeywords'];

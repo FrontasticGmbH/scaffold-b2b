@@ -25,7 +25,7 @@ export const mapOrder = (order: Order, { businessUnits }: { businessUnits?: Busi
     businessUnit: businessUnits?.find((bu) => bu.key === order.businessUnitKey)?.name ?? order.businessUnitKey ?? '',
     creationDate: order.createdAt ? new Date(order.createdAt).toISOString() : '',
     status: mappedStatus,
-    items: (order.lineItems ?? []).map(mapLineItem),
+    items: (order.lineItems ?? []).map((item) => mapLineItem(item, { discountCodes: order?.discountCodes ?? [] })),
     currency: currencyCode,
     taxCosts: tax.centAmount,
     subtotal: subtotal.centAmount,

@@ -1,9 +1,9 @@
+import { useParams } from 'next/navigation';
 import { classnames } from '@/utils/classnames/classnames';
 import Breadcrumb from '@/components/molecules/breadcrumb';
 import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { PDPHeaderProps } from '../types';
-import { useParams } from 'next/navigation';
 
 const Header = ({ className, product }: PDPHeaderProps) => {
   const translate = useTranslations();

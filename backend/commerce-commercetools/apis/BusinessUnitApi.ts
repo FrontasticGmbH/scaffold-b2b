@@ -597,6 +597,7 @@ export default class BusinessUnitApi extends BaseApi {
     const limit = +approvalFlowQuery.limit || undefined;
     const sortAttributes: string[] = [];
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     if (approvalFlowQuery.sortAttributes !== undefined) {
       Object.keys(approvalFlowQuery.sortAttributes).map((field, directionIndex) => {
@@ -637,7 +638,7 @@ export default class BusinessUnitApi extends BaseApi {
       .execute()
       .then((response) => {
         const commercetoolsApprovalFlows = response.body.results.map((approvalFlow) =>
-          BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(approvalFlow, locale, this.defaultLocale),
+          BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(approvalFlow, locale, defaultLocale),
         );
 
         const result: PaginatedResult<ApprovalFlow> = {
@@ -657,6 +658,8 @@ export default class BusinessUnitApi extends BaseApi {
 
   async getApprovalFlowById(accountId: string, businessUnitKey: string, approvalFlowId: string): Promise<ApprovalFlow> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
+
     return this.associateRequestBuilder(accountId)
       .inBusinessUnitKeyWithBusinessUnitKeyValue({ businessUnitKey })
       .approvalFlows()
@@ -668,7 +671,7 @@ export default class BusinessUnitApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
+        return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, defaultLocale);
       })
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
@@ -682,6 +685,7 @@ export default class BusinessUnitApi extends BaseApi {
     approvalFlowId: string,
   ): Promise<ApprovalFlow> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return this.getApprovalFlowById(accountId, businessUnitKey, approvalFlowId).then((approvalFlow) =>
       this.associateRequestBuilder(accountId)
@@ -699,7 +703,7 @@ export default class BusinessUnitApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
+          return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, defaultLocale);
         })
         .catch((error) => {
           throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });

@@ -317,7 +317,7 @@ export default class BusinessUnitMapper {
   static commercetoolsApprovalFlowToApprovalFlow(
     commercetoolsApprovalFlow: CommercetoolsApprovalFlow,
     locale: Locale,
-    defaultLocale: string,
+    defaultLocale: Locale,
   ): ApprovalFlow {
     return {
       approvalFlowId: commercetoolsApprovalFlow.id,
@@ -362,7 +362,7 @@ export default class BusinessUnitMapper {
   static commercetoolsOrderReferenceToOrder(
     order: CommercetoolsOrderReference,
     locale: Locale,
-    defaultLocale: string,
+    defaultLocale: Locale,
   ): Order {
     return {
       cartId: order?.id,

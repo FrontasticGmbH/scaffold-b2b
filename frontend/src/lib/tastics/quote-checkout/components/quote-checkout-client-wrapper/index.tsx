@@ -1,27 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
-import useCustomRouter from '@/hooks/useCustomRouter';
+import toast from '@/components/atoms/toaster/helpers/toast';
 import Checkout from '@/components/organisms/checkout';
+import { SubmitPurchasePayload } from '@/components/organisms/checkout/types';
+import useCustomRouter from '@/hooks/useCustomRouter';
+import useAccount from '@/lib/hooks/useAccount';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
+import useCart from '@/lib/hooks/useCart';
+import useProjectSettings from '@/lib/hooks/useProjectSettings';
+import { TasticProps } from '@/lib/tastics/types';
+import { formatCentAmount, formatDiscountSegments } from '@/lib/utils/format-price';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { resolveReference } from '@/utils/lib/resolve-reference';
 import { mapAddress, mapCoCoAddress } from '@/utils/mappers/map-address';
-import useCart from '@/lib/hooks/useCart';
-import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
+import { mapCountry } from '@/utils/mappers/map-country';
 import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { mapShippingMethod } from '@/utils/mappers/map-shipping-method';
-import toast from '@/components/atoms/toaster/helpers/toast';
-import { useTranslations } from 'use-intl';
-import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
-import useAccount from '@/lib/hooks/useAccount';
-import { TasticProps } from '@/lib/tastics/types';
-import { SubmitPurchasePayload } from '@/components/organisms/checkout/types';
 import { isEmptyObject } from '@/utils/object/is-empty-object';
 import { Address } from '@shared/types/account';
-import useProjectSettings from '@/lib/hooks/useProjectSettings';
-import { mapCountry } from '@/utils/mappers/map-country';
-import { Props } from '../../types';
+import { useEffect, useState } from 'react';
+import { useTranslations } from 'use-intl';
 import usePaymentMethods from '../../hooks/usePaymentMethods';
-import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import { Props } from '../../types';
 
 const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
   const router = useCustomRouter();
@@ -46,7 +47,55 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<(typeof paymentMethods)[0]>();
   const [paymentData, setPaymentData] = useState<unknown>({});
+  const [selectedShippingMethodId, setSelectedShippingMethodId] = useState<string | undefined>();
   const canAddAddress = permissions.UpdateBusinessUnitDetails;
+
+  // Sync selectedShippingMethodId with cart's shippingInfo if it exists
+  useEffect(() => {
+    if (cart?.shippingInfo?.shippingMethodId) {
+      setSelectedShippingMethodId(cart.shippingInfo.shippingMethodId);
+    }
+  }, [cart?.shippingInfo?.shippingMethodId]);
+
+  // Calculate shipping cost from selected method when shippingInfo is not available
+  const calculateShippingFromMethod = () => {
+    if (cart?.shippingInfo?.price?.centAmount) {
+      // If we have actual shipping info, use it
+      return cart.transaction.shipping.centAmount;
+    }
+
+    if (selectedShippingMethodId && cart?.availableShippingMethods) {
+      // Find the selected shipping method
+      const selectedMethod = cart.availableShippingMethods.find(
+        (method) => method.shippingMethodId === selectedShippingMethodId,
+      );
+
+      if (selectedMethod?.rates?.[0]?.price?.centAmount) {
+        return selectedMethod.rates[0].price.centAmount;
+      }
+    }
+
+    // Fall back to estimated shipping
+    return cart?.transaction.shipping.centAmount;
+  };
+
+  const shippingAmount = calculateShippingFromMethod();
+
+  // Calculate total with the selected shipping method
+  const calculateTotal = () => {
+    if (!cart?.transaction) return 0;
+
+    const baseTotal = cart.transaction.total.centAmount;
+
+    // If shipping was estimated but we now have a selected method, adjust the total
+    if (cart.transaction.shipping.isEstimated && selectedShippingMethodId && shippingAmount) {
+      // Remove the estimated shipping and add the actual shipping
+      const estimatedShipping = cart.transaction.shipping.centAmount || 0;
+      return baseTotal - estimatedShipping + shippingAmount;
+    }
+
+    return baseTotal;
+  };
 
   return (
     <Checkout
@@ -79,17 +128,31 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
         },
       }))}
       transaction={{
-        subtotal: cart?.transaction.subtotal.centAmount ?? 0,
-        discounts: cart?.transaction.discount.centAmount ?? 0,
+        subtotal: formatCentAmount(
+          cart?.transaction.subtotal.centAmount ?? 0,
+          cart?.transaction.subtotal.fractionDigits ?? 2,
+        ),
+        discounts: formatCentAmount(
+          cart?.transaction.discount.centAmount ?? 0,
+          cart?.transaction.discount.fractionDigits ?? 2,
+        ),
+        discountSegments: formatDiscountSegments(
+          cart?.transaction.discount.segments ?? [],
+          cart?.transaction.discount.fractionDigits ?? 2,
+        ),
         shipping: {
-          isEstimated: !cart?.shippingInfo,
-          amount: cart?.transaction.shipping.centAmount ?? 0,
+          isEstimated: !selectedShippingMethodId && !!cart?.transaction.shipping.isEstimated,
+          amount: shippingAmount
+            ? formatCentAmount(shippingAmount, cart?.transaction.shipping.fractionDigits ?? 2)
+            : undefined,
         },
-        taxes: cart?.transaction.tax.centAmount ?? 0,
-        total: cart?.transaction.total.centAmount ?? 0,
+        taxes: cart?.transaction.tax.centAmount
+          ? formatCentAmount(cart.transaction.tax.centAmount, cart.transaction.tax.fractionDigits ?? 2)
+          : undefined,
+        total: formatCentAmount(calculateTotal(), cart?.transaction.total.fractionDigits ?? 2),
         currency: cart?.transaction.total.currencyCode ?? 'USD',
       }}
-      products={(cart?.lineItems ?? []).map(mapLineItem)}
+      products={(cart?.lineItems ?? []).map((item) => mapLineItem(item, { discountCodes: cart?.discountCodes ?? [] }))}
       addresses={selectedBusinessUnit?.addresses ?? []}
       shippingMethods={(cart?.availableShippingMethods ?? []).map(mapShippingMethod)}
       countryOptions={(projectSettings?.countries ?? []).map(mapCountry).map(({ name, code, states }) => ({
@@ -113,7 +176,7 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
       }
       onApplyDiscount={async (code) => {
         const res = await redeemDiscount(code);
-        return !!res.cartId;
+        return res;
       }}
       onCompleteAddresses={async (shippingAddress, billingAddress) => {
         if (!account) return false;
@@ -132,6 +195,10 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
       }}
       onCompleteShipping={async (shippingMethodId) => {
         const response = await setShippingMethod(shippingMethodId);
+
+        if (response.cartId) {
+          setSelectedShippingMethodId(shippingMethodId);
+        }
 
         return !!response.cartId;
       }}
@@ -155,6 +222,7 @@ const QuoteCheckoutClientWrapper = ({ data }: TasticProps<Props>) => {
 
         return !!quoteRequestId;
       }}
+      codeApplied={data.codeApplied}
     />
   );
 };

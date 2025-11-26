@@ -10,6 +10,7 @@ import useAccount from '@/lib/hooks/useAccount';
 import { Address } from '@shared/types/account';
 import { mapAddress } from '@/utils/mappers/map-address';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
+import { formatCentAmount } from '@/lib/utils/format-price';
 import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import { useTranslations } from 'use-intl';
@@ -51,14 +52,16 @@ const QuoteThankYouClientWrapper = () => {
           number: quoteRequest.purchaseOrderNumber ?? '',
         })}
         transaction={{
-          subtotal: transaction.subtotal.centAmount,
-          shipping: transaction.shipping.centAmount,
-          discounts: transaction.discount.centAmount,
-          taxes: transaction.tax.centAmount,
-          total: transaction.total.centAmount,
+          subtotal: formatCentAmount(transaction.subtotal.centAmount, transaction.subtotal.fractionDigits),
+          shipping: formatCentAmount(transaction.shipping.centAmount ?? 0, transaction.shipping.fractionDigits),
+          discounts: formatCentAmount(transaction.discount.centAmount, transaction.discount.fractionDigits),
+          taxes: formatCentAmount(transaction.tax.centAmount ?? 0, transaction.tax.fractionDigits),
+          total: formatCentAmount(transaction.total.centAmount, transaction.total.fractionDigits),
           currency: transaction.total.currencyCode,
         }}
-        lineItems={(quoteRequest.lineItems ?? []).map(mapLineItem)}
+        lineItems={(quoteRequest.lineItems ?? []).map((item) =>
+          mapLineItem(item, { discountCodes: quoteRequest.quotationCart?.discountCodes ?? [] }),
+        )}
         onReviewQuoteClick={() => router.push(DashboardLinks.quoteRequestDetail(quoteRequestId ?? ''))}
         purchaseOrderNumber={quoteRequest.purchaseOrderNumber}
       />

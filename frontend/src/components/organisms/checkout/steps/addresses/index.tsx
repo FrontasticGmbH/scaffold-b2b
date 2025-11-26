@@ -88,11 +88,11 @@ const AddressesStep = ({
     ];
 
     return (
-      <div className="px-4 pb-4 lg:px-0 lg:pb-6">
-        <div className="flex flex-col gap-4 md:flex-row md:rounded-md md:border md:border-neutral-400 md:p-5">
+      <div className="rounded border border-neutral-400 p-5">
+        <div className="flex flex-col gap-6 md:flex-row md:gap-16">
           {preview.map(({ key, address }) => (
-            <div key={key} className="flex flex-col gap-[6px] overflow-hidden md:flex-1">
-              <h5 className="text-14 font-medium uppercase text-gray-700">
+            <div key={key} className="flex flex-col gap-2 overflow-hidden md:flex-1">
+              <h5 className="text-sm font-semibold uppercase text-neutral-800">
                 {translate(`common.address-${key as 'shipping' | 'billing'}`)}
               </h5>
               {address && (
@@ -117,7 +117,7 @@ const AddressesStep = ({
   if (addingNewAddress) {
     return (
       <div>
-        <h5 className="pb-4 text-14 font-medium uppercase text-gray-700">
+        <h5 className="text-small pb-4 font-semibold uppercase text-neutral-800">
           {translate(`common.address-${addingNewAddress as 'shipping' | 'billing'}`)}
         </h5>
 
@@ -172,7 +172,7 @@ const AddressesStep = ({
     return (
       <div>
         <div>
-          <h5 className="flex justify-between pb-4 text-14 font-medium uppercase text-gray-700">
+          <h5 className="flex justify-between pb-4 text-sm font-semibold uppercase text-neutral-800">
             <span>{translate('common.address-delivery')}</span>
             <span className="lowercase">{translate('checkout.one-of-two')}</span>
           </h5>
@@ -196,7 +196,7 @@ const AddressesStep = ({
         </div>
         {newUnsavedBillingAddress && (
           <div className="mt-8">
-            <h5 className="flex justify-between pb-6 text-14 font-medium uppercase text-gray-700">
+            <h5 className="flex justify-between pb-6 text-14 font-medium uppercase text-neutral-800">
               <span>{translate('common.address-billing')} </span>
               <span className="lowercase">{translate('checkout.two-of-two')}</span>
             </h5>
@@ -283,19 +283,21 @@ const AddressesStep = ({
         <div className={classnames('flex flex-col gap-6', className)} key={key}>
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h5 className="text-14 font-medium uppercase text-gray-700">
+              <h5 className="text-sm font-semibold uppercase text-neutral-800">
                 {translate(`common.address-${key as 'shipping' | 'billing'}`)}
               </h5>
               {canAddAddress && (
                 <button
-                  className="hidden text-left text-14 text-gray-600 underline underline-offset-2 lg:block"
+                  className="hidden text-left text-sm font-semibold text-neutral-800 underline underline-offset-2 lg:block"
                   onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
                 >
                   {translate(`checkout.address-${key as 'shipping' | 'billing'}-add`)} +
                 </button>
               )}
             </div>
-            <h6 className="mt-4 text-14 text-gray-700"></h6>
+            <h6 className="mb-2 mt-4 text-sm font-normal leading-tight text-neutral-800">
+              {translate('checkout.select-an-address')}
+            </h6>
             <Select
               value={
                 selectedAddresses[key as keyof typeof selectedAddresses]
@@ -320,7 +322,7 @@ const AddressesStep = ({
             {extra?.()}
           </div>
           <button
-            className="text-left text-14 text-gray-600 underline underline-offset-2 lg:hidden"
+            className="text-left text-sm font-semibold text-neutral-800 underline underline-offset-2 lg:hidden"
             onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
           >
             {translate(`checkout.address-${key as 'shipping' | 'billing'}-add`)} +

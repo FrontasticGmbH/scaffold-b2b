@@ -2,16 +2,18 @@ import React, { useCallback, useState } from 'react';
 import Accordion from '@/components/molecules/accordion';
 import useFormat from '@/hooks/useFormat';
 import { useTranslations } from 'use-intl';
-import Image from '@/components/atoms/Image';
-import Link from '@/components/atoms/link';
 import Costs from '@/components/molecules/costs';
 import DiscountsForm from '@/components/molecules/discounts-form';
 import Button from '@/components/atoms/button';
 import useMediaQuery from '@/hooks/useMediaQuery';
 import { desktop } from '@/constants/screensizes';
 import TextArea from '@/components/atoms/text-area';
+import useDisclosure from '@/hooks/useDisclosure';
+import { classnames } from '@/utils/classnames/classnames';
 import { CheckoutProps } from '../../types';
 import { useCheckout } from '../../provider';
+import CheckoutItem from '../checkout-item';
+import CheckoutGiftItem from '../checkout-gift-item';
 
 const OrderSummary = ({
   transaction,
@@ -20,7 +22,9 @@ const OrderSummary = ({
   onApplyDiscount,
   onSubmitPurchase,
   buyerCanAddComment,
+  includeTotalAmountInSummary = true,
   translations = {},
+  codeApplied,
 }: Pick<
   CheckoutProps,
   | 'transaction'
@@ -30,12 +34,16 @@ const OrderSummary = ({
   | 'onSubmitPurchase'
   | 'translations'
   | 'buyerCanAddComment'
+  | 'includeTotalAmountInSummary'
+  | 'codeApplied'
 >) => {
   const translate = useTranslations();
-
+  const cartLevelDiscounts = transaction?.discountSegments.filter((segment) => segment.targetsTotal);
   const [isLargerThanDesktop] = useMediaQuery(desktop);
 
   const { isLastStep, isCtCheckoutEnabled, checkoutIsProcessing, setCheckoutIsProcessing } = useCheckout();
+
+  const { isOpen: isDiscountExpanded, onOpen: onDiscountExpand, onClose: onDiscountCollapse } = useDisclosure();
 
   const [buyerComment, setBuyerComment] = useState('');
 
@@ -54,89 +62,69 @@ const OrderSummary = ({
     [onSubmitPurchase, buyerComment, setCheckoutIsProcessing],
   );
 
+  const paidItems = products.filter((product) => !product.isGift);
+  const giftItems = products.filter((product) => product.isGift);
+
   return (
-    <div className="shrink-0 rounded-lg bg-white lg:w-[432px] lg:p-9">
-      <div className="border-b border-neutral-400 pb-4">
-        <h5 className="text-gray-700 md:text-18">
+    <div className="shrink-0 rounded-lg bg-white p-5 md:p-9 lg:w-[432px]">
+      <div className="pb-2">
+        <h5 className="justify-center text-lg font-semibold leading-normal text-neutral-800">
           {translations.orderSummaryTitle || translate('checkout.order-summary')}
         </h5>
       </div>
-      <Accordion className="border-none" defaultIsExpanded={isLargerThanDesktop}>
+      <Accordion
+        className={classnames('rounded-none border-x-0 border-t-0', 'border-b-0 border-gray-300 md:border-b')}
+        defaultIsExpanded={isLargerThanDesktop}
+      >
         <Accordion.Button defaultSpacing={false} className="py-4">
           <div className="flex items-center justify-between">
             <span className="text-gray-600">
               {translations.orderSummarySubtitle || translate('checkout.yourOrder')}
             </span>
-            <span className="font-medium text-gray-700">{formatCurrency(transaction.total, transaction.currency)}</span>
+            {includeTotalAmountInSummary && (
+              <span className="font-medium text-gray-700">
+                {formatCurrency(transaction.total, transaction.currency)}
+              </span>
+            )}
           </div>
         </Accordion.Button>
         <Accordion.Panel defaultSpacing={false}>
-          <div className="lg:hidden">
-            <div className="flex flex-col">
-              {products.map(({ id, name, price, currency, quantity, images, url }) => (
-                <div key={id} className="flex items-center gap-4 border-t border-neutral-400 py-4 md:gap-8">
-                  <div className="relative h-[104px] w-[89px] shrink-0">
-                    <Link href={url ?? '#'}>
-                      <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
-                    </Link>
-                  </div>
-                  <div className="flex grow items-center justify-between overflow-hidden">
-                    <div className="max-w-full grow">
-                      <Link
-                        href={url ?? '#'}
-                        className="mt-1 block max-w-full truncate py-1 text-16 font-semibold leading-loose text-gray-700"
-                      >
-                        <p className="truncate text-12 text-gray-700 md:text-14">{name}</p>
-                      </Link>
-                      <p className="mt-2 text-12 font-medium text-gray-700 md:hidden">
-                        {formatCurrency(price, currency)}
-                      </p>
-                      <span className="mt-3 block text-14 text-gray-600 md:mt-2">x {quantity}</span>
-                    </div>
-                    <span className="hidden text-gray-700 md:block">{formatCurrency(price, currency)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="border-t border-neutral-400 pb-6 pt-4">
-              <Costs
-                subtotal={transaction.subtotal}
-                discount={transaction.discounts}
-                shipping={transaction.shipping.amount}
-                isShippingEstimated={transaction.shipping.isEstimated}
-                tax={transaction.taxes}
-                total={transaction.total}
-                currency={transaction.currency}
-                classNames={{ totalAmount: 'border-none pt-[0px]' }}
-              />
-            </div>
-          </div>
-          <div className="hidden pb-6 pt-2 lg:block">
-            <div className="flex items-center gap-4">
-              {products.slice(0, 3).map(({ id, images, name, url }) => (
-                <div className="relative size-[88px]" key={id}>
-                  <Link href={url ?? '#'}>
-                    <Image src={images?.[0]} fill style={{ objectFit: 'contain' }} alt={name} />
-                  </Link>
-                </div>
-              ))}
-              {products.length > 3 && <div className="pl-1 text-14 text-gray-600">+{products.length - 3}</div>}
-            </div>
+          <div className="flex flex-col lg:max-h-[350px] lg:overflow-auto lg:px-2 lg:pb-2">
+            {paidItems.map((product) => (
+              <CheckoutItem key={product.id} product={product} />
+            ))}
+            {giftItems.length > 0 && (
+              <div className="mt-4 flex w-full flex-col items-stretch gap-4">
+                {giftItems.map((product) => (
+                  <CheckoutGiftItem key={product.id} product={product} />
+                ))}
+              </div>
+            )}
           </div>
         </Accordion.Panel>
       </Accordion>
-      <div className="border-b border-neutral-400">
-        <DiscountsForm discounts={discounts} onSubmit={onApplyDiscount} />
+      <div className={classnames({ 'border-b border-gray-300': !isDiscountExpanded })}>
+        <DiscountsForm
+          discounts={discounts}
+          onSubmit={onApplyDiscount}
+          onExpanded={onDiscountExpand}
+          onCollapsed={onDiscountCollapse}
+          codeApplied={codeApplied}
+        />
       </div>
-      <div className="hidden pb-5 pt-6 lg:block">
+
+      <div className={classnames(isDiscountExpanded ? 'pt-1' : 'pt-4')}>
         <Costs
           subtotal={transaction.subtotal}
           discount={transaction.discounts}
+          discountSegments={transaction.discountSegments}
           shipping={transaction.shipping.amount}
           isShippingEstimated={transaction.shipping.isEstimated}
+          shippingIncludesTaxes={transaction.shipping.shippingIncludesTaxes}
           tax={transaction.taxes}
           total={transaction.total}
           currency={transaction.currency}
+          classNames={{ container: 'pt-0' }}
         />
       </div>
 
@@ -151,24 +139,22 @@ const OrderSummary = ({
           </div>
         )}
 
-        <div className="mt-5">
-          <Button
-            variant="primary"
-            size="full"
-            disabled={!isLastStep}
-            loading={checkoutIsProcessing}
-            type={isCtCheckoutEnabled ? 'button' : 'submit'}
-            {...(isCtCheckoutEnabled
-              ? {
-                  'data-ctc-selector': 'paymentButton',
-                }
-              : {})}
-          >
-            {translations.purchase || translate('checkout.complete-purchase')}
-          </Button>
+        <Button
+          variant="primary"
+          size="full"
+          disabled={!isLastStep}
+          loading={checkoutIsProcessing}
+          type={isCtCheckoutEnabled ? 'button' : 'submit'}
+          {...(isCtCheckoutEnabled
+            ? {
+                'data-ctc-selector': 'paymentButton',
+              }
+            : {})}
+        >
+          {translations.purchase || translate('checkout.complete-purchase')}
+        </Button>
 
-          {isCtCheckoutEnabled && <div className="mt-3" data-ctc-selector="vendorPaymentButton"></div>}
-        </div>
+        {isCtCheckoutEnabled && <div data-ctc-selector="vendorPaymentButton"></div>}
       </form>
     </div>
   );

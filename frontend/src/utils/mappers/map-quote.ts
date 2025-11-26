@@ -157,7 +157,7 @@ const getQuoteTransaction = (
     currency: currencyCode,
     subtotal: subtotal.centAmount,
     ...(subtotal.centAmount > 0 ? { taxCosts: tax.centAmount } : {}),
-    ...(shipping.centAmount > 0 ? { shippingCosts: shipping.centAmount } : {}),
+    ...(shipping.centAmount && shipping.centAmount > 0 ? { shippingCosts: shipping.centAmount } : {}),
     ...(discount.centAmount > 0 ? { discount: discount.centAmount } : {}),
     total: total.centAmount,
   };
@@ -199,7 +199,9 @@ export const mapQuote = (
       ...getQuoteActivity(quote, status),
     ],
     ...getQuoteTransaction(quote),
-    items: (quote.lineItems ?? []).map(mapLineItem),
+    items: (quote.lineItems ?? []).map((item) =>
+      mapLineItem(item, { discountCodes: quote.quotationCart?.discountCodes ?? [] }),
+    ),
     ownedByOtherUser: account && account.accountId !== quote.account?.accountId,
     purchaseOrderNumber: quote.purchaseOrderNumber,
   };
@@ -237,7 +239,9 @@ export const mapQuoteRequest = (
       ...getQuoteActivity(quoteRequest, status),
     ],
     ...getQuoteTransaction(quoteRequest),
-    items: (quoteRequest.lineItems ?? []).map(mapLineItem),
+    items: (quoteRequest.lineItems ?? []).map((item) =>
+      mapLineItem(item, { discountCodes: quoteRequest.quotationCart?.discountCodes ?? [] }),
+    ),
     ownedByOtherUser: account && account.accountId !== quoteRequest.account?.accountId,
     purchaseOrderNumber: quoteRequest.purchaseOrderNumber,
   };

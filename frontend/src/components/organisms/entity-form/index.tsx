@@ -12,6 +12,7 @@ const EntityForm = ({
   classNames = {},
   showCancelButton = true,
   showSubmitButton = true,
+  stackButtonsOnMobile = false,
 }: React.PropsWithChildren<EntityFormProps>) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -36,15 +37,32 @@ const EntityForm = ({
       <div
         className={classnames('flex items-center gap-3', classNames.buttonsContainer, {
           'pt-8': showSubmitButton || showCancelButton,
+          'flex-col md:flex-row': stackButtonsOnMobile,
         })}
       >
         {showCancelButton && (
-          <Button variant="secondary" size="m" onClick={onCancel} type="button" className="min-w-[112px]">
+          <Button
+            variant="secondary"
+            size="m"
+            onClick={onCancel}
+            type="button"
+            className={classnames('min-w-[112px]', {
+              'w-full md:w-auto': stackButtonsOnMobile,
+            })}
+          >
             {translations.cancel}
           </Button>
         )}
         {showSubmitButton && (
-          <Button variant="primary" size="m" type="submit" loading={isLoading} className="min-w-[112px]">
+          <Button
+            variant="primary"
+            size="m"
+            type="submit"
+            loading={isLoading}
+            className={classnames('min-w-[112px]', {
+              'w-full md:w-auto': stackButtonsOnMobile,
+            })}
+          >
             {translations.submit}
           </Button>
         )}

@@ -6,6 +6,33 @@ export type Attribute = {
   value: string;
 };
 
+export type DiscountCode = {
+  name: string;
+  code: string;
+};
+
+export type PerCountDiscount = {
+  count: number;
+  details: {
+    totalDiscountedPrice: number;
+    includedDiscounts: Array<{
+      discountedAmount: number;
+      discount: {
+        cartDiscountId: string;
+        name: string;
+        description: string;
+      };
+    }>;
+  };
+};
+
+export type ProductDiscount = {
+  name: string;
+  description: string;
+  type?: 'relative' | 'absolute';
+  value?: number;
+};
+
 export interface Product {
   id: string;
   key?: string;
@@ -17,6 +44,7 @@ export interface Product {
   images?: string[];
   price: number;
   discountedPrice?: number;
+  discountPercentage?: number;
   priceRange?: [number, number];
   currency: Currency;
   inStock?: boolean;
@@ -28,4 +56,8 @@ export interface Product {
   specs?: Array<Attribute>;
   categories?: Array<Category>;
   url?: string;
+  isGift?: boolean;
+  discountCode?: DiscountCode;
+  discount?: ProductDiscount;
+  discountsAppliedPerCount?: Array<PerCountDiscount>;
 }

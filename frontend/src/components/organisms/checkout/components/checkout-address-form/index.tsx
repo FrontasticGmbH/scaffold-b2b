@@ -79,6 +79,7 @@ const CheckoutAddressForm = ({
       onSubmit={handleSubmit(onFormSubmit)}
       onCancel={onCancel ?? router.back}
       classNames={{ buttonsContainer: 'justify-end' }}
+      stackButtonsOnMobile
     >
       <div className="flex flex-col gap-4">
         <Input
@@ -144,8 +145,8 @@ const CheckoutAddressForm = ({
 
         <Input label={translate('common.building-business')} showOptionalLabel {...register('building')} />
 
-        <div className="flex w-full flex-col gap-4 md:flex-row">
-          <div className="w-full md:basis-1/2">
+        <div className="flex w-full flex-row gap-4">
+          <div className="w-full basis-1/2">
             <Input
               label={translate('common.zipCode')}
               required
@@ -157,7 +158,7 @@ const CheckoutAddressForm = ({
             />
           </div>
 
-          <div className="w-full md:basis-1/2">
+          <div className="w-full basis-1/2">
             <Input
               label={translate('common.city')}
               required
@@ -196,6 +197,7 @@ const CheckoutAddressForm = ({
                   checked={field.value ?? false}
                   onChecked={field.onChange}
                   label={translate('account.address-setDefault-billing')}
+                  containerClassName="items-start"
                 />
               )}
             />
@@ -214,6 +216,7 @@ const CheckoutAddressForm = ({
                     onChecked={field.onChange}
                     label={translate('checkout.save-as-default-shipping')}
                     name="isDefaultShipping"
+                    containerClassName="items-start"
                   />
                 )}
               />
@@ -223,6 +226,7 @@ const CheckoutAddressForm = ({
                 onChecked={() => setSameAsBilling(!sameAsBilling)}
                 label={translate('checkout.use-as-billing')}
                 name="sameAsBilling"
+                containerClassName="items-start"
               />
             </div>
           </>

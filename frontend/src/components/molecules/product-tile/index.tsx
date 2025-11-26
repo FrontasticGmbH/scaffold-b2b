@@ -26,6 +26,7 @@ const ProductTile = ({
     maxQuantity = Number.MAX_VALUE,
     restockableInDays,
     url,
+    discount,
   },
   onAddToCart,
   addToCartDisabled = false,
@@ -47,7 +48,7 @@ const ProductTile = ({
 
   const { formatCurrency } = useFormat();
 
-  const { isDiscounted, discountPercentage } = useDiscount(price, discountedPrice);
+  const { isDiscounted, discount: discountInfo } = useDiscount(price, discountedPrice, discount);
 
   const descriptionItems = (specifications ?? []).filter((item) => !!item.value);
 
@@ -67,7 +68,7 @@ const ProductTile = ({
     >
       {isDiscounted && (
         <DiscountTag
-          discountPercentage={discountPercentage}
+          discountName={discountInfo?.name}
           className={classnames('absolute left-0 top-4', { 'md:top-2': variant === 'list-item' })}
         />
       )}

@@ -42,7 +42,8 @@ export type OrderSummaryProps = {
   button?: ReactElement<unknown>;
   transaction?: Transaction;
   discounts?: Array<Discount & { onRemove?: () => Promise<boolean> }>;
-  onDiscountRedeem?: (code: string) => Promise<boolean>;
+  onDiscountRedeem?: (code: string) => Promise<{ success: boolean; message?: string }>;
+  codeApplied?: string;
 };
 
 export type SummaryAccordionProps = {

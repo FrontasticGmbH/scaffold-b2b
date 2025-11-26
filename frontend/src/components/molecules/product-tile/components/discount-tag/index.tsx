@@ -3,8 +3,10 @@ import { classnames } from '@/utils/classnames/classnames';
 import { useTranslations } from 'use-intl';
 import { Props } from './types';
 
-const DiscountTag = ({ discountPercentage, className }: Props) => {
+const DiscountTag = ({ discountName, className }: Props) => {
   const translate = useTranslations();
+
+  if (!discountName) return null;
 
   return (
     <div
@@ -13,7 +15,7 @@ const DiscountTag = ({ discountPercentage, className }: Props) => {
         className,
       )}
     >
-      {translate('common.sale')} {discountPercentage}%
+      {discountName}
     </div>
   );
 };

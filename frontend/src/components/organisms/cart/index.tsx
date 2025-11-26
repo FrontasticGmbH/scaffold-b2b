@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'use-intl';
 import useCloseFlyouts from '@/hooks/useCloseFlyouts';
 import Image from '@/components/atoms/Image';
@@ -25,11 +25,15 @@ const Cart = ({
   invalidAddressesRequirements = false,
   discountCodes,
   onDiscountRedeem,
+  onAdd,
+  codeApplied,
   ...props
 }: CartProps) => {
   const translate = useTranslations();
 
-  const [lineItems, setLineItems] = useState<Array<Product & { deleted?: boolean }> | undefined>(lineItemsProp);
+  const [lineItems, setLineItems] = useState<
+    Array<Product & { deleted?: boolean; undoProcessing?: boolean }> | undefined
+  >(lineItemsProp);
 
   const allItemsAreDeleted = !lineItems?.filter((item) => !item.deleted).length;
 
@@ -42,18 +46,35 @@ const Cart = ({
     setLineItems((lineItems) => {
       if (!lineItems) return lineItemsProp;
 
-      const newItems = lineItemsProp.filter((lineItem) => !lineItems.find((item) => lineItem.sku === item.sku));
+      const newItems = lineItemsProp.filter((lineItem) => !lineItems.find((item) => lineItem.id === item.id));
 
       return [
-        ...lineItems.map((lineItem) => {
-          const item = lineItemsProp.find((item) => lineItem.sku === item.sku);
+        ...lineItems
+          .filter((item) => !item.undoProcessing)
+          .map((lineItem) => {
+            const item = lineItemsProp.find((item) => lineItem.id === item.id);
 
-          return { ...(item ?? lineItem), deleted: !item };
-        }),
+            return { ...(item ?? lineItem), deleted: !item };
+          }),
         ...newItems,
       ];
     });
   }, [lineItemsProp]);
+
+  const onUndoRemove = useCallback(
+    async (lineItemId: string) => {
+      const item = lineItems?.find((item) => item.id === lineItemId);
+
+      const newItems = (lineItems ?? []).map((item) =>
+        item.id !== lineItemId ? item : { ...item, undoProcessing: true },
+      );
+
+      setLineItems(newItems);
+
+      if (item) await onAdd(item.sku ?? '', item.quantity ?? 1);
+    },
+    [lineItems, onAdd],
+  );
 
   const onClearItem = (itemId: string) => {
     setLineItems((items) => items?.filter((item) => item.id !== itemId));
@@ -113,7 +134,10 @@ const Cart = ({
         <CartContent
           loading={loading}
           lineItems={lineItems ?? []}
-          className="grow bg-white px-4 py-3 md:px-6 lg:rounded-lg lg:p-9"
+          discountCodes={discountCodes}
+          className="grow bg-white px-4 pt-3 md:px-6 lg:rounded-lg lg:p-9"
+          onAdd={onAdd}
+          onUndoRemove={onUndoRemove}
           onClearItem={onClearItem}
           {...props}
         />
@@ -121,20 +145,14 @@ const Cart = ({
         {(lineItems ?? []).length > 0 ? (
           <>
             <OrderSummary
-              className="bg-white px-4 pb-3 md:px-6 md:pt-3 lg:mt-0 lg:rounded-lg lg:p-9 lg:px-12 lg:pb-11 xl:w-[432px] xl:shrink-0"
-              title="Order Summary"
+              className="min-w-[432px] grow bg-white lg:rounded-lg"
+              title={translate('cart.order-summary')}
               paymentMethods={paymentMethods}
-              button={
-                <CheckoutCTA
-                  className={classnames('hidden w-full md:grid', {
-                    'mt-4 md:mt-6 lg:pt-11': !quoteRequestDisabled || !checkoutDisabled,
-                  })}
-                  {...defaultCheckoutCTAProps}
-                />
-              }
+              button={<CheckoutCTA className={classnames('hidden w-full md:grid')} {...defaultCheckoutCTAProps} />}
               transaction={transaction}
               discounts={discountCodes}
               onDiscountRedeem={onDiscountRedeem}
+              codeApplied={codeApplied}
             />
             <CheckoutCTA
               className="sticky bottom-0 grid w-full border-t border-neutral-400 bg-white p-4 md:hidden"

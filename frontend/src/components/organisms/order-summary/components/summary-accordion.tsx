@@ -8,6 +8,7 @@ import Accordion from '@/components/molecules/accordion';
 import useDisclosure from '@/hooks/useDisclosure';
 import Costs from '@/components/molecules/costs';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
+import { formatCentAmount, formatDiscountSegments } from '@/lib/utils/format-price';
 import AccordionButton from './accordion-button';
 import { SummaryAccordionProps } from '../types';
 
@@ -50,11 +51,25 @@ const SummaryAccordion = ({ className, order, cart, transaction }: SummaryAccord
 
       <Costs
         classNames={{ container: 'bg-neutral-200 py-4 md:py-6 lg:pb-11' }}
-        subtotal={transaction?.subtotal.centAmount ?? 0}
-        shipping={transaction?.shipping.centAmount ?? 0}
-        discount={transaction?.discount.centAmount ?? 0}
-        tax={transaction?.tax.centAmount ?? 0}
-        total={transaction?.total.centAmount ?? 0}
+        subtotal={formatCentAmount(transaction?.subtotal.centAmount ?? 0, transaction?.subtotal.fractionDigits ?? 2)}
+        shipping={
+          transaction?.shipping.centAmount
+            ? formatCentAmount(transaction.shipping.centAmount, transaction.shipping.fractionDigits ?? 2)
+            : undefined
+        }
+        isShippingEstimated={transaction?.shipping.isEstimated}
+        shippingIncludesTaxes={transaction?.shipping.includesTaxes}
+        discount={formatCentAmount(transaction?.discount.centAmount ?? 0, transaction?.discount.fractionDigits ?? 2)}
+        discountSegments={formatDiscountSegments(
+          transaction?.discount.segments ?? [],
+          transaction?.discount.fractionDigits ?? 2,
+        )}
+        tax={
+          transaction?.tax.centAmount
+            ? formatCentAmount(transaction.tax.centAmount, transaction.tax.fractionDigits ?? 2)
+            : undefined
+        }
+        total={formatCentAmount(transaction?.total.centAmount ?? 0, transaction?.total.fractionDigits ?? 2)}
         currency={transaction?.total.currencyCode ?? 'USD'}
       />
     </Accordion>

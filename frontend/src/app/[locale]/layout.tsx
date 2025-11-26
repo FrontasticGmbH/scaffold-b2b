@@ -7,6 +7,7 @@ import '@/styles/global/index.css';
 import { CookiesProvider } from 'next-client-cookies/server';
 import { getMessages } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
+import I18nProvider from '@/providers/i18n-provider';
 
 export default async function RootLayout(props: LayoutProps) {
   const params = await props.params;
@@ -20,9 +21,9 @@ export default async function RootLayout(props: LayoutProps) {
     <html lang={locale} className={inter.variable}>
       <body>
         <CookiesProvider>
-          <NextIntlClientProvider messages={messages} locale={locale}>
+          <I18nProvider locale={locale} messages={messages}>
             {children}
-          </NextIntlClientProvider>
+          </I18nProvider>
         </CookiesProvider>
       </body>
     </html>

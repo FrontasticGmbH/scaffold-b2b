@@ -22,24 +22,27 @@ const Checkout = ({
   countryOptions = [],
   initialData = {},
   shippingMethods = [],
+  shippingDiscount,
   paymentMethods = [],
   translations = {},
   buyerCanAddComment = false,
   enableCtCheckout = false,
+  includeTotalAmountInSummary = true,
   callbackUrl,
+  codeApplied,
 }: CheckoutProps) => {
   const translate = useTranslations();
 
   return (
     <CheckoutProvider buyerCanAddComment={buyerCanAddComment} enableCtCheckout={enableCtCheckout}>
-      <div className="min-h-screen p-4 md:px-5 lg:bg-neutral-200 lg:px-12 lg:py-6">
-        <div className="hidden border-b border-neutral-400 pb-5 pt-3 lg:block">
-          <p className="text-20 capitalize leading-normal text-gray-700">
+      <div className="min-h-screen bg-neutral-200 p-4 md:px-5 lg:px-12 lg:py-6">
+        <div className="mb-5 border-b border-neutral-400 pb-3.5 pt-3">
+          <p className="flex-1 justify-center text-2xl font-bold leading-loose text-neutral-800">
             {translations.header || translate('checkout.secure-checkout')}
           </p>
         </div>
 
-        <div className="flex flex-col gap-4 lg:flex-row-reverse lg:items-start lg:justify-between lg:gap-6 lg:pt-6">
+        <div className="flex flex-col gap-5 lg:flex-row-reverse lg:items-start lg:justify-between lg:gap-6 lg:pt-6">
           <OrderSummary
             transaction={transaction}
             products={products}
@@ -48,6 +51,8 @@ const Checkout = ({
             onSubmitPurchase={onSubmitPurchase}
             translations={translations}
             buyerCanAddComment={buyerCanAddComment}
+            includeTotalAmountInSummary={includeTotalAmountInSummary}
+            codeApplied={codeApplied}
           />
           <Steps
             addresses={addresses}
@@ -56,11 +61,13 @@ const Checkout = ({
             countryOptions={countryOptions}
             initialData={initialData}
             shippingMethods={shippingMethods}
+            shippingDiscount={shippingDiscount}
             onCompleteShipping={onCompleteShipping}
             paymentMethods={paymentMethods}
             onCompletePayment={onCompletePayment}
             translations={translations}
             callbackUrl={callbackUrl}
+            transaction={transaction}
           />
         </div>
 

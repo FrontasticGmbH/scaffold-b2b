@@ -8,7 +8,7 @@ import { AccordionProps } from './types';
 const Accordion: FC<PropsWithChildren<AccordionProps>> & {
   Button: typeof AccordionButton;
   Panel: typeof AccordionPanel;
-} = ({ children, isExpanded, onExpand, onCollapse, defaultIsExpanded = false, className = '' }) => {
+} = ({ children, isExpanded, onExpand, onCollapse, defaultIsExpanded = false, className = '', borderless = false }) => {
   return (
     <AccordionProvider
       defaultIsExpanded={defaultIsExpanded}
@@ -16,7 +16,9 @@ const Accordion: FC<PropsWithChildren<AccordionProps>> & {
       onExpand={onExpand}
       onCollapse={onCollapse}
     >
-      <div className={classnames('rounded-md border border-neutral-400', className)}>{children}</div>
+      <div className={classnames('rounded-md', className, { 'border border-neutral-400': !borderless })}>
+        {children}
+      </div>
     </AccordionProvider>
   );
 };

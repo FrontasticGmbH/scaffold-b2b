@@ -7,7 +7,9 @@ export interface InputProps
     Pick<LabelProps, 'requiredStyle' | 'showOptionalLabel' | 'optionalLabel'> {
   label?: string;
   valid?: boolean;
+  showValidIcon?: boolean;
   error?: string;
+  success?: string;
   clearButton?: boolean;
   onClear?: () => void;
   icon?: React.ReactNode;

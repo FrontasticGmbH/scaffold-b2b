@@ -66,6 +66,22 @@ export const mapProduct = (
 
   const inCartQuantity = cart?.lineItems?.find((lineItem) => lineItem.variant?.sku === variant.sku)?.count ?? 0;
 
+  const discount = variant.discountedPrice?.discount;
+  const discountValue = discount?.discountValue;
+
+  let discountType: 'relative' | 'absolute' | undefined;
+  let discountAmount: number | undefined;
+
+  if (discountValue) {
+    if (discountValue.type === 'relative') {
+      discountType = 'relative';
+      discountAmount = discountValue.value / 100;
+    } else if (discountValue.type === 'absolute') {
+      discountType = 'absolute';
+      discountAmount = (discountValue.value?.centAmount ?? 0) / 100;
+    }
+  }
+
   return {
     id: product.productId ?? '',
     key: product.productKey,
@@ -86,5 +102,15 @@ export const mapProduct = (
     ...(priceRange ? { priceRange } : {}),
     url: product._url,
     categories: product.categories?.map((c) => mapCategory(c, { locale })) ?? [],
+    ...(discount
+      ? {
+          discount: {
+            name: discount.name ?? '',
+            description: discount.description ?? '',
+            type: discountType,
+            value: discountAmount,
+          },
+        }
+      : {}),
   };
 };

@@ -16,10 +16,12 @@ const useSteps = ({
   initialData = {},
   countryOptions = [],
   shippingMethods = [],
+  shippingDiscount,
   paymentMethods = [],
   translations,
   callbackUrl,
-}: Omit<CheckoutProps, 'transaction' | 'products' | 'discounts' | 'onSubmitPurchase'>) => {
+  transaction,
+}: Omit<CheckoutProps, 'products' | 'discounts' | 'onSubmitPurchase'>) => {
   const { isCtCheckoutEnabled } = useCheckout();
 
   const steps = useMemo(() => {
@@ -45,8 +47,10 @@ const useSteps = ({
             isActive={isActive}
             isCompleted={isCompleted}
             shippingMethods={shippingMethods}
+            shippingDiscount={shippingDiscount}
             onCompleteShipping={onCompleteShipping}
             initialData={initialData}
+            transaction={transaction}
           />
         ),
       },
@@ -81,10 +85,12 @@ const useSteps = ({
     countryOptions,
     initialData,
     shippingMethods,
+    shippingDiscount,
     onCompleteShipping,
     paymentMethods,
     onCompletePayment,
     callbackUrl,
+    transaction,
   ]);
 
   return { steps };

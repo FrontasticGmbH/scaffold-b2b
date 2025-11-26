@@ -3,7 +3,7 @@ import { useTranslations } from 'use-intl';
 import Link from '@/components/atoms/link';
 import { CartItemHeaderProps } from '../types';
 
-const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
+const CartItemHeader = ({ item, className, showStockAvailability = true }: CartItemHeaderProps) => {
   const translate = useTranslations();
 
   return (
@@ -17,12 +17,12 @@ const CartItemHeader = ({ item, className }: CartItemHeaderProps) => {
       </Link>
 
       {/* Product Model and availability */}
-      <div className="mt-3 flex items-center gap-3 md:mt-2 md:grid md:gap-5">
+      <div className="mt-2 flex flex-col items-start gap-3 md:grid md:flex-row md:items-center md:gap-5">
         {item.sku && (
-          <p className="truncate text-12 leading-loose text-gray-600">{`${translate('common.model')}# ${item.sku}`}</p>
+          <p className="truncate text-12 uppercase leading-loose text-gray-600">{`${translate('common.model')}# ${item.sku}`}</p>
         )}
 
-        <StockIndicator inStock={item.inStock} />
+        {showStockAvailability && <StockIndicator inStock={item.inStock} />}
       </div>
     </div>
   );

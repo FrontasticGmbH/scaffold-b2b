@@ -1,6 +1,6 @@
+import React, { useCallback, useEffect, useState } from 'react';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
-import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'use-intl';
 import Input from '../input';
 import { Props } from './types';
@@ -68,7 +68,7 @@ const QuantityWidget = ({
           -
         </button>
         <form
-          className={boxClassName}
+          className="flex min-w-[40px] items-center justify-center p-0"
           onSubmit={(e) => {
             e.preventDefault();
             handleRawValueSubmit();
@@ -77,7 +77,8 @@ const QuantityWidget = ({
           <Input
             data-testid="quantity-widget-input"
             unStyled
-            className="text-center text-14"
+            className="mx-1 w-auto p-0 text-center text-14"
+            style={{ width: `${Math.max(2, rawValue.length)}ch`, maxWidth: '5ch' }}
             aria-label={translate('common.quantity')}
             value={rawValue}
             onChange={handleRawValueChange}

@@ -6,11 +6,19 @@ import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
 import usePurchaseList from '@/lib/hooks/usePurchaseList';
 import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
+import { QueueListIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { CartItemFooterProps } from '../types';
 
-const CartItemFooter = ({ className, onRemove, item, onAddToNewWishlist, isQuotationCart }: CartItemFooterProps) => {
+const CartItemFooter = ({
+  className,
+  onRemove,
+  item,
+  onAddToNewWishlist,
+  isQuotationCart,
+  showRemoveOnly = false,
+}: CartItemFooterProps) => {
   const translate = useTranslations();
-  const ClassNames = classnames('mt-5 flex items-center gap-3 py-5 md:mt-8 md:gap-5 md:py-0', className);
+  const ClassNames = classnames('flex items-center gap-3', className);
 
   const { selectedStore } = useStoreAndBusinessUnits();
 
@@ -19,26 +27,36 @@ const CartItemFooter = ({ className, onRemove, item, onAddToNewWishlist, isQuota
 
   return (
     <div className={ClassNames}>
-      <MoveToList
-        disabled={isQuotationCart}
-        lists={purchaseLists?.items.map(mapPurchaseList).map((list) => ({ id: list.id, label: list.name })) ?? []}
-        onAddNewList={onAddToNewWishlist}
-        onSubmit={async (selected) => {
-          await Promise.all(selected.map((listId) => addItem({ wishlistId: listId, sku: item.sku ?? '', count: 1 })));
-        }}
-      />
+      {!showRemoveOnly && (
+        <div className="flex shrink-0 items-center gap-1">
+          <QueueListIcon className="size-[16px] text-primary" />
+          <MoveToList
+            disabled={isQuotationCart}
+            lists={purchaseLists?.items.map(mapPurchaseList).map((list) => ({ id: list.id, label: list.name })) ?? []}
+            onAddNewList={onAddToNewWishlist}
+            onSubmit={async (selected) => {
+              await Promise.all(
+                selected.map((listId) => addItem({ wishlistId: listId, sku: item.sku ?? '', count: 1 })),
+              );
+            }}
+          />
+        </div>
+      )}
 
-      <span className="text-neutral-400">|</span>
+      {!showRemoveOnly && <span className="text-neutral-400">|</span>}
 
-      <Button
-        variant="ghost"
-        size="fit"
-        className="flex-1 text-center text-14 font-medium text-gray-700 md:flex-[unset] md:text-start"
-        onClick={onRemove}
-        disabled={isQuotationCart}
-      >
-        {translate('common.remove')}
-      </Button>
+      <div className="flex items-center gap-1">
+        <XMarkIcon className="size-[16px] text-primary" />
+        <Button
+          variant="ghost"
+          size="fit"
+          className="flex-1 text-center text-14 font-medium text-primary md:flex-[unset] md:text-start"
+          onClick={onRemove}
+          disabled={isQuotationCart}
+        >
+          {translate('common.remove')}
+        </Button>
+      </div>
     </div>
   );
 };

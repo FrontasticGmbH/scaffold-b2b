@@ -29,6 +29,7 @@ export default class ProductApi extends BaseApi {
 
   async query(productQuery: ProductQuery): Promise<ProductPaginatedResult> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     productQuery.categories = await this.hydrateCategories(productQuery);
     productQuery.filters = await this.hydrateFilters(productQuery);
     productQuery.store = await this.hydrateStore(productQuery);
@@ -37,7 +38,7 @@ export default class ProductApi extends BaseApi {
       ...ProductMapper.commercetoolsProductTypesToFacetDefinitions(
         await this.getCommercetoolsProductTypes(),
         locale,
-        this.defaultLocale,
+        defaultLocale,
       ),
       // Include Price facet
       {
@@ -53,7 +54,6 @@ export default class ProductApi extends BaseApi {
         locale,
         this.productIdField,
       );
-    const defaultLocale = this.defaultLocale;
 
     return this.requestBuilder()
       .products()
@@ -71,6 +71,8 @@ export default class ProductApi extends BaseApi {
             locale,
             defaultLocale,
             productQuery.supplyChannelId,
+            productQuery.distributionChannelId,
+            productQuery.accountGroupIds,
           ),
         );
         const count = response.body.results.length;
@@ -108,6 +110,7 @@ export default class ProductApi extends BaseApi {
 
   async getSearchableAttributes(): Promise<FilterField[]> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const response = await this.requestBuilder()
       .productTypes()
@@ -120,7 +123,7 @@ export default class ProductApi extends BaseApi {
     const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(
       response.body.results,
       locale,
-      this.defaultLocale,
+      defaultLocale,
     );
 
     // Category filter. Not included as commercetools product type.
@@ -150,6 +153,7 @@ export default class ProductApi extends BaseApi {
 
   async getProductFilters(): Promise<FilterField[]> {
     const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const commercetoolsProductTypes = await this.getCommercetoolsProductTypes();
 
@@ -177,7 +181,7 @@ export default class ProductApi extends BaseApi {
 
     // Searchable attributes filter
     filterFields.push(
-      ...ProductMapper.commercetoolsProductTypesToFilterFields(commercetoolsProductTypes, locale, this.defaultLocale),
+      ...ProductMapper.commercetoolsProductTypesToFilterFields(commercetoolsProductTypes, locale, defaultLocale),
     );
 
     filterFields.push(...(await this.getCategoryFilters()));
@@ -205,7 +209,7 @@ export default class ProductApi extends BaseApi {
 
   async queryCategories(categoryQuery: CategoryQuery): Promise<PaginatedResult<Category>> {
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = this.defaultLocale;
+    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const limit = +categoryQuery.limit || 24;
     const where: string[] = [];

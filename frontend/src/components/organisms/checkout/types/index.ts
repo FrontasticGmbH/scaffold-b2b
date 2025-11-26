@@ -5,6 +5,7 @@ import { Discount } from '@/types/entity/discount';
 import { Product } from '@/types/entity/product';
 import { ShippingMethod } from '@/types/entity/shipping-method';
 import { Link } from '@/types/link';
+import { DiscountSegment } from '@/types/transaction';
 
 interface InitialData {
   shippingAddress?: Address;
@@ -18,11 +19,14 @@ interface Transaction {
   discounts: number;
   shipping: {
     isEstimated: boolean;
-    amount: number;
+    shippingIncludesTaxes?: boolean;
+    amount?: number;
+    freeAbove?: number;
   };
-  taxes: number;
+  taxes?: number;
   total: number;
   currency: Currency;
+  discountSegments: DiscountSegment[];
 }
 
 export interface PaymentMethod {
@@ -39,20 +43,28 @@ export interface SubmitPurchasePayload {
   buyerComment: string;
 }
 
+export interface ShippingDiscount {
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage?: number;
+}
+
 export interface CheckoutProps {
+  includeTotalAmountInSummary?: boolean;
   buyerCanAddComment?: boolean;
   enableCtCheckout?: boolean;
   addresses: Address[];
   onAddAddress?: (address: Address) => Promise<boolean>;
-  products: Array<Pick<Product, 'id' | 'name' | 'currency' | 'price' | 'quantity' | 'images' | 'url'>>;
+  products: Array<Pick<Product, 'id' | 'name' | 'currency' | 'price' | 'quantity' | 'images' | 'url' | 'isGift'>>;
   transaction: Transaction;
   discounts: Array<Discount & { onRemove?: () => Promise<boolean> }>;
-  onApplyDiscount?: (code: string) => Promise<boolean>;
+  onApplyDiscount?: (code: string) => Promise<{ success: boolean; message?: string }>;
   countryOptions: Array<Option & { states: Array<Option> }>;
   onCompleteAddresses?: (shippingAddress: Address, billingAddress: Address) => Promise<boolean>;
   termsAndConditionsLink?: Link;
   initialData: InitialData;
   shippingMethods: ShippingMethod[];
+  shippingDiscount?: ShippingDiscount;
   onCompleteShipping?: (shippingMethodId: string) => Promise<boolean>;
   paymentMethods: PaymentMethod[];
   onCompletePayment?: (paymentMethodId: string, data: unknown) => Promise<boolean>;
@@ -65,4 +77,5 @@ export interface CheckoutProps {
     review?: string;
   };
   callbackUrl?: string;
+  codeApplied?: string;
 }

@@ -6,6 +6,7 @@ export const checkout: CheckoutProps = {
     currency: 'USD',
     subtotal: 100,
     discounts: 0,
+    discountSegments: [],
     taxes: 0,
     total: 100,
     shipping: {
@@ -25,7 +26,7 @@ export const checkout: CheckoutProps = {
   ],
   discounts: [],
   onAddAddress: async () => true,
-  onApplyDiscount: async () => true,
+  onApplyDiscount: async () => ({ success: true }),
   onCompleteAddresses: async () => true,
   onCompleteShipping: async () => true,
   onCompletePayment: async () => true,

@@ -5,8 +5,8 @@ import { Product } from '@/types/entity/product';
 interface Transaction {
   subtotal: number;
   discounts: number;
-  shipping: number;
-  taxes: number;
+  shipping?: number;
+  taxes?: number;
   total: number;
   currency: Currency;
 }

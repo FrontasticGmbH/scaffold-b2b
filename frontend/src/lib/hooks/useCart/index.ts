@@ -115,9 +115,13 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 
-      if (!result.isError) mutate(result.data, { revalidate: false });
+      if (result.isError) {
+        return { success: false, message: result.error.message ?? '' };
+      }
 
-      return result.isError ? ({} as Partial<Cart>) : result.data;
+      mutate(result.data, { revalidate: false });
+
+      return { success: true };
     },
     [mutate, businessUnitKey, storeKey],
   );

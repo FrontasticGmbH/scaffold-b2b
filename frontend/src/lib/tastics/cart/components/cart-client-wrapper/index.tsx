@@ -10,11 +10,11 @@ import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import { TasticProps } from '@/lib/tastics/types';
 import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { PurchaseList } from '@/types/entity/purchase-list';
+import { mapDiscountCode } from '@/utils/mappers/map-discount-code';
 import { Props } from '../../types';
 
-const CartClientWrapper = ({}: TasticProps<Props>) => {
+const CartClientWrapper = ({ data: { codeApplied } }: TasticProps<Props>) => {
   const { account } = useAccount();
-
   const { selectedBusinessUnit, selectedStore } = useStoreAndBusinessUnits();
   const { createPurchaseList, addToWishlists } = usePurchaseLists(selectedStore?.key);
 
@@ -44,29 +44,26 @@ const CartClientWrapper = ({}: TasticProps<Props>) => {
     },
     [addToWishlists, createPurchaseList],
   );
-
   return (
     <Cart
       {...cart}
       key={`${selectedBusinessUnit?.key}-${selectedStore?.key}`}
       loading={isLoading}
-      lineItems={(cart?.lineItems ?? []).map(mapLineItem)}
+      lineItems={(cart?.lineItems ?? []).map((product) =>
+        mapLineItem(product, { discountCodes: cart?.discountCodes ?? [] }),
+      )}
+      codeApplied={codeApplied}
       viewCartDisabled={!permissions.ViewMyCarts}
       checkoutDisabled={!permissions.CreateMyOrdersFromMyCarts || invalidAddressesRequirements}
       quoteRequestDisabled={!permissions.CreateMyQuoteRequestsFromMyCarts || invalidAddressesRequirements}
       invalidAddressesRequirements={invalidAddressesRequirements}
       account={{ email: account?.email ?? '' }}
       paymentMethods={[]}
-      onDiscountRedeem={async (code: string) => {
-        const res = await redeemDiscount(code);
-        return !!res.cartId;
-      }}
-      discountCodes={(cart?.discountCodes ?? []).map(({ discountCodeId, name, code }) => ({
-        discountCodeId: discountCodeId ?? '',
-        name: name ?? '',
-        code: code ?? '',
+      onDiscountRedeem={redeemDiscount}
+      discountCodes={(cart?.discountCodes ?? []).map((code) => ({
+        ...mapDiscountCode(code),
         onRemove: async () => {
-          const res = await removeDiscount(discountCodeId ?? '');
+          const res = await removeDiscount(code.discountCodeId ?? '');
           return !!res.cartId;
         },
       }))}
