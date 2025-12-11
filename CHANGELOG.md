@@ -1,5 +1,15 @@
 # @commercetools-frontend/b2b-launchpad
 
+## 1.2.1
+
+### Patch Changes
+
+-   cb72597: Modify the items count on the purchase list page
+-   1b0a7f4: Bumped NextJs version to 15.2.6 to fix a security vulnerability.
+    Replaced isomorphic-dompurify with dompurify to fix security vulnerability.
+-   414c252: Included recurring princes on cart line items
+-   e7c49a8: Bump esbuild package to fix security issue
+
 ## 1.2.0
 
 ### Minor Changes

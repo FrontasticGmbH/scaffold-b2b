@@ -10,6 +10,7 @@ import LoadingIcon from '@/components/atoms/loading-icon';
 import { classnames } from '@/utils/classnames/classnames';
 import Image from '@/components/atoms/Image';
 import { Tooltip } from 'react-tooltip';
+import { PurchaseListItem } from '@/types/entity/purchase-list';
 import { DashboardLinks } from '../../constants';
 import { PurchaseListsPageProps } from './types';
 
@@ -39,6 +40,14 @@ const PurchaseListsPage = ({ purchaseLists, loading, image, permissionImage, per
       </div>
     );
   }
+
+  const getItemsCount = (listItems: PurchaseListItem[]) => {
+    const count = listItems.reduce((acc, curr) => {
+      return acc + curr.quantity;
+    }, 0);
+
+    return count;
+  };
 
   return (
     <>
@@ -103,7 +112,7 @@ const PurchaseListsPage = ({ purchaseLists, loading, image, permissionImage, per
                   <p className="max-w-1/4 text-wrap">{businessUnitMap[businessUnitKey ?? '']}</p>
                 </Table.Cell>
                 <Table.Cell>
-                  <p className="text-right">{items.length}</p>
+                  <p className="text-right">{getItemsCount(items)}</p>
                 </Table.Cell>
                 <Table.Cell>
                   <div className="flex justify-end">
@@ -156,7 +165,7 @@ const PurchaseListsPage = ({ purchaseLists, loading, image, permissionImage, per
 
                       <div className="mt-2 flex gap-1 text-sm">
                         <p className="basis-28 font-semibold uppercase">{translate('common.items')}: </p>
-                        <p className="w-2/3 text-wrap text-gray-500 md:w-5/6">{items.length}</p>
+                        <p className="w-2/3 text-wrap text-gray-500 md:w-5/6">{getItemsCount(items)}</p>
                       </div>
 
                       <div className="mt-4">

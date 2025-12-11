@@ -86,6 +86,7 @@ export default class CartMapper {
     locale: Locale,
     defaultLocale: Locale,
     supplyChannelId?: string,
+    distributionChannelId?: string,
   ): Cart {
     return {
       cartId: commercetoolsCart.id,
@@ -96,6 +97,7 @@ export default class CartMapper {
         locale,
         defaultLocale,
         supplyChannelId,
+        distributionChannelId,
       ),
       totalLineItemQuantity: commercetoolsCart?.totalLineItemQuantity,
       email: commercetoolsCart?.customerEmail,
@@ -157,6 +159,7 @@ export default class CartMapper {
     locale: Locale,
     defaultLocale: Locale,
     supplyChannelId?: string,
+    distributionChannelId?: string,
   ): LineItem[] {
     const lineItems: LineItem[] = [];
 
@@ -189,6 +192,7 @@ export default class CartMapper {
           locale,
           defaultLocale,
           supplyChannelId,
+          distributionChannelId,
         ),
         isGift:
           commercetoolsLineItem?.lineItemMode !== undefined && commercetoolsLineItem.lineItemMode === 'GiftLineItem',
@@ -317,6 +321,8 @@ export default class CartMapper {
     commercetoolsOrder: CommercetoolsOrder,
     locale: Locale,
     defaultLocale: Locale,
+    supplyChannelId?: string,
+    distributionChannelId?: string,
   ): Order {
     return {
       cartId: commercetoolsOrder.cart?.id,
@@ -328,7 +334,13 @@ export default class CartMapper {
       purchaseOrderNumber: this.getPurchaseOrderNumber(commercetoolsOrder),
       quoteId: commercetoolsOrder.quote?.id,
       orderVersion: commercetoolsOrder.version.toString(),
-      lineItems: this.commercetoolsLineItemsToLineItems(commercetoolsOrder.lineItems, locale, defaultLocale),
+      lineItems: this.commercetoolsLineItemsToLineItems(
+        commercetoolsOrder.lineItems,
+        locale,
+        defaultLocale,
+        supplyChannelId,
+        distributionChannelId,
+      ),
       email: commercetoolsOrder?.customerEmail,
       shippingAddress: this.commercetoolsAddressToAddress(commercetoolsOrder.shippingAddress),
       billingAddress: this.commercetoolsAddressToAddress(commercetoolsOrder.billingAddress),

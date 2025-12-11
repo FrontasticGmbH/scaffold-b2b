@@ -43,11 +43,12 @@ const PurchaseListDetailPage = ({
     DeleteOthersShoppingLists,
     CreateMyCarts,
     UpdateMyCarts,
-    UpdateOthersCarts,
-    CreateOthersCarts,
   } = permissions || {};
 
-  const itemsCount = purchaseList.items.length;
+  const itemsCount = purchaseList.items.reduce((acc, curr) => {
+    acc += curr.quantity;
+    return acc;
+  }, 0);
   const isOwner = purchaseList?.account?.accountId === accountId;
   const canEdit = isOwner ? UpdateMyShoppingLists : UpdateOthersShoppingLists;
   const canDelete = isOwner ? DeleteMyShoppingLists : DeleteOthersShoppingLists;

@@ -8,10 +8,13 @@ import useAccount from '../useAccount';
 const usePurchaseList = (id?: string) => {
   const { account } = useAccount();
 
-  const response = useSWR(['/action/wishlist/getWishlist', id], () =>
-    id && account?.accountId
-      ? sdk.composableCommerce.wishlist.queryWishlists({ accountId: account.accountId, wishlistIds: [id] })
-      : null,
+  const response = useSWR(
+    ['/action/wishlist/getWishlist', id],
+    () =>
+      id && account?.accountId
+        ? sdk.composableCommerce.wishlist.queryWishlists({ accountId: account.accountId, wishlistIds: [id] })
+        : null,
+    { revalidateIfStale: true },
   );
 
   const { mutate } = useSWRConfig();

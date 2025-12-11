@@ -15,8 +15,10 @@ import {
   ProductSearchResult as CommercetoolsProductSearchResult,
   ProductDiscountValue as CommercetoolsProductDiscountValue,
   DiscountedPrice as CommercetoolsDiscountedPrice,
+  Attribute as CommercetoolsAttribute,
+  ProductPriceModeEnum as CommercetoolsProductPriceModeEnum,
+  ProductPriceModeEnumValues as CommercetoolsProductPriceModeEnumValues,
 } from '@commercetools/platform-sdk';
-import { Attribute as CommercetoolsAttribute } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
 import { ProductDiscount as CommercetoolsProductDiscount } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-discount';
 import {
   Money as CommercetoolsMoney,
@@ -138,6 +140,7 @@ export default class ProductMapper {
           distributionChannelId,
           accountGroupIds,
           commercetoolsProduct.matchingVariants,
+          commercetoolsProduct.productProjection.priceMode,
         ),
       );
     }
@@ -152,6 +155,7 @@ export default class ProductMapper {
           distributionChannelId,
           accountGroupIds,
           commercetoolsProduct.matchingVariants,
+          commercetoolsProduct.productProjection.priceMode,
         ),
       ),
     );
@@ -166,16 +170,22 @@ export default class ProductMapper {
     supplyChannelId?: string,
     distributionChannelId?: string,
     accountGroupIds?: string[],
-    matchingVariants?: CommercetoolsProductSearchMatchingVariants,
+    commercetoolsMatchingVariants?: CommercetoolsProductSearchMatchingVariants,
+    commercetoolsPriceMode?: CommercetoolsProductPriceModeEnum,
   ): Variant {
     const attributes = this.commercetoolsAttributesToAttributes(commercetoolsVariant.attributes, locale);
-    const { price, discountedPrice } = this.extractPriceAndDiscounts(commercetoolsVariant, locale);
+    const { price, discountedPrice } = this.extractPriceAndDiscounts(
+      commercetoolsVariant,
+      locale,
+      commercetoolsPriceMode,
+    );
     const recurrencePrices = this.extractRecurrencePrices(
       commercetoolsVariant,
       locale,
       defaultLocale,
       distributionChannelId,
       accountGroupIds,
+      commercetoolsPriceMode,
     );
 
     return {
@@ -191,8 +201,8 @@ export default class ProductMapper {
       discountedPrice: discountedPrice,
       recurrencePrices: recurrencePrices,
       isMatchingVariant:
-        matchingVariants?.allMatched ||
-        matchingVariants?.matchedVariants.some((variant) => variant.id === commercetoolsVariant.id),
+        commercetoolsMatchingVariants?.allMatched ||
+        commercetoolsMatchingVariants?.matchedVariants.some((variant) => variant.id === commercetoolsVariant.id),
       isOnStock: supplyChannelId
         ? commercetoolsVariant.availability?.channels?.[supplyChannelId]?.isOnStock
         : commercetoolsVariant.availability?.isOnStock || undefined,
@@ -264,7 +274,11 @@ export default class ProductMapper {
     }
   }
 
-  static extractPriceAndDiscounts(commercetoolsVariant: CommercetoolsProductVariant, locale: Locale) {
+  static extractPriceAndDiscounts(
+    commercetoolsVariant: CommercetoolsProductVariant,
+    locale: Locale,
+    commercetoolsPriceMode?: CommercetoolsProductPriceModeEnum,
+  ) {
     let price: Money | undefined;
     let discountedPrice: ProductDiscountedPrice | undefined;
 
@@ -288,6 +302,11 @@ export default class ProductMapper {
           ? ProductMapper.commercetoolsDiscountedPriceToDiscountedPrice(commercetoolsVariant.price?.discounted, locale)
           : undefined;
 
+      return { price, discountedPrice };
+    }
+
+    // The property prices contains the embedded prices for the variant, if the price mode is different than Embedded, this property is not relevant and we can return the price and discounted price
+    if (commercetoolsPriceMode !== CommercetoolsProductPriceModeEnumValues.Embedded) {
       return { price, discountedPrice };
     }
 
@@ -331,6 +350,7 @@ export default class ProductMapper {
     defaultLocale: Locale,
     distributionChannelId?: string,
     accountGroupIds?: string[],
+    commercetoolsPriceMode?: CommercetoolsProductPriceModeEnum,
   ): Price[] | undefined {
     let recurrencePrices: Price[] = [];
 
@@ -345,8 +365,8 @@ export default class ProductMapper {
       return recurrencePrices;
     }
 
-    // If we don't have recurrence prices, we use the prices returned under the prices field that have a recurrence policy
-    if (commercetoolsVariant?.prices) {
+    // Fallback to prices with recurrence policy if recurrence prices are unavailable. Use embedded prices only if price mode is "Embedded".
+    if (commercetoolsPriceMode === CommercetoolsProductPriceModeEnumValues.Embedded && commercetoolsVariant?.prices) {
       // Filter price by distribution channel, account group, country and currency and if we don't find one, then filter only by currency
       const commercetoolsRecurrencePrices: CommercetoolsPrice[] = commercetoolsVariant?.prices.filter(
         (commercetoolsPrice: CommercetoolsPrice) => {

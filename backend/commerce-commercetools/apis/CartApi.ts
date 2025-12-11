@@ -58,6 +58,8 @@ import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBu
 const CART_EXPANDS = [
   'lineItems[*].discountedPricePerQuantity[*].discountedPrice.includedDiscounts[*].discount',
   'lineItems[*].price.discounted.discount',
+  'lineItems[*].variant.prices[*].recurrencePolicy',
+  'lineItems[*].variant.recurrencePrices[*].recurrencePolicy',
   'lineItems[*].recurrenceInfo.recurrencePolicy',
   'discountCodes[*].discountCode',
   'discountOnTotalPrice.includedDiscounts[*].discount',
@@ -436,7 +438,15 @@ export default class CartApi extends BaseApi {
         body: orderFromCartDraft,
       })
       .execute()
-      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
+      .then((response) =>
+        CartMapper.commercetoolsOrderToOrder(
+          response.body,
+          locale,
+          defaultLocale,
+          this.supplyChannelId,
+          this.distributionChannelId,
+        ),
+      )
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
@@ -455,7 +465,15 @@ export default class CartApi extends BaseApi {
         },
       })
       .execute()
-      .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
+      .then((response) =>
+        CartMapper.commercetoolsOrderToOrder(
+          response.body,
+          locale,
+          defaultLocale,
+          this.supplyChannelId,
+          this.distributionChannelId,
+        ),
+      )
       .catch((error) => {
         throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
       });
@@ -488,7 +506,15 @@ export default class CartApi extends BaseApi {
           },
         })
         .execute()
-        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
+        .then((response) =>
+          CartMapper.commercetoolsOrderToOrder(
+            response.body,
+            locale,
+            defaultLocale,
+            this.supplyChannelId,
+            this.distributionChannelId,
+          ),
+        )
         .catch((error) => {
           throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
@@ -521,7 +547,15 @@ export default class CartApi extends BaseApi {
           },
         })
         .execute()
-        .then((response) => CartMapper.commercetoolsOrderToOrder(response.body, locale, defaultLocale))
+        .then((response) =>
+          CartMapper.commercetoolsOrderToOrder(
+            response.body,
+            locale,
+            defaultLocale,
+            this.supplyChannelId,
+            this.distributionChannelId,
+          ),
+        )
         .catch((error) => {
           throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
         });
@@ -998,7 +1032,13 @@ export default class CartApi extends BaseApi {
       .execute()
       .then((response) => {
         const orders = response.body.results.map((commercetoolsOrder) => {
-          return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, defaultLocale);
+          return CartMapper.commercetoolsOrderToOrder(
+            commercetoolsOrder,
+            locale,
+            defaultLocale,
+            this.supplyChannelId,
+            this.distributionChannelId,
+          );
         });
         return {
           total: response.body.total,
@@ -1359,7 +1399,13 @@ export default class CartApi extends BaseApi {
 
     const commercetoolsOrder = await this.updateOrder(order.orderId, orderUpdate);
 
-    return CartMapper.commercetoolsOrderToOrder(commercetoolsOrder, locale, defaultLocale);
+    return CartMapper.commercetoolsOrderToOrder(
+      commercetoolsOrder,
+      locale,
+      defaultLocale,
+      this.supplyChannelId,
+      this.distributionChannelId,
+    );
   }
 
   protected async assertCorrectLocale(
@@ -1389,7 +1435,13 @@ export default class CartApi extends BaseApi {
       commercetoolsCart = await this.updateCart(commercetoolsCart.id, cartUpdate);
     }
 
-    return CartMapper.commercetoolsCartToCart(commercetoolsCart, locale, defaultLocale, this.supplyChannelId);
+    return CartMapper.commercetoolsCartToCart(
+      commercetoolsCart,
+      locale,
+      defaultLocale,
+      this.supplyChannelId,
+      this.distributionChannelId,
+    );
   }
 
   protected async recreate(
@@ -1480,7 +1532,13 @@ export default class CartApi extends BaseApi {
     // Delete previous cart
     await this.deleteCart(primaryCart);
 
-    return CartMapper.commercetoolsCartToCart(replicatedCommercetoolsCart, locale, defaultLocale, this.supplyChannelId);
+    return CartMapper.commercetoolsCartToCart(
+      replicatedCommercetoolsCart,
+      locale,
+      defaultLocale,
+      this.supplyChannelId,
+      this.distributionChannelId,
+    );
   }
 
   protected async updateCart(cartId: string, cartUpdate: CartUpdate): Promise<CommercetoolsCart> {
