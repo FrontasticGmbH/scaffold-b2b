@@ -6,13 +6,13 @@ import defaultMessages from '../../src/messages/en.json';
 // Custom render function that wraps components in NextIntlClientProvider
 const customRender = (ui: React.ReactElement, options?: RenderOptions) =>
   render(
-    <NextIntlClientProvider locale="en" messages={defaultMessages}>
+    <NextIntlClientProvider locale="en-us" messages={defaultMessages}>
       {ui}
     </NextIntlClientProvider>,
     options,
   );
 
-export function createWrapper(locale = 'en', messages = defaultMessages) {
+export function createWrapper(locale = 'en-us', messages = defaultMessages) {
   return function Wrapper({ children }: { children: ReactNode }) {
     return (
       <NextIntlClientProvider locale={locale} messages={messages}>

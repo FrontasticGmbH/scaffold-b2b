@@ -34,7 +34,8 @@ const CommercetoolsPayment = ({
 
   const { session, isExpired } = useSession();
 
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = params?.locale;
 
   const { projectSettings } = useProjectSettings();
 

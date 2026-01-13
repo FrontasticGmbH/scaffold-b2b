@@ -107,7 +107,6 @@ describe('Drawer Component', () => {
 
   it('applies the correct class names based on props', () => {
     const { container } = render(
-      // eslint-disable-next-line tailwindcss/no-custom-classname
       <Drawer isOpen={true} className="custom-class" direction="left" headline="Test Drawer" onClose={jest.fn()}>
         <p>Drawer Content</p>
       </Drawer>,

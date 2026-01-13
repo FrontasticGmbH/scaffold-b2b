@@ -7,7 +7,8 @@ import { PDPHeaderProps } from '../types';
 
 const Header = ({ className, product }: PDPHeaderProps) => {
   const translate = useTranslations();
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = params?.locale;
 
   const headerClassName = classnames('border-b border-neutral-400 pb-4 pt-3 md:pt-4 lg:pt-6', className);
 

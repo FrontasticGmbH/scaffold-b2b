@@ -8,7 +8,7 @@ const DropdownContainer = ({ children }: React.PropsWithChildren) => {
 
   return (
     <div className={classnames('relative', className)}>
-      <Listbox value={value ?? {}} defaultValue={defaultValue} onChange={handleChange} disabled={disabled}>
+      <Listbox value={value} defaultValue={defaultValue} onChange={handleChange} disabled={disabled}>
         {children}
       </Listbox>
     </div>

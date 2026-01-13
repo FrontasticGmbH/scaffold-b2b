@@ -1,5 +1,11 @@
 # @commercetools-frontend/b2b-launchpad
 
+## 1.2.3
+
+### Patch Changes
+
+-   cd70978: Axios security vulnerability fixed
+
 ## 1.2.2
 
 ### Patch Changes

@@ -12,9 +12,26 @@ const nextConfig = withNextIntl({
   reactStrictMode: true,
   trailingSlash: true,
 
+  // Add Turbopack alias for Next.js 16 Turbopack builds
+  // Skip for Storybook to avoid vite plugin issues
+    turbopack: {
+      root: require('path').join(__dirname, '../..'),
+      resolveAlias: {
+        '@shared/types': './poc/types',
+      },
+    },
+
   images: {
-    loader: 'custom',
-    domains: ['res.cloudinary.com', 's3-eu-west-1.amazonaws.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 's3-eu-west-1.amazonaws.com',
+      },
+    ],
     deviceSizes: [
       640, 750, 828, 1080, 1200, 1280, 1440, 1520, 1640, 1720, 1800, 1920, 2048, 2280, 2460, 2640, 2820, 3000,
     ],

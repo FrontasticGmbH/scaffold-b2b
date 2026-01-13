@@ -26,7 +26,6 @@ describe('[Component] ColoredVariant', () => {
   });
 
   it('applies provided className', () => {
-    //eslint-disable-next-line
     render(<ColoredVariant color="yellow" className="additional-class" />);
 
     const divElement = screen.getByRole('button');

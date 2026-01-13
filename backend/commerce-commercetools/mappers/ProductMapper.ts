@@ -2,6 +2,7 @@ import {
   Category as CommercetoolsCategory,
   CategoryReference,
   ProductVariant as CommercetoolsProductVariant,
+  ProductProjection as CommercetoolsProductProjection,
   TypedMoney,
   ProductSearchRequest,
   ProductSearchFacetExpression,
@@ -12,7 +13,6 @@ import {
   ProductSearchFacetResultCount,
   ProductSearchFacetResult,
   ProductSearchMatchingVariants as CommercetoolsProductSearchMatchingVariants,
-  ProductSearchResult as CommercetoolsProductSearchResult,
   ProductDiscountValue as CommercetoolsProductDiscountValue,
   DiscountedPrice as CommercetoolsDiscountedPrice,
   Attribute as CommercetoolsAttribute,
@@ -62,8 +62,8 @@ const TypeMap = new Map<string, string>([
 ]);
 
 export default class ProductMapper {
-  static commercetoolsProductSearchResultToProduct(
-    commercetoolsProduct: CommercetoolsProductSearchResult,
+  static commercetoolsProductProjectionToProduct(
+    commercetoolsProductProjection: CommercetoolsProductProjection,
     productIdField: string,
     categoryIdField: string,
     locale: Locale,
@@ -71,48 +71,39 @@ export default class ProductMapper {
     supplyChannelId?: string,
     distributionChannelId?: string,
     accountGroupIds?: string[],
+    commercetoolsProductSearchMatchingVariants?: CommercetoolsProductSearchMatchingVariants,
   ): Product {
     const product: Product = {
-      productId: commercetoolsProduct?.productProjection?.id,
-      productKey: commercetoolsProduct?.productProjection?.key,
-      productRef: commercetoolsProduct?.productProjection?.[productIdField],
-      productTypeId: commercetoolsProduct?.productProjection?.productType?.id,
-      version: commercetoolsProduct?.productProjection.version?.toString(),
-      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProduct?.productProjection.name),
-      slug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProduct?.productProjection.slug),
-      description: LocalizedValue.getLocalizedValue(
-        locale,
-        defaultLocale,
-        commercetoolsProduct?.productProjection.description,
-      ),
+      productId: commercetoolsProductProjection?.id,
+      productKey: commercetoolsProductProjection?.key,
+      productRef: commercetoolsProductProjection?.[productIdField],
+      productTypeId: commercetoolsProductProjection?.productType?.id,
+      version: commercetoolsProductProjection.version?.toString(),
+      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.name),
+      slug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.slug),
+      description: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.description),
       categories: this.commercetoolsCategoryReferencesToCategories(
-        commercetoolsProduct.productProjection.categories,
+        commercetoolsProductProjection.categories,
         categoryIdField,
         locale,
       ),
       variants: this.commercetoolsProductProjectionToVariants(
-        commercetoolsProduct,
+        commercetoolsProductProjection,
         locale,
         defaultLocale,
         supplyChannelId,
         distributionChannelId,
         accountGroupIds,
+        commercetoolsProductSearchMatchingVariants,
       ),
       metaTitle:
-        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProduct?.productProjection?.metaTitle) ||
-        undefined,
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.metaTitle) || undefined,
       metaDescription:
-        LocalizedValue.getLocalizedValue(
-          locale,
-          defaultLocale,
-          commercetoolsProduct?.productProjection?.metaDescription,
-        ) || undefined,
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.metaDescription) ||
+        undefined,
       metaKeywords:
-        LocalizedValue.getLocalizedValue(
-          locale,
-          defaultLocale,
-          commercetoolsProduct?.productProjection?.metaKeywords,
-        ) || undefined,
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.metaKeywords) ||
+        undefined,
     };
 
     product._url = ProductRouter.generateUrlFor(product);
@@ -121,32 +112,33 @@ export default class ProductMapper {
   }
 
   static commercetoolsProductProjectionToVariants(
-    commercetoolsProduct: CommercetoolsProductSearchResult,
+    commercetoolsProductProjection: CommercetoolsProductProjection,
     locale: Locale,
     defaultLocale: Locale,
     supplyChannelId?: string,
     distributionChannelId?: string,
     accountGroupIds?: string[],
+    commercetoolsProductSearchMatchingVariants?: CommercetoolsProductSearchMatchingVariants,
   ): Variant[] {
     const variants: Variant[] = [];
 
-    if (commercetoolsProduct?.productProjection.masterVariant) {
+    if (commercetoolsProductProjection.masterVariant) {
       variants.push(
         this.commercetoolsProductVariantToVariant(
-          commercetoolsProduct.productProjection.masterVariant,
+          commercetoolsProductProjection.masterVariant,
           locale,
           defaultLocale,
           supplyChannelId,
           distributionChannelId,
           accountGroupIds,
-          commercetoolsProduct.matchingVariants,
-          commercetoolsProduct.productProjection.priceMode,
+          commercetoolsProductSearchMatchingVariants,
+          commercetoolsProductProjection.priceMode,
         ),
       );
     }
 
     variants.push(
-      ...commercetoolsProduct.productProjection.variants.map((variant) =>
+      ...commercetoolsProductProjection.variants.map((variant) =>
         this.commercetoolsProductVariantToVariant(
           variant,
           locale,
@@ -154,8 +146,8 @@ export default class ProductMapper {
           supplyChannelId,
           distributionChannelId,
           accountGroupIds,
-          commercetoolsProduct.matchingVariants,
-          commercetoolsProduct.productProjection.priceMode,
+          commercetoolsProductSearchMatchingVariants,
+          commercetoolsProductProjection.priceMode,
         ),
       ),
     );

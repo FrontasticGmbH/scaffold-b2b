@@ -25,7 +25,7 @@ export default getRequestConfig(async () => {
 
   // Ensure that a valid locale is used
   if (!locale || !routing.locales.includes(locale as Locale)) {
-    locale = routing.defaultLocale as string;
+    locale = routing.defaultLocale;
   }
 
   return {

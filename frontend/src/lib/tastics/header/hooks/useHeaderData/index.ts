@@ -19,7 +19,8 @@ import useSwrClearCache from '@/hooks/useSwrClearCache';
 const useHeaderData = () => {
   const router = useCustomRouter();
 
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = params?.locale;
 
   const clearCache = useSwrClearCache();
 

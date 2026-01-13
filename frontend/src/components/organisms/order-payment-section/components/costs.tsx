@@ -13,7 +13,8 @@ const Costs = ({
   subCostClassName,
   totalAmountClassName,
 }: CostsProps) => {
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = params?.locale;
   const { costsToRender, total } = useCostsData({ dataReference, order, cart });
 
   const totalAmountClassNames = classnames('mt-6 flex items-center justify-between font-medium', totalAmountClassName);

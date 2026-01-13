@@ -1,16 +1,16 @@
-import React from 'react';
-import type { Preview } from '@storybook/react';
-import { inter } from '@/fonts';
 import Toaster from '@/components/atoms/toaster';
-import 'tailwindcss/tailwind.css';
+import { inter } from '@/fonts';
+import { projectSettings } from '@/mocks/projectSettings';
+import ShipAndLanguageProvider from '@/providers/ship-and-language';
+import '@/styles/global/index.css';
+import type { Preview } from '@storybook/react';
+import 'flag-icons/css/flag-icons.min.css';
+import React from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-tooltip/dist/react-tooltip.css';
-import 'flag-icons/css/flag-icons.min.css';
-import '@/styles/global/index.css';
-import theme from './theme';
-import ShipAndLanguageProvider from '@/providers/ship-and-language';
-import { projectSettings } from '@/mocks/projectSettings';
+import 'tailwindcss/tailwind.css';
 import nextIntl from './next-intl';
+import theme from './theme';
 
 const preview: Preview = {
   initialGlobals: {
@@ -22,6 +22,36 @@ const preview: Preview = {
   },
   parameters: {
     nextIntl,
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        pathname: '/en',
+        query: {},
+      },
+      router: {
+        basePath: '',
+        pathname: '/en',
+        route: '/[locale]',
+        query: { locale: 'en' },
+        asPath: '/en',
+        push: async () => true,
+        replace: async () => true,
+        reload: () => {},
+        back: () => {},
+        forward: () => {},
+        prefetch: async () => {},
+        beforePopState: () => {},
+        events: {
+          on: () => {},
+          off: () => {},
+          emit: () => {},
+        },
+        isFallback: false,
+        isLocaleDomain: false,
+        isReady: true,
+        isPreview: false,
+      },
+    },
     docs: {
       theme: theme,
     },

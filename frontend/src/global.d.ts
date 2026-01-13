@@ -1,9 +1,12 @@
 import en from './messages/en.json';
 
-export type Messages = typeof en;
+// Type for message structure
+type Messages = typeof en;
 
-declare global {
-  // Use type safe message keys with `next-intl`
-  // eslint-disable-next-line
-  interface IntlMessages extends Messages {}
+// Augment next-intl with your app config (v4 syntax)
+declare module 'next-intl' {
+  interface AppConfig {
+    Messages: Messages;
+    Locale: string;
+  }
 }

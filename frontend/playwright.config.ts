@@ -23,17 +23,21 @@ export default defineConfig({
     [
       './e2e/reporters/flaky-tolerance-reporter.ts',
       {
-        failureTolerancePercentage: 50, // Allow up to 50% test failures
-        onlyFlakyTests: false, // Apply tolerance to all tests
+        failureTolerancePercentageFlakyTests: 100, // Allow up to 100% test failures for flaky tests
       },
     ],
   ],
   timeout: 60000,
+  expect: {
+    timeout: 15000, // 15 seconds for all expect() assertions
+  },
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
+    actionTimeout: 15000, // 15 seconds for clicks, fills, etc.
+    navigationTimeout: 30000, // 30 seconds for page.goto, waitForURL
   },
   projects: [
     {

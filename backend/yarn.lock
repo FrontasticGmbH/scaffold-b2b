@@ -1701,7 +1701,6 @@ __metadata:
     "@commercetools/ts-client": "npm:^3.4.0"
     "@frontastic/extension-types": "npm:0.0.13"
     "@sendgrid/mail": "npm:^8.1.6"
-    "@types/axios": "npm:^0.14.4"
     "@types/core-js": "npm:^2.5.4"
     "@types/crypto-js": "npm:^4.1.1"
     "@types/jest": "npm:^30"
@@ -1711,7 +1710,7 @@ __metadata:
     "@types/uuid": "npm:^8.3.4"
     "@typescript-eslint/eslint-plugin": "npm:^5.1.0"
     "@typescript-eslint/parser": "npm:^5.1.0"
-    axios: "npm:^1.12.2"
+    axios: "npm:^1.13.2"
     contentful: "npm:^9.3.7"
     core-js: "npm:^3.20.0"
     crypto-js: "npm:^4.2.0"
@@ -2741,15 +2740,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/axios@npm:^0.14.4":
-  version: 0.14.4
-  resolution: "@types/axios@npm:0.14.4"
-  dependencies:
-    axios: "npm:*"
-  checksum: 10c0/945ef9d9d493b7292d33cf55679af90ffb60fe85475ce79327494480d517e8263f3f0c2f262396a1ada3ef4d66f3b05ea16b1f3c40680aa2b8399c36f6a92dfa
-  languageName: node
-  linkType: hard
-
 "@types/babel__core@npm:^7.20.5":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -3524,34 +3514,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:*":
-  version: 0.24.0
-  resolution: "axios@npm:0.24.0"
-  dependencies:
-    follow-redirects: "npm:^1.14.4"
-  checksum: 10c0/d106561e761bf48633633073626eafb80289eb7c7c27f9fae4fb796939b6ecd2c9f63b596e3b3d872f7c0bec6b2fb117c58456d387e4ca2da7fc07c795a979c3
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.12.0, axios@npm:^1.12.2":
-  version: 1.12.2
-  resolution: "axios@npm:1.12.2"
+"axios@npm:^1.12.0, axios@npm:^1.13.2, axios@npm:^1.7.4":
+  version: 1.13.2
+  resolution: "axios@npm:1.13.2"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.4"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/80b063e318cf05cd33a4d991cea0162f3573481946f9129efb7766f38fde4c061c34f41a93a9f9521f02b7c9565ccbc197c099b0186543ac84a24580017adfed
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.7.4":
-  version: 1.7.7
-  resolution: "axios@npm:1.7.7"
-  dependencies:
-    follow-redirects: "npm:^1.15.6"
-    form-data: "npm:^4.0.0"
-    proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/4499efc89e86b0b49ffddc018798de05fab26e3bf57913818266be73279a6418c3ce8f9e934c7d2d707ab8c095e837fc6c90608fb7715b94d357720b5f568af7
+  checksum: 10c0/e8a42e37e5568ae9c7a28c348db0e8cf3e43d06fcbef73f0048669edfe4f71219664da7b6cc991b0c0f01c28a48f037c515263cb79be1f1ae8ff034cd813867b
   languageName: node
   linkType: hard
 
@@ -5177,16 +5147,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.4":
-  version: 1.14.6
-  resolution: "follow-redirects@npm:1.14.6"
-  peerDependenciesMeta:
-    debug:
-      optional: true
-  checksum: 10c0/e2b93b2fa671cad5d7c7755f10072cc719c6e8b6a7994f9e26a31f7544856f3104cd9d3ad4b645f0763698271b7cb086fae553d775192cefd582607c0a50a16c
-  languageName: node
-  linkType: hard
-
 "follow-redirects@npm:^1.15.6":
   version: 1.15.9
   resolution: "follow-redirects@npm:1.15.9"
@@ -5213,17 +5173,6 @@ __metadata:
     cross-spawn: "npm:^7.0.0"
     signal-exit: "npm:^4.0.1"
   checksum: 10c0/9700a0285628abaeb37007c9a4d92bd49f67210f09067638774338e146c8e9c825c5c877f072b2f75f41dc6a2d0be8664f79ffc03f6576649f54a84fb9b47de0
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "form-data@npm:4.0.0"
-  dependencies:
-    asynckit: "npm:^0.4.0"
-    combined-stream: "npm:^1.0.8"
-    mime-types: "npm:^2.1.12"
-  checksum: 10c0/cb6f3ac49180be03ff07ba3ff125f9eba2ff0b277fb33c7fc47569fc5e616882c5b1c69b9904c4c4187e97dd0419dd03b134174756f296dec62041e6527e2c6e
   languageName: node
   linkType: hard
 

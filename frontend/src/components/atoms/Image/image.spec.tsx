@@ -11,7 +11,6 @@ jest.mock(
 jest.mock('next-cloudinary', () => {
   return {
     CldImage: ({ src, alt }: { src: string; alt: string }) => {
-      //eslint-disable-next-line @next/next/no-img-element
       return <img src={src} alt={alt} />;
     },
   };

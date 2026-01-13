@@ -1,5 +1,5 @@
 import { DiscountTarget } from '@/types/entity/discount';
-import { Product, PerCountDiscount } from '@/types/entity/product';
+import { Product } from '@/types/entity/product';
 import { DiscountCode } from '@shared/types/cart';
 import { LineItem } from '@shared/types/cart/LineItem';
 

@@ -28,7 +28,9 @@ const ProductListViewModel = ({
 }: Omit<DataSourceProps, 'category'> & ViewModelProps) => {
   const translate = useTranslations();
 
-  const { slug, locale } = useParams();
+  const params = useParams();
+  const slug = params?.slug;
+  const locale = params?.locale;
 
   const searchParams = useSearchParams();
 

@@ -4,17 +4,23 @@ import Select from '@/components/atoms/select';
 import { SelectProps } from '@/components/atoms/select/types';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { format } from 'date-fns';
-import { CaptionProps, useDayPicker, useNavigation } from 'react-day-picker';
+import { CaptionProps, useNavigation } from 'react-day-picker';
 
-const DateCaption = ({ displayMonth }: CaptionProps) => {
-  const { goToMonth, goToDate, nextMonth, previousMonth } = useNavigation();
-  const { fromYear, toYear } = useDayPicker();
+interface DateCaptionProps extends CaptionProps {
+  fromYear?: number;
+  toYear?: number;
+}
+
+const DateCaption = ({ calendarMonth, fromYear, toYear }: DateCaptionProps) => {
+  const { goToMonth, nextMonth, previousMonth } = useNavigation();
+
+  const displayMonth = calendarMonth.date;
 
   const goToYear = (year: string) => {
     const selectedYear = parseInt(year, 10);
     const month = displayMonth.getMonth();
     const newDate = new Date(selectedYear, month, 1);
-    goToDate(newDate);
+    goToMonth(newDate);
   };
 
   const getYearOptions = useCallback(() => {

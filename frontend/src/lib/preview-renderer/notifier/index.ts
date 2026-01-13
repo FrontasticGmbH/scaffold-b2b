@@ -53,7 +53,6 @@ export class Notifier {
       return this.messageHandlers[message.Name](message.Payload, message);
     }
 
-    // eslint-disable-next-line no-console
     console.info('Unknown WebSocket message', message);
     // Do nothing for other messages
   }

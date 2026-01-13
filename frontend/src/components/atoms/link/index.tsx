@@ -19,7 +19,8 @@ const Link = ({
   underlineOnHover = true,
   ...props
 }: LinkProps) => {
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = params?.locale;
 
   const linkClassName = classnames(className, 'w-fit', {
     'underline-offset-4 hover:underline': underlineOnHover,

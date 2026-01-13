@@ -49,7 +49,7 @@ const Slider = ({
   ) as number;
 
   return (
-    <div className={containerClassNames}>
+    <div className={containerClassNames} suppressHydrationWarning>
       <Slick
         beforeChange={(...args) => setCurrentSlide(args[1])}
         slidesToShow={responsiveSlidesToShow}

@@ -1,18 +1,18 @@
 import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
+import Toaster from '@/components/atoms/toaster';
+import Renderer from '@/lib/renderer';
+import { isRedirectResponse } from '@/lib/utils/is-redirect-response';
+import { Providers } from '@/providers';
 import { sdk } from '@/sdk';
 import { PageProps } from '@/types/next';
-import Renderer from '@/lib/renderer';
-import Toaster from '@/components/atoms/toaster';
-import { authenticate } from '@/utils/server/authenticate';
-import { Providers } from '@/providers';
-import fetchPageData from '@/utils/server/fetch-page-data';
-import fetchBusinessUnits from '@/utils/server/fetchBusinessUnits';
-import fetchAssociate from '@/utils/server/fetch-associate';
-import fetchProjectSettings from '@/utils/server/fetch-project-settings';
-import { isRedirectResponse } from '@/lib/utils/is-redirect-response';
-import fetchCategories from '@/utils/server/fetch-categories';
 import { getSeoInfoFromPageResponse } from '@/utils/lib/seo-tools';
+import { authenticate } from '@/utils/server/authenticate';
+import fetchAssociate from '@/utils/server/fetch-associate';
+import fetchCategories from '@/utils/server/fetch-categories';
+import fetchPageData from '@/utils/server/fetch-page-data';
+import fetchProjectSettings from '@/utils/server/fetch-project-settings';
+import fetchBusinessUnits from '@/utils/server/fetchBusinessUnits';
 
 /* Start of Route Segments */
 
@@ -82,7 +82,13 @@ export default async function Page(props: PageProps) {
   }
 
   return (
-    <div data-theme={(!page.isError && page.data.pageFolder.configuration.displayTheme) ?? 'default'}>
+    <div
+      data-theme={
+        !page.isError && page.data.pageFolder.configuration?.displayTheme
+          ? page.data.pageFolder.configuration.displayTheme
+          : 'default'
+      }
+    >
       <Providers
         page={{ ...page, data: page.data }}
         locale={locale}

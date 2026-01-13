@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { useTranslations } from 'use-intl';
 import { classnames } from '@/utils/classnames/classnames';
+import { useMemo, useState } from 'react';
+import { useTranslations } from 'use-intl';
 
 import {
   Combobox,
@@ -13,10 +13,10 @@ import {
   Transition,
 } from '@headlessui/react';
 
-import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import useControllableState from '@/hooks/useControllableState';
-import { SelectProps } from './types';
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
 import Label from '../label';
+import { SelectProps } from './types';
 
 const Select = ({
   label,
@@ -52,9 +52,11 @@ const Select = ({
       immediate
       value={dropdownValue}
       onClose={() => setSearch('')}
-      onChange={(inputValue: string) => {
-        setDropdownValue(inputValue);
-        onChange?.(inputValue);
+      onChange={(inputValue: string | null) => {
+        if (inputValue) {
+          setDropdownValue(inputValue);
+          onChange?.(inputValue);
+        }
       }}
       as="div"
       className={classnames('relative', className)}

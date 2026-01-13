@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useCookies } from 'next-client-cookies';
 import { Option } from '@/components/atoms/select/types';
-import usePath from '@/hooks/usePath';
 import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
+import usePath from '@/hooks/usePath';
+import { useCategories } from '@/lib/hooks/useCategories';
 import { mapCountry } from '@/utils/mappers/map-country';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
-import { useCategories } from '@/lib/hooks/useCategories';
+import Cookies from 'js-cookie';
 
 const initialMarketState = {
   selectedLanguage: {} as Option,
@@ -21,7 +21,6 @@ const ShipAndLanguageProvider = ({
   projectSettings,
 }: React.PropsWithChildren<{ projectSettings?: ProjectSettings }>) => {
   const { path } = usePath();
-  const cookies = useCookies();
 
   const { flatCategories } = useCategories();
 
@@ -36,9 +35,12 @@ const ShipAndLanguageProvider = ({
         languages: locales.map(({ name, locale }) => ({ name, value: locale })),
       }) as Location,
   );
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = params?.locale;
 
-  const [selectedLocationValue, setSelectedLocationValue] = useState(locale?.split('-')[1]?.toLowerCase());
+  const [selectedLocationValue, setSelectedLocationValue] = useState(
+    locale && typeof locale === 'string' ? locale.split('-')[1]?.toLowerCase() : undefined,
+  );
 
   const selectedLocation = locations.find((location) => location.value === selectedLocationValue) ?? locations[0];
   const selectedLanguage =
@@ -56,7 +58,7 @@ const ShipAndLanguageProvider = ({
 
     if (pathToGo.startsWith('/')) pathToGo = pathToGo.slice(1);
 
-    cookies.set('locale', language);
+    Cookies.set('locale', language);
 
     window.location.assign(`/${language}/${pathToGo}`);
   };

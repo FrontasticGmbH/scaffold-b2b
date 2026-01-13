@@ -3,7 +3,7 @@ import { DropdownProps, Option } from '../types';
 type CommonDropdownProps = Pick<DropdownProps, 'size' | 'disabled' | 'value' | 'className' | 'defaultValue'>;
 
 export interface DropdownContextShape extends CommonDropdownProps {
-  handleChange: (value: Option) => void;
+  handleChange: (value: string | Option) => void;
 }
 
 export interface Props {

@@ -8,7 +8,6 @@ describe('Skeleton Component', () => {
   });
 
   it('applies custom className', () => {
-    //eslint-disable-next-line
     const { container } = render(<Skeleton className="custom-class" />);
     expect(container.firstChild).toHaveClass('custom-class');
   });
