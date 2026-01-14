@@ -12,7 +12,11 @@ const DropdownButton = ({ children, className }: Props) => {
   const { buttonClassName } = useClassNames({ disabled, size });
 
   return (
-    <ListboxButton data-testid="dropdown-button" className={classnames(className, buttonClassName)}>
+    <ListboxButton
+      data-testid="dropdown-button"
+      className={classnames(className, buttonClassName)}
+      suppressHydrationWarning
+    >
       {({ open }) => (
         <div>
           <div className="block truncate">

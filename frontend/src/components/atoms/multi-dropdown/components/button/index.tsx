@@ -19,6 +19,7 @@ const DropdownButton = ({ children, className }: Props) => {
       aria-label={translate('common.select')}
       className={classnames(className, buttonClassName)}
       onClick={onToggle}
+      suppressHydrationWarning
     >
       <div className="block truncate">
         {typeof children === 'function'

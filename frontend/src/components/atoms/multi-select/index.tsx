@@ -88,6 +88,7 @@ const MultiSelect = ({
               aria-label="Dropdown button"
               data-testid="dropdown-button"
               className="absolute inset-y-0 right-0 flex items-center pr-3"
+              suppressHydrationWarning
             >
               <ChevronDownIcon className="h-[18px]" aria-hidden="true" />
             </ComboboxButton>
