@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { act, renderHook } from '@test/utils';
 import useCustomRouter from '.';
 

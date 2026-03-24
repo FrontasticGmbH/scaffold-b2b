@@ -15,7 +15,7 @@ export default class QuoteMapper {
   static commercetoolsQuoteToQuote(
     commercetoolsQuote: CommercetoolsQuote,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): Quote {
     const quoteRequest = commercetoolsQuote.quoteRequest?.obj
       ? this.commercetoolsQuoteRequestToQuoteRequest(commercetoolsQuote.quoteRequest.obj, locale, defaultLocale)
@@ -55,7 +55,7 @@ export default class QuoteMapper {
   static commercetoolsQuoteRequestToQuoteRequest(
     commercetoolsQuoteRequest: CommercetoolsQuoteRequest,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): QuoteRequest {
     return {
       quoteRequestId: commercetoolsQuoteRequest.id,

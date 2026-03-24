@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import { classnames } from '@/utils/classnames/classnames';
 import { Product } from '@/types/entity/product';
 import Image from '@/components/atoms/Image';
 import Button from '@/components/atoms/button';
@@ -55,13 +54,8 @@ const ProductTile = ({
 
     return (
       <div className="flex">
-        <span
-          className={classnames('text-12 font-bold leading-loose md:text-14 lg:text-16', {
-            'text-red-500': !product.price,
-            'text-gray-800': !!product.price,
-          })}
-        >
-          {product.price ? formatCurrency(product.price, product.currency) : translate('common.not-available')}
+        <span className="text-12 font-bold leading-loose text-gray-800 md:text-14 lg:text-16">
+          {formatCurrency(product.price, product.currency)}
         </span>
       </div>
     );
@@ -93,11 +87,7 @@ const ProductTile = ({
             variant="secondary"
             size="s"
             className="w-full px-1 text-12 md:text-14 lg:py-3"
-            onClick={() => {
-              if (!product.price) return;
-              handleAddToCart();
-            }}
-            disabled={!product.price}
+            onClick={handleAddToCart}
           >
             {translate('cart.add')}
           </Button>

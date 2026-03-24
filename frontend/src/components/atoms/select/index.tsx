@@ -1,8 +1,8 @@
 'use client';
 
-import { classnames } from '@/utils/classnames/classnames';
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'use-intl';
+import { classnames } from '@/utils/classnames/classnames';
 
 import {
   Combobox,
@@ -13,10 +13,10 @@ import {
   Transition,
 } from '@headlessui/react';
 
-import useControllableState from '@/hooks/useControllableState';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import Label from '../label';
+import useControllableState from '@/hooks/useControllableState';
 import { SelectProps } from './types';
+import Label from '../label';
 
 const Select = ({
   label,
@@ -52,11 +52,9 @@ const Select = ({
       immediate
       value={dropdownValue}
       onClose={() => setSearch('')}
-      onChange={(inputValue: string | null) => {
-        if (inputValue) {
-          setDropdownValue(inputValue);
-          onChange?.(inputValue);
-        }
+      onChange={(inputValue: string) => {
+        setDropdownValue(inputValue);
+        onChange?.(inputValue);
       }}
       as="div"
       className={classnames('relative', className)}
@@ -92,7 +90,6 @@ const Select = ({
           aria-label="Dropdown button"
           data-testid="dropdown-button"
           className="absolute inset-y-0 right-0 flex items-center pr-3"
-          suppressHydrationWarning
         >
           <ChevronDownIcon className="h-[18px]" aria-hidden="true" />
         </ComboboxButton>

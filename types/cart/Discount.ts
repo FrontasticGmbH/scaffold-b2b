@@ -18,14 +18,13 @@ export type CartDiscountValue =
   | FixedDiscountValue
   | GiftLineItemDiscountValue;
 
-export type CartDiscountTargetType = 'lineItems' | 'pattern' | 'shipping' | 'totalPrice' | 'multiBuyLineItems';
+export type CartDiscountTargetType = 'lineItems' | 'pattern' | 'shipping' | 'totalPrice';
 
 export type CartDiscountTarget =
   | CartDiscountLineItemsTarget
   | CartDiscountPatternTarget
   | CartDiscountShippingCostTarget
-  | CartDiscountTotalPriceTarget
-  | CartDiscountMultipleBuyLineItems;
+  | CartDiscountTotalPriceTarget;
 
 export interface BaseDiscountValue {
   type: DiscountType;
@@ -81,15 +80,6 @@ export interface CartDiscountShippingCostTarget extends BaseCartDiscountTarget {
 
 export interface CartDiscountTotalPriceTarget extends BaseCartDiscountTarget {
   type: 'totalPrice';
-}
-
-export interface CartDiscountMultipleBuyLineItems extends BaseCartDiscountTarget {
-  type: 'multiBuyLineItems';
-  predicate?: string;
-  selectionMode?: CartDiscountSelectionMode;
-  triggerQuantity?: number;
-  discountedQuantity?: number;
-  maxOccurrence?: number;
 }
 
 export interface CartDiscount {

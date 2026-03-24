@@ -8,15 +8,14 @@ import { ProductQueryFactory } from './utils/ProductQueryFactory';
 import { ValidationError } from './errors/ValidationError';
 import queryParamsToSortAttributes from './utils/requestHandlers/queryParamsToSortAttributes';
 import { AccountFetcher } from './utils/AccountFetcher';
-import { RecurringOrderFactory } from './utils/RecurringOrderQueryFactory';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
-import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 import handleError from '@Commerce-commercetools/utils/handleError';
-import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
-import getQuoteApi from '@Commerce-commercetools/utils/apiFactories/getQuoteApi';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
+import getQuoteApi from '@Commerce-commercetools/utils/apiConstructors/getQuoteApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 import { getBusinessUnitKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import ApprovalsQueryFactory from '@Commerce-commercetools/utils/ApprovalsQueryFactory';
 
@@ -33,14 +32,6 @@ function orderQueryFromContext(context: DataSourceContext) {
   const orderQuery = OrderQueryFactory.queryFromParams(context.request);
 
   return { cartApi, orderQuery };
-}
-
-function recurringOrderQueryFromContext(context: DataSourceContext) {
-  const cartApi = getCartApi(context.request, context.frontasticContext);
-
-  const recurringOrderQuery = RecurringOrderFactory.queryFromParams(context.request);
-
-  return { cartApi, recurringOrderQuery };
 }
 
 function quoteQueryFromContext(context: DataSourceContext) {
@@ -94,8 +85,10 @@ function getPreviewPayload(queryResult: ProductPaginatedResult) {
 
 // Master data source is only available in the context of a dynamic page
 const findDynamicPageMasterDataSource = (context: DataSourceContext, dataSourceType: string) => {
+  // Since the DataSourceConfiguration doesn't return the streamId, we need to access the private property directly.
+  // This needs to be refactored once the dataSourceId is returned in the DataSourceConfiguration.
   return context.pageFolder.dataSourceConfigurations.find(
-    (dataSource) => dataSource.dataSourceId === '__master' && dataSource.type === dataSourceType,
+    (dataSource) => (dataSource as any).streamId === '__master' && dataSource.type === dataSourceType,
   );
 };
 
@@ -237,44 +230,6 @@ const dataSources: DataSourceRegistry = {
       const { cartApi, orderQuery } = orderQueryFromContext(context);
 
       const queryResult = await cartApi.queryOrders(orderQuery);
-
-      return {
-        dataSourcePayload: queryResult,
-      };
-    } catch (error) {
-      return {
-        dataSourcePayload: handleError(error, context.request),
-      };
-    }
-  },
-
-  'frontastic/recurring-order': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    try {
-      AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
-
-      const { cartApi, recurringOrderQuery } = recurringOrderQueryFromContext(context);
-
-      const queryResult = await cartApi.queryRecurringOrders(recurringOrderQuery);
-
-      return {
-        dataSourcePayload: {
-          order: queryResult.items[0],
-        },
-      };
-    } catch (error) {
-      return {
-        dataSourcePayload: handleError(error, context.request),
-      };
-    }
-  },
-
-  'frontastic/recurring-orders': async (config: DataSourceConfiguration, context: DataSourceContext) => {
-    try {
-      AccountFetcher.fetchAccountIdFromSessionEnsureLoggedIn(context.request);
-
-      const { cartApi, recurringOrderQuery } = recurringOrderQueryFromContext(context);
-
-      const queryResult = await cartApi.queryRecurringOrders(recurringOrderQuery);
 
       return {
         dataSourcePayload: queryResult,

@@ -15,15 +15,13 @@
       ]
     },
     {
-      "name": "Order Summary",
+      "name": "Settings",
       "fields": [
         {
-          "type": "text",
-          "field": "codeApplied",
-          "label": "Code Applied",
-          "required": true,
-          "default": "Coupon code applied successfully!",
-          "translatable": true
+          "label": "Enable CT (commercetools) payment",
+          "field": "enableCtCheckout",
+          "type": "boolean",
+          "default": true
         }
       ]
     }

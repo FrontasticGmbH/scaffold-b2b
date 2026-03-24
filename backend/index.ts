@@ -12,12 +12,17 @@ import {
   ExtensionRegistry,
 } from '@frontastic/extension-types';
 
+import appHealthExtension from './extensions-runner-test';
 import commercetoolsExtension from '@Commerce-commercetools';
 import contentfulExtensions from '@Content-contentful';
 
 // Integration tests
 
-const extensionsToMerge = [commercetoolsExtension, contentfulExtensions] as Array<ExtensionRegistry>;
+const extensionsToMerge = [
+  commercetoolsExtension,
+  contentfulExtensions,
+  appHealthExtension,
+] as Array<ExtensionRegistry>;
 // END: List of used extensions
 
 const mergeActions = (extensions: Array<ExtensionRegistry>): ActionRegistry => {

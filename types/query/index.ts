@@ -8,7 +8,6 @@ import { RangeFilter } from './RangeFilter';
 import { TermFacet } from './TermFacet';
 import { TermFilter } from './TermFilter';
 import { OrderQuery } from './OrderQuery';
-import { RecurrencePolicyQuery, RecurringOrderQuery } from './RecurringOrderQuery';
 
 export {
   type CategoryQuery,
@@ -25,6 +24,4 @@ export {
   type TermFacet,
   type TermFilter,
   type OrderQuery,
-  type RecurrencePolicyQuery,
-  type RecurringOrderQuery,
 };

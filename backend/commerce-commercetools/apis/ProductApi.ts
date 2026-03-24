@@ -10,58 +10,20 @@ import {
   ProductSearchFacetResult,
   ProductSearchFacetResultBucket,
   ProductSearchRequest,
-  ProductProjection as CommercetoolsProductProjection,
 } from '@commercetools/platform-sdk';
-import { Store } from '@Types/store/Store';
-import { Context, Request } from '@frontastic/extension-types';
 import ProductMapper from '../mappers/ProductMapper';
-import { BadRequestError } from '../errors/BadRequestError';
-import { ExternalError } from '../errors/ExternalError';
-import { ResourceNotFoundError } from '../errors/ResourceNotFoundError';
 import { ProductSearchFactory } from '@Commerce-commercetools/utils/ProductSearchQueryFactory';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import BaseApi from '@Commerce-commercetools/apis/BaseApi';
-import getProjectApi from '@Commerce-commercetools/utils/apiFactories/getProjectApi';
-
-const EXPANDS = [
-  'categories[*].ancestors[*]',
-  'categories[*].parent',
-  'masterVariant.price.discounted.discount',
-  'masterVariant.price.recurrencePolicy',
-  'masterVariant.prices[*].discounted.discount',
-  'masterVariant.prices[*].recurrencePolicy',
-  'masterVariant.recurrencePrices[*].discounted.discount',
-  'masterVariant.recurrencePrices[*].recurrencePolicy',
-  'variants[*].price.discounted.discount',
-  'variants[*].price.recurrencePolicy',
-  'variants[*].prices[*].discounted.discount',
-  'variants[*].prices[*].recurrencePolicy',
-  'variants[*].recurrencePrices[*].discounted.discount',
-  'variants[*].recurrencePrices[*].recurrencePolicy',
-  'productType',
-];
 
 export default class ProductApi extends BaseApi {
-  protected request: Request;
-
-  constructor(context: Context, locale: string | null, currency: string | null, request?: Request | null) {
-    super(context, locale, currency, request);
-    this.request = request;
-  }
-
-  async query(productQuery: ProductQuery): Promise<ProductPaginatedResult> {
+  query: (productQuery: ProductQuery) => Promise<ProductPaginatedResult> = async (productQuery: ProductQuery) => {
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
     productQuery.categories = await this.hydrateCategories(productQuery);
     productQuery.filters = await this.hydrateFilters(productQuery);
-    productQuery.store = await this.hydrateStore(productQuery);
 
     const facetDefinitions: FacetDefinition[] = [
-      ...ProductMapper.commercetoolsProductTypesToFacetDefinitions(
-        await this.getCommercetoolsProductTypes(),
-        locale,
-        defaultLocale,
-      ),
+      ...ProductMapper.commercetoolsProductTypesToFacetDefinitions(await this.getCommercetoolsProductTypes(), locale),
       // Include Price facet
       {
         attributeId: 'variants.prices',
@@ -76,6 +38,7 @@ export default class ProductApi extends BaseApi {
         locale,
         this.productIdField,
       );
+    const defaultLocale = this.defaultLocale;
 
     return this.requestBuilder()
       .products()
@@ -84,53 +47,15 @@ export default class ProductApi extends BaseApi {
         body: commercetoolsProductSearchRequest,
       })
       .execute()
-      .then(async (response) => {
-        let productSearchResults = response.body.results;
-
-        // Extract product IDs from product search results
-        const productIds = productSearchResults
-          .map((productSearchResult) => productSearchResult.id)
-          .filter((id) => id !== undefined);
-
-        // If we have product IDs, fetch complete product projections
-        if (productIds.length > 0) {
-          const productProjections = await this.fetchProductProjectionsByProductIds(
-            productIds,
-            locale,
-            productQuery.distributionChannelId,
-            productQuery.store?.key,
-            productQuery.accountGroupIds,
-          );
-
-          // Create a map for product projections lookup
-          const productProjectionsMap = new Map(
-            productProjections.map((productProjection) => [productProjection.id, productProjection]),
-          );
-
-          // Enrich product search results with complete product projections
-          productSearchResults = productSearchResults.map((productSearchResult) => {
-            const productProjection = productProjectionsMap.get(productSearchResult.id);
-            if (productProjection) {
-              return {
-                ...productSearchResult,
-                productProjection,
-              };
-            }
-            return productSearchResult;
-          });
-        }
-
-        const items = productSearchResults.map((productSearchResult) =>
-          ProductMapper.commercetoolsProductProjectionToProduct(
-            productSearchResult.productProjection,
+      .then((response) => {
+        const items = response.body.results.map((product) =>
+          ProductMapper.commercetoolsProductSearchResultToProduct(
+            product,
             this.productIdField,
             this.categoryIdField,
             locale,
             defaultLocale,
             productQuery.supplyChannelId,
-            productQuery.distributionChannelId,
-            productQuery.accountGroupIds,
-            productSearchResult.matchingVariants,
           ),
         );
         const count = response.body.results.length;
@@ -152,82 +77,35 @@ export default class ProductApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  }
+  };
 
-  async getProduct(productQuery: ProductQuery): Promise<Product> {
+  getProduct: (productQuery: ProductQuery) => Promise<Product> = async (productQuery: ProductQuery) => {
     try {
-      const locale = await this.getCommercetoolsLocal();
-      const defaultLocale = await this.getCommercetoolsDefaultLocal();
-      let commercetoolsProductProjection: CommercetoolsProductProjection;
+      const result = await this.query(productQuery);
 
-      // We assume that the product query is a single product query, so we can use the first item of the result.
-      switch (true) {
-        case productQuery.productIds?.length > 0:
-          commercetoolsProductProjection = await this.fetchProductProjectionById(
-            productQuery.productIds[0],
-            locale,
-            productQuery.distributionChannelId,
-            productQuery.store?.key,
-            productQuery.accountGroupIds,
-          );
-          break;
-        case productQuery.productKeys?.length > 0:
-          commercetoolsProductProjection = await this.fetchProductProjectionByKey(
-            productQuery.productKeys[0],
-            locale,
-            productQuery.distributionChannelId,
-            productQuery.store?.key,
-            productQuery.accountGroupIds,
-          );
-          break;
-        case productQuery.skus?.length > 0:
-          commercetoolsProductProjection = await this.fetchProductProjectionBySku(
-            productQuery.skus[0],
-            locale,
-            productQuery.distributionChannelId,
-            productQuery.store?.key,
-            productQuery.accountGroupIds,
-          );
-          break;
-        default:
-          throw new BadRequestError({ message: 'No product query parameters provided' });
-      }
-
-      // Map the ProductProjection to Product
-      // Wrap the ProductProjection in a structure compatible with the mapper
-      return ProductMapper.commercetoolsProductProjectionToProduct(
-        commercetoolsProductProjection,
-        this.productIdField,
-        this.categoryIdField,
-        locale,
-        defaultLocale,
-        productQuery.supplyChannelId,
-        productQuery.distributionChannelId,
-        productQuery.accountGroupIds,
-      );
+      return result.items.shift() as Product;
     } catch (error) {
       throw error;
     }
-  }
+  };
 
-  async getSearchableAttributes(): Promise<FilterField[]> {
+  getSearchableAttributes: () => Promise<FilterField[]> = async () => {
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const response = await this.requestBuilder()
       .productTypes()
       .get()
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     const filterFields = ProductMapper.commercetoolsProductTypesToFilterFields(
       response.body.results,
       locale,
-      defaultLocale,
+      this.defaultLocale,
     );
 
     // Category filter. Not included as commercetools product type.
@@ -253,11 +131,10 @@ export default class ProductApi extends BaseApi {
     });
 
     return filterFields;
-  }
+  };
 
   async getProductFilters(): Promise<FilterField[]> {
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     const commercetoolsProductTypes = await this.getCommercetoolsProductTypes();
 
@@ -276,16 +153,9 @@ export default class ProductApi extends BaseApi {
       }),
     });
 
-    // Variants price filter. Not included as commercetools product type.
-    filterFields.push({
-      field: 'variants.prices',
-      type: FilterFieldTypes.MONEY,
-      label: 'Variants price',
-    });
-
     // Searchable attributes filter
     filterFields.push(
-      ...ProductMapper.commercetoolsProductTypesToFilterFields(commercetoolsProductTypes, locale, defaultLocale),
+      ...ProductMapper.commercetoolsProductTypesToFilterFields(commercetoolsProductTypes, locale, this.defaultLocale),
     );
 
     filterFields.push(...(await this.getCategoryFilters()));
@@ -311,10 +181,52 @@ export default class ProductApi extends BaseApi {
     ];
   }
 
-  async queryCategories(categoryQuery: CategoryQuery): Promise<PaginatedResult<Category>> {
-    const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
+  queryFacetCategoriesForSubtree: (storeId?: string) => Promise<any> = async (storeId?: string) => {
+    const query: ProductSearchRequest = {
+      ...(storeId && {
+        query: {
+          exact: {
+            field: 'stores',
+            value: storeId,
+          },
+        },
+      }),
+      facets: [
+        {
+          distinct: {
+            name: 'categoriesSubTree',
+            field: 'categoriesSubTree',
+            level: 'products',
+            limit: 200,
+          },
+        },
+      ],
+    };
 
+    const result = await this.requestBuilder()
+      .products()
+      .search()
+      .post({
+        body: query,
+      })
+      .execute();
+
+    const res = (
+      result?.body.facets?.find(
+        (r: ProductSearchFacetResult) => r.name === 'categoriesSubTree',
+      ) as ProductSearchFacetResultBucket
+    )?.buckets
+      ?.filter((b) => b.count > 0)
+      ?.map((b) => b.key);
+
+    return res;
+  };
+
+  async queryCategories(categoryQuery: CategoryQuery, buckets?: string[]): Promise<PaginatedResult<Category>> {
+    const locale = await this.getCommercetoolsLocal();
+    const defaultLocale = this.defaultLocale;
+
+    // TODO: get default from constant
     const limit = +categoryQuery.limit || 24;
     const where: string[] = [];
 
@@ -326,18 +238,8 @@ export default class ProductApi extends BaseApi {
       where.push(`parent(id="${categoryQuery.parentId}")`);
     }
 
-    // Some categories are only available for a specific store. If the storeKey is provided,
-    // we need to filter the categories by store.
-    if (categoryQuery.storeKey) {
-      const store = await getProjectApi(this.request, this.commercetoolsFrontendContext).getStoreByKey(
-        categoryQuery.storeKey,
-      );
-
-      const storeCategoryIds = await this.getCategoryIdsForStore(store.storeId);
-
-      if (storeCategoryIds?.length) {
-        where.push(`id in ("${storeCategoryIds.join('","')}")`);
-      }
+    if (buckets?.length) {
+      where.push(`id in (${buckets.map((b) => `"${b}"`).join(',')})`);
     }
 
     const methodArgs = {
@@ -371,206 +273,18 @@ export default class ProductApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
-  /**
-   * Fetches complete product projections by IDs using the product-projections endpoint
-   * This is used to enrich search results with complete product data
-   */
-  protected async fetchProductProjectionsByProductIds(
-    productIds: string[],
-    locale: Locale,
-    distributionChannelId?: string,
-    storeKey?: string,
-    accountGroupIds?: string[],
-  ): Promise<CommercetoolsProductProjection[]> {
-    if (productIds.length === 0) {
-      return [];
-    }
-
-    const queryArgs: {
-      where: string;
-      limit: number;
-      priceCurrency: string;
-      priceCountry: string;
-      priceChannel?: string;
-      priceCustomerGroupAssignments?: string[];
-      storeProjection?: string;
-      expand: string[];
-    } = {
-      where: `id in ("${productIds.join('","')}")`,
-      limit: productIds.length,
-      priceCurrency: locale.currency,
-      priceCountry: locale.country,
-      priceChannel: distributionChannelId,
-      storeProjection: storeKey,
-      priceCustomerGroupAssignments: accountGroupIds?.length > 0 ? accountGroupIds : undefined,
-      expand: EXPANDS,
-    };
-
-    return this.requestBuilder()
-      .productProjections()
-      .get({
-        queryArgs,
-      })
-      .execute()
-      .then((response) => {
-        const products = response.body.results;
-        if (!products) {
-          throw new ResourceNotFoundError({ message: `Products with IDs '${productIds.join('","')}' not found` });
-        }
-        return products;
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-  }
-
-  /**
-   * Fetches a product projection by its unique ID.
-   * Uses in-store endpoint if storeKey is provided.
-   */
-  protected async fetchProductProjectionById(
-    productId: string,
-    locale: Locale,
-    distributionChannelId?: string,
-    storeKey?: string,
-    accountGroupIds?: string[],
-  ): Promise<CommercetoolsProductProjection> {
-    const queryArgs: {
-      priceCurrency?: string;
-      priceCountry?: string;
-      priceChannel?: string;
-      priceCustomerGroupAssignments?: string[];
-      storeProjection?: string;
-      expand?: string[];
-    } = {
-      priceCurrency: locale.currency,
-      priceCountry: locale.country,
-      priceChannel: distributionChannelId,
-      priceCustomerGroupAssignments: accountGroupIds?.length > 0 ? accountGroupIds : undefined,
-      storeProjection: storeKey,
-      expand: EXPANDS,
-    };
-
-    return await this.requestBuilder()
-      .productProjections()
-      .withId({ ID: productId })
-      .get({ queryArgs })
-      .execute()
-      .then((response) => {
-        const product = response.body;
-        if (!product) {
-          throw new ResourceNotFoundError({ message: `Product with ID '${productId}' not found` });
-        }
-        return product;
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-  }
-
-  /**
-   * Fetches a product projection by its key.
-   * Uses in-store endpoint if storeKey is provided.
-   */
-  protected async fetchProductProjectionByKey(
-    key: string,
-    locale: Locale,
-    distributionChannelId?: string,
-    storeKey?: string,
-    accountGroupIds?: string[],
-  ): Promise<CommercetoolsProductProjection> {
-    const queryArgs: {
-      priceCurrency?: string;
-      priceCountry?: string;
-      priceChannel?: string;
-      priceCustomerGroupAssignments?: string[];
-      storeProjection?: string;
-      expand?: string[];
-    } = {
-      priceCurrency: locale.currency,
-      priceCountry: locale.country,
-      priceChannel: distributionChannelId,
-      priceCustomerGroupAssignments: accountGroupIds?.length > 0 ? accountGroupIds : undefined,
-      storeProjection: storeKey,
-      expand: EXPANDS,
-    };
-
-    return await this.requestBuilder()
-      .productProjections()
-      .withKey({ key })
-      .get({ queryArgs })
-      .execute()
-      .then((response) => {
-        const product = response.body;
-        if (!product) {
-          throw new ResourceNotFoundError({ message: `Product with key '${key}' not found` });
-        }
-        return product;
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-  }
-
-  /**
-   * Fetches a product projection by SKU using a where clause.
-   * Note: SKU lookup queries all products and returns the first match.
-   */
-  protected async fetchProductProjectionBySku(
-    sku: string,
-    locale: Locale,
-    distributionChannelId?: string,
-    storeKey?: string,
-    accountGroupIds?: string[],
-  ): Promise<CommercetoolsProductProjection> {
-    const queryArgs: {
-      where?: string;
-      priceCurrency?: string;
-      priceCountry?: string;
-      priceChannel?: string;
-      priceCustomerGroupAssignments?: string[];
-      storeProjection?: string;
-      expand?: string[];
-      limit?: number;
-    } = {
-      where: `masterVariant(sku="${sku}") or variants(sku="${sku}")`, // Match by SKU across all variants
-      priceCurrency: locale.currency,
-      priceCountry: locale.country,
-      priceChannel: distributionChannelId,
-      priceCustomerGroupAssignments: accountGroupIds?.length > 0 ? accountGroupIds : undefined,
-      storeProjection: storeKey,
-      expand: EXPANDS,
-      limit: 1, // We only need the first match
-    };
-
-    return await this.requestBuilder()
-      .productProjections()
-      .get({ queryArgs })
-      .execute()
-      .then((response) => {
-        const product = response.body.results?.[0];
-        if (!product) {
-          throw new ResourceNotFoundError({ message: `Product with SKU '${sku}' not found` });
-        }
-        return product;
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-  }
-
-  protected getOffsetFromCursor(cursor: string): number | undefined {
+  protected getOffsetFromCursor = (cursor: string): number | undefined => {
     if (cursor === undefined) {
       return undefined;
     }
 
     const offsetMach = cursor.match(/(?<=offset:).+/);
     return offsetMach !== null ? +Object.values(offsetMach)[0] : undefined;
-  }
+  };
 
   protected async hydrateCategories(productQuery: ProductQuery): Promise<string[]> {
     if (productQuery.categories !== undefined && productQuery.categories.length !== 0) {
@@ -597,28 +311,6 @@ export default class ProductApi extends BaseApi {
       return categoryIds;
     }
     return [];
-  }
-
-  protected async hydrateStore(productQuery: ProductQuery): Promise<Store | undefined> {
-    const projectApi = getProjectApi(this.request, this.commercetoolsFrontendContext);
-
-    // We give priority to storeRef as this is set by the seller in Studio
-    if (productQuery.storeRef) {
-      switch (this.storeRefField) {
-        case 'key':
-          return await projectApi.getStoreByKey(productQuery.storeRef);
-        case 'id':
-          return await projectApi.getStoreById(productQuery.storeRef);
-        default:
-          break;
-      }
-    }
-
-    if (productQuery?.store?.key) {
-      return await projectApi.getStoreByKey(productQuery.store.key);
-    }
-
-    return undefined;
   }
 
   protected async hydrateFilters(productQuery: ProductQuery): Promise<Filter[]> {
@@ -663,56 +355,13 @@ export default class ProductApi extends BaseApi {
     return [];
   }
 
-  protected async getCategoryIdsForStore(storeId: string): Promise<string[] | undefined> {
-    const productSearchRequest: ProductSearchRequest = {
-      query: {
-        exact: {
-          field: 'stores',
-          value: storeId, // CoCo uses IDs to filter products by store
-        },
-      },
-      facets: [
-        {
-          distinct: {
-            name: 'categoriesSubTree',
-            field: 'categoriesSubTree',
-            level: 'products',
-            limit: 200,
-          },
-        },
-      ],
-    };
-
-    return await this.requestBuilder()
-      .products()
-      .search()
-      .post({
-        body: productSearchRequest,
-      })
-      .execute()
-      .then((response) => {
-        const categoriesSubTreeFacet = response.body.facets?.find(
-          (facetResult: ProductSearchFacetResult) => facetResult.name === 'categoriesSubTree',
-        ) as ProductSearchFacetResultBucket;
-
-        if (!categoriesSubTreeFacet?.buckets) {
-          return undefined;
-        }
-
-        return categoriesSubTreeFacet.buckets.filter((bucket) => bucket.count > 0).map((bucket) => bucket.key);
-      })
-      .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-  }
-
   protected async getCommercetoolsCategoryPagedQueryResponse(methodArgs: object) {
     return await this.requestBuilder()
       .categories()
       .get(methodArgs)
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -722,7 +371,7 @@ export default class ProductApi extends BaseApi {
       .get(methodArgs)
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 }

@@ -2,20 +2,21 @@ import {
   DataSourceConfiguration,
   DataSourceContext,
   DataSourceResult,
+  DynamicPageContext,
   DynamicPageRedirectResult,
   DynamicPageSuccessResult,
   Request,
   Response,
 } from '@frontastic/extension-types';
 
-import axios, { AxiosResponse } from 'axios';
-import { Filter } from '@Types/query';
+import axios from 'axios';
 import { loadMovieData, MovieData } from './movieData';
 import { getPath } from './utils/Request';
 
 export default {
   'dynamic-page-handler': async (
     request: Request,
+    context: DynamicPageContext,
   ): Promise<DynamicPageSuccessResult | DynamicPageRedirectResult | null> => {
     const staticPageMatch = getPath(request)?.match(/^\/(foo-handler)/);
     if (staticPageMatch) {
@@ -90,16 +91,13 @@ export default {
     ): Promise<DataSourceResult> => {
       const pageSize = context.request.query.pageSize || 10;
       const after = context.request.query.cursor || null;
-      const {
-        characterFilters,
-      }: { characterFilters: { filters: Array<Filter & { field: string }>; values: Record<string, string> } } =
-        config.configuration.characterFilters;
-      const filters = characterFilters.filters.map((filter) => {
+      const { characterFilters } = config.configuration;
+      const filters = characterFilters.filters.map((filter: any) => {
         let value = characterFilters.values[filter.field];
         if (typeof value !== 'number') {
           value = `"${value}"`;
         }
-        return `${filter.identifier}: ${value}`;
+        return `${filter.field}: ${value}`;
       });
       return await axios
         .post('https://frontastic-swapi-graphql.netlify.app/', {
@@ -181,11 +179,7 @@ export default {
       },
       filters: async (): Promise<Response> => {
         return await axios
-          .post<
-            AxiosResponse<{
-              getAllPossiblePeopleFilters: { filter: Array<Filter & { name: string; values: string[] }> };
-            }>
-          >('https://frontastic-swapi-graphql.netlify.app/', {
+          .post('https://frontastic-swapi-graphql.netlify.app/', {
             query: `{
             getAllPossiblePeopleFilters {
               filter {
@@ -196,7 +190,8 @@ export default {
           }}`,
           })
           .then((response) => {
-            const responseData = response.data?.data?.getAllPossiblePeopleFilters?.filter?.map((filter) => {
+            const { filter } = response.data?.data?.getAllPossiblePeopleFilters;
+            const responseData = filter.map((filter: any) => {
               return {
                 field: filter.name,
                 label: filter.name,

@@ -7,7 +7,6 @@ export interface ClientConfig {
   hostUrl: string;
   projectKey: string;
   productIdField?: string;
-  storeRefField?: string;
   categoryIdField?: string;
   defaultAssociateRoleKeys?: string[];
   defaultStoreKey?: string;

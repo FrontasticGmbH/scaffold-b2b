@@ -8,7 +8,7 @@ const useBusinessUnit = () => {
 
   const { account } = useAccount();
 
-  const filterPrivileged = (businessUnit: BusinessUnit) => {
+  const filterPriviliged = (businessUnit: BusinessUnit) => {
     return businessUnit.associates?.some(
       (associate) =>
         associate.accountId === account?.accountId && associate.roles?.some((role) => role.key === 'admin'),
@@ -23,9 +23,9 @@ const useBusinessUnit = () => {
 
   const selectedBusinessUnit = businessUnitsData?.find((businessUnit) => businessUnit.key === selectedBusinessUnitKey);
 
-  const activeBusinessUnit = selectedBusinessUnit ?? businessUnitsData?.filter(filterPrivileged)[0];
+  const activeBusinessUnit = selectedBusinessUnit ?? businessUnitsData?.filter(filterPriviliged)[0];
 
-  const businessUnits = businessUnitsData?.filter(filterPrivileged) ?? [];
+  const businessUnits = businessUnitsData?.filter(filterPriviliged) ?? [];
 
   return {
     businessUnits,

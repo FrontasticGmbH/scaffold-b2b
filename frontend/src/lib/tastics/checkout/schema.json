@@ -1,4 +1,5 @@
 {
+  "tasticType": "commercetools/ui/checkout",
   "name": "Checkout",
   "category": "Checkout",
   "schema": [
@@ -21,34 +22,6 @@
           "field": "enableCtCheckout",
           "type": "boolean",
           "default": true
-        }
-      ]
-    },
-    {
-      "name": "Redirect URL after Checkout",
-      "fields": [
-        {
-          "type": "description",
-          "text": "This is the url where the customer will be redirected after a successful checkout."
-        },
-        {
-          "label": "URL",
-          "field": "callbackUrl",
-          "type": "string",
-          "default": "/thank-you"
-        }
-      ]
-    },
-    {
-      "name": "Order Summary",
-      "fields": [
-        {
-          "type": "text",
-          "field": "codeApplied",
-          "label": "Code Applied",
-          "required": true,
-          "default": "Coupon code applied successfully!",
-          "translatable": true
         }
       ]
     }

@@ -26,7 +26,6 @@ const ProductTile = ({
     maxQuantity = Number.MAX_VALUE,
     restockableInDays,
     url,
-    discount,
   },
   onAddToCart,
   addToCartDisabled = false,
@@ -48,12 +47,11 @@ const ProductTile = ({
 
   const { formatCurrency } = useFormat();
 
-  const { isDiscounted, discount: discountInfo } = useDiscount(price, discountedPrice, discount);
+  const { isDiscounted, discountPercentage } = useDiscount(price, discountedPrice);
 
   const descriptionItems = (specifications ?? []).filter((item) => !!item.value);
 
   const maxDescriptionItems = 3;
-  const hasPriceAndIsInStock = !!price && inStock;
 
   return (
     <div
@@ -68,7 +66,7 @@ const ProductTile = ({
     >
       {isDiscounted && (
         <DiscountTag
-          discountName={discountInfo?.name}
+          discountPercentage={discountPercentage}
           className={classnames('absolute left-0 top-4', { 'md:top-2': variant === 'list-item' })}
         />
       )}
@@ -77,11 +75,7 @@ const ProductTile = ({
           'md:hidden': variant === 'list-item',
         })}
       >
-        {price ? (
-          <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
-        ) : (
-          <span className="text-red-500">{translate('common.not-available')}</span>
-        )}
+        <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
       </div>
 
       <Link href={url ?? '#'}>
@@ -138,11 +132,7 @@ const ProductTile = ({
         )}
       >
         <div className={classnames('hidden justify-end', { 'md:flex': variant === 'list-item' })}>
-          {price ? (
-            <StockIndicator inStock={inStock} restockableInDays={restockableInDays} />
-          ) : (
-            <span className="text-red-500">{translate('common.not-available')}</span>
-          )}
+          <StockIndicator inStock={inStock && Boolean(price)} restockableInDays={restockableInDays} />
         </div>
 
         <div
@@ -157,7 +147,7 @@ const ProductTile = ({
               onChange={setQuantity}
               minValue={1}
               maxValue={maxQuantity}
-              disabled={!hasPriceAndIsInStock || addToCartDisabled}
+              disabled={!inStock || addToCartDisabled}
             />
           </div>
 
@@ -200,7 +190,7 @@ const ProductTile = ({
                 minValue={Math.min(1, maxQuantity ?? Infinity)}
                 maxValue={maxQuantity}
                 showLabel={false}
-                disabled={!hasPriceAndIsInStock || addToCartDisabled}
+                disabled={!inStock || addToCartDisabled}
               />
             </div>
 
@@ -210,7 +200,7 @@ const ProductTile = ({
               className="grow truncate"
               onClick={handleAddToCart}
               loading={addingToCart}
-              disabled={!hasPriceAndIsInStock || addToCartDisabled || maxQuantity === 0}
+              disabled={!inStock || addToCartDisabled || maxQuantity === 0}
             >
               {translate('cart.add')}
             </Button>

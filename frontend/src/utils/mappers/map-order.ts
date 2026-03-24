@@ -7,9 +7,8 @@ import { mapLineItem } from './map-lineitem';
 
 const orderStatus = (order: Order): OrderStatus => {
   if (order.shipmentState === 'Delivered' || order.orderState === 'Complete') return 'Delivered';
-  else if (order.orderState === 'Open') {
-    return order.approvalFlowStatus || 'Placed';
-  } else if (order.orderState === 'Confirmed') return order.shipmentState === 'Shipped' ? 'Shipped' : 'Confirmed';
+  else if (order.orderState === 'Open') return 'Pending';
+  else if (order.orderState === 'Confirmed') return order.shipmentState === 'Shipped' ? 'Shipped' : 'Confirmed';
   else return 'Returned';
 };
 
@@ -25,7 +24,7 @@ export const mapOrder = (order: Order, { businessUnits }: { businessUnits?: Busi
     businessUnit: businessUnits?.find((bu) => bu.key === order.businessUnitKey)?.name ?? order.businessUnitKey ?? '',
     creationDate: order.createdAt ? new Date(order.createdAt).toISOString() : '',
     status: mappedStatus,
-    items: (order.lineItems ?? []).map((item) => mapLineItem(item, { discountCodes: order?.discountCodes ?? [] })),
+    items: (order.lineItems ?? []).map(mapLineItem),
     currency: currencyCode,
     taxCosts: tax.centAmount,
     subtotal: subtotal.centAmount,

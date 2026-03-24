@@ -7,5 +7,4 @@ export interface ShippingMethod {
   estimatedDeliveryDate?: string;
   price: number;
   currency: Currency;
-  freeAbove?: number;
 }

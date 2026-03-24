@@ -6,7 +6,6 @@ import { Locale } from '@/project.config';
 import { mapMasterAttributes } from './map-master-attributes';
 import { mapCategory } from './map-category';
 import { mapAttribute } from './map-attribute';
-import { Facet } from '@shared/types/result';
 
 export const mapProduct = (
   product: Product,
@@ -16,7 +15,6 @@ export const mapProduct = (
     locale = 'en-us',
     filterOutNonMatchingVariants = true,
   }: { variantIndex?: number; cart?: Cart; locale?: Locale; filterOutNonMatchingVariants?: boolean } = {},
-  facets?: Facet[],
 ): EntityProduct => {
   const variant =
     product.variants[variantIndex] ??
@@ -28,7 +26,7 @@ export const mapProduct = (
     ) ??
     product.variants[0];
 
-  const cheapestVariant = product.variants.reduce(
+  const cheapeastVariant = product.variants.reduce(
     (a, b) => ((a.price?.centAmount ?? Number.MAX_VALUE) < (b.price?.centAmount ?? Number.MAX_VALUE) ? a : b),
     {
       price: { centAmount: Number.MAX_VALUE },
@@ -52,35 +50,19 @@ export const mapProduct = (
     .map((v) => mapAttribute({ label: v.attributes?.model, key: v.attributes?.model }))
     .filter(Boolean) as Attribute[];
 
-  const specifications = mapMasterAttributes(variant, facets);
+  const specifications = mapMasterAttributes(variant);
 
   const priceRange =
-    cheapestVariant &&
+    cheapeastVariant &&
     mostExpensiveVariant &&
-    cheapestVariant.price?.centAmount !== mostExpensiveVariant.price?.centAmount
+    cheapeastVariant.price?.centAmount !== mostExpensiveVariant.price?.centAmount
       ? ([
-          (cheapestVariant.price?.centAmount ?? 0) / Math.pow(10, cheapestVariant.price?.fractionDigits ?? 2),
+          (cheapeastVariant.price?.centAmount ?? 0) / Math.pow(10, cheapeastVariant.price?.fractionDigits ?? 2),
           (mostExpensiveVariant.price?.centAmount ?? 0) / Math.pow(10, mostExpensiveVariant.price?.fractionDigits ?? 2),
         ] as [number, number])
       : undefined;
 
   const inCartQuantity = cart?.lineItems?.find((lineItem) => lineItem.variant?.sku === variant.sku)?.count ?? 0;
-
-  const discount = variant.discountedPrice?.discount;
-  const discountValue = discount?.discountValue;
-
-  let discountType: 'relative' | 'absolute' | undefined;
-  let discountAmount: number | undefined;
-
-  if (discountValue) {
-    if (discountValue.type === 'relative') {
-      discountType = 'relative';
-      discountAmount = discountValue.value / 100;
-    } else if (discountValue.type === 'absolute') {
-      discountType = 'absolute';
-      discountAmount = (discountValue.value?.centAmount ?? 0) / 100;
-    }
-  }
 
   return {
     id: product.productId ?? '',
@@ -102,15 +84,5 @@ export const mapProduct = (
     ...(priceRange ? { priceRange } : {}),
     url: product._url,
     categories: product.categories?.map((c) => mapCategory(c, { locale })) ?? [],
-    ...(discount
-      ? {
-          discount: {
-            name: discount.name ?? '',
-            description: discount.description ?? '',
-            type: discountType,
-            value: discountAmount,
-          },
-        }
-      : {}),
   };
 };

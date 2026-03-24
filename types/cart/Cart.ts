@@ -11,7 +11,6 @@ export enum CartOrigin {
   Customer = 'Customer',
   Merchant = 'Merchant',
   Quote = 'Quote',
-  RecurringOrder = 'RecurringOrder',
 }
 
 export enum CartState {
@@ -25,7 +24,6 @@ export interface Cart {
   cartId: string;
   cartVersion?: string;
   lineItems?: LineItem[];
-  totalLineItemQuantity?: number;
   email?: string;
   shippingInfo?: ShippingInfo; // Info of the shipping method selected by the customer
   availableShippingMethods?: ShippingMethod[]; // Available shipping methods for this cart

@@ -18,13 +18,6 @@ import {
   ShippingRate as CommercetoolsShippingRate,
   CartDiscountTarget as CommercetoolsCartDiscountTarget,
   SelectionMode as CommercetoolsSelectionMode,
-  RecurrencePolicy as CommercetoolsRecurrencePolicy,
-  RecurrencePolicySchedule as CommercetoolsRecurrencePolicySchedule,
-  IntervalUnit as CommercetoolsIntervalUnit,
-  LineItemRecurrenceInfo as CommercetoolsLineItemRecurrenceInfo,
-  PriceSelectionMode as CommercetoolsPriceSelectionMode,
-  RecurringOrder as CommercetoolsRecurringOrder,
-  RecurringOrderState as CommercetoolsRecurringOrderState,
 } from '@commercetools/platform-sdk';
 import { LineItem, LineItemShippingAddress } from '@Types/cart/LineItem';
 import { Cart, CartOrigin, CartState } from '@Types/cart/Cart';
@@ -63,8 +56,6 @@ import {
   TaxPortion,
   TaxRate,
   DirectDiscount,
-  RecurrencePolicy,
-  LineItemRecurrenceInfo,
 } from '@Types/cart';
 import {
   ShippingMethod as CommercetoolsShippingMethod,
@@ -72,8 +63,6 @@ import {
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/shipping-method';
 import { Payment as CommercetoolsPayment } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/payment';
 import { CartDiscountSelectionMode, CartDiscountTarget } from '@Types/cart/Discount';
-import { RecurringOrder, RecurringOrderState } from '@Types/cart/RecurringOrder';
-import { IntervalUnit, PriceSelectionMode, RecurrencePolicySchedule } from '@Types/cart/RecurrencePolicy';
 import ProductRouter from '../utils/routers/ProductRouter';
 import ProductMapper from './ProductMapper';
 import AccountMapper from './AccountMapper';
@@ -84,9 +73,8 @@ export default class CartMapper {
   static commercetoolsCartToCart(
     commercetoolsCart: CommercetoolsCart,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
     supplyChannelId?: string,
-    distributionChannelId?: string,
   ): Cart {
     return {
       cartId: commercetoolsCart.id,
@@ -97,9 +85,7 @@ export default class CartMapper {
         locale,
         defaultLocale,
         supplyChannelId,
-        distributionChannelId,
       ),
-      totalLineItemQuantity: commercetoolsCart?.totalLineItemQuantity,
       email: commercetoolsCart?.customerEmail,
       sum: ProductMapper.commercetoolsMoneyToMoney(commercetoolsCart.totalPrice),
       shippingAddress: this.commercetoolsAddressToAddress(commercetoolsCart.shippingAddress),
@@ -130,7 +116,7 @@ export default class CartMapper {
   static commerceToolsDiscountOnTotalPriceToDiscountOnTotalPrice(
     commerceToolsDiscountOnTotalPrice: CommercetoolsDiscountOnTotalPrice,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): DiscountOnTotalPrice | undefined {
     if (!commerceToolsDiscountOnTotalPrice) {
       return undefined;
@@ -157,9 +143,8 @@ export default class CartMapper {
   static commercetoolsLineItemsToLineItems(
     commercetoolsLineItems: CommercetoolsLineItem[],
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
     supplyChannelId?: string,
-    distributionChannelId?: string,
   ): LineItem[] {
     const lineItems: LineItem[] = [];
 
@@ -167,8 +152,8 @@ export default class CartMapper {
       const item: LineItem = {
         lineItemId: commercetoolsLineItem.id,
         productId: commercetoolsLineItem.productId,
-        productSlug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsLineItem.productSlug),
-        name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsLineItem?.name) || '',
+        productSlug: commercetoolsLineItem.productSlug?.[locale.language],
+        name: commercetoolsLineItem?.name[locale.language] || '',
         type: 'variant',
         count: commercetoolsLineItem.quantity,
         price: ProductMapper.commercetoolsMoneyToMoney(commercetoolsLineItem.price?.value),
@@ -190,9 +175,7 @@ export default class CartMapper {
         variant: ProductMapper.commercetoolsProductVariantToVariant(
           commercetoolsLineItem.variant,
           locale,
-          defaultLocale,
           supplyChannelId,
-          distributionChannelId,
         ),
         isGift:
           commercetoolsLineItem?.lineItemMode !== undefined && commercetoolsLineItem.lineItemMode === 'GiftLineItem',
@@ -206,44 +189,12 @@ export default class CartMapper {
           }),
           valid: commercetoolsLineItem.shippingDetails?.valid,
         },
-        recurrenceInfo:
-          commercetoolsLineItem?.recurrenceInfo !== undefined
-            ? this.commercetoolsLineItemRecurrenceInfoToLineItemRecurrenceInfo(
-                commercetoolsLineItem?.recurrenceInfo,
-                locale,
-                defaultLocale,
-              )
-            : undefined,
       };
       item._url = ProductRouter.generateUrlFor(item);
       lineItems.push(item);
     });
 
     return lineItems;
-  }
-
-  static commercetoolsLineItemRecurrenceInfoToLineItemRecurrenceInfo(
-    commercetoolsLineItemRecurrenceInfo: CommercetoolsLineItemRecurrenceInfo,
-    locale: Locale,
-    defaultLocale: Locale,
-  ): LineItemRecurrenceInfo {
-    const lineItemRecurrenceInfo: LineItemRecurrenceInfo = {
-      priceSelectionMode: this.commercetoolsPriceSelectionModeToPriceSelectionMode(
-        commercetoolsLineItemRecurrenceInfo?.priceSelectionMode,
-      ),
-      recurrencePolicy: {
-        recurrencePolicyId: commercetoolsLineItemRecurrenceInfo.recurrencePolicy.id,
-        ...(commercetoolsLineItemRecurrenceInfo.recurrencePolicy.obj && {
-          ...this.commercetoolsRecurrencePolicyToRecurrencePolicy(
-            commercetoolsLineItemRecurrenceInfo.recurrencePolicy.obj,
-            locale,
-            defaultLocale,
-          ),
-        }),
-      },
-    };
-
-    return lineItemRecurrenceInfo;
   }
 
   static commercetoolsAddressToAddress(commercetoolsAddress: CommercetoolsAddress): Address {
@@ -257,8 +208,6 @@ export default class CartMapper {
       streetNumber: commercetoolsAddress?.streetNumber,
       additionalStreetInfo: commercetoolsAddress?.additionalStreetInfo,
       additionalAddressInfo: commercetoolsAddress?.additionalAddressInfo,
-      building: commercetoolsAddress?.building,
-      apartment: commercetoolsAddress?.apartment,
       postalCode: commercetoolsAddress?.postalCode,
       city: commercetoolsAddress?.city,
       country: commercetoolsAddress?.country,
@@ -307,8 +256,6 @@ export default class CartMapper {
       streetNumber: address?.streetNumber,
       additionalStreetInfo: address?.additionalStreetInfo,
       additionalAddressInfo: address?.additionalAddressInfo,
-      building: address?.building,
-      apartment: address?.apartment,
       postalCode: address?.postalCode,
       city: address?.city,
       country: address?.country,
@@ -320,9 +267,7 @@ export default class CartMapper {
   static commercetoolsOrderToOrder(
     commercetoolsOrder: CommercetoolsOrder,
     locale: Locale,
-    defaultLocale: Locale,
-    supplyChannelId?: string,
-    distributionChannelId?: string,
+    defaultLocale: string,
   ): Order {
     return {
       cartId: commercetoolsOrder.cart?.id,
@@ -334,13 +279,7 @@ export default class CartMapper {
       purchaseOrderNumber: this.getPurchaseOrderNumber(commercetoolsOrder),
       quoteId: commercetoolsOrder.quote?.id,
       orderVersion: commercetoolsOrder.version.toString(),
-      lineItems: this.commercetoolsLineItemsToLineItems(
-        commercetoolsOrder.lineItems,
-        locale,
-        defaultLocale,
-        supplyChannelId,
-        distributionChannelId,
-      ),
+      lineItems: this.commercetoolsLineItemsToLineItems(commercetoolsOrder.lineItems, locale, defaultLocale),
       email: commercetoolsOrder?.customerEmail,
       shippingAddress: this.commercetoolsAddressToAddress(commercetoolsOrder.shippingAddress),
       billingAddress: this.commercetoolsAddressToAddress(commercetoolsOrder.billingAddress),
@@ -357,134 +296,13 @@ export default class CartMapper {
       returnInfo: this.commercetoolsReturnInfoToReturnInfo(commercetoolsOrder.returnInfo),
       shipmentState: this.commercetoolsShipmentStateToShipmentState(commercetoolsOrder.shipmentState),
       accountGroup: AccountMapper.commercetoolsCustomerGroupToAccountGroup(commercetoolsOrder.customerGroup?.obj),
-      recurringOrder: commercetoolsOrder.recurringOrder?.obj
-        ? this.commercetoolsRecurringOrderToRecurringOrder(commercetoolsOrder.recurringOrder.obj, locale, defaultLocale)
-        : undefined,
     };
-  }
-
-  static commercetoolsRecurringOrderStateToRecurringOrderState(
-    state: CommercetoolsRecurringOrderState,
-  ): RecurringOrderState {
-    switch (state) {
-      case 'Active':
-        return 'Active';
-      case 'Expired':
-        return 'Expired';
-      case 'Canceled':
-        return 'Canceled';
-      case 'Failed':
-        return 'Failed';
-      case 'Paused':
-        return 'Paused';
-      default:
-        return undefined;
-    }
-  }
-
-  static commercetoolsRecurringOrderToRecurringOrder(
-    commercetoolsRecurringOrder: CommercetoolsRecurringOrder,
-    locale: Locale,
-    defaultLocale: Locale,
-  ): RecurringOrder {
-    return {
-      recurringOrderId: commercetoolsRecurringOrder?.id,
-      recurringOrderVersion: commercetoolsRecurringOrder?.version,
-      key: commercetoolsRecurringOrder?.key,
-      schedule: this.commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
-        commercetoolsRecurringOrder?.schedule,
-      ),
-      recurringOrderState: this.commercetoolsRecurringOrderStateToRecurringOrderState(
-        commercetoolsRecurringOrder?.recurringOrderState,
-      ),
-      businessUnitKey: commercetoolsRecurringOrder?.businessUnit?.key,
-      storeKey: commercetoolsRecurringOrder?.store?.key,
-      cart: commercetoolsRecurringOrder?.cart?.obj
-        ? this.commercetoolsCartToCart(commercetoolsRecurringOrder?.cart?.obj, locale, defaultLocale)
-        : undefined,
-      account: commercetoolsRecurringOrder?.customer?.obj
-        ? AccountMapper.commercetoolsCustomerToAccount(commercetoolsRecurringOrder?.customer?.obj)
-        : undefined,
-      originOrderId: commercetoolsRecurringOrder?.originOrder?.id,
-      nextOrderAt: commercetoolsRecurringOrder?.nextOrderAt,
-      resumesAt: commercetoolsRecurringOrder?.resumesAt,
-      lastOrderAt: commercetoolsRecurringOrder?.lastOrderAt,
-      startsAt: commercetoolsRecurringOrder?.startsAt,
-      createdAt: commercetoolsRecurringOrder?.createdAt,
-    };
-  }
-
-  static commercetoolsRecurrencePolicyToRecurrencePolicy(
-    commercetoolsRecurrencePolicy: CommercetoolsRecurrencePolicy,
-    locale: Locale,
-    defaultLocale: Locale,
-  ): RecurrencePolicy {
-    return {
-      recurrencePolicyId: commercetoolsRecurrencePolicy?.id,
-      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsRecurrencePolicy?.name) || undefined,
-      key: commercetoolsRecurrencePolicy?.key,
-      description:
-        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsRecurrencePolicy?.description) ||
-        undefined,
-      schedule: this.commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
-        commercetoolsRecurrencePolicy?.schedule,
-      ),
-    };
-  }
-
-  static commercetoolsRecurrencePolicyScheduleToRecurrencePolicySchedule(
-    commercetoolsRecurrencePolicySchedule: CommercetoolsRecurrencePolicySchedule,
-  ): RecurrencePolicySchedule {
-    switch (commercetoolsRecurrencePolicySchedule?.type) {
-      case 'dayOfMonth':
-        return {
-          type: 'dayOfMonth',
-          day: commercetoolsRecurrencePolicySchedule?.day,
-        };
-
-      case 'standard':
-        return {
-          type: 'standard',
-          value: commercetoolsRecurrencePolicySchedule?.value,
-          intervalUnit: this.commercetoolsIntervalUnitsToIntervalUnits(
-            commercetoolsRecurrencePolicySchedule?.intervalUnit,
-          ),
-        };
-      default:
-        return undefined;
-    }
-  }
-
-  static commercetoolsPriceSelectionModeToPriceSelectionMode(
-    mode: CommercetoolsPriceSelectionMode,
-  ): PriceSelectionMode {
-    switch (mode) {
-      case 'Fixed':
-        return PriceSelectionMode.Fixed;
-      case 'Dynamic':
-        return PriceSelectionMode.Dynamic;
-      default:
-        return undefined;
-    }
-  }
-
-  static commercetoolsIntervalUnitsToIntervalUnits(unit: CommercetoolsIntervalUnit): IntervalUnit {
-    switch (unit) {
-      case 'Days':
-        return 'Days';
-      case 'Months':
-        return 'Months';
-      case 'Weeks':
-        return 'Weeks';
-      default:
-        return undefined;
-    }
   }
 
   static commercetoolsShippingInfoToShippingInfo(
     commercetoolsShippingInfo: CommercetoolsShippingInfo | undefined,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): ShippingInfo | undefined {
     if (commercetoolsShippingInfo === undefined) {
       return undefined;
@@ -515,7 +333,7 @@ export default class CartMapper {
   static commercetoolsShippingMethodToShippingMethod(
     commercetoolsShippingMethod: CommercetoolsShippingMethod,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): ShippingMethod {
     return {
       shippingMethodId: commercetoolsShippingMethod?.id || undefined,
@@ -599,7 +417,7 @@ export default class CartMapper {
   static commercetoolsDiscountCodesInfoToDiscountCodes(
     commercetoolsDiscountCodesInfo: CommercetoolsDiscountCodeInfo[] | undefined,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): DiscountCode[] {
     const discounts: DiscountCode[] = [];
 
@@ -634,7 +452,7 @@ export default class CartMapper {
   static commercetoolsDiscountCodeInfoToDiscountCode(
     commercetoolsDiscountCodeInfo: CommercetoolsDiscountCodeInfo,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): DiscountCode {
     let discountCode: DiscountCode = {
       discountCodeId: commercetoolsDiscountCodeInfo.discountCode.id,
@@ -651,10 +469,9 @@ export default class CartMapper {
         description:
           LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsDiscountCode.description) || undefined,
         discounts: commercetoolsDiscountCode.cartDiscounts.map((commercetoolsCartDiscount) => {
-          if (this.isCartDiscountReferenceExpanded(commercetoolsCartDiscount)) {
-            return this.commercetoolsCartDiscountToCartDiscount(commercetoolsCartDiscount.obj, locale, defaultLocale);
-          }
-          return undefined;
+          return {
+            cartDiscountId: commercetoolsCartDiscount.id,
+          };
         }),
       };
     }
@@ -695,7 +512,7 @@ export default class CartMapper {
   static commercetoolsDiscountPortionToDiscountedPortion(
     commercetoolsDiscountedPortion: CommercetoolsDiscountedTotalPricePortion | CommercetoolsDiscountedLineItemPortion,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): DiscountedPortion {
     let cartDiscount: CartDiscount = {
       cartDiscountId: commercetoolsDiscountedPortion.discount.id,
@@ -718,7 +535,7 @@ export default class CartMapper {
   static commercetoolsCartDiscountToCartDiscount(
     commercetoolsCartDiscount: CommercetoolsCartDiscount,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): CartDiscount {
     return {
       cartDiscountId: commercetoolsCartDiscount.id,
@@ -738,7 +555,7 @@ export default class CartMapper {
   static commercetoolsCartDiscountTargetToCartDiscountTarget(
     commercetoolsCartDiscountTarget: CommercetoolsCartDiscountTarget,
   ): CartDiscountTarget | undefined {
-    switch (commercetoolsCartDiscountTarget?.type) {
+    switch (commercetoolsCartDiscountTarget.type) {
       case 'lineItems':
         return {
           type: 'lineItems',
@@ -760,17 +577,6 @@ export default class CartMapper {
         return {
           type: 'totalPrice',
         };
-      case 'multiBuyLineItems':
-        return {
-          type: 'multiBuyLineItems',
-          predicate: commercetoolsCartDiscountTarget.predicate,
-          selectionMode: this.commercetoolsSelectionModeToCartDiscountSelectionMode(
-            commercetoolsCartDiscountTarget.selectionMode,
-          ),
-          triggerQuantity: commercetoolsCartDiscountTarget.triggerQuantity,
-          discountedQuantity: commercetoolsCartDiscountTarget.discountedQuantity,
-          maxOccurrence: commercetoolsCartDiscountTarget.maxOccurrence,
-        };
       default:
         return undefined;
     }
@@ -789,10 +595,30 @@ export default class CartMapper {
     }
   }
 
+  static commercetoolsDiscountedPricesPerQuantityToDiscountTexts(
+    commercetoolsDiscountedLineItemPricesForQuantity: CommercetoolsDiscountedLineItemPriceForQuantity[] | undefined,
+    locale: Locale,
+  ): string[] {
+    const discountTexts: string[] = [];
+
+    commercetoolsDiscountedLineItemPricesForQuantity?.forEach((commercetoolsDiscountedLineItemPriceForQuantity) => {
+      commercetoolsDiscountedLineItemPriceForQuantity.discountedPrice.includedDiscounts.forEach(
+        (commercetoolsDiscountedLineItemPortion) => {
+          if (this.isCartDiscountReference(commercetoolsDiscountedLineItemPortion.discount)) {
+            const discount = commercetoolsDiscountedLineItemPortion.discount;
+            discountTexts.push(discount.obj.name[locale.language]);
+          }
+        },
+      );
+    });
+
+    return discountTexts;
+  }
+
   static commercetoolsDiscountedPricesPerQuantityToDiscountedPricePerCount(
     commercetoolsDiscountedLineItemPricesForQuantity: CommercetoolsDiscountedLineItemPriceForQuantity[] | undefined,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): DiscountedPricePerCount[] {
     return commercetoolsDiscountedLineItemPricesForQuantity?.map(
       (commercetoolsDiscountedLineItemPriceForQuantity): DiscountedPricePerCount => {
@@ -811,7 +637,7 @@ export default class CartMapper {
   static commercetoolsDiscountedLineItemPriceToDiscountedPrice(
     commercetoolsDiscountedLineItemPrice: CommercetoolsDiscountedLineItemPrice | undefined,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): DiscountedPrice | undefined {
     if (commercetoolsDiscountedLineItemPrice === undefined) {
       return undefined;
@@ -891,11 +717,10 @@ export default class CartMapper {
       case commercetoolsCartOrigin === 'Quote':
         cartOrigin = CartOrigin.Quote;
         break;
-      case commercetoolsCartOrigin === 'RecurringOrder':
-        cartOrigin = CartOrigin.RecurringOrder;
-        break;
+      case commercetoolsCartOrigin === 'Customer':
       default:
         cartOrigin = CartOrigin.Customer;
+        break;
     }
 
     return cartOrigin;

@@ -19,16 +19,21 @@
  * // For queryParams = { status: ["active", "inactive"] }
  * queryParamsToStates('status', queryParams); // returns ["active", "inactive"]
  */
-const queryParamsToStates = <T extends string>(param: string, queryParams: Record<string, T>): T[] => {
+const queryParamsToStates = <T>(param: string, queryParams: any): T[] => {
   const states: T[] = [];
 
-  const requestParamStates = queryParams[param];
+  const requestParamStates = queryParams?.[param];
 
   if (requestParamStates) {
     if (Array.isArray(requestParamStates)) {
-      requestParamStates.forEach((value) => states.push(value));
+      states.push(...requestParamStates);
     } else {
-      requestParamStates.split(',').forEach((value) => states.push(value as T));
+      const params = requestParamStates.split(',');
+      if (params.length > 1) {
+        states.push(...params);
+      } else {
+        states.push(requestParamStates);
+      }
     }
   }
 

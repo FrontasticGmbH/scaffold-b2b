@@ -19,8 +19,7 @@ describe('[Component] DatePicker', () => {
 
     const todayButton = screen.getByText(todayDate);
 
-    // react-day-picker v9 uses rdp-day_button for today's button
-    expect(todayButton).toHaveClass('rdp-day_button');
+    expect(todayButton).toHaveClass('rdp-day_today');
   });
 
   it('Renders the DatePicker component correctly', () => {

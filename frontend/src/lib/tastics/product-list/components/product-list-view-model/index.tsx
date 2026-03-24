@@ -28,9 +28,7 @@ const ProductListViewModel = ({
 }: Omit<DataSourceProps, 'category'> & ViewModelProps) => {
   const translate = useTranslations();
 
-  const params = useParams();
-  const slug = params?.slug;
-  const locale = params?.locale;
+  const { slug, locale } = useParams();
 
   const searchParams = useSearchParams();
 
@@ -40,7 +38,7 @@ const ProductListViewModel = ({
 
   const currency = useCurrency();
 
-  const mappedProducts = useMappedProducts({ items, facets });
+  const mappedProducts = useMappedProducts({ items });
 
   const mappedFacets = useMappedFacets({ facets, categories });
 
@@ -118,9 +116,12 @@ const ProductListViewModel = ({
       products={mappedProducts}
       breadcrumb={categoriesBreadcrumb}
       sortValues={[
+        // { name: translate('product.featured'), value: 'featured' },
         { name: `${translate('product.relevance')}`, value: '', vector: 'desc' },
         { name: `${translate('product.price')} (Asc)`, value: 'price', vector: 'asc' },
         { name: `${translate('product.price')} (Desc)`, value: 'price', vector: 'desc' },
+        // { name: translate('product.best-selling'), value: 'best-selling' },
+        // { name: translate('product.newest'), value: 'newest' },
       ]}
       addToCartDisabled={!permissions.UpdateMyCarts}
       currentSortValue={currentSortValue}

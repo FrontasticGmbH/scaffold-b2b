@@ -2,9 +2,9 @@ import { Context, Request } from '@frontastic/extension-types';
 import { CategoryQuery } from '@Types/query/CategoryQuery';
 import { Category } from '@Types/product/Category';
 import { ProductPaginatedResult } from '@Types/result';
-import { getPath, getStoreKey } from '../requestHandlers/Request';
+import { getPath } from '../requestHandlers/Request';
 import { ProductQueryFactory } from '../ProductQueryFactory';
-import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 
 export default class CategoryRouter {
   static identifyFrom(request: Request) {
@@ -24,7 +24,6 @@ export default class CategoryRouter {
     if (urlMatches) {
       const categoryQuery: CategoryQuery = {
         slug: urlMatches[0],
-        storeKey: getStoreKey(request),
       };
 
       const categoryQueryResult = await productApi.queryCategories(categoryQuery);

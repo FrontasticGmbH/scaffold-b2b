@@ -5,7 +5,7 @@ import queryParamsToIds from './requestHandlers/queryParamsToIds';
 import queryParamsToStates from './requestHandlers/queryParamsToState';
 
 export class OrderQueryFactory {
-  static queryFromParams(request: Request): OrderQuery {
+  static queryFromParams: (request: Request) => OrderQuery = (request: Request) => {
     const orderQuery: OrderQuery = {
       accountId: request.query?.accountId ?? undefined,
       limit: request.query?.limit ?? undefined,
@@ -24,7 +24,7 @@ export class OrderQueryFactory {
     };
 
     return orderQuery;
-  }
+  };
 
   private static queryParamsToSortAttributes(queryParams: { sortAttributes?: string }): SortAttributes {
     if (!queryParams.sortAttributes) {

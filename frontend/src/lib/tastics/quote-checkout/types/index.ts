@@ -2,5 +2,5 @@ import { Reference } from '@/types/lib/reference';
 
 export interface Props {
   termsAndConditionsLink: Reference;
-  codeApplied: string;
+  enableCtCheckout: boolean;
 }

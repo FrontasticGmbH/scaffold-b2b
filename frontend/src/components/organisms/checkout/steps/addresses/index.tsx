@@ -4,6 +4,7 @@ import Select from '@/components/atoms/select';
 import useFormat from '@/hooks/useFormat';
 import { classnames } from '@/utils/classnames/classnames';
 import Button from '@/components/atoms/button';
+import AddressForm from '@/components/molecules/address-form';
 import Checkbox from '@/components/atoms/checkbox';
 import { Address } from '@/types/entity/address';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -11,7 +12,6 @@ import Confirmation from '@/components/organisms/confirmation';
 import { CheckoutProps } from '../../types';
 import { Props as StepProps } from '../../components/step/types';
 import { useCheckout } from '../../provider';
-import CheckoutAddressForm from '../../components/checkout-address-form';
 
 const AddressesStep = ({
   isCompleted,
@@ -54,6 +54,8 @@ const AddressesStep = ({
     setSelectedAddresses((currentSelectedAddresses) => ({ ...currentSelectedAddresses, ...data }));
   }, [initialData.shippingAddress, initialData.billingAddress]);
 
+  const keyToTitle = { shipping: 'delivery', billing: 'billing' };
+
   const [addingNewAddress, setAddingNewAddress] = useState<'shipping' | 'billing' | ''>('');
   const {
     isOpen: isAddressUnsavedModalOpen,
@@ -78,8 +80,6 @@ const AddressesStep = ({
     [onCompleteAddresses, nextStep, visitedAllSteps, goToLastStep],
   );
 
-  const canAddAddress = !!onAddAddress;
-
   // Step is done
   if (isCompleted) {
     const preview = [
@@ -88,12 +88,12 @@ const AddressesStep = ({
     ];
 
     return (
-      <div className="rounded border border-neutral-400 p-5">
-        <div className="flex flex-col gap-6 md:flex-row md:gap-16">
+      <div className="px-4 pb-4 lg:px-0 lg:pb-6">
+        <div className="flex flex-col gap-4 md:flex-row md:rounded-md md:border md:border-neutral-400 md:p-5">
           {preview.map(({ key, address }) => (
-            <div key={key} className="flex flex-col gap-2 overflow-hidden md:flex-1">
-              <h5 className="text-sm font-semibold uppercase text-neutral-800">
-                {translate(`common.address-${key as 'shipping' | 'billing'}`)}
+            <div key={key} className="flex flex-col gap-[6px] overflow-hidden md:flex-1">
+              <h5 className="text-14 font-medium uppercase text-gray-700">
+                {translate(`common.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}`)}
               </h5>
               {address && (
                 <>
@@ -117,25 +117,17 @@ const AddressesStep = ({
   if (addingNewAddress) {
     return (
       <div>
-        <h5 className="text-small pb-4 font-semibold uppercase text-neutral-800">
-          {translate(`common.address-${addingNewAddress as 'shipping' | 'billing'}`)}
+        <h5 className="pb-4 text-14 font-medium uppercase text-gray-700">
+          {translate(`common.address-${keyToTitle[addingNewAddress] as 'delivery' | 'billing'}`)}
         </h5>
 
-        <CheckoutAddressForm
+        <AddressForm
           addresses={[]}
           countryOptions={countryOptions}
-          onAddAddress={async (address, sameAsBilling) => {
-            if (!canAddAddress) {
-              return false;
-            }
+          onAddAddress={async (address) => {
+            const success = await onAddAddress?.(address);
 
-            const success = await onAddAddress(address);
-
-            if (success && sameAsBilling) {
-              setSelectedAddresses({ shipping: address, billing: address });
-            }
-
-            if (success && !sameAsBilling) {
+            if (success) {
               setSelectedAddresses({
                 shipping: addingNewAddress === 'shipping' ? address : selectedAddresses.shipping,
                 billing: addingNewAddress === 'billing' ? address : selectedAddresses.billing,
@@ -146,8 +138,8 @@ const AddressesStep = ({
           }}
           onCancel={onAddressUnsavedModalOpen}
           onSave={() => setAddingNewAddress('')}
+          showDefaultCheckBoxes={false}
           unstyled
-          addressType={addingNewAddress}
         />
         <Confirmation
           isOpen={isAddressUnsavedModalOpen}
@@ -168,15 +160,14 @@ const AddressesStep = ({
   }
 
   // Unsaved addresses flow
-  if (addresses.length === 0 && canAddAddress) {
+  if (addresses.length === 0) {
     return (
       <div>
         <div>
-          <h5 className="flex justify-between pb-4 text-sm font-semibold uppercase text-neutral-800">
-            <span>{translate('common.address-delivery')}</span>
-            <span className="lowercase">{translate('checkout.one-of-two')}</span>
+          <h5 className="pb-4 text-14 font-medium uppercase text-gray-700">
+            {translate('common.address-delivery')} (1/2)
           </h5>
-          <CheckoutAddressForm
+          <AddressForm
             addresses={[]}
             countryOptions={countryOptions}
             onAddAddress={async (address) => {
@@ -196,9 +187,8 @@ const AddressesStep = ({
         </div>
         {newUnsavedBillingAddress && (
           <div className="mt-8">
-            <h5 className="flex justify-between pb-6 text-14 font-medium uppercase text-neutral-800">
-              <span>{translate('common.address-billing')} </span>
-              <span className="lowercase">{translate('checkout.two-of-two')}</span>
+            <h5 className="pb-6 text-14 font-medium uppercase text-gray-700">
+              {translate('common.address-billing')} (2/2)
             </h5>
 
             <div className="pb-6">
@@ -230,7 +220,7 @@ const AddressesStep = ({
             </div>
 
             {!sameUnsavedBillingAddress && (
-              <CheckoutAddressForm
+              <AddressForm
                 addresses={[]}
                 countryOptions={countryOptions}
                 onAddAddress={async (address) => {
@@ -263,10 +253,6 @@ const AddressesStep = ({
     );
   }
 
-  if (addresses.length === 0 && !canAddAddress) {
-    return <p className="text-gray-600">{translate('account.no-address-creation-permission')}</p>;
-  }
-
   // Default select addresses flow
   return (
     <div>
@@ -282,23 +268,23 @@ const AddressesStep = ({
       ].map(({ key, className, extra }) => (
         <div className={classnames('flex flex-col gap-6', className)} key={key}>
           <div>
-            <div className="mb-4 flex items-center justify-between">
-              <h5 className="text-sm font-semibold uppercase text-neutral-800">
-                {translate(`common.address-${key as 'shipping' | 'billing'}`)}
+            <div className="flex items-center justify-between">
+              <h5 className="text-14 font-medium uppercase text-gray-700">
+                {translate(`common.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}`)}
               </h5>
-              {canAddAddress && (
-                <button
-                  className="hidden text-left text-sm font-semibold text-neutral-800 underline underline-offset-2 lg:block"
-                  onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
-                >
-                  {translate(`checkout.address-${key as 'shipping' | 'billing'}-add`)} +
-                </button>
-              )}
+              <button
+                className="hidden text-left text-14 text-gray-600 underline underline-offset-2 lg:block"
+                onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
+              >
+                {translate(
+                  `checkout.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}-add`,
+                )}{' '}
+                +
+              </button>
             </div>
-            <h6 className="mb-2 mt-4 text-sm font-normal leading-tight text-neutral-800">
-              {translate('checkout.select-an-address')}
-            </h6>
+            <h6 className="mt-4 text-14 text-gray-700"></h6>
             <Select
+              className="mt-2"
               value={
                 selectedAddresses[key as keyof typeof selectedAddresses]
                   ? formatAddress(selectedAddresses[key as keyof typeof selectedAddresses])
@@ -322,24 +308,24 @@ const AddressesStep = ({
             {extra?.()}
           </div>
           <button
-            className="text-left text-sm font-semibold text-neutral-800 underline underline-offset-2 lg:hidden"
+            className="text-left text-14 text-gray-600 underline underline-offset-2 lg:hidden"
             onClick={() => setAddingNewAddress(key as typeof addingNewAddress)}
           >
-            {translate(`checkout.address-${key as 'shipping' | 'billing'}-add`)} +
+            {translate(`checkout.address-${keyToTitle[key as keyof typeof keyToTitle] as 'delivery' | 'billing'}-add`)}{' '}
+            +
           </button>
         </div>
       ))}
-      <div className="flex justify-end">
-        <Button
-          className="mt-9 w-full md:w-fit"
-          size="l"
-          variant="primary"
-          loading={loading}
-          onClick={() => handleStepCompletion(selectedAddresses.shipping, selectedAddresses.billing)}
-        >
-          {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-shipping-section')}
-        </Button>
-      </div>
+
+      <Button
+        className="mt-9 w-full md:w-fit"
+        size="l"
+        variant="primary"
+        loading={loading}
+        onClick={() => handleStepCompletion(selectedAddresses.shipping, selectedAddresses.billing)}
+      >
+        {translate(visitedAllSteps ? 'checkout.save-and-review' : 'checkout.continue-to-shipping')}
+      </Button>
     </div>
   );
 };

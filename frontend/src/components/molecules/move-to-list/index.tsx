@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import Button from '@/components/atoms/button';
 import { useTranslations } from 'use-intl';
 import useDisclosure from '@/hooks/useDisclosure';
@@ -8,8 +8,6 @@ import { Wishlist } from '../wishlist-modal/types';
 
 const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const openSnapshotRef = useRef<Record<string, boolean> | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -37,29 +35,13 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
     [onSubmit, onClose, selectedIds],
   );
 
-  const handleCancelClose = () => {
-    if (openSnapshotRef.current) {
-      setCheckedBoxes(openSnapshotRef.current);
-    }
-    openSnapshotRef.current = null;
-    onClose();
-  };
-
-  const savedItemsIds = useMemo(() => {
-    const snap = openSnapshotRef.current || {};
-    return Object.keys(snap).filter((k) => !!snap[k]);
-  }, []);
-
   return (
     <>
       <Button
         size="fit"
         variant="ghost"
-        className="flex-1 text-center text-14 font-medium text-primary md:flex-[unset] md:text-start"
-        onClick={() => {
-          openSnapshotRef.current = { ...checkedBoxes };
-          onOpen();
-        }}
+        className="flex-1 text-center text-14 font-medium text-gray-700 md:flex-[unset] md:text-start"
+        onClick={onOpen}
         disabled={disabled}
       >
         {translate('wishlist.move-to-list')}
@@ -67,10 +49,9 @@ const MoveToList = ({ lists, onSubmit, onAddNewList, disabled }: MoveToListProps
       <WishlistModal
         lists={lists}
         isOpen={isOpen}
-        onClose={handleCancelClose}
+        onClose={onClose}
         handleChange={handleChange}
         selectedIds={selectedIds}
-        savedItemsIds={savedItemsIds}
         onSubmit={handleSubmit}
         loading={loading}
         onAddToNewList={onAddNewList}

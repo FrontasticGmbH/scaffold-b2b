@@ -17,9 +17,7 @@ const CommercetoolsPayment = ({
   isCompleted,
   translations,
   onCompletePayment,
-  callbackUrl,
-}: Pick<CheckoutProps, 'translations' | 'onCompletePayment' | 'callbackUrl'> &
-  Pick<StepProps, 'isActive' | 'isCompleted'>) => {
+}: Pick<CheckoutProps, 'translations' | 'onCompletePayment'> & Pick<StepProps, 'isActive' | 'isCompleted'>) => {
   const router = useCustomRouter();
 
   const initiatedCheckout = useRef(false);
@@ -34,8 +32,7 @@ const CommercetoolsPayment = ({
 
   const { session, isExpired } = useSession();
 
-  const params = useParams();
-  const locale = params?.locale;
+  const { locale } = useParams();
 
   const { projectSettings } = useProjectSettings();
 
@@ -96,7 +93,7 @@ const CommercetoolsPayment = ({
 
               const { order } = message.payload as { order: { id: string } };
 
-              window.location.href = `${locale}${callbackUrl}/?orderId=${order.id}`;
+              router.push(`${process.env.NEXT_PUBLIC_COMMERCETOOLS_CHECKOUT_CALLBACK_URL}?orderId=${order.id}`);
 
               break;
           }
@@ -113,7 +110,6 @@ const CommercetoolsPayment = ({
     router,
     setCheckoutIsProcessing,
     translate,
-    callbackUrl,
   ]);
 
   useEffect(() => {
@@ -135,18 +131,16 @@ const CommercetoolsPayment = ({
       <div data-ctc />
 
       {!isCompleted && (
-        <div className="mr-3 flex justify-end">
-          <Button
-            type="submit"
-            className="mt-4 w-full md:w-fit"
-            size="l"
-            variant="primary"
-            loading={loading}
-            data-ctc-selector="confirmMethod"
-          >
-            {translations?.review ?? translate('checkout.review-quote')}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          className="mt-9 w-full md:w-fit"
+          size="l"
+          variant="primary"
+          loading={loading}
+          data-ctc-selector="confirmMethod"
+        >
+          {translations?.review ?? translate('checkout.review-quote')}
+        </Button>
       )}
     </div>
   );

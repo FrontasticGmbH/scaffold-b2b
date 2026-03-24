@@ -15,7 +15,6 @@ import { ApprovalFlow, ApprovalFlowsQuery, ApprovalRule } from '@Types/business-
 import { PaginatedResult } from '@Types/result';
 import { ApprovalRuleQuery } from '@Types/business-unit/ApprovalRule';
 import { ApprovalFlowRejectAction } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/approval-flow';
-import { Context, Request } from '@frontastic/extension-types';
 import BusinessUnitMapper from '../mappers/BusinessUnitMapper';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
 import { businessUnitKeyFormatter } from '@Commerce-commercetools/utils/BusinessUnitFormatter';
@@ -23,20 +22,13 @@ import BaseApi from '@Commerce-commercetools/apis/BaseApi';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 import AccountMapper from '@Commerce-commercetools/mappers/AccountMapper';
 import Guid from '@Commerce-commercetools/utils/Guid';
+import getStoreApi from '@Commerce-commercetools/utils/apiConstructors/getStoreApi';
 import ProductMapper from '@Commerce-commercetools/mappers/ProductMapper';
 import { getOffsetFromCursor } from '@Commerce-commercetools/utils/Pagination';
-import getProjectApi from '@Commerce-commercetools/utils/apiFactories/getProjectApi';
 
 const MAX_LIMIT = 50;
 
 export default class BusinessUnitApi extends BaseApi {
-  protected request: Request;
-
-  constructor(context: Context, locale: string | null, currency: string | null, request?: Request | null) {
-    super(context, locale, currency, request);
-    this.request = request;
-  }
-
   async createForAccount(accountId: string, account: Account): Promise<BusinessUnit> {
     const associateRoleAssignments = this.defaultAssociateRoleKeys.map((associateRoleKey) => {
       const associateRoleAssignment: AssociateRoleAssignmentDraft = {
@@ -79,7 +71,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -99,7 +91,7 @@ export default class BusinessUnitApi extends BaseApi {
           return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         }),
     );
   }
@@ -114,7 +106,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -135,11 +127,11 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsBusinessUnitToBusinessUnit(response.body);
       })
       .catch((error) => {
-        if (error.statusCode === 404) {
+        if (error.code === 404) {
           throw new ResourceNotFoundError({ message: `Business unit "${businessUnitKey}" not found for this account` });
         }
 
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     if (expandStores) {
@@ -148,10 +140,10 @@ export default class BusinessUnitApi extends BaseApi {
         businessUnit.stores = await this.getBusinessUnitStoresFromParentUnitKey(businessUnit.parentUnit.key);
       }
 
-      const projectApi = getProjectApi(this.request, this.commercetoolsFrontendContext);
+      const storeApi = getStoreApi(this.commercetoolsFrontendContext, this.locale, this.currency);
       const storeKeys = businessUnit?.stores?.map((store) => `"${store.key}"`).join(' ,');
 
-      const allStores = storeKeys ? await projectApi.queryStores(`key in (${storeKeys})`) : [];
+      const allStores = storeKeys ? await storeApi.query(`key in (${storeKeys})`) : [];
 
       businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);
     }
@@ -177,7 +169,7 @@ export default class BusinessUnitApi extends BaseApi {
         });
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     if (expandStores) {
@@ -188,7 +180,7 @@ export default class BusinessUnitApi extends BaseApi {
         }
       }
 
-      const projectApi = getProjectApi(this.request, this.commercetoolsFrontendContext);
+      const storeApi = getStoreApi(this.commercetoolsFrontendContext, this.locale, this.currency);
 
       const storeKeys = businessUnits
         .reduce((prev: Store[], curr) => {
@@ -198,7 +190,7 @@ export default class BusinessUnitApi extends BaseApi {
         ?.map((store) => `"${store.key}"`)
         .join(' ,');
 
-      const allStores = storeKeys ? await projectApi.queryStores(`key in (${storeKeys})`) : [];
+      const allStores = storeKeys ? await storeApi.query(`key in (${storeKeys})`) : [];
 
       businessUnits.map((businessUnit) => {
         businessUnit.stores = BusinessUnitMapper.expandStores(businessUnit.stores, allStores);
@@ -217,7 +209,7 @@ export default class BusinessUnitApi extends BaseApi {
           .map((associateRole) => BusinessUnitMapper.commercetoolsAssociateRoleToAssociateRole(associateRole));
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -322,10 +314,10 @@ export default class BusinessUnitApi extends BaseApi {
     ]);
   }
 
-  async getAssociate(businessUnitKey: string, account: Account): Promise<Associate> {
+  async getAssociate(businessUnitKey: string, accountId: string, account: Account): Promise<Associate> {
     return this.requestBuilder()
       .businessUnits()
-      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: account.accountId })
+      .keyWithKeyValueAssociatesWithAssociateIdValue({ key: businessUnitKey, associateId: accountId })
       .get()
       .execute()
       .then((response) => {
@@ -339,7 +331,7 @@ export default class BusinessUnitApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -425,21 +417,21 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
   async queryApprovalRules(
     businessUnitKey: string,
     accountId: string,
-    approvalFlowQuery: ApprovalRuleQuery,
+    approvalRuleQuery: ApprovalRuleQuery,
   ): Promise<PaginatedResult<ApprovalRule>> {
-    const limit = +approvalFlowQuery.limit || undefined;
+    const limit = +approvalRuleQuery.limit || undefined;
     const sortAttributes: string[] = [];
 
-    if (approvalFlowQuery.sortAttributes !== undefined) {
-      Object.keys(approvalFlowQuery.sortAttributes).map((field, directionIndex) => {
-        sortAttributes.push(`${field} ${Object.values(approvalFlowQuery.sortAttributes)[directionIndex]}`);
+    if (approvalRuleQuery.sortAttributes !== undefined) {
+      Object.keys(approvalRuleQuery.sortAttributes).map((field, directionIndex) => {
+        sortAttributes.push(`${field} ${Object.values(approvalRuleQuery.sortAttributes)[directionIndex]}`);
       });
     } else {
       // default sort
@@ -448,12 +440,12 @@ export default class BusinessUnitApi extends BaseApi {
 
     const whereClause = [];
 
-    if (approvalFlowQuery.approvalRuleIds !== undefined && approvalFlowQuery.approvalRuleIds.length !== 0) {
-      whereClause.push(`id in ("${approvalFlowQuery.approvalRuleIds.join('","')}")`);
+    if (approvalRuleQuery.approvalRuleIds !== undefined && approvalRuleQuery.approvalRuleIds.length !== 0) {
+      whereClause.push(`id in ("${approvalRuleQuery.approvalRuleIds.join('","')}")`);
     }
 
-    if (approvalFlowQuery.approvalRuleStatus !== undefined && approvalFlowQuery.approvalRuleStatus.length > 0) {
-      whereClause.push(`status in ("${approvalFlowQuery.approvalRuleStatus.join('","')}")`);
+    if (approvalRuleQuery.approvalRuleStatus !== undefined && approvalRuleQuery.approvalRuleStatus.length > 0) {
+      whereClause.push(`status in ("${approvalRuleQuery.approvalRuleStatus.join('","')}")`);
     }
 
     return this.associateRequestBuilder(accountId)
@@ -463,7 +455,7 @@ export default class BusinessUnitApi extends BaseApi {
         queryArgs: {
           where: whereClause,
           limit: limit,
-          offset: getOffsetFromCursor(approvalFlowQuery.cursor),
+          offset: getOffsetFromCursor(approvalRuleQuery.cursor),
           sort: sortAttributes,
         },
       })
@@ -483,7 +475,7 @@ export default class BusinessUnitApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -498,7 +490,7 @@ export default class BusinessUnitApi extends BaseApi {
         return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -584,7 +576,7 @@ export default class BusinessUnitApi extends BaseApi {
             return BusinessUnitMapper.commercetoolsApprovalRuleToApprovalRule(response.body);
           })
           .catch((error) => {
-            throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+            throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
           }),
     );
   }
@@ -592,16 +584,15 @@ export default class BusinessUnitApi extends BaseApi {
   async queryApprovalFlows(
     businessUnitKey: string,
     accountId: string,
-    approvalFlowQuery: ApprovalFlowsQuery,
+    approvalRuleQuery: ApprovalFlowsQuery,
   ): Promise<PaginatedResult<ApprovalFlow>> {
-    const limit = +approvalFlowQuery.limit || undefined;
+    const limit = +approvalRuleQuery.limit || undefined;
     const sortAttributes: string[] = [];
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
-    if (approvalFlowQuery.sortAttributes !== undefined) {
-      Object.keys(approvalFlowQuery.sortAttributes).map((field, directionIndex) => {
-        sortAttributes.push(`${field} ${Object.values(approvalFlowQuery.sortAttributes)[directionIndex]}`);
+    if (approvalRuleQuery.sortAttributes !== undefined) {
+      Object.keys(approvalRuleQuery.sortAttributes).map((field, directionIndex) => {
+        sortAttributes.push(`${field} ${Object.values(approvalRuleQuery.sortAttributes)[directionIndex]}`);
       });
     } else {
       // default sort
@@ -610,17 +601,12 @@ export default class BusinessUnitApi extends BaseApi {
 
     const whereClause = [];
 
-    if (approvalFlowQuery.approvalFlowIds !== undefined && approvalFlowQuery.approvalFlowIds.length !== 0) {
-      whereClause.push(`id in ("${approvalFlowQuery.approvalFlowIds.join('","')}")`);
+    if (approvalRuleQuery.approvalFlowIds !== undefined && approvalRuleQuery.approvalFlowIds.length !== 0) {
+      whereClause.push(`id in ("${approvalRuleQuery.approvalFlowIds.join('","')}")`);
     }
 
-    if (approvalFlowQuery.approvalFlowStatus !== undefined && approvalFlowQuery.approvalFlowStatus.length > 0) {
-      whereClause.push(`status in ("${approvalFlowQuery.approvalFlowStatus.join('","')}")`);
-    }
-
-    if (approvalFlowQuery.orderIds !== undefined && approvalFlowQuery.orderIds.length !== 0) {
-      const orderIds = approvalFlowQuery.orderIds.map((orderId) => `"${orderId}"`).join(', ');
-      whereClause.push(`order(id in (${orderIds}))`);
+    if (approvalRuleQuery.approvalFlowStatus !== undefined && approvalRuleQuery.approvalFlowStatus.length > 0) {
+      whereClause.push(`status in ("${approvalRuleQuery.approvalFlowStatus.join('","')}")`);
     }
 
     return this.associateRequestBuilder(accountId)
@@ -631,14 +617,14 @@ export default class BusinessUnitApi extends BaseApi {
           where: whereClause,
           expand: ['order', 'approvals[*].approver.customer'],
           limit: limit,
-          offset: getOffsetFromCursor(approvalFlowQuery.cursor),
+          offset: getOffsetFromCursor(approvalRuleQuery.cursor),
           sort: sortAttributes,
         },
       })
       .execute()
       .then((response) => {
         const commercetoolsApprovalFlows = response.body.results.map((approvalFlow) =>
-          BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(approvalFlow, locale, defaultLocale),
+          BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(approvalFlow, locale, this.defaultLocale),
         );
 
         const result: PaginatedResult<ApprovalFlow> = {
@@ -652,14 +638,12 @@ export default class BusinessUnitApi extends BaseApi {
         return result;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
   async getApprovalFlowById(accountId: string, businessUnitKey: string, approvalFlowId: string): Promise<ApprovalFlow> {
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
-
     return this.associateRequestBuilder(accountId)
       .inBusinessUnitKeyWithBusinessUnitKeyValue({ businessUnitKey })
       .approvalFlows()
@@ -671,10 +655,10 @@ export default class BusinessUnitApi extends BaseApi {
       })
       .execute()
       .then((response) => {
-        return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, defaultLocale);
+        return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -685,7 +669,6 @@ export default class BusinessUnitApi extends BaseApi {
     approvalFlowId: string,
   ): Promise<ApprovalFlow> {
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
 
     return this.getApprovalFlowById(accountId, businessUnitKey, approvalFlowId).then((approvalFlow) =>
       this.associateRequestBuilder(accountId)
@@ -703,10 +686,10 @@ export default class BusinessUnitApi extends BaseApi {
         })
         .execute()
         .then((response) => {
-          return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, defaultLocale);
+          return BusinessUnitMapper.commercetoolsApprovalFlowToApprovalFlow(response.body, locale, this.defaultLocale);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
         }),
     );
   }

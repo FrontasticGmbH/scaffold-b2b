@@ -12,10 +12,9 @@ export const getConfig = (context: Context, engine: string): ClientConfig => {
     hostUrl: getFromProjectConfig(`${prefix}_HOST_URL`, context),
     projectKey: getFromProjectConfig(`${prefix}_PROJECT_KEY`, context),
     productIdField: getFromProjectConfig(`${prefix}_PRODUCT_ID_FIELD`, context),
-    storeRefField: getFromProjectConfig(`${prefix}_STORE_REF_FIELD`, context),
     categoryIdField: getFromProjectConfig(`${prefix}_CATEGORY_ID_FIELD`, context),
     defaultAssociateRoleKeys: getFromProjectConfig(`${prefix}_DEFAULT_ASSOCIATE_ROLE_KEYS`, context)
-      ?.split(',')
+      .split(',')
       .map((associateRoleKey: string) => associateRoleKey.trim()),
     defaultStoreKey: getFromProjectConfig(`${prefix}_DEFAULT_STORE_KEY`, context),
     sessionUrl: getFromProjectConfig(`${prefix}_SESSION_URL`, context),

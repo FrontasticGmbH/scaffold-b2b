@@ -1,6 +1,6 @@
-import { PurchaseListItem as PurchaseListItemType } from '@/types/entity/purchase-list';
-import { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
+import { Meta, StoryFn } from '@storybook/react';
+import { PurchaseListItem as PurchaseListItemType } from '@/types/entity/purchase-list';
 import PurchaseListItem from '.';
 
 export default {
@@ -25,25 +25,18 @@ const item = {
   name: 'Brake Pad Set, disc brake DELPHI LP20',
   sku: 'SHXM4AY55N',
   inStock: true,
+  manufacturer: 'ERA',
+  partNumber: '770035A',
+  pressure: '0,3 bar',
+  weight: '563 gram',
   price: 734.64,
   currency: 'USD',
   image: '/sb-assets/brake-disk.png',
-  specifications: [],
-  quantity: 1,
 } as PurchaseListItemType;
 
 export const Primary = Template.bind({});
 Primary.args = {
-  item: {
-    ...item,
-    maxQuantity: 10,
-    specifications: [
-      { label: 'Manufacturer', value: 'ERA' },
-      { label: 'Part Number', value: '770035A' },
-      { label: 'Pressure', value: '0,3 bar' },
-      { label: 'Weight', value: '563 gram' },
-    ],
-  },
+  item: { ...item, maxQuantity: 10 },
 };
 
 export const OutOfStock = Template.bind({});

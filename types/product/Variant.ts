@@ -1,7 +1,6 @@
 import { ProductDiscountedPrice } from '../cart';
 import { Attributes } from './Attributes';
 import { Money } from './Money';
-import { Price } from './Price';
 
 export interface Variant {
   id?: string;
@@ -15,5 +14,4 @@ export interface Variant {
   availableQuantity?: number;
   restockableInDays?: number;
   isMatchingVariant?: boolean;
-  recurrencePrices?: Price[];
 }

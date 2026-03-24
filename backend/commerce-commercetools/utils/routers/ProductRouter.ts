@@ -4,14 +4,15 @@ import { ProductQuery } from '@Types/query/ProductQuery';
 import { LineItem } from '@Types/cart/LineItem';
 import { LineItem as WishlistItem } from '@Types/wishlist/LineItem';
 import {
-  getAccountGroupIds,
+  getAccountGroupId,
   getDistributionChannelId,
   getPath,
   getProductSelectionId,
+  getStoreId,
   getStoreKey,
   getSupplyChannelId,
 } from '../requestHandlers/Request';
-import getProductApi from '@Commerce-commercetools/utils/apiFactories/getProductApi';
+import getProductApi from '@Commerce-commercetools/utils/apiConstructors/getProductApi';
 
 export default class ProductRouter {
   private static isProduct(product: Product | LineItem | WishlistItem): product is Product {
@@ -50,13 +51,12 @@ export default class ProductRouter {
     if (sku) {
       const productQuery: ProductQuery = {
         skus: [sku],
-        store: {
-          key: getStoreKey(request),
-        },
+        storeKey: getStoreKey(request),
         distributionChannelId: getDistributionChannelId(request),
         supplyChannelId: getSupplyChannelId(request),
+        storeId: getStoreId(request),
         productSelectionId: getProductSelectionId(request),
-        accountGroupIds: getAccountGroupIds(request),
+        accountGroupId: getAccountGroupId(request),
       };
 
       return productApi.getProduct(productQuery);

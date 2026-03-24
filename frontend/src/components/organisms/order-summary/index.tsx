@@ -14,7 +14,6 @@ const OrderSummary = ({
   transaction,
   discounts,
   onDiscountRedeem,
-  codeApplied,
   ...props
 }: OrderSummaryProps) => {
   const translate = useTranslations();
@@ -22,10 +21,10 @@ const OrderSummary = ({
   const itemsListClassName = classnames('mb-6 border-y border-neutral-400', props.classNames?.itemsList);
 
   return (
-    <div className={classnames(className, 'px-5 pb-5 md:p-9')}>
+    <div className={className}>
       {title && (
-        <div className="hidden pb-2 lg:block">
-          <p className="text-18 font-semibold md:text-20">{title}</p>
+        <div className="hidden py-4 md:py-6 lg:block lg:pb-6 lg:pt-0">
+          <p className="text-16 md:text-18">{title}</p>
         </div>
       )}
 
@@ -43,7 +42,6 @@ const OrderSummary = ({
           discounts={discounts ?? []}
           onSubmit={onDiscountRedeem}
           customError={translate('cart.quote-cannot-apply-discount')}
-          codeApplied={codeApplied}
         />
       )}
 
@@ -55,8 +53,9 @@ const OrderSummary = ({
           onDiscountRedeem={onDiscountRedeem}
           classNames={{
             applyDiscountButton: 'py-3 text-16',
+            totalAmount: 'text-18 md:pb-5',
+            subCostsContainer: 'pt-3 md:pt-4 mb-5 lg:py-6 lg:mb-4 lg:border-b border-neutral-400',
           }}
-          codeApplied={codeApplied}
           {...props}
         />
       )}

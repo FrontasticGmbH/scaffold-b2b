@@ -1,7 +1,7 @@
-import useControllableState from '@/hooks/useControllableState';
 import React, { useCallback, useContext } from 'react';
-import { Option } from '../types';
+import useControllableState from '@/hooks/useControllableState';
 import { DropdownContextShape, Props } from './types';
+import { Option } from '../types';
 
 export const DropdownContext = React.createContext({} as DropdownContextShape);
 
@@ -12,10 +12,9 @@ const DropdownProvider = ({
   const [value, setValue] = useControllableState(valueProp);
 
   const handleChange = useCallback(
-    (valueOrOption: string | Option) => {
-      const newValue = typeof valueOrOption === 'string' ? valueOrOption : valueOrOption.value;
-      onChange?.(newValue);
-      setValue(newValue);
+    ({ value }: Option) => {
+      onChange?.(value);
+      setValue(value);
     },
     [onChange, setValue],
   );

@@ -11,13 +11,7 @@ describe('[Component] Tag', () => {
 
     render(<Tag variant="secondary" />);
 
-    expect(screen.getByTestId('tag').className.includes('bg-neutral-200 text-gray-700')).toBeTruthy();
-
-    cleanup();
-
-    render(<Tag variant="light" />);
-
-    expect(screen.getByTestId('tag').className.includes('bg-neutral-200 text-blue-500')).toBeTruthy();
+    expect(screen.getByTestId('tag').className.includes('bg-neutral-200 text-primary')).toBeTruthy();
 
     cleanup();
 

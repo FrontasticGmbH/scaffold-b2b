@@ -28,7 +28,6 @@ type QueryProductCategoriesQuery = {
   cursor?: string;
   parentId?: string;
   slug?: string;
-  storeKey?: string;
   format?: string;
 };
 

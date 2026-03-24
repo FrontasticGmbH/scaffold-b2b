@@ -5,11 +5,8 @@ import { QuoteRequest } from '@shared/types/quote/QuoteRequest';
 import { Quote, QuoteState } from '@shared/types/quote/Quote';
 import { PaginatedResult } from '@shared/types/result';
 import { Options } from './types';
-import { useTranslations } from 'next-intl';
 
 const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes }: Options) => {
-  const translate = useTranslations();
-
   const quotesResponse = useSWR(
     !businessUnitKey ? null : ['/action/quote/query', limit, cursor, ids, states, businessUnitKey, sortAttributes],
     () =>
@@ -85,13 +82,13 @@ const useQuotes = ({ cursor, limit, states, ids, businessUnitKey, sortAttributes
 
   const acceptQuote = useCallback(
     async (id: string) => {
-      if (!businessUnitKey) return { isError: true, error: new Error(translate('common.business-unit-key-missing')) };
+      if (!businessUnitKey) return;
 
       const res = await sdk.composableCommerce.quote.acceptQuote({ id, businessUnitKey });
 
-      return res;
+      return res.isError ? {} : res.data;
     },
-    [translate, businessUnitKey],
+    [businessUnitKey],
   );
 
   return {

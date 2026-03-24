@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import EntityForm from '@/components/organisms/entity-form';
 import { useTranslations } from 'use-intl';
@@ -51,8 +51,11 @@ const AddressForm = ({
 
   const watchCountry = watch('country');
   const selectedCountry = countryOptions.find((c) => c.value === watchCountry);
+  const [showLine2, setShowLine2] = useState(!!defaultAddress.line2);
 
   const onFormSubmit = async (formData: Partial<Address>) => {
+    if (!(formData.name && formData.country && formData.line1 && formData.zip && formData.city)) return;
+
     const success = await (id ? onUpdateAddress?.(formData) : onAddAddress?.(formData as Address));
 
     if (toasters) {
@@ -71,13 +74,12 @@ const AddressForm = ({
       unstyled={unstyled}
       translations={{
         cancel: translations.cancel ?? translate('common.cancel'),
-        submit: translations.submit ?? translate('dashboard.save-address'),
+        submit: translations.submit ?? translate('common.save'),
       }}
       showSubmitButton={showSubmitButton}
       showCancelButton={showCancelButton}
       onSubmit={handleSubmit(onFormSubmit)}
       onCancel={onCancel ?? router.back}
-      classNames={{ buttonsContainer: '-mt-[9px]' }}
     >
       <div className="flex flex-col gap-4">
         <Input
@@ -101,6 +103,7 @@ const AddressForm = ({
           <Input
             label={translate('common.phone')}
             showOptionalLabel
+            optionalLabel={translate('common.optional-for-order-updates')}
             containerClassName="max-w-[400px]"
             {...register('phone')}
           />
@@ -123,42 +126,34 @@ const AddressForm = ({
           )}
         />
 
-        <div className="flex max-w-[400px] flex-col gap-4 md:flex-row">
-          <div className="md:w-1/3">
-            <Input
-              label={translate('common.street-number')}
-              required
-              {...register('streetNumber', {
-                required: translate('common.fieldIsRequired'),
-              })}
-              error={errors.streetNumber?.message}
-            />
-          </div>
-
-          <div className="grow">
-            <Input
-              label={translate('common.street-name')}
-              required
-              {...register('streetName', {
-                required: translate('common.fieldIsRequired'),
-              })}
-              error={errors.streetName?.message}
-            />
-          </div>
-        </div>
-
         <Input
-          label={translate('common.building-business')}
-          showOptionalLabel
+          label={translate('common.address')}
+          required
           containerClassName="max-w-[400px]"
-          {...register('building')}
+          {...register('line1', {
+            required: translate('common.fieldIsRequired'),
+          })}
+          error={errors.line1?.message}
         />
 
-        <div className="flex max-w-[400px] flex-col gap-4 md:flex-row">
+        {showLine2 ? (
+          <Input
+            label={`${translate('common.address')} 2`}
+            showOptionalLabel
+            containerClassName="max-w-[400px]"
+            {...register('line2')}
+          />
+        ) : (
+          <span className="w-fit cursor-pointer text-14 font-medium text-gray-700" onClick={() => setShowLine2(true)}>
+            + {translate('dashboard.add-another-address')}
+          </span>
+        )}
+
+        <div className="flex max-w-[400px] gap-3">
           <Input
             label={translate('common.zipCode')}
             required
-            containerClassName="w-full  md:min-w-[100px]"
+            containerClassName="w-[100px] min-w-[100px]"
             {...register('zip', {
               required: translate('common.fieldIsRequired'),
             })}
@@ -195,8 +190,8 @@ const AddressForm = ({
 
         {showDefaultCheckBoxes && (
           <>
-            <p className="mt-[7px] text-14 font-medium text-gray-700">{`${translate('dashboard.save-as-default')}?`}</p>
-            <div className="-mt-1 flex items-center gap-5">
+            <p className="cursor-pointer text-14 font-medium text-gray-700">{translate('dashboard.save-as-default')}</p>
+            <div className="flex items-center gap-5">
               <Controller
                 name="isDefaultShipping"
                 control={control}

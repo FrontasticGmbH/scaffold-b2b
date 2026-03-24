@@ -6,8 +6,7 @@ const useClassNames = (variant: Variant) => {
   const resolveVariant = cva({
     intent: {
       primary: 'bg-blue-100 text-blue-600',
-      light: 'bg-neutral-200 text-blue-500',
-      secondary: 'bg-neutral-200 text-gray-700',
+      secondary: 'bg-neutral-200 text-primary',
       warning: 'bg-yellow-100 text-yellow-700',
       success: 'bg-green-100 text-green-700',
       danger: 'bg-red-100 text-red-600',

@@ -26,49 +26,42 @@ const StoreAndBusinessUnitsProvider = ({ children }: React.PropsWithChildren) =>
     async (key: string) => {
       const businessUnit = businessUnits.find((bu) => bu.key === key);
 
-      if (businessUnit && businessUnit.stores?.[0]?.key) {
+      if (businessUnit && businessUnit.stores?.[0]) {
         await setBusinessUnitAndStoreSessionKeys(key, businessUnit.stores[0].key);
 
         localStorage.setItem('bu-key', key);
         localStorage.setItem('st-key', businessUnit.stores[0].key);
 
         setSelectedBusinessUnitKey(key);
-        window.location.reload();
+        setSelectedStoreKey(businessUnit.stores[0].key);
       }
     },
     [businessUnits, setBusinessUnitAndStoreSessionKeys],
   );
 
   const handleStoreSelection = useCallback(
-    async (key: string) => {
+    (key: string) => {
       if (selectedBusinessUnit) {
         const store = selectedBusinessUnit.stores?.find((st) => st.key === key);
 
         if (!store) return;
 
-        await setBusinessUnitAndStoreSessionKeys(selectedBusinessUnit.key as string, key);
+        setBusinessUnitAndStoreSessionKeys(selectedBusinessUnit.key as string, key);
 
-        setSelectedStoreKey(key);
         localStorage.setItem('st-key', key);
 
-        window.location.reload();
+        setSelectedStoreKey(key);
       }
     },
     [setBusinessUnitAndStoreSessionKeys, selectedBusinessUnit],
   );
 
   useEffect(() => {
-    const storedBusinessUnitKey = localStorage.getItem('bu-key');
-
-    if (!storedBusinessUnitKey) {
-      localStorage.setItem('bu-key', defaultBusinessUnit?.key ?? '');
-    }
-
     const buInStorage = businessUnits.find((bu) => bu.key === localStorage.getItem('bu-key'));
     const stInStorage = buInStorage?.stores?.find((bu) => bu.key === localStorage.getItem('st-key'));
 
-    if (buInStorage?.key && stInStorage?.key) {
-      setSelectedBusinessUnitKey(buInStorage.key);
+    if (buInStorage && stInStorage) {
+      setSelectedBusinessUnitKey(buInStorage.key as string);
       setSelectedStoreKey(stInStorage.key);
     }
   }, [businessUnits]);

@@ -27,7 +27,6 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
   const mutateAll = useCallback(() => {
     mutateGlobal((key: string[]) => key?.[0].startsWith('/action/cart/getCart'), undefined, { revalidate: true });
   }, [mutateGlobal]);
-
   const isLoading = !(businessUnitKey && storeKey) || response.isLoading;
 
   const isQuotationCart = data?.origin === 'Quote';
@@ -73,7 +72,7 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         storeKey: storeKey as string,
       });
 
-      mutate();
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
       return result.isError ? {} : result.data;
     },
@@ -115,13 +114,9 @@ const useCart = (businessUnitKey?: string, storeKey?: string) => {
         { businessUnitKey: businessUnitKey as string, storeKey: storeKey as string },
       );
 
-      if (result.isError) {
-        return { success: false, message: result.error.message ?? '' };
-      }
+      if (!result.isError) mutate(result.data, { revalidate: false });
 
-      mutate(result.data, { revalidate: false });
-
-      return { success: true };
+      return result.isError ? ({} as Partial<Cart>) : result.data;
     },
     [mutate, businessUnitKey, storeKey],
   );

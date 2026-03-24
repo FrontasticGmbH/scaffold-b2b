@@ -1,9 +1,0 @@
-{
-    "dynamicPageType": "frontastic/recurring-order-page",
-    "name": "Recurring order",
-    "category": "Recurring Order",
-    "icon": "group",
-    "dataSourceType": "frontastic/recurring-order",
-    "isMultiple": true
-  }
-  

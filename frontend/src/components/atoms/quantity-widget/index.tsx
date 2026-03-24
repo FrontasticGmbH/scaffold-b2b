@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useTranslations } from 'use-intl';
 import useControllableState from '@/hooks/useControllableState';
 import { classnames } from '@/utils/classnames/classnames';
-import { useTranslations } from 'use-intl';
-import Input from '../input';
 import { Props } from './types';
+import Input from '../input';
 
 const QuantityWidget = ({
   value: valueProp,
@@ -56,6 +56,7 @@ const QuantityWidget = ({
   const buttonClassName = classnames(
     'border-gray-300 bg-white transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:hover:bg-white',
   );
+
   return (
     <div className="flex items-center gap-3">
       {showLabel && <span className="text-14 text-gray-700">{translate('common.quantity-shorthand')}</span>}
@@ -68,7 +69,7 @@ const QuantityWidget = ({
           -
         </button>
         <form
-          className="flex min-w-[40px] items-center justify-center p-0"
+          className={boxClassName}
           onSubmit={(e) => {
             e.preventDefault();
             handleRawValueSubmit();
@@ -77,8 +78,7 @@ const QuantityWidget = ({
           <Input
             data-testid="quantity-widget-input"
             unStyled
-            className="mx-1 w-auto p-0 text-center text-14"
-            style={{ width: `${Math.max(2, rawValue.length)}ch`, maxWidth: '5ch' }}
+            className="text-center text-14"
             aria-label={translate('common.quantity')}
             value={rawValue}
             onChange={handleRawValueChange}

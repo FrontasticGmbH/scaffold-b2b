@@ -30,7 +30,6 @@ export type CartProps = {
   lineItems: ProductWithDeleteAttr[];
   account: Pick<Account, 'email'>;
   paymentMethods: Array<PaymentMethod>;
-  codeApplied?: string;
   viewCartDisabled?: boolean;
   quoteRequestDisabled?: boolean;
   checkoutDisabled?: boolean;
@@ -39,44 +38,26 @@ export type CartProps = {
   onAdd: (sku: string, qty: number) => Promise<void>;
   onRemove: (id: string) => Promise<void>;
   onUpdateQuantity: (id: string, qty: number) => Promise<void>;
-  onUndoRemove?: (id: string) => Promise<void>;
-  onDiscountRedeem?: (code: string) => Promise<{ success: boolean; message?: string }>;
+  onDiscountRedeem?: (code: string) => Promise<boolean>;
   onClear?: () => Promise<void>;
-  onClearItem?: (id: string) => void;
 } & { transaction?: Transaction } & Pick<CartItemProps, 'onAddToNewWishlist'>;
 
 export type CartContentProps = Pick<
   CartProps,
-  | 'onUpdateQuantity'
-  | 'onRemove'
-  | 'onAdd'
-  | 'onAddToNewWishlist'
-  | 'lineItems'
-  | 'loading'
-  | 'discountCodes'
-  | 'onUndoRemove'
-  | 'onClearItem'
+  'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'lineItems' | 'loading'
 > & {
   className?: string;
 };
 
-export type CartItemFooterProps = {
+export type CartItemFooterProps = Pick<CartItemProps, 'onRemove' | 'onAddToNewWishlist'> & {
   item: Product;
   className?: string;
   isQuotationCart?: boolean;
-  showRemoveOnly?: boolean;
-  onRemove?: () => Promise<void>;
-  onAddToNewWishlist?: (
-    list: Pick<PurchaseList, 'name' | 'description' | 'store'>,
-    sku?: string,
-    qty?: number,
-  ) => Promise<Wishlist | null>;
 };
 
 export type CartItemHeaderProps = {
   item: Product;
   className?: string;
-  showStockAvailability?: boolean;
 };
 
 interface ClassNames {
@@ -85,7 +66,6 @@ interface ClassNames {
 
 export interface CartItemProps {
   item: Product & { deleted?: boolean };
-  discountCodesApplied?: Array<{ name: string; code: string }>;
   classNames?: ClassNames;
   onUpdateQuantity: (qty: number) => Promise<void>;
   onUndoRemove?: () => Promise<void>;
@@ -95,8 +75,7 @@ export interface CartItemProps {
     sku?: string,
     qty?: number,
   ) => Promise<Wishlist | null>;
-  onClearItem?: (id: string) => void;
 }
 
-export type CartItemsListProps = Pick<CartContentProps, 'lineItems' | 'onUndoRemove'> &
-  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist' | 'discountCodes' | 'onClearItem'>;
+export type CartItemsListProps = Pick<CartContentProps, 'lineItems'> &
+  Pick<CartProps, 'onUpdateQuantity' | 'onRemove' | 'onAdd' | 'onAddToNewWishlist'>;

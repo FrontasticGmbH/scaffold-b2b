@@ -14,7 +14,6 @@ import useAccountRoles from '@/lib/hooks/useAccountRoles';
 import { TasticProps } from '@/lib/tastics/types';
 import useBusinessUnits from '@/lib/hooks/useBusinessUnits';
 import { DataSourceProps } from '../../types';
-import toast from '@/components/atoms/toaster/helpers/toast';
 
 const QuoteDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSourceProps>>) => {
   const router = useCustomRouter();
@@ -64,10 +63,8 @@ const QuoteDetailClientWrapper = ({ data }: TasticProps<DataSource<DataSourcePro
             router.refresh();
           }}
           onAccept={async () => {
-            const res = await acceptQuote(quote.quoteId as string);
-
-            if (!res.isError) router.refresh();
-            else toast.error(res.error.message);
+            await acceptQuote(quote.quoteId as string);
+            router.refresh();
           }}
           onViewOrder={async () => {
             if (quote.orderNumber) router.push(DashboardLinks.orderDetail(quote.orderNumber.replace(/\s/g, '-')));

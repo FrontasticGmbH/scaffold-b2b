@@ -1,13 +1,12 @@
+import { createContext, Fragment, useCallback, useContext, useState } from 'react';
+import { AddToCartOverlayContextShape } from '@/providers/add-to-cart-overlay/types';
 import AddedToCartModal from '@/components/molecules/added-to-cart-modal';
+import { Product } from '@/types/entity/product';
 import useCart from '@/lib/hooks/useCart';
 import useProduct from '@/lib/hooks/useProduct';
-import { AddToCartOverlayContextShape } from '@/providers/add-to-cart-overlay/types';
 import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
-import { Product } from '@/types/entity/product';
-import { mapLineItem } from '@/utils/mappers/map-lineitem';
-import { mapProduct } from '@/utils/mappers/map-product';
 import { LineItem } from '@shared/types/cart';
-import { createContext, Fragment, useCallback, useContext, useMemo, useState } from 'react';
+import { mapProduct } from '@/utils/mappers/map-product';
 
 const AddToCartOverlayContext = createContext<AddToCartOverlayContextShape>({} as AddToCartOverlayContextShape);
 
@@ -22,15 +21,9 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
   const addedItem = cart?.lineItems?.find((item: LineItem) => {
     return item.variant?.sku === product?.sku;
   });
+  const count = addedItem?.count;
 
-  const cartProduct = useMemo(() => {
-    if (addedItem) {
-      return mapLineItem(addedItem, { discountCodes: cart?.discountCodes ?? [] });
-    }
-    return undefined;
-  }, [addedItem, cart?.discountCodes]);
-
-  const showModal = useCallback((product: Product) => {
+  const showModal = useCallback(async (product: Product) => {
     setProduct({ ...product });
   }, []);
   const hideModal = useCallback(() => {
@@ -43,13 +36,11 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
     }
   };
 
-  const contextValue = useMemo(() => ({ showModal }), [showModal]);
-
   return (
     <Fragment>
-      {product && cartProduct && addedItem?.lineItemId && relatedProducts.length > 0 && (
+      {product && addedItem?.lineItemId && relatedProducts.length > 0 && (
         <AddedToCartModal
-          item={cartProduct}
+          item={{ ...product, quantity: count }}
           onClose={hideModal}
           onQuantityChange={handleOnQuantityChange}
           sliderProducts={relatedProducts
@@ -57,7 +48,7 @@ const AddToCartOverlayProvider = ({ children }: React.PropsWithChildren) => {
             .map((product) => mapProduct(product, { cart }))}
         />
       )}
-      <AddToCartOverlayContext.Provider value={contextValue}>{children}</AddToCartOverlayContext.Provider>
+      <AddToCartOverlayContext.Provider value={{ showModal }}>{children}</AddToCartOverlayContext.Provider>
     </Fragment>
   );
 };

@@ -11,7 +11,6 @@ import { mapLineItem } from '@/utils/mappers/map-lineitem';
 import { Address } from '@shared/types/account';
 import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import { calculateTransaction } from '@/lib/utils/calculate-transaction';
-import { formatCentAmount } from '@/lib/utils/format-price';
 import { TasticProps } from '@/lib/tastics/types';
 
 const ThankYouClientWrapper = ({ data }: TasticProps<DataSource<{ order: Order }>>) => {
@@ -34,16 +33,14 @@ const ThankYouClientWrapper = ({ data }: TasticProps<DataSource<{ order: Order }
         deliveryAddress={mapAddress(order.shippingAddress as Address)}
         billingAddress={mapAddress(order.billingAddress as Address)}
         transaction={{
-          subtotal: formatCentAmount(transaction.subtotal.centAmount, transaction.subtotal.fractionDigits),
-          shipping: formatCentAmount(transaction.shipping.centAmount ?? 0, transaction.shipping.fractionDigits),
-          discounts: formatCentAmount(transaction.discount.centAmount, transaction.discount.fractionDigits),
-          taxes: formatCentAmount(transaction.tax.centAmount ?? 0, transaction.tax.fractionDigits),
-          total: formatCentAmount(transaction.total.centAmount, transaction.total.fractionDigits),
+          subtotal: transaction.subtotal.centAmount,
+          shipping: transaction.shipping.centAmount,
+          discounts: transaction.discount.centAmount,
+          taxes: transaction.tax.centAmount,
+          total: transaction.total.centAmount,
           currency: transaction.total.currencyCode,
         }}
-        lineItems={(order.lineItems ?? []).map((item) =>
-          mapLineItem(item, { discountCodes: order?.discountCodes ?? [] }),
-        )}
+        lineItems={(order.lineItems ?? []).map(mapLineItem)}
         onReviewOrderClick={() => router.push(DashboardLinks.orderDetail(order.orderId ?? ''))}
         purchaseOrderNumber={order.purchaseOrderNumber}
       />

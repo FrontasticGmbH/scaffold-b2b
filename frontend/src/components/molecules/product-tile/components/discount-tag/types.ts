@@ -1,4 +1,4 @@
 export interface Props {
-  discountName?: string;
+  discountPercentage: number;
   className?: string;
 }

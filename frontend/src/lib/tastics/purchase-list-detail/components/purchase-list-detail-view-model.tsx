@@ -1,15 +1,16 @@
-import { ImageProps } from '@/components/atoms/Image/types';
-import Dashboard from '@/components/pages/dashboard';
-import { DashboardLinks } from '@/components/pages/dashboard/constants';
+import React from 'react';
 import PurchaseListDetailPage from '@/components/pages/dashboard/pages/purchase-list-detail';
-import useCustomRouter from '@/hooks/useCustomRouter';
+import Dashboard from '@/components/pages/dashboard';
+import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
+import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
+import { DashboardLinks } from '@/components/pages/dashboard/constants';
 import useAccount from '@/lib/hooks/useAccount';
-import useAccountRoles from '@/lib/hooks/useAccountRoles';
+import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
 import useCart from '@/lib/hooks/useCart';
 import usePurchaseList from '@/lib/hooks/usePurchaseList';
-import usePurchaseLists from '@/lib/hooks/usePurchaseLists';
-import { useStoreAndBusinessUnits } from '@/providers/store-and-business-units';
-import { mapPurchaseList } from '@/utils/mappers/map-purchase-list';
+import useCustomRouter from '@/hooks/useCustomRouter';
+import { ImageProps } from '@/components/atoms/Image/types';
+import useAccountRoles from '@/lib/hooks/useAccountRoles';
 
 const PurchaseListDetailViewModel = ({ wishlistId, image }: { wishlistId: string; image: ImageProps }) => {
   const router = useCustomRouter();
@@ -34,11 +35,12 @@ const PurchaseListDetailViewModel = ({ wishlistId, image }: { wishlistId: string
         image={image}
         permissions={permissions}
         accountId={account?.accountId}
-        onAddPurchaseListToCart={async () => {
+        onOrderPurchaseList={async () => {
           if (!wishlist.lineItems?.length) return false;
+
           const res = await addItemToCart(
             wishlist.lineItems.map((lineItem) => ({
-              sku: lineItem.variant?.sku ?? '',
+              sku: lineItem.variant?.sku as string,
               count: lineItem.count ?? 1,
             })),
           );

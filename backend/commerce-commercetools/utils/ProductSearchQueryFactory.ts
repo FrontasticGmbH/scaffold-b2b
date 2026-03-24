@@ -26,6 +26,15 @@ import {
 } from '@commercetools/platform-sdk';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
+const EXPANDS = [
+  'categories[*].ancestors[*]',
+  'categories[*].parent',
+  'masterVariant.price.discounted.discount',
+  'masterVariant.prices[*].discounted.discount',
+  'variants[*].price.discounted.discount',
+  'variants[*].prices[*].discounted.discount',
+  'productType',
+];
 const LOCALIZED_FULLTEXT_QUERY_FIELDS = ['name', 'description', 'slug', 'searchKeywords'];
 const KEYWORD_EXACT_QUERY_FIELDS = ['variants.sku'];
 
@@ -34,7 +43,7 @@ type Writeable<T> = { -readonly [P in keyof T]: Writeable<T[P]> };
 type ProductSearchFactoryUtilMethod = (
   commercetoolsProductSearchRequest: ProductSearchRequest,
   productQuery: ProductQuery,
-  locale?: Locale,
+  locale: Locale,
 ) => ProductSearchRequest;
 
 export class ProductSearchFactory {
@@ -44,7 +53,10 @@ export class ProductSearchFactory {
     locale: Locale,
     productIdField: string,
   ): ProductSearchRequest {
-    let commercetoolsProductSearchRequest = ProductSearchFactory.initializeProductSearchRequestObject(productQuery);
+    let commercetoolsProductSearchRequest = ProductSearchFactory.initializeProductSearchRequestObject(
+      productQuery,
+      locale,
+    );
 
     commercetoolsProductSearchRequest = this.applyQueryString(commercetoolsProductSearchRequest, productQuery, locale);
     commercetoolsProductSearchRequest = this.applyQueryCategories(
@@ -58,7 +70,7 @@ export class ProductSearchFactory {
       productIdField,
     );
     commercetoolsProductSearchRequest = this.applyQueryProductTypeId(commercetoolsProductSearchRequest, productQuery);
-    commercetoolsProductSearchRequest = this.applyStore(commercetoolsProductSearchRequest, productQuery);
+    commercetoolsProductSearchRequest = this.applyStore(commercetoolsProductSearchRequest, productQuery, locale);
     commercetoolsProductSearchRequest = this.applyProductSelection(
       commercetoolsProductSearchRequest,
       productQuery,
@@ -95,9 +107,17 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   }
 
-  private static initializeProductSearchRequestObject(productQuery: ProductQuery): ProductSearchRequest {
+  private static initializeProductSearchRequestObject(
+    productQuery: ProductQuery,
+    locale: Locale,
+  ): ProductSearchRequest {
     const commercetoolsProductSearchRequest: Writeable<ProductSearchRequest> = {
       query: {},
+      productProjectionParameters: {
+        priceCountry: locale.country,
+        priceCurrency: locale.currency,
+        expand: EXPANDS,
+      },
       markMatchingVariants: true,
       postFilter: {},
     };
@@ -105,6 +125,17 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest.limit = +productQuery.limit || 24;
     commercetoolsProductSearchRequest.offset = this.getOffsetFromCursor(productQuery.cursor);
 
+    if (productQuery.storeKey) {
+      commercetoolsProductSearchRequest.productProjectionParameters.storeProjection = productQuery.storeKey;
+    }
+
+    if (productQuery.accountGroupId) {
+      commercetoolsProductSearchRequest.productProjectionParameters.priceCustomerGroup = productQuery.accountGroupId;
+    }
+
+    if (productQuery.distributionChannelId) {
+      commercetoolsProductSearchRequest.productProjectionParameters.priceChannel = productQuery.distributionChannelId;
+    }
     return commercetoolsProductSearchRequest as ProductSearchRequest;
   }
 
@@ -267,10 +298,13 @@ export class ProductSearchFactory {
     return searchQuery;
   }
 
-  private static pushToProductSearchRequestQueryAndExpression(
+  private static pushToProductSearchRequestQueryAndExpression: (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
-  ): ProductSearchRequest {
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
     if ('and' in commercetoolsProductSearchRequest.query) {
       if (Array.isArray(expression)) {
         commercetoolsProductSearchRequest.query.and.push(...expression);
@@ -291,12 +325,15 @@ export class ProductSearchFactory {
       }
     }
     return commercetoolsProductSearchRequest;
-  }
+  };
 
-  private static pushToProductSearchRequestQueryOrExpression(
+  private static pushToProductSearchRequestQueryOrExpression: (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
-  ): ProductSearchRequest {
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
     if ('or' in commercetoolsProductSearchRequest.query) {
       if (Array.isArray(expression)) {
         commercetoolsProductSearchRequest.query.or.push(...expression);
@@ -317,12 +354,15 @@ export class ProductSearchFactory {
       }
     }
     return commercetoolsProductSearchRequest;
-  }
+  };
 
-  private static pushToProductSearchRequestPostFilterAndExpression(
+  private static pushToProductSearchRequestPostFilterAndExpression: (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     expression: SearchQuery | SearchQuery[],
-  ): ProductSearchRequest {
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
     if ('and' in commercetoolsProductSearchRequest.postFilter) {
       if (Array.isArray(expression)) {
         commercetoolsProductSearchRequest.postFilter.and.push(...expression);
@@ -343,12 +383,15 @@ export class ProductSearchFactory {
       }
     }
     return commercetoolsProductSearchRequest;
-  }
+  };
 
-  private static pushToProductSearchFacetExpressionFilterAndExpression(
+  private static pushToProductSearchFacetExpressionFilterAndExpression: (
     productSearchFacetExpression: Writeable<ProductSearchFacetExpression>,
     expression: SearchQuery | SearchQuery[],
-  ): ProductSearchFacetExpression {
+  ) => ProductSearchFacetExpression = (
+    productSearchFacetExpression: ProductSearchFacetExpression,
+    expression: SearchQuery | SearchQuery[],
+  ) => {
     switch (true) {
       case 'count' in productSearchFacetExpression:
         (productSearchFacetExpression as Writeable<ProductSearchFacetCountExpression>).count.filter =
@@ -374,12 +417,12 @@ export class ProductSearchFactory {
     }
 
     return productSearchFacetExpression;
-  }
+  };
 
-  private static pushToSeachQueryAndExpresion(
+  private static pushToSeachQueryAndExpresion: (
     filter: Writeable<_SearchQuery>,
     expression: SearchQuery | SearchQuery[],
-  ): _SearchQuery {
+  ) => _SearchQuery = (filter: _SearchQuery, expression: SearchQuery | SearchQuery[]) => {
     if (filter && 'and' in filter) {
       if (Array.isArray(expression)) {
         filter.and.push(...expression);
@@ -401,7 +444,7 @@ export class ProductSearchFactory {
     }
 
     return filter;
-  }
+  };
 
   private static applyQueryString: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
@@ -587,24 +630,23 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   }
 
-  private static applyStore(
+  private static applyStore: ProductSearchFactoryUtilMethod = (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
-  ): ProductSearchRequest {
-    if (productQuery.store?.storeId) {
+  ) => {
+    if (productQuery.storeId) {
       commercetoolsProductSearchRequest = this.pushToProductSearchRequestQueryAndExpression(
         commercetoolsProductSearchRequest,
         {
           exact: {
             field: 'stores',
-            value: productQuery.store.storeId,
+            value: productQuery.storeId,
           },
         },
       );
     }
-
     return commercetoolsProductSearchRequest;
-  }
+  };
 
   private static applyQueryProductTypeId(
     commercetoolsProductSearchRequest: ProductSearchRequest,
@@ -717,12 +759,17 @@ export class ProductSearchFactory {
     return commercetoolsProductSearchRequest;
   }
 
-  private static applySortAttributes(
+  private static applySortAttributes: (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ): ProductSearchRequest {
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
+    productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
+  ) => {
     const searchSortings: SearchSorting[] = [];
 
     switch (true) {
@@ -783,14 +830,19 @@ export class ProductSearchFactory {
     commercetoolsProductSearchRequest.sort = searchSortings;
 
     return commercetoolsProductSearchRequest as ProductSearchRequest;
-  }
+  };
 
-  private static applyFacets(
+  private static applyFacets: (
     commercetoolsProductSearchRequest: ProductSearchRequest,
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ): ProductSearchRequest {
+  ) => ProductSearchRequest = (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
+  ) => {
     commercetoolsProductSearchRequest = this.applyFacetDefinitionsToFacets(
       commercetoolsProductSearchRequest,
       productQuery,
@@ -798,14 +850,19 @@ export class ProductSearchFactory {
       locale,
     );
     return commercetoolsProductSearchRequest;
-  }
+  };
 
-  private static applyFacetDefinitionsToFacets(
+  private static applyFacetDefinitionsToFacets: (
+    commercetoolsProductSearchRequest: ProductSearchRequest,
+    productQuery: ProductQuery,
+    facetDefinitions: FacetDefinition[],
+    locale: Locale,
+  ) => ProductSearchRequest = (
     commercetoolsProductSearchRequest: Writeable<ProductSearchRequest>,
     productQuery: ProductQuery,
     facetDefinitions: FacetDefinition[],
     locale: Locale,
-  ): ProductSearchRequest {
+  ) => {
     const productSearchFacetExpressions = this.facetDefinitionsToProductSearchFacetExpressions(
       facetDefinitions,
       locale,
@@ -879,7 +936,7 @@ export class ProductSearchFactory {
     }
 
     return commercetoolsProductSearchRequest as ProductSearchRequest;
-  }
+  };
 
   private static hydrateQueryExpressionWithAttributeType = (
     facet: _ProductSearchFacetExpression,

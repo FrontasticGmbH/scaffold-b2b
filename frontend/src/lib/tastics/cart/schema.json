@@ -29,19 +29,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "Order Summary",
-      "fields": [
-        {
-          "type": "text",
-          "field": "codeApplied",
-          "label": "Code Applied",
-          "required": true,
-          "default": "Coupon code applied successfully!",
-          "translatable": true
-        }
-      ]
     }
   ]
 }

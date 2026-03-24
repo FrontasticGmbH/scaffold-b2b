@@ -2,9 +2,8 @@ import React, { FC } from 'react';
 import { classnames } from '@/utils/classnames/classnames';
 import Costs from '@/components/molecules/costs';
 import DiscountsForm from '@/components/molecules/discounts-form';
-import useDisclosure from '@/hooks/useDisclosure';
-import { OrderSummaryProps } from '../order-summary/types';
 import PaymentMethods from './components/payment-methods';
+import { OrderSummaryProps } from '../order-summary/types';
 
 const OrderPaymentSection: FC<OrderSummaryProps> = ({
   className,
@@ -15,17 +14,9 @@ const OrderPaymentSection: FC<OrderSummaryProps> = ({
   transaction,
   discounts,
   onDiscountRedeem,
-  codeApplied,
   ...props
 }) => {
-  const { isOpen: isExpanded, onOpen: onExpanded, onClose: onCollapsed } = useDisclosure();
-
-  const infoContainerClassName = classnames('bg-white', classNames?.infoContainer, {
-    'border-t border-gray-300 pt-4': !isExpanded,
-    'pb-4 pt-1': isExpanded,
-  });
-
-  const cartLevelDiscounts = transaction?.discount.segments.filter((segment) => segment.targetsTotal);
+  const infoContainerClassName = classnames('border-t border-neutral-400 bg-white', classNames?.infoContainer);
 
   return (
     <div className={className} {...props}>
@@ -34,28 +25,19 @@ const OrderPaymentSection: FC<OrderSummaryProps> = ({
           className={classNames?.applyDiscountButton}
           discounts={discounts ?? []}
           onSubmit={onDiscountRedeem}
-          onExpanded={onExpanded}
-          onCollapsed={onCollapsed}
-          codeApplied={codeApplied}
         />
       )}
 
       <div className={infoContainerClassName}>
         <Costs
-          classNames={{
-            subCosts: classNames?.subCost,
-            subCostsContainer: classNames?.subCostsContainer,
-          }}
+          classNames={{ container: 'pt-4 md:pt-6 lg:pt-11' }}
           subtotal={transaction?.subtotal.centAmount ?? 0}
-          shipping={transaction?.shipping.centAmount}
+          shipping={transaction?.shipping.centAmount ?? 0}
           isShippingEstimated={transaction?.shipping.isEstimated}
-          shippingIncludesTaxes={transaction?.shipping.includesTaxes}
           discount={transaction?.discount.centAmount ?? 0}
-          discountSegments={transaction?.discount.segments}
-          tax={transaction?.tax.centAmount}
+          tax={transaction?.tax.centAmount ?? 0}
           total={transaction?.total.centAmount ?? 0}
           currency={transaction?.total.currencyCode ?? 'USD'}
-          fractionDigits={transaction?.total.fractionDigits ?? 2}
         />
 
         {button}

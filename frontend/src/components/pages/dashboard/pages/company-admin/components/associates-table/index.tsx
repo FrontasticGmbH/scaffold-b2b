@@ -42,9 +42,7 @@ const AssociatesTable = ({
         <Table.Body>
           {associates.map(({ id, firstName, lastName, email, roles }) => (
             <Table.Row key={id}>
-              <Table.Cell aria-label={!firstName ? translate('dashboard.associate-name-not-specified') : undefined}>
-                {firstName || lastName ? `${firstName} ${lastName}`.trim() : '-'}
-              </Table.Cell>
+              <Table.Cell>{firstName || lastName ? `${firstName} ${lastName}`.trim() : '-'}</Table.Cell>
               <Table.Cell>{email}</Table.Cell>
               <Table.Cell>{roles.join(', ')}</Table.Cell>
               <Table.Cell>
@@ -66,7 +64,7 @@ const AssociatesTable = ({
                     >
                       <DeleteIcon className="cursor-pointer" width={20} />
                     </Confirmation>
-                    <Link href={`?subPath=edit-associate&id=${id}`} aria-label={translate('dashboard.associate-edit')}>
+                    <Link href={`?subPath=edit-associate&id=${id}`}>
                       <EditIcon className="cursor-pointer" width={20} />
                     </Link>
                   </div>

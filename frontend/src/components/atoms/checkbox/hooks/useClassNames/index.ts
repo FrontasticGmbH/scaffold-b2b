@@ -51,9 +51,7 @@ const useClassNames = ({
     resolveLabelVariant(`intent.${disabledVariant}.${checkedVariant}`) as string,
   );
 
-  const hasItemsClass = containerClassName && /\bitems-\S+/.test(containerClassName);
-
-  const containerClassNames = classnames('flex w-fit gap-2', { 'items-center': !hasItemsClass }, containerClassName);
+  const containerClassNames = classnames('flex w-fit items-center gap-2', containerClassName);
 
   return { checkboxClassName, labelClassName, containerClassNames };
 };

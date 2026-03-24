@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
@@ -17,27 +17,12 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ['list'], // This provides real-time console output
-    ['html'], // This generates the HTML report
-    [
-      './e2e/reporters/flaky-tolerance-reporter.ts',
-      {
-        failureTolerancePercentageFlakyTests: 100, // Allow up to 100% test failures for flaky tests
-      },
-    ],
-  ],
-  timeout: 60000,
-  expect: {
-    timeout: 15000, // 15 seconds for all expect() assertions
-  },
+  reporter: 'html',
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
-    actionTimeout: 15000, // 15 seconds for clicks, fills, etc.
-    navigationTimeout: 30000, // 30 seconds for page.goto, waitForURL
   },
   projects: [
     {

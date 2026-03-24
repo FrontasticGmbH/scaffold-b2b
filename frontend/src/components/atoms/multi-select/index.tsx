@@ -12,7 +12,6 @@ import {
   ComboboxOption,
 } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/solid';
-import useControllableState from '@/hooks/useControllableState';
 import { SelectProps } from './types';
 import Label from '../label';
 import Checkbox from '../checkbox';
@@ -25,16 +24,17 @@ const MultiSelect = ({
   options = [],
   placeholder = '',
   enableSearch = false,
+
   disabled,
   className,
   onChange,
-  value,
+  value = [],
   defaultValue,
 }: SelectProps) => {
   const translate = useTranslations();
 
   const [search, setSearch] = useState('');
-  const [dropdownValue, setDropdownValue] = useControllableState(value, defaultValue);
+  const [dropdownValue, setDropdownValue] = useState(defaultValue || value);
 
   const filteredOptions = useMemo(() => {
     if (!enableSearch || !search) return options;
@@ -88,7 +88,6 @@ const MultiSelect = ({
               aria-label="Dropdown button"
               data-testid="dropdown-button"
               className="absolute inset-y-0 right-0 flex items-center pr-3"
-              suppressHydrationWarning
             >
               <ChevronDownIcon className="h-[18px]" aria-hidden="true" />
             </ComboboxButton>

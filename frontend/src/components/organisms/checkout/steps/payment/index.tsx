@@ -111,17 +111,15 @@ const PaymentStep = ({
           ))}
         </div>
       </div>
-      <div className="flex justify-end">
-        <Button
-          className="mt-9 w-full md:w-fit"
-          size="l"
-          variant="primary"
-          loading={loading}
-          onClick={handleStepCompletion}
-        >
-          {translations?.review ?? translate('checkout.review-quote')}
-        </Button>
-      </div>
+      <Button
+        className="mt-9 w-full md:w-fit"
+        size="l"
+        variant="primary"
+        loading={loading}
+        onClick={handleStepCompletion}
+      >
+        {translations?.review ?? translate('checkout.review-quote')}
+      </Button>
     </div>
   );
 };

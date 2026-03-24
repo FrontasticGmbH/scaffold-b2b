@@ -42,7 +42,6 @@ const ApprovalRuleForm = ({
     setValue,
     watch,
     handleSubmit,
-    reset,
     formState: { isSubmitting },
   } = useForm<ApprovalRule>({
     defaultValues: initialData ?? {
@@ -58,11 +57,11 @@ const ApprovalRuleForm = ({
 
   useEffect(() => {
     if (initialData) {
-      reset(initialData);
-      setAddRule({ rules: !!initialData, approvers: !!initialData });
-      setIsPreviewing({ rules: !!initialData, approvers: !!initialData });
+      for (const [key, value] of Object.entries(initialData)) {
+        setValue(key as keyof ApprovalRule, value);
+      }
     }
-  }, [initialData, reset]);
+  }, [initialData, setValue]);
 
   const isValidGroup = (group?: Group) => {
     if (!group?.rules?.length) return false;
@@ -101,13 +100,7 @@ const ApprovalRuleForm = ({
           name="name"
           rules={{ required: true }}
           render={({ field }) => (
-            <Input
-              {...field}
-              label={translate('dashboard.rule-name')}
-              required
-              containerClassName="max-w-[400px]"
-              disabled={viewOnly}
-            />
+            <Input {...field} label={translate('dashboard.rule-name')} required containerClassName="max-w-[400px]" />
           )}
         />
 
@@ -120,7 +113,6 @@ const ApprovalRuleForm = ({
               label={translate('common.description')}
               showOptionalLabel
               containerClassName="max-w-[400px]"
-              disabled={viewOnly}
             />
           )}
         />
@@ -139,7 +131,6 @@ const ApprovalRuleForm = ({
               className="w-full max-w-[400px]"
               value={value?.map((r) => r.key)}
               required
-              disabled={viewOnly}
               onChange={(vals) =>
                 onChange(
                   roles.filter((role) => vals.includes(role.value)).map(({ name, value }) => ({ key: value, name })),
@@ -158,7 +149,6 @@ const ApprovalRuleForm = ({
                 ? translate('dashboard.rules-setup-incomplete')
                 : ''
             }
-            viewOnly={viewOnly}
             criteria={rulesCriteria}
             tiers={data.rules as Group[]}
             addRule={addRule.rules}
@@ -187,7 +177,6 @@ const ApprovalRuleForm = ({
                 ? translate('dashboard.tiers-setup-incomplete')
                 : ''
             }
-            viewOnly={viewOnly}
             criteria={approversCriteria}
             includeGroupHeader
             singleMode
@@ -223,9 +212,8 @@ const ApprovalRuleForm = ({
             render={({ field: { value, onChange } }) => (
               <Toggle
                 label={translate('dashboard.set-rule-as-active')}
-                checked={value === 'active'}
+                defaultChecked={value === 'active'}
                 onChange={(checked) => onChange(checked ? 'active' : 'inactive')}
-                disabled={viewOnly}
               />
             )}
           />

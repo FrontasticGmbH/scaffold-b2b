@@ -16,12 +16,9 @@ const useSteps = ({
   initialData = {},
   countryOptions = [],
   shippingMethods = [],
-  shippingDiscount,
   paymentMethods = [],
   translations,
-  callbackUrl,
-  transaction,
-}: Omit<CheckoutProps, 'products' | 'discounts' | 'onSubmitPurchase'>) => {
+}: Omit<CheckoutProps, 'transaction' | 'products' | 'discounts' | 'onSubmitPurchase'>) => {
   const { isCtCheckoutEnabled } = useCheckout();
 
   const steps = useMemo(() => {
@@ -47,10 +44,8 @@ const useSteps = ({
             isActive={isActive}
             isCompleted={isCompleted}
             shippingMethods={shippingMethods}
-            shippingDiscount={shippingDiscount}
             onCompleteShipping={onCompleteShipping}
             initialData={initialData}
-            transaction={transaction}
           />
         ),
       },
@@ -58,12 +53,7 @@ const useSteps = ({
         title: 'common.payment',
         Component: ({ isActive, isCompleted }: Pick<StepProps, 'isActive' | 'isCompleted'>) =>
           isCtCheckoutEnabled ? (
-            <CommercetoolsPayment
-              translations={translations}
-              isActive={isActive}
-              isCompleted={isCompleted}
-              callbackUrl={callbackUrl}
-            />
+            <CommercetoolsPayment translations={translations} isActive={isActive} isCompleted={isCompleted} />
           ) : (
             <PaymentStep
               isActive={isActive}
@@ -85,12 +75,9 @@ const useSteps = ({
     countryOptions,
     initialData,
     shippingMethods,
-    shippingDiscount,
     onCompleteShipping,
     paymentMethods,
     onCompletePayment,
-    callbackUrl,
-    transaction,
   ]);
 
   return { steps };

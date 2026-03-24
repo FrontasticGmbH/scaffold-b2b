@@ -1,7 +1,6 @@
 import { Filter } from './Filter';
 import { PaginatedQuery } from './PaginatedQuery';
 import { Facet } from './Facet';
-import { Store } from '../store/Store';
 
 export enum SortOrder {
   ASCENDING = 'ascending',
@@ -27,10 +26,10 @@ export interface ProductQuery extends PaginatedQuery {
   filters?: Filter[];
   facets?: Facet[];
   sortAttributes?: SortAttributes;
-  storeRef?: string;
-  store?: Store;
+  storeKey?: string;
+  storeId?: string;
   distributionChannelId?: string;
   supplyChannelId?: string;
   productSelectionId?: string;
-  accountGroupIds?: string[];
+  accountGroupId?: string;
 }

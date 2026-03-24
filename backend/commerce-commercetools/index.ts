@@ -13,7 +13,6 @@ import { Order } from '@Types/cart/Order';
 import { PaginatedResult, ProductPaginatedResult } from '@Types/result';
 import { ApprovalFlow, ApprovalRule } from '@Types/business-unit';
 import { Attributes } from '@Types/product/Attributes';
-import { RecurringOrder } from '@Types/cart';
 import { actions } from './actionControllers';
 import dataSources from './dataSources';
 import CategoryRouter from './utils/routers/CategoryRouter';
@@ -88,44 +87,6 @@ const extensionRegistry: ExtensionRegistry = {
         if (result) {
           return {
             dynamicPageType: 'frontastic/orders-page',
-            dataSourcePayload: result,
-            pageMatchingPayload: result,
-          };
-        }
-        return null;
-      }
-
-      // Identify Recurring Order
-      if (CartRouter.identifyRecurringOrderFrom(request)) {
-        const recurringOrder: RecurringOrder = await CartRouter.loadRecurringOrderFor(
-          request,
-          context.frontasticContext,
-        );
-
-        if (recurringOrder) {
-          return {
-            dynamicPageType: CartRouter.getRecurringOrderPageType(request),
-            dataSourcePayload: {
-              recurringOrder,
-            },
-            pageMatchingPayload: {
-              recurringOrder,
-            },
-          };
-        }
-        return null;
-      }
-
-      // Identify Recurring Orders
-      if (CartRouter.identifyRecurringOrdersFrom(request)) {
-        const result: PaginatedResult<RecurringOrder> = await CartRouter.loadRecurringOrdersFor(
-          request,
-          context.frontasticContext,
-        );
-
-        if (result) {
-          return {
-            dynamicPageType: 'frontastic/recurring-orders-page',
             dataSourcePayload: result,
             pageMatchingPayload: result,
           };
@@ -248,7 +209,7 @@ const extensionRegistry: ExtensionRegistry = {
 
         if (result) {
           return {
-            dynamicPageType: 'frontastic/approval-rules-page',
+            dynamicPageType: 'frontastic/approval-flows-page',
             dataSourcePayload: result,
             pageMatchingPayload: result,
           };
@@ -258,41 +219,41 @@ const extensionRegistry: ExtensionRegistry = {
 
       // Identify Product
       if (ProductRouter.identifyFrom(request)) {
-        const product: Product = await ProductRouter.loadFor(request, context.frontasticContext);
-
-        if (!product) {
-          return null;
-        }
-
-        const sku = ProductRouter.skuFromUrl(request);
-        const matchingAttributes: Attributes = {};
-
-        if (sku) {
-          const selectedVariant = product.variants.find((variant) => variant.sku === sku);
-
-          if (selectedVariant.attributes) {
-            Object.entries(selectedVariant.attributes).forEach(([key, value]) => {
-              // FECL can't match rules on arrays, so we ignore array attributes
-              if (!Array.isArray(value)) {
-                matchingAttributes[key] = value?.key ?? value;
-              }
-            });
+        return ProductRouter.loadFor(request, context.frontasticContext).then((product: Product) => {
+          if (!product) {
+            return null;
           }
-        }
 
-        return {
-          dynamicPageType: 'frontastic/product-page',
-          dataSourcePayload: {
-            product: product,
-          },
-          pageMatchingPayload: {
-            productTypeId: product.productTypeId || '',
-            variants: {
-              attributes: matchingAttributes,
+          const sku = ProductRouter.skuFromUrl(request);
+          const matchingAttributes: Attributes = {};
+
+          if (sku) {
+            const selectedVariant = product.variants.find((variant) => variant.sku === sku);
+
+            if (selectedVariant.attributes) {
+              Object.entries(selectedVariant.attributes).forEach(([key, value]) => {
+                // FECL can't match rules on arrays, so we ignore array attributes
+                if (!Array.isArray(value)) {
+                  matchingAttributes[key] = value?.key ?? value;
+                }
+              });
+            }
+          }
+
+          return {
+            dynamicPageType: 'frontastic/product-page',
+            dataSourcePayload: {
+              product: product,
             },
-            categoryRef: product.categories?.map((category) => category.categoryRef),
-          },
-        };
+            pageMatchingPayload: {
+              productTypeId: product.productTypeId || '',
+              variants: {
+                attributes: matchingAttributes,
+              },
+              categoryRef: product.categories?.map((category) => category.categoryRef),
+            },
+          };
+        });
       }
 
       // Identify Search
@@ -316,26 +277,26 @@ const extensionRegistry: ExtensionRegistry = {
 
       // Identify Category
       if (CategoryRouter.identifyFrom(request)) {
-        const category = await CategoryRouter.loadFor(request, context.frontasticContext);
+        return CategoryRouter.loadFor(request, context.frontasticContext).then((category) => {
+          if (!category) {
+            return null;
+          }
 
-        if (!category) {
-          return null;
-        }
+          return CategoryRouter.loadProductsFor(request, context.frontasticContext, category).then((result) => {
+            if (!result) {
+              return null;
+            }
 
-        const result = await CategoryRouter.loadProductsFor(request, context.frontasticContext, category);
-
-        if (!result) {
-          return null;
-        }
-
-        return {
-          dynamicPageType: 'frontastic/category',
-          dataSourcePayload: result,
-          pageMatchingPayload: {
-            categoryRef: category.categoryRef,
-            isMainCategory: category.parentId === undefined,
-          },
-        };
+            return {
+              dynamicPageType: 'frontastic/category',
+              dataSourcePayload: result,
+              pageMatchingPayload: {
+                categoryRef: category.categoryRef,
+                isMainCategory: category.parentId === undefined,
+              },
+            };
+          });
+        });
       }
 
       return null;

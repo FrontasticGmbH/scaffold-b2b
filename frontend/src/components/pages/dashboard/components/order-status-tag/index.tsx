@@ -9,19 +9,21 @@ const OrderStatusTag = ({ status }: OrderStatusTagProps) => {
   const translate = useTranslations();
 
   const statusVariant = {
-    Placed: 'primary',
     Pending: 'warning',
-    Confirmed: 'light',
+    Confirmed: 'primary',
     Cancelled: 'danger',
-    Rejected: 'danger',
-    Returned: 'danger',
+    Returned: 'secondary',
     Delivered: 'success',
-    Shipped: 'light',
+    Shipped: 'primary',
   } as Record<OrderStatus, TagVariant>;
 
   return (
     <Tag className="capitalize" variant={statusVariant[status]}>
-      {translate(`orders.status-${status.toLowerCase()}` as Parameters<typeof translate>[0])}
+      {
+        // eslint-disable-next-line
+        // @ts-ignore
+        translate(`orders.status-${status.toLowerCase()}`)
+      }
     </Tag>
   );
 };

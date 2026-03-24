@@ -1,11 +1,13 @@
+// @ts-ignore
 import * as crypto from 'crypto';
+// @ts-ignore
+import fetch from 'node-fetch';
 import {
   ApiRoot,
   AssociateRole as CommercetoolsAssociateRole,
   createApiBuilderFromCtpClient,
   ProductType as CommercetoolsProductType,
   Project as CommercetoolsProject,
-  Store as CommercetoolsStore,
 } from '@commercetools/platform-sdk';
 import { Context, Request } from '@frontastic/extension-types';
 import { ByProjectKeyRequestBuilder } from '@commercetools/platform-sdk/dist/declarations/src/generated/client/by-project-key-request-builder';
@@ -22,16 +24,13 @@ import { ValidationError } from '@Commerce-commercetools/errors/ValidationError'
 import { ClientConfig } from '@Commerce-commercetools/interfaces/ClientConfig';
 import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import { ConfigurationError } from '@Commerce-commercetools/errors/ConfigurationError';
-import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 const defaultCurrency = 'USD';
 
 const localeRegex =
-  /^(?<language>[a-z]{2,})(?:[_-](?<country>[A-Z0-9]{2,}))?(?:\.(?<codeset>[A-Z0-9_+-]+))?(?:@(?<modifier>[A-Za-z]+))?$/;
+  /^(?<language>[a-z]{2,})(?:_(?<territory>[A-Z0-9]{2,}))?(?:\.(?<codeset>[A-Z0-9_+-]+))?(?:@(?<modifier>[A-Za-z]+))?$/;
 
-const currencyRegex = /^[A-Z]{3}$/;
-
-const languageToCountry = {
+const languageToTerritory = {
   en: 'US',
 };
 
@@ -39,7 +38,7 @@ const modifierToCurrency = {
   euro: 'EUR',
 };
 
-const countryToCurrency = {
+const territoryToCurrency = {
   AD: 'EUR',
   AE: 'AED',
   AF: 'AFN',
@@ -289,7 +288,13 @@ const countryToCurrency = {
   ZW: 'ZWD',
 };
 
-const parseLocale = (locale: string, currency?: string): Locale => {
+interface ParsedLocale {
+  language: string;
+  territory: string;
+  currency: string;
+}
+
+const parseLocale = (locale: string, currency?: string): ParsedLocale => {
   const matches = locale.match(localeRegex);
 
   if (matches === null) {
@@ -298,20 +303,20 @@ const parseLocale = (locale: string, currency?: string): Locale => {
 
   const language = matches.groups.language;
 
-  let country = matches.groups.country;
-  if (country === undefined) {
-    if (language in languageToCountry) {
-      country = languageToCountry[language];
+  let territory = matches.groups.territory;
+  if (territory === undefined) {
+    if (language in languageToTerritory) {
+      territory = languageToTerritory[language];
     } else {
-      country = language.toUpperCase();
+      territory = language.toUpperCase();
     }
   }
 
   if (!currency) {
     currency = defaultCurrency;
 
-    if (country in countryToCurrency) {
-      currency = countryToCurrency[country];
+    if (territory in territoryToCurrency) {
+      currency = territoryToCurrency[territory];
     }
 
     const modifier = matches.groups.modifier;
@@ -319,7 +324,9 @@ const parseLocale = (locale: string, currency?: string): Locale => {
       if (modifier in modifierToCurrency) {
         currency = modifierToCurrency[modifier];
       } else {
-        const foundCurrency = Object.values(countryToCurrency).find((currency) => currency === modifier.toUpperCase());
+        const foundCurrency = Object.values(territoryToCurrency).find(
+          (currency) => currency === modifier.toUpperCase(),
+        );
         if (foundCurrency !== undefined) {
           currency = foundCurrency;
         }
@@ -327,16 +334,9 @@ const parseLocale = (locale: string, currency?: string): Locale => {
     }
   }
 
-  // Validate the currency code follows ISO-4217 format (3 uppercase letters)
-  if (!currencyRegex.test(currency)) {
-    throw new LocaleError({
-      message: `Invalid currency code: ${currency}. Currency must be a valid ISO-4217 code (3 uppercase letters).`,
-    });
-  }
-
   return {
     language,
-    country,
+    territory,
     currency,
   };
 };
@@ -354,10 +354,6 @@ const productTypesCache: {
   [projectKey: string]: { productTypes: CommercetoolsProductType[]; expiryTime: number };
 } = {};
 
-const storeCache: {
-  [storeIdOrKey: string]: { store: CommercetoolsStore; expiryTime: number };
-} = {};
-
 const pickCandidate = (candidates: string[], availableOptions: string[]): string | undefined => {
   for (const candidate of candidates) {
     const found = availableOptions.find((option) => option.toLowerCase() === candidate.toLowerCase());
@@ -369,8 +365,8 @@ const pickCandidate = (candidates: string[], availableOptions: string[]): string
   return undefined;
 };
 
-const pickCommercetoolsLanguage = (parsedLocale: Locale, availableLanguages: string[]): string | undefined => {
-  const candidates = [`${parsedLocale.language}-${parsedLocale.country}`, parsedLocale.language];
+const pickCommercetoolsLanguage = (parsedLocale: ParsedLocale, availableLanguages: string[]): string | undefined => {
+  const candidates = [`${parsedLocale.language}-${parsedLocale.territory}`, parsedLocale.language];
 
   const foundCandidate = pickCandidate(candidates, availableLanguages);
   if (foundCandidate !== undefined) {
@@ -387,11 +383,11 @@ const pickCommercetoolsLanguage = (parsedLocale: Locale, availableLanguages: str
 };
 
 const pickCommercetoolsCountry = (
-  parsedLocale: Locale,
+  parsedLocale: ParsedLocale,
   language: string,
   availableCountries: string[],
 ): string | undefined => {
-  const candidates = [parsedLocale.country, parsedLocale.language, language];
+  const candidates = [parsedLocale.territory, parsedLocale.language, language];
 
   const foundCandidate = pickCandidate(candidates, availableCountries);
   if (foundCandidate !== undefined) {
@@ -401,8 +397,11 @@ const pickCommercetoolsCountry = (
   return undefined;
 };
 
-const pickCommercetoolsCurrency = (parsedLocale: Locale, availableCurrencies: string[]): string | undefined => {
-  const candidates = [parsedLocale.currency, parseLocale(`${parsedLocale.language}_${parsedLocale.country}`).currency];
+const pickCommercetoolsCurrency = (parsedLocale: ParsedLocale, availableCurrencies: string[]): string | undefined => {
+  const candidates = [
+    parsedLocale.currency,
+    parseLocale(`${parsedLocale.language}_${parsedLocale.territory}`).currency,
+  ];
 
   const foundCandidate = pickCandidate(candidates, availableCurrencies);
   if (foundCandidate !== undefined) {
@@ -420,16 +419,15 @@ export default abstract class BaseApi {
   protected environment: string;
   protected projectKey: string;
   protected productIdField: string;
-  protected storeRefField: string;
   protected categoryIdField: string;
   protected defaultAssociateRoleKeys: string[];
-  protected locale: Locale;
-  protected defaultLocale: Locale;
+  protected locale: string;
+  protected defaultLocale: string;
   protected defaultCurrency: string;
   protected clientHashKey: string;
   protected token: Token;
   protected currency: string;
-  protected sessionData: Request['sessionData'];
+  protected sessionData: any | null;
   protected checkoutHashKey: string;
   protected commercetoolsFrontendContext: Context;
 
@@ -439,8 +437,11 @@ export default abstract class BaseApi {
     currency: string | null,
     request?: Request | null,
   ) {
-    this.defaultLocale = parseLocale(commercetoolsFrontendContext.project.defaultLocale);
-    this.locale = locale !== null ? parseLocale(locale, currency) : this.defaultLocale;
+    this.defaultLocale = commercetoolsFrontendContext.project.defaultLocale;
+    this.defaultCurrency = defaultCurrency;
+
+    this.locale = locale !== null ? locale : this.defaultLocale;
+    this.currency = currency;
 
     const engine = 'commercetools';
     this.clientSettings = getConfig(commercetoolsFrontendContext, engine);
@@ -449,7 +450,6 @@ export default abstract class BaseApi {
     this.projectKey = this.clientSettings.projectKey;
     this.productIdField = this.clientSettings?.productIdField || 'key';
     this.categoryIdField = this.clientSettings?.categoryIdField || 'key';
-    this.storeRefField = this.clientSettings?.storeRefField || 'key';
     this.defaultAssociateRoleKeys = this.clientSettings?.defaultAssociateRoleKeys || ['admin'];
     this.token = clientTokensStored.get(this.getClientHashKey());
     this.checkoutHashKey = null;
@@ -458,7 +458,7 @@ export default abstract class BaseApi {
     this.sessionData = request?.sessionData ?? {};
   }
 
-  getSessionData(): Request['sessionData'] | null {
+  getSessionData(): any | null {
     return this.sessionData;
   }
 
@@ -477,6 +477,8 @@ export default abstract class BaseApi {
   }
 
   protected async getCommercetoolsLocal(): Promise<Locale> {
+    const parsedLocale = parseLocale(this.locale, this.currency);
+    const parsedDefaultLocale = parseLocale(this.defaultLocale, this.currency);
     const project = await this.getCommercetoolsProject();
 
     /**
@@ -487,37 +489,17 @@ export default abstract class BaseApi {
      * 3. First from the list of available ones
      */
     const language =
-      pickCommercetoolsLanguage(this.locale, project.languages) ??
-      pickCommercetoolsLanguage(this.defaultLocale, project.languages) ??
+      pickCommercetoolsLanguage(parsedLocale, project.languages) ??
+      pickCommercetoolsLanguage(parsedDefaultLocale, project.languages) ??
       project.languages[0];
     const country =
-      pickCommercetoolsCountry(this.locale, language, project.countries) ??
-      pickCommercetoolsCountry(this.defaultLocale, language, project.countries) ??
+      pickCommercetoolsCountry(parsedLocale, language, project.countries) ??
+      pickCommercetoolsCountry(parsedDefaultLocale, language, project.countries) ??
       project.countries[0];
     const currency =
-      pickCommercetoolsCurrency(this.locale, project.currencies) ??
-      pickCommercetoolsCurrency(this.defaultLocale, project.currencies) ??
+      pickCommercetoolsCurrency(parsedLocale, project.currencies) ??
+      pickCommercetoolsCurrency(parsedDefaultLocale, project.currencies) ??
       project.currencies[0];
-
-    return Promise.resolve({
-      language,
-      country,
-      currency,
-    });
-  }
-
-  protected async getCommercetoolsDefaultLocal(): Promise<Locale> {
-    const project = await this.getCommercetoolsProject();
-
-    /**
-     * Get a valid locale following the priority of:
-     *
-     * 1. From default locale
-     * 2. First from the list of available ones
-     */
-    const language = pickCommercetoolsLanguage(this.defaultLocale, project.languages) ?? project.languages[0];
-    const country = pickCommercetoolsCountry(this.defaultLocale, language, project.countries) ?? project.countries[0];
-    const currency = pickCommercetoolsCurrency(this.defaultLocale, project.currencies) ?? project.currencies[0];
 
     return Promise.resolve({
       language,
@@ -552,7 +534,7 @@ export default abstract class BaseApi {
         return productTypes;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -571,7 +553,7 @@ export default abstract class BaseApi {
       .get()
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
     const project = response.body;
 
@@ -609,76 +591,8 @@ export default abstract class BaseApi {
         return associateRoles;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
-  }
-
-  protected async getCommercetoolsStoreById(id: string): Promise<CommercetoolsStore> {
-    const now = Date.now();
-
-    if (id in storeCache) {
-      const cacheEntry = storeCache[id];
-
-      if (now < cacheEntry.expiryTime) {
-        return cacheEntry.store;
-      }
-    }
-
-    const response = await this.requestBuilder()
-      .stores()
-      .withId({ ID: id })
-      .get()
-      .execute()
-      .catch((error) => {
-        if (error.statusCode === 404) {
-          throw new ResourceNotFoundError({ message: 'Store not found' });
-        }
-
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-
-    const store = response.body;
-
-    storeCache[id] = {
-      store,
-      expiryTime: cacheTtlMilliseconds + now,
-    };
-
-    return store;
-  }
-
-  protected async getCommercetoolsStoreByKey(key: string): Promise<CommercetoolsStore> {
-    const now = Date.now();
-
-    if (key in storeCache) {
-      const cacheEntry = storeCache[key];
-
-      if (now < cacheEntry.expiryTime) {
-        return cacheEntry.store;
-      }
-    }
-
-    const response = await this.requestBuilder()
-      .stores()
-      .withKey({ key })
-      .get()
-      .execute()
-      .catch((error) => {
-        if (error.statusCode === 404) {
-          throw new ResourceNotFoundError({ message: 'Store not found' });
-        }
-
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
-      });
-
-    const store = response.body;
-
-    storeCache[key] = {
-      store,
-      expiryTime: cacheTtlMilliseconds + now,
-    };
-
-    return store;
   }
 
   protected associateRequestBuilder(accountId: string): ByProjectKeyAsAssociateByAssociateIdRequestBuilder {
@@ -803,11 +717,11 @@ export default abstract class BaseApi {
     };
 
     const response = await fetch(url, requestOptions)
-      .then((response: Response) => {
+      .then((response: any) => {
         return response.json();
       })
-      .catch((error: { statusCode: number; message: string }) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: JSON.stringify(error) });
+      .catch((error: any) => {
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error });
       });
 
     if (response?.errors) {

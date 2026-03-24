@@ -1,14 +1,14 @@
-import { Context, Request } from '@frontastic/extension-types';
+import { ActionContext, Request } from '@frontastic/extension-types';
 import { Cart } from '@Types/cart/Cart';
 import { AccountFetcher } from './AccountFetcher';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
-import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { getBusinessUnitKey, getStoreKey } from '@Commerce-commercetools/utils/requestHandlers/Request';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
 
 export class CartFetcher {
-  static async fetchCart(request: Request, context: Context): Promise<Cart> {
-    const cart = await this.fetchActiveCartFromSession(request, context);
+  static async fetchCart(request: Request, actionContext: ActionContext): Promise<Cart> {
+    const cart = await this.fetchActiveCartFromSession(request, actionContext);
 
     if (cart) {
       return cart;
@@ -23,10 +23,10 @@ export class CartFetcher {
       });
     }
 
-    return await getCartApi(request, context).createCartInStore(storeKey);
+    return await getCartApi(request, actionContext.frontasticContext).createCartInStore(storeKey);
   }
 
-  static async fetchActiveCartFromSession(request: Request, context: Context): Promise<Cart | undefined> {
+  static async fetchActiveCartFromSession(request: Request, actionContext: ActionContext): Promise<Cart | undefined> {
     const accountId = AccountFetcher.fetchAccountIdFromSession(request);
     const cartId = request.sessionData?.cartId;
     const businessUnitKey = getBusinessUnitKey(request);
@@ -37,15 +37,14 @@ export class CartFetcher {
       return undefined;
     }
 
-    const cartApi = getCartApi(request, context);
+    const cartApi = getCartApi(request, actionContext.frontasticContext);
 
     try {
       if (cartId) {
         const cart = await cartApi.getById(cartId);
         if (
           cartApi.assertCartIsActive(cart) &&
-          cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey) &&
-          cartApi.assertCartOrigin(cart)
+          cartApi.assertCartForBusinessUnitAndStore(cart, businessUnitKey, storeKey)
         ) {
           return cart;
         }

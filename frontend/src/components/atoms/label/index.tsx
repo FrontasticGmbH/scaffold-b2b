@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useTranslations } from 'use-intl';
 import { LabelProps } from './types';
 
@@ -15,24 +15,20 @@ const Label = ({
   if (!children && !required) return <></>;
 
   return (
-    <Fragment>
+    <div className="mb-2 flex items-center justify-between">
       {children && (
-        <div className="mb-2 flex items-center justify-between">
-          <label aria-label={htmlFor} data-testid="label" htmlFor={htmlFor} className="block text-14">
-            <span className="text-gray-700">{children}</span>{' '}
-            {!required && showOptionalLabel && (
-              <span className="lowercase text-gray-400">({optionalLabel ?? translate('common.optional')})</span>
-            )}
-            {required && requiredStyle === 'asterisk' && <span>*</span>}
-          </label>
-        </div>
+        <label aria-label={htmlFor} data-testid="label" htmlFor={htmlFor} className="block text-14">
+          <span className="text-gray-700">{children}</span>{' '}
+          {!required && showOptionalLabel && (
+            <span className="lowercase text-gray-600">({optionalLabel ?? translate('common.optional')})</span>
+          )}
+          {required && requiredStyle === 'asterisk' && <span>*</span>}
+        </label>
       )}
       {required && requiredStyle === 'label' && (
-        <div className="mb-2 flex items-center justify-between">
-          <span className="text-12 text-gray-500">{translate('common.field-required')}</span>
-        </div>
+        <span className="text-12 text-gray-500">{translate('common.field-required')}</span>
       )}
-    </Fragment>
+    </div>
   );
 };
 

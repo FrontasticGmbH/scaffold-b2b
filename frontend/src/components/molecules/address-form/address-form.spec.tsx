@@ -23,11 +23,20 @@ describe('AddressForm', () => {
     expect(screen.getByLabelText('C/O', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('Phone', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('Country', { exact: false })).toBeInTheDocument();
-    expect(screen.getByText('Street number')).toBeInTheDocument();
-    expect(screen.getByText('Street name')).toBeInTheDocument();
-    expect(screen.getByText('Building/Business')).toBeInTheDocument();
+    expect(screen.getByText('Address')).toBeInTheDocument();
     expect(screen.getByLabelText('Postcode', { exact: false })).toBeInTheDocument();
     expect(screen.getByText('City', { exact: false })).toBeInTheDocument();
+  });
+
+  it('displays a second address line when the "Add another address" link is clicked', async () => {
+    render(<AddressForm onAddAddress={jest.fn()} onUpdateAddress={jest.fn()} addresses={[]} countryOptions={[]} />);
+
+    expect(screen.queryByLabelText(/Address 2/i)).not.toBeInTheDocument();
+
+    const addAnotherAddressLink = screen.getByText(/Add another address/i);
+    await userEvent.click(addAnotherAddressLink);
+
+    expect(screen.getByLabelText(/Address 2/i)).toBeInTheDocument();
   });
 
   it('calls onAddAddress when form is submitted for a new address', async () => {
@@ -42,8 +51,7 @@ describe('AddressForm', () => {
     );
 
     await userEvent.type(screen.getByLabelText(/Company name/), 'Test Company');
-    await userEvent.type(screen.getByRole('textbox', { name: /streetName/ }), 'Main St');
-    await userEvent.type(screen.getByRole('textbox', { name: /streetNumber/ }), '123');
+    await userEvent.type(screen.getByRole('textbox', { name: /line1/ }), '123 Main St');
     await userEvent.type(screen.getByLabelText(/Postcode/), '12345');
     await userEvent.type(screen.getByLabelText(/City/), 'Test City');
 
@@ -57,8 +65,7 @@ describe('AddressForm', () => {
       expect(onAddAddress).toHaveBeenCalledWith(
         expect.objectContaining({
           name: 'Test Company',
-          streetName: 'Main St',
-          streetNumber: '123',
+          line1: '123 Main St',
           zip: '12345',
           city: 'Test City',
           country: 'US',
@@ -70,11 +77,11 @@ describe('AddressForm', () => {
   it('displays a validation error if required fields are missing', async () => {
     render(<AddressForm onAddAddress={jest.fn()} onUpdateAddress={jest.fn()} addresses={[]} countryOptions={[]} />);
 
-    const saveButton = screen.getByRole('button', { name: /Save address/i });
+    const saveButton = screen.getByText('Save');
     await userEvent.click(saveButton);
 
     expect(screen.getByLabelText(/Company name/)).toHaveAttribute('required');
-    expect(screen.getByRole('textbox', { name: /streetName/ })).toHaveAttribute('required');
+    expect(screen.getByRole('textbox', { name: /line1/ })).toHaveAttribute('required');
     expect(screen.getByLabelText(/Postcode/)).toHaveAttribute('required');
     expect(screen.getByLabelText(/City/)).toHaveAttribute('required');
   });

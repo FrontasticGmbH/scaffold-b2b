@@ -12,8 +12,8 @@ import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/pars
 import { AccountAuthenticationError } from '@Commerce-commercetools/errors/AccountAuthenticationError';
 import { BusinessUnitDuplicatedError } from '@Commerce-commercetools/errors/BusinessUnitDuplicatedError';
 import { ExternalError } from '@Commerce-commercetools/errors/ExternalError';
-import getAccountApi from '@Commerce-commercetools/utils/apiFactories/getAccountApi';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
+import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 import { AccountFetcher } from '@Commerce-commercetools/utils/AccountFetcher';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
@@ -47,7 +47,7 @@ type AccountChangePasswordBody = {
 async function loginAccount(request: Request, actionContext: ActionContext, account: Account): Promise<Response> {
   const accountApi = getAccountApi(request, actionContext.frontasticContext);
 
-  const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext.frontasticContext);
+  const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
 
   const { account: loggedInAccount, cart: loggedInCart } = await accountApi.login(account, cart);
 
@@ -69,6 +69,7 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
   // By default, we'll select the first business unit and store for the user.
   const businessUnitKey = businessUnits?.[0]?.key;
   const storeKey = businessUnits?.[0]?.stores?.[0]?.key;
+  const storeId = businessUnits?.[0]?.stores?.[0]?.storeId;
   const distributionChannelId = businessUnits?.[0]?.stores?.[0]?.distributionChannels?.[0]?.channelId;
   const supplyChannelId = businessUnits?.[0]?.stores?.[0]?.supplyChannels?.[0]?.channelId;
   const productSelectionId = businessUnits?.[0]?.stores?.[0]?.productSelectionIds?.[0];
@@ -78,12 +79,11 @@ async function loginAccount(request: Request, actionContext: ActionContext, acco
     body: JSON.stringify(loggedInAccount),
     sessionData: {
       ...request.sessionData,
-      ...(loggedInAccount
-        ? { accountId: loggedInAccount.accountId, accountGroupIds: loggedInAccount.accountGroupIds }
-        : {}),
+      ...(loggedInAccount ? { accountId: loggedInAccount.accountId } : {}),
       ...(loggedInCart ? { cartId: loggedInCart.cartId } : {}),
       businessUnitKey,
       storeKey,
+      storeId,
       distributionChannelId,
       supplyChannelId,
       productSelectionId,
@@ -156,7 +156,7 @@ export const register: ActionHook = async (request: Request, actionContext: Acti
       }
     }
 
-    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext.frontasticContext);
+    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
 
     const createdAccount = await accountApi.create(account, cart);
 
@@ -201,7 +201,7 @@ export const requestConfirmationEmail: ActionHook = async (request: Request, act
       password: accountLoginBody.password,
     } as Account;
 
-    const cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    const cart = await CartFetcher.fetchCart(request, actionContext);
 
     const { account: loggedInAccount, cart: loggedInCart } = await accountApi.login(account, cart);
 
@@ -279,11 +279,22 @@ export const login: ActionHook = async (request: Request, actionContext: ActionC
   }
 };
 
-export const logout: ActionHook = async () => {
+export const logout: ActionHook = async (request: Request) => {
   return {
     statusCode: 200,
     body: JSON.stringify({}),
-    sessionData: {},
+    sessionData: {
+      ...request.sessionData,
+      accountId: undefined,
+      cartId: undefined,
+      wishlistId: undefined,
+      businessUnitKey: undefined,
+      storeKey: undefined,
+      storeId: undefined,
+      distributionChannelId: undefined,
+      supplyChannelId: undefined,
+      productSelectionId: undefined,
+    },
   } as Response;
 };
 

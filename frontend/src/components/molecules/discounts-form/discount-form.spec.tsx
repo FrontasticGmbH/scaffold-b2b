@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, waitFor } from '@test/utils';
 import userEvent from '@testing-library/user-event';
 import DiscountsForm from './';
@@ -17,7 +18,7 @@ describe('DiscountsForm', () => {
     render(<DiscountsForm className="custom-class" discounts={[]} onSubmit={mockOnSubmit} />);
 
     expect(screen.getByText('Apply a discount')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Insert discount code')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter discount code')).toBeInTheDocument();
   });
 
   it('applies the provided custom className', () => {
@@ -27,10 +28,10 @@ describe('DiscountsForm', () => {
   });
 
   it('calls onSubmit with the entered discount code', async () => {
-    mockOnSubmit.mockResolvedValue({ success: true });
+    mockOnSubmit.mockResolvedValue(true);
     render(<DiscountsForm onSubmit={mockOnSubmit} discounts={[]} />);
 
-    const input = screen.getByPlaceholderText('Insert discount code');
+    const input = screen.getByPlaceholderText('Enter discount code');
     const code = 'SAVE10';
 
     await userEvent.type(input, code);
@@ -41,14 +42,14 @@ describe('DiscountsForm', () => {
       expect(mockOnSubmit).toHaveBeenCalledWith(code);
     });
 
-    expect(input).toHaveValue('');
+    expect(input).toHaveValue('SAVE10');
   });
 
   it('displays an error message for invalid discount code', async () => {
-    mockOnSubmit.mockResolvedValue({ success: false });
+    mockOnSubmit.mockResolvedValue(false);
     render(<DiscountsForm onSubmit={mockOnSubmit} customError="Invalid code!" discounts={[]} />);
 
-    const input = screen.getByPlaceholderText('Insert discount code');
+    const input = screen.getByPlaceholderText('Enter discount code');
     const code = 'INVALID';
 
     await userEvent.type(input, code);
@@ -72,5 +73,23 @@ describe('DiscountsForm', () => {
 
     await userEvent.click(removeButtons[0]);
     expect(defaultDiscounts[0].onRemove).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears the input when XMarkIcon is clicked', async () => {
+    render(<DiscountsForm discounts={[]} onSubmit={mockOnSubmit} />);
+
+    const input = screen.getByPlaceholderText('Enter discount code');
+    const code = 'SAVE10';
+
+    await userEvent.type(input, code);
+
+    expect(input).toHaveValue(code);
+
+    await userEvent.keyboard('{Enter}');
+
+    const clearIcon = screen.getByTestId('clear-input');
+    await userEvent.click(clearIcon);
+
+    expect(input).toHaveValue('');
   });
 });

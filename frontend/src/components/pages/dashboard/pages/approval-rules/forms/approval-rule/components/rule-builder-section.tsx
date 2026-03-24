@@ -9,7 +9,6 @@ const RuleBuilderSection = ({
   title,
   summary,
   error,
-  viewOnly,
   addRule,
   onAddRule,
   isPreviewing,
@@ -79,7 +78,7 @@ const RuleBuilderSection = ({
 
               {isPreviewing && (
                 <div className="absolute right-6 top-6">
-                  <Button variant="secondary" onClick={() => onPreviewEnd()} disabled={viewOnly}>
+                  <Button variant="secondary" onClick={() => onPreviewEnd()}>
                     {translate('common.edit')}
                   </Button>
                 </div>
@@ -87,7 +86,7 @@ const RuleBuilderSection = ({
             </div>
 
             {allowMultiTier && !isPreviewing && (typeof maxTiers === 'undefined' || tiers.length < maxTiers) && (
-              <Button variant="secondary" className="self-end" size="m" onClick={onTierAdd} disabled={viewOnly}>
+              <Button variant="secondary" className="self-end" size="m" onClick={onTierAdd}>
                 {translate('dashboard.add-approval-tier')}
               </Button>
             )}
@@ -101,7 +100,7 @@ const RuleBuilderSection = ({
         ) : (
           <div className="flex gap-3">
             <div className="h-[40px] grow rounded-md border border-gray-300"></div>
-            <Button className="min-w-[100px]" onClick={onAddRule} disabled={viewOnly}>
+            <Button className="min-w-[100px]" onClick={onAddRule}>
               {translate('common.add')}
             </Button>
           </div>

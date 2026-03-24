@@ -81,6 +81,18 @@ export const getStoreKey = (request: Request): string | null => {
   return null;
 };
 
+export const getStoreId = (request: Request): string | null => {
+  if (request !== undefined) {
+    const { storeId } = parseQueryParams<{
+      storeId: string;
+    }>(request.query);
+
+    return storeId ?? request.sessionData?.storeId;
+  }
+
+  return null;
+};
+
 export const getDistributionChannelId = (request: Request): string | null => {
   if (request !== undefined) {
     const { distributionChannelId } = parseQueryParams<{
@@ -117,12 +129,12 @@ export const getProductSelectionId = (request: Request): string | null => {
   return null;
 };
 
-export const getAccountGroupIds = (request: Request): string[] | null => {
+export const getAccountGroupId = (request: Request): string | null => {
   if (request !== undefined) {
-    const { accountGroupIds } = parseQueryParams<{
-      accountGroupIds: string[];
+    const { accountGroupId } = parseQueryParams<{
+      accountGroupId: string;
     }>(request.query);
-    return accountGroupIds ?? request.sessionData?.accountGroupIds;
+    return accountGroupId ?? request.sessionData?.account?.accountGroupId;
   }
 
   return null;

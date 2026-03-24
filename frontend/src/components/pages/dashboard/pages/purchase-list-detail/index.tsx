@@ -1,25 +1,24 @@
-import Button from '@/components/atoms/button';
-import InfoBanner from '@/components/molecules/info-banner';
-import PurchaseListItem from '@/components/molecules/purchase-list-item';
-import Confirmation from '@/components/organisms/confirmation';
-import useEntityToasters from '@/hooks/useEntityToasters';
-import { ShoppingCartIcon } from '@heroicons/react/24/outline';
-import { InformationCircleIcon } from '@heroicons/react/24/solid';
-
-import { format } from 'date-fns';
-import { useState } from 'react';
-import { Tooltip } from 'react-tooltip';
+import React, { useState } from 'react';
 import { useTranslations } from 'use-intl';
-import PreviousPageLink from '../../components/previous-page-link';
+import Button from '@/components/atoms/button';
+import Confirmation from '@/components/organisms/confirmation';
+import PurchaseListItem from '@/components/molecules/purchase-list-item';
+import useEntityToasters from '@/hooks/useEntityToasters';
+import { Tooltip } from 'react-tooltip';
+import InfoBanner from '@/components/molecules/info-banner';
+import { ExclamationTriangleIcon, InformationCircleIcon } from '@heroicons/react/24/solid';
+import { format } from 'date-fns';
+import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import EditPurchaseListModal from './components/edit-modal';
-import EmptyPurchaseList from './components/empty-purchase-list';
 import { PurchaseListDetailPageProps } from './types';
+import PreviousPageLink from '../../components/previous-page-link';
+import EmptyPurchaseList from './components/empty-purchase-list';
 
 const PurchaseListDetailPage = ({
   purchaseList,
   onUpdatePurchaseList,
   onDeletePurchaseList,
-  onAddPurchaseListToCart,
+  onOrderPurchaseList,
   onAddItemToCart,
   onRemoveItem,
   onUpdateItem,
@@ -41,22 +40,28 @@ const PurchaseListDetailPage = ({
     DeleteMyShoppingLists,
     UpdateMyShoppingLists,
     DeleteOthersShoppingLists,
-    CreateMyCarts,
-    UpdateMyCarts,
+    CreateMyOrdersFromMyCarts,
+    CreateOrdersFromOthersCarts,
   } = permissions || {};
 
-  const itemsCount = purchaseList.items.reduce((acc, curr) => {
-    acc += curr.quantity;
-    return acc;
-  }, 0);
+  const itemsCount = purchaseList.items.length;
   const isOwner = purchaseList?.account?.accountId === accountId;
   const canEdit = isOwner ? UpdateMyShoppingLists : UpdateOthersShoppingLists;
   const canDelete = isOwner ? DeleteMyShoppingLists : DeleteOthersShoppingLists;
-  const canUpdateCart = UpdateMyCarts && CreateMyCarts;
+  const canCreateOrder = isOwner ? CreateMyOrdersFromMyCarts : CreateOrdersFromOthersCarts;
 
   return (
     <div className="pt-6">
-      {!canEdit && !canDelete && !canUpdateCart && (
+      {!canEdit && canCreateOrder && (
+        <InfoBanner variant="warning" className="mb-8">
+          <p className="flex items-start gap-2 text-gray-600 md:items-center">
+            <ExclamationTriangleIcon className="size-7 text-yellow-600 md:size-5 md:pt-0" />
+            <span>{translate('dashboard.purchase-list-cannot-edit')}</span>
+          </p>
+        </InfoBanner>
+      )}
+
+      {!canCreateOrder && (
         <InfoBanner className="mb-8">
           <p className="flex items-start gap-2 text-gray-600 lg:items-center">
             <InformationCircleIcon className="size-1/4 text-blue-600 md:size-10 lg:size-7" />
@@ -176,10 +181,10 @@ const PurchaseListDetailPage = ({
                 </Button>
               </span>
             </Confirmation>
-            {!canUpdateCart && (
+            {!canCreateOrder && (
               <Tooltip
                 id="order-purchase-list-tooltip"
-                content={translate('dashboard.purchase-list-cannot-add-to-cart')}
+                content={translate('dashboard.purchase-list-cannot-order')}
                 place="top"
                 openEvents={{ mouseover: true, focus: true }}
               />
@@ -191,16 +196,16 @@ const PurchaseListDetailPage = ({
                 size="m"
                 loading={isOrderingList}
                 onClick={async () => {
-                  if (!canUpdateCart) return;
+                  if (!canCreateOrder) return;
 
                   setIsOrderingList(true);
-                  await onAddPurchaseListToCart?.();
+                  await onOrderPurchaseList?.();
                   setIsOrderingList(false);
                 }}
-                disabled={!itemsCount || !canUpdateCart}
+                disabled={!canCreateOrder || !itemsCount}
               >
                 <ShoppingCartIcon className="mr-2 size-4" />
-                {translate('cart.add')}
+                {translate('common.order')}
               </Button>
             </span>
           </div>

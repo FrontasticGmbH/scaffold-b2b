@@ -7,13 +7,10 @@ const CartContent = ({
   loading,
   className,
   lineItems,
-  discountCodes,
   onUpdateQuantity,
   onRemove,
   onAdd,
-  onUndoRemove,
   onAddToNewWishlist,
-  onClearItem,
 }: CartContentProps) => {
   const translate = useTranslations();
 
@@ -23,10 +20,10 @@ const CartContent = ({
     <div className={className}>
       {cartHasProducts ? (
         <>
-          <div className="flex items-center gap-1 font-semibold">
+          <div className="flex items-center gap-1">
             <p className="text-16 text-gray-700 md:text-18 lg:text-20">{translate('cart.cart')}</p>
             <p className="text-16 text-gray-600 md:text-18 lg:text-20">{`(${lineItems
-              ?.filter((item) => !item.isGift && !item.deleted)
+              ?.filter((item) => !item.deleted)
               .reduce(
                 (sum, item) => sum + (item && item.quantity ? item.quantity : 0),
                 0,
@@ -34,13 +31,10 @@ const CartContent = ({
           </div>
           <CartItemsList
             lineItems={lineItems}
-            discountCodes={discountCodes}
             onAdd={onAdd}
             onUpdateQuantity={onUpdateQuantity}
             onRemove={onRemove}
-            onUndoRemove={onUndoRemove}
             onAddToNewWishlist={onAddToNewWishlist}
-            onClearItem={onClearItem}
           />
         </>
       ) : (

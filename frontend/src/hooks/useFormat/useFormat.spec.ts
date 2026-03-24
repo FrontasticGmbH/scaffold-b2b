@@ -25,25 +25,20 @@ describe('[Hook] useFormat', () => {
       formatAddress({
         name: 'Zack',
         careOf: 'Kuni',
+        line1: '221B Baker Street',
         zip: 'NW1 6XE',
         country: 'United Kingdom',
-        streetName: 'Baker Street',
-        streetNumber: '221B',
-        city: 'Leicester',
       }),
-    ).toBe('Zack (c/o Kuni)\nBaker Street 221B\nNW1 6XE Leicester, United Kingdom');
+    ).toBe('Zack (c/o Kuni)\n221B Baker Street\nNW1 6XE undefined, United Kingdom');
 
     expect(
       formatAddress({
         name: 'Zack',
-        streetName: 'King Street',
-        streetNumber: '221B',
-        careOf: 'Kuni',
+        line1: '221B Baker Street',
         zip: 'NW1 6XE',
-        city: 'New York',
-        country: 'United States',
+        country: 'United Kingdom',
       }),
-    ).toBe('Zack (c/o Kuni)\nKing Street 221B\nNW1 6XE New York, United States');
+    ).toBe('Zack\n221B Baker Street\nNW1 6XE undefined, United Kingdom');
   });
 
   it('Formats local date correctly', () => {

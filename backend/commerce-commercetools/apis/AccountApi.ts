@@ -64,7 +64,7 @@ export default class AccountApi extends BaseApi {
           return AccountMapper.commercetoolsCustomerToAccount(response.body.customer);
         })
         .catch((error) => {
-          throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+          throw new ExternalError({ statusCode: error.status, message: error.message, body: error.body });
         });
     } catch (error) {
       if (error instanceof ExternalError && error?.errorName === ExternalError.DUPLICATED_FIELD_ERROR_NAME) {
@@ -100,15 +100,13 @@ export default class AccountApi extends BaseApi {
         return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
   async login(account: Account, cart: Cart | undefined): Promise<{ account: Account; cart: Cart | undefined }> {
-    this.invalidateSessionCheckoutData();
-
     const locale = await this.getCommercetoolsLocal();
-    const defaultLocale = await this.getCommercetoolsDefaultLocal();
+    const defaultLocale = this.defaultLocale;
 
     const { account: loggedInAccount, cart: loggedInCart } = await this.requestBuilder()
       .login()
@@ -135,7 +133,7 @@ export default class AccountApi extends BaseApi {
         };
       })
       .catch((error) => {
-        if (error.statusCode && error.statusCode === 400) {
+        if (error.code && error.code === 400) {
           if (error.body && error.body?.errors?.[0]?.code === 'InvalidCredentials') {
             throw new AccountAuthenticationError({
               message: 'Failed to login account with the given credentials',
@@ -150,7 +148,7 @@ export default class AccountApi extends BaseApi {
           }
         }
 
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     if (!loggedInAccount.confirmed) {
@@ -179,7 +177,7 @@ export default class AccountApi extends BaseApi {
         };
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -198,7 +196,7 @@ export default class AccountApi extends BaseApi {
         return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -221,7 +219,7 @@ export default class AccountApi extends BaseApi {
         return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -235,7 +233,7 @@ export default class AccountApi extends BaseApi {
         return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -271,7 +269,7 @@ export default class AccountApi extends BaseApi {
       .execute()
       .then((response) => response.body)
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -509,7 +507,7 @@ export default class AccountApi extends BaseApi {
       .get()
       .execute()
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
 
     return commercetoolsAccount.body?.version;
@@ -534,7 +532,7 @@ export default class AccountApi extends BaseApi {
         return AccountMapper.commercetoolsCustomerToAccount(response.body);
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 
@@ -559,7 +557,7 @@ export default class AccountApi extends BaseApi {
         return accountToken;
       })
       .catch((error) => {
-        throw new ExternalError({ statusCode: error.statusCode, message: error.message, body: error.body });
+        throw new ExternalError({ statusCode: error.code, message: error.message, body: error.body });
       });
   }
 }

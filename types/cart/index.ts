@@ -28,8 +28,6 @@ import { ShippingRate } from './ShippingRate';
 import { Tax } from './Tax';
 import { TaxPortion } from './TaxPortion';
 import { TaxRate } from './TaxRate';
-import { RecurringOrder, RecurringOrderState } from './RecurringOrder';
-import { RecurrencePolicy, LineItemRecurrenceInfo } from './RecurrencePolicy';
 
 export {
   type Cart,
@@ -67,8 +65,4 @@ export {
   type ProductDiscountedPrice,
   type ProductDiscountValue,
   type RelativeDiscountValue,
-  type RecurrencePolicy,
-  type LineItemRecurrenceInfo,
-  type RecurringOrder,
-  type RecurringOrderState,
 };

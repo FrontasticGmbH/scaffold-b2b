@@ -23,8 +23,7 @@ export const mapShippingMethod = (shippingMethod: ShippingMethod): EntityShippin
     description: shippingMethod.description ?? '',
     price: (defaultRate?.price?.centAmount ?? 0) / Math.pow(10, defaultRate?.price?.fractionDigits ?? 2),
     currency: (defaultRate?.price?.currencyCode ?? 'USD') as Currency,
-    freeAbove: defaultRate?.freeAbove?.centAmount,
-    ...(Number.isNaN(estimatedDays)
+    ...(isNaN(estimatedDays)
       ? { estimatedDeliveryDate: 'N/A' }
       : { estimatedDeliveryDate: `${days.toString().padStart(2, '0')}-${months.toString().padStart(2, '0')}-${year}` }),
   };

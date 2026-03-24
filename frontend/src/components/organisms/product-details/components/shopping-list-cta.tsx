@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslations } from 'use-intl';
 import WishlistModal from '@/components/molecules/wishlist-modal';
-import toast from '@/components/atoms/toaster/helpers/toast';
 import useDisclosure from '@/hooks/useDisclosure';
-import { classnames } from '@/utils/classnames/classnames';
+import { useTranslations } from 'use-intl';
+import toast from '@/components/atoms/toaster/helpers/toast';
 import { ShoppingListCTAProps, Wishlist } from '../types';
 import WishlistToast from './wishlist-toast';
 
 const ShoppingListCTA = ({
   getWishlists,
-  canAddToOwnWishlist,
-  canAddToOthersWishlist,
   addToWishlists,
   removeFromWishlists,
   addToNewWishlist,
-  addToWishlistDisabled = false,
 }: ShoppingListCTAProps) => {
   const translate = useTranslations();
 
@@ -23,7 +19,6 @@ const ShoppingListCTA = ({
   const [lists, setLists] = useState<Array<Wishlist>>([]);
 
   const [checkedBoxes, setCheckedBoxes] = useState<Record<string, boolean>>({});
-  const [savedItemsIds, setSavedItemsIds] = useState<string[]>([]);
 
   const selectedIds = useMemo(() => Object.keys(checkedBoxes).filter((key) => !!checkedBoxes[key]), [checkedBoxes]);
 
@@ -35,11 +30,8 @@ const ShoppingListCTA = ({
   };
 
   const fetchLists = useCallback(async () => {
-    const shoppingLists = ((await getWishlists()) ?? []).filter((shoppingList) =>
-      shoppingList.isOwnWishlist ? canAddToOwnWishlist : canAddToOthersWishlist,
-    );
-
-    setLists(shoppingLists);
+    const shoppingLists = await getWishlists();
+    setLists(shoppingLists ?? []);
 
     const checkedBoxes = shoppingLists?.reduce(
       (acc, list) => {
@@ -50,9 +42,7 @@ const ShoppingListCTA = ({
     );
 
     setCheckedBoxes(checkedBoxes ?? {});
-    const saved = shoppingLists.filter((l) => !!l.productIsInWishlist).map((l) => l.id);
-    setSavedItemsIds(saved);
-  }, [canAddToOthersWishlist, canAddToOwnWishlist, getWishlists]);
+  }, [getWishlists]);
 
   const toastAddedLists = (addedWishlists: string[]) => {
     addedWishlists.forEach((addedWishlistsId) => {
@@ -88,9 +78,6 @@ const ShoppingListCTA = ({
       toastAddedLists(addedWishlists);
     }
 
-    // Persist new baseline for savedItemsIds after successful submit
-    setSavedItemsIds(selectedIds);
-
     onClose();
   };
 
@@ -100,16 +87,7 @@ const ShoppingListCTA = ({
 
   return (
     <div className="mb-1 mt-2 border-y border-neutral-400 py-5 lg:mt-4">
-      <button
-        disabled={addToWishlistDisabled}
-        onClick={() => {
-          if (addToWishlistDisabled) return;
-          onOpen();
-        }}
-        className={classnames('text-14 leading-[16px] text-gray-700', {
-          'cursor-not-allowed opacity-50': addToWishlistDisabled,
-        })}
-      >
+      <button onClick={onOpen} className="text-14 leading-[16px] text-gray-700">
         {`+ ${translate('product.add-to-list')}`}
       </button>
       <WishlistModal
@@ -120,7 +98,6 @@ const ShoppingListCTA = ({
         onClose={onClose}
         handleChange={handleChange}
         selectedIds={selectedIds}
-        savedItemsIds={savedItemsIds}
       />
     </div>
   );

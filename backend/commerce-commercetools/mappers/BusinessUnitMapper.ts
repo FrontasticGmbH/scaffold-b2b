@@ -130,12 +130,13 @@ export default class BusinessUnitMapper {
 
   static expandStores(stores: Store[], allStores: Store[]): Store[] {
     return stores?.map((store) => {
-      const storeObj = allStores.find((storeObj) => storeObj.key === store.key);
+      const storeObj = allStores.find((s) => s.key === store.key);
       return storeObj
         ? {
-            storeId: storeObj.storeId,
             name: storeObj.name,
             key: storeObj.key,
+            typeId: 'store',
+            storeId: storeObj.storeId,
             distributionChannels: storeObj?.distributionChannels,
             supplyChannels: storeObj?.supplyChannels,
             productSelectionIds: storeObj?.productSelectionIds,
@@ -317,7 +318,7 @@ export default class BusinessUnitMapper {
   static commercetoolsApprovalFlowToApprovalFlow(
     commercetoolsApprovalFlow: CommercetoolsApprovalFlow,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): ApprovalFlow {
     return {
       approvalFlowId: commercetoolsApprovalFlow.id,
@@ -362,7 +363,7 @@ export default class BusinessUnitMapper {
   static commercetoolsOrderReferenceToOrder(
     order: CommercetoolsOrderReference,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): Order {
     return {
       cartId: order?.id,

@@ -1,19 +1,17 @@
 import { LocalizedString, TypedMoney } from '@commercetools/platform-sdk';
 import { Money } from '@Types/product/Money';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
+import { Locale } from '../Locale';
 
 export default class LocalizedValue {
-  static getLocalizedValue = (locale: Locale, defaultLocale: Locale, productValue?: LocalizedString): string => {
+  static getLocalizedValue = (locale: Locale, defaultLocale: string, productValue?: LocalizedString): string => {
     if (!productValue) {
       return '';
     }
-
     if (productValue[locale.language]) {
       return productValue[locale.language];
     }
-
-    if (productValue[defaultLocale.language]) {
-      return productValue[defaultLocale.language];
+    if (productValue[defaultLocale]) {
+      return productValue[defaultLocale];
     }
 
     return Object.values(productValue)[0];

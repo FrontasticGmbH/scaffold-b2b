@@ -1,12 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Option } from '@/components/atoms/select/types';
-import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
 import usePath from '@/hooks/usePath';
-import { useCategories } from '@/lib/hooks/useCategories';
+import { ContextShape, Location } from '@/components/organisms/shipping-and-language/types';
 import { mapCountry } from '@/utils/mappers/map-country';
 import { ProjectSettings } from '@shared/types/ProjectSettings';
-import Cookies from 'js-cookie';
+import { useCategories } from '@/lib/hooks/useCategories';
 
 const initialMarketState = {
   selectedLanguage: {} as Option,
@@ -35,12 +34,9 @@ const ShipAndLanguageProvider = ({
         languages: locales.map(({ name, locale }) => ({ name, value: locale })),
       }) as Location,
   );
-  const params = useParams();
-  const locale = params?.locale;
+  const { locale } = useParams();
 
-  const [selectedLocationValue, setSelectedLocationValue] = useState(
-    locale && typeof locale === 'string' ? locale.split('-')[1]?.toLowerCase() : undefined,
-  );
+  const [selectedLocationValue, setSelectedLocationValue] = useState(locale?.split('-')[1]?.toLowerCase());
 
   const selectedLocation = locations.find((location) => location.value === selectedLocationValue) ?? locations[0];
   const selectedLanguage =
@@ -58,9 +54,8 @@ const ShipAndLanguageProvider = ({
 
     if (pathToGo.startsWith('/')) pathToGo = pathToGo.slice(1);
 
-    Cookies.set('locale', language);
-
-    window.location.assign(`/${language}/${pathToGo}`);
+    // Added to cause a full page reload
+    window.location.href = `/${language}/${pathToGo}`;
   };
 
   const onLocationSelect = (location: string) => {

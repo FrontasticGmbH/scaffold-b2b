@@ -1,8 +1,8 @@
 import en from '../src/messages/en.json';
 import de from '../src/messages/de.json';
-type Messages = { en: typeof en; de: typeof de };
+type Messages = typeof en;
 
-const messagesByLocale: Messages = { en, de };
+const messagesByLocale: Messages = {en, de};
 
 const nextIntl = {
   defaultLocale: 'en',

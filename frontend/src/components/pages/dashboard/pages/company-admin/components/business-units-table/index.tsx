@@ -31,10 +31,7 @@ const BusinessUnitsTable = ({ businessUnitsAreViewOnly, businessUnits = [] }: Pa
               <Table.Cell>
                 {!businessUnitsAreViewOnly && (
                   <div className="flex items-center justify-end gap-5 text-primary">
-                    <Link
-                      href={`?subPath=edit-business-unit&id=${id}`}
-                      aria-label={translate('dashboard.business-unit-edit')}
-                    >
+                    <Link href={`?subPath=edit-business-unit&id=${id}`}>
                       <EditIcon className="cursor-pointer" width={20} />
                     </Link>
                   </div>

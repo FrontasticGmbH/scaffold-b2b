@@ -10,7 +10,6 @@ export interface EntityFormProps {
   };
   showCancelButton?: boolean;
   showSubmitButton?: boolean;
-  stackButtonsOnMobile?: boolean;
   onCancel?: () => void;
   onSubmit?: () => Promise<void>;
 }

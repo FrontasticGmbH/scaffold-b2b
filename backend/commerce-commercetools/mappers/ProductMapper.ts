@@ -1,8 +1,9 @@
+import { Category } from '@Types/product/Category';
+import { Variant } from '@Types/product/Variant';
 import {
   Category as CommercetoolsCategory,
   CategoryReference,
   ProductVariant as CommercetoolsProductVariant,
-  ProductProjection as CommercetoolsProductProjection,
   TypedMoney,
   ProductSearchRequest,
   ProductSearchFacetExpression,
@@ -13,12 +14,12 @@ import {
   ProductSearchFacetResultCount,
   ProductSearchFacetResult,
   ProductSearchMatchingVariants as CommercetoolsProductSearchMatchingVariants,
+  ProductSearchResult as CommercetoolsProductSearchResult,
   ProductDiscountValue as CommercetoolsProductDiscountValue,
   DiscountedPrice as CommercetoolsDiscountedPrice,
-  Attribute as CommercetoolsAttribute,
-  ProductPriceModeEnum as CommercetoolsProductPriceModeEnum,
-  ProductPriceModeEnumValues as CommercetoolsProductPriceModeEnumValues,
 } from '@commercetools/platform-sdk';
+import { Attribute as CommercetoolsAttribute } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product';
+import { Attributes, FacetDefinition, Money, Product } from '@Types/product';
 import { ProductDiscount as CommercetoolsProductDiscount } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-discount';
 import {
   Money as CommercetoolsMoney,
@@ -32,23 +33,17 @@ import {
   AttributeLocalizedEnumValue,
   AttributeSetType,
   ProductType as CommercetoolsProductType,
-  AttributeType,
 } from '@commercetools/platform-sdk/dist/declarations/src/generated/models/product-type';
-
-import { ProductDiscount, ProductDiscountedPrice, ProductDiscountValue } from '@Types/cart';
-import { Category } from '@Types/product/Category';
 import { FilterField, FilterFieldTypes, FilterFieldValue } from '@Types/product/FilterField';
-import { Attributes, FacetDefinition, Money, Price, Product, Variant } from '@Types/product';
-import { LocalizedString, ProductQuery } from '@Types/query';
-import { RangeFacet as QueryRangeFacet } from '@Types/query/RangeFacet';
-import { TermFacet as QueryTermFacet } from '@Types/query/TermFacet';
-import { Facet, FacetTypes } from '@Types/result/Facet';
 import { RangeFacet, Term, TermFacet } from '@Types/result';
-
-import CartMapper from './CartMapper';
+import { Facet, FacetTypes } from '@Types/result/Facet';
+import { LocalizedString, ProductQuery } from '@Types/query';
+import { TermFacet as QueryTermFacet } from '@Types/query/TermFacet';
+import { RangeFacet as QueryRangeFacet } from '@Types/query/RangeFacet';
+import { ProductDiscount, ProductDiscountedPrice, ProductDiscountValue } from '@Types/cart';
+import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 import ProductRouter from '@Commerce-commercetools/utils/routers/ProductRouter';
 import LocalizedValue from '@Commerce-commercetools/utils/LocalizedValue';
-import { Locale } from '@Commerce-commercetools/interfaces/Locale';
 
 const TypeMap = new Map<string, string>([
   ['boolean', FilterFieldTypes.BOOLEAN],
@@ -62,48 +57,44 @@ const TypeMap = new Map<string, string>([
 ]);
 
 export default class ProductMapper {
-  static commercetoolsProductProjectionToProduct(
-    commercetoolsProductProjection: CommercetoolsProductProjection,
+  static commercetoolsProductSearchResultToProduct(
+    commercetoolsProduct: CommercetoolsProductSearchResult,
     productIdField: string,
     categoryIdField: string,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
     supplyChannelId?: string,
-    distributionChannelId?: string,
-    accountGroupIds?: string[],
-    commercetoolsProductSearchMatchingVariants?: CommercetoolsProductSearchMatchingVariants,
   ): Product {
     const product: Product = {
-      productId: commercetoolsProductProjection?.id,
-      productKey: commercetoolsProductProjection?.key,
-      productRef: commercetoolsProductProjection?.[productIdField],
-      productTypeId: commercetoolsProductProjection?.productType?.id,
-      version: commercetoolsProductProjection.version?.toString(),
-      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.name),
-      slug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.slug),
-      description: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.description),
+      productId: commercetoolsProduct?.productProjection?.id,
+      productKey: commercetoolsProduct?.productProjection?.key,
+      productRef: commercetoolsProduct?.productProjection?.[productIdField],
+      productTypeId: commercetoolsProduct?.productProjection?.productType?.id,
+      version: commercetoolsProduct?.productProjection.version?.toString(),
+      name: commercetoolsProduct?.productProjection.name?.[locale.language],
+      slug: commercetoolsProduct?.productProjection.slug?.[locale.language],
+      description: commercetoolsProduct?.productProjection.description?.[locale.language],
       categories: this.commercetoolsCategoryReferencesToCategories(
-        commercetoolsProductProjection.categories,
+        commercetoolsProduct.productProjection.categories,
         categoryIdField,
         locale,
       ),
-      variants: this.commercetoolsProductProjectionToVariants(
-        commercetoolsProductProjection,
-        locale,
-        defaultLocale,
-        supplyChannelId,
-        distributionChannelId,
-        accountGroupIds,
-        commercetoolsProductSearchMatchingVariants,
-      ),
+      variants: this.commercetoolsProductProjectionToVariants(commercetoolsProduct, locale, supplyChannelId),
       metaTitle:
-        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.metaTitle) || undefined,
+        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProduct?.productProjection?.metaTitle) ||
+        undefined,
       metaDescription:
-        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.metaDescription) ||
-        undefined,
+        LocalizedValue.getLocalizedValue(
+          locale,
+          defaultLocale,
+          commercetoolsProduct?.productProjection?.metaDescription,
+        ) || undefined,
       metaKeywords:
-        LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsProductProjection.metaKeywords) ||
-        undefined,
+        LocalizedValue.getLocalizedValue(
+          locale,
+          defaultLocale,
+          commercetoolsProduct?.productProjection?.metaKeywords,
+        ) || undefined,
     };
 
     product._url = ProductRouter.generateUrlFor(product);
@@ -112,42 +103,30 @@ export default class ProductMapper {
   }
 
   static commercetoolsProductProjectionToVariants(
-    commercetoolsProductProjection: CommercetoolsProductProjection,
+    commercetoolsProduct: CommercetoolsProductSearchResult,
     locale: Locale,
-    defaultLocale: Locale,
     supplyChannelId?: string,
-    distributionChannelId?: string,
-    accountGroupIds?: string[],
-    commercetoolsProductSearchMatchingVariants?: CommercetoolsProductSearchMatchingVariants,
   ): Variant[] {
     const variants: Variant[] = [];
 
-    if (commercetoolsProductProjection.masterVariant) {
+    if (commercetoolsProduct?.productProjection.masterVariant) {
       variants.push(
         this.commercetoolsProductVariantToVariant(
-          commercetoolsProductProjection.masterVariant,
+          commercetoolsProduct.productProjection.masterVariant,
           locale,
-          defaultLocale,
           supplyChannelId,
-          distributionChannelId,
-          accountGroupIds,
-          commercetoolsProductSearchMatchingVariants,
-          commercetoolsProductProjection.priceMode,
+          commercetoolsProduct.matchingVariants,
         ),
       );
     }
 
     variants.push(
-      ...commercetoolsProductProjection.variants.map((variant) =>
+      ...commercetoolsProduct.productProjection.variants.map((variant) =>
         this.commercetoolsProductVariantToVariant(
           variant,
           locale,
-          defaultLocale,
           supplyChannelId,
-          distributionChannelId,
-          accountGroupIds,
-          commercetoolsProductSearchMatchingVariants,
-          commercetoolsProductProjection.priceMode,
+          commercetoolsProduct.matchingVariants,
         ),
       ),
     );
@@ -158,27 +137,11 @@ export default class ProductMapper {
   static commercetoolsProductVariantToVariant(
     commercetoolsVariant: CommercetoolsProductVariant,
     locale: Locale,
-    defaultLocale: Locale,
     supplyChannelId?: string,
-    distributionChannelId?: string,
-    accountGroupIds?: string[],
-    commercetoolsMatchingVariants?: CommercetoolsProductSearchMatchingVariants,
-    commercetoolsPriceMode?: CommercetoolsProductPriceModeEnum,
+    matchingVariants?: CommercetoolsProductSearchMatchingVariants,
   ): Variant {
     const attributes = this.commercetoolsAttributesToAttributes(commercetoolsVariant.attributes, locale);
-    const { price, discountedPrice } = this.extractPriceAndDiscounts(
-      commercetoolsVariant,
-      locale,
-      commercetoolsPriceMode,
-    );
-    const recurrencePrices = this.extractRecurrencePrices(
-      commercetoolsVariant,
-      locale,
-      defaultLocale,
-      distributionChannelId,
-      accountGroupIds,
-      commercetoolsPriceMode,
-    );
+    const { price, discountedPrice } = this.extractPriceAndDiscounts(commercetoolsVariant, locale);
 
     return {
       id: commercetoolsVariant.id?.toString(),
@@ -191,10 +154,9 @@ export default class ProductMapper {
       attributes: attributes,
       price: price,
       discountedPrice: discountedPrice,
-      recurrencePrices: recurrencePrices,
       isMatchingVariant:
-        commercetoolsMatchingVariants?.allMatched ||
-        commercetoolsMatchingVariants?.matchedVariants.some((variant) => variant.id === commercetoolsVariant.id),
+        matchingVariants?.allMatched ||
+        matchingVariants?.matchedVariants.some((variant) => variant.id === commercetoolsVariant.id),
       isOnStock: supplyChannelId
         ? commercetoolsVariant.availability?.channels?.[supplyChannelId]?.isOnStock
         : commercetoolsVariant.availability?.isOnStock || undefined,
@@ -214,10 +176,7 @@ export default class ProductMapper {
     const attributes: Attributes = {};
 
     commercetoolsAttributes?.forEach((commercetoolsAttribute) => {
-      attributes[this.generateAttributeIdFromAttributeName(commercetoolsAttribute.name)] = this.extractAttributeValue(
-        commercetoolsAttribute.value,
-        locale,
-      );
+      attributes[commercetoolsAttribute.name] = this.extractAttributeValue(commercetoolsAttribute.value, locale);
     });
 
     return attributes;
@@ -233,7 +192,7 @@ export default class ProductMapper {
     commercetoolsCategoryReferences.forEach((commercetoolsCategory) => {
       let category: Category = {
         categoryId: commercetoolsCategory.id,
-      };
+      } as any;
 
       if (commercetoolsCategory.obj) {
         category = this.commercetoolsCategoryToCategory(commercetoolsCategory.obj, categoryIdField, locale);
@@ -266,11 +225,7 @@ export default class ProductMapper {
     }
   }
 
-  static extractPriceAndDiscounts(
-    commercetoolsVariant: CommercetoolsProductVariant,
-    locale: Locale,
-    commercetoolsPriceMode?: CommercetoolsProductPriceModeEnum,
-  ) {
+  static extractPriceAndDiscounts(commercetoolsVariant: CommercetoolsProductVariant, locale: Locale) {
     let price: Money | undefined;
     let discountedPrice: ProductDiscountedPrice | undefined;
 
@@ -297,13 +252,8 @@ export default class ProductMapper {
       return { price, discountedPrice };
     }
 
-    // The property prices contains the embedded prices for the variant, if the price mode is different than Embedded, this property is not relevant and we can return the price and discounted price
-    if (commercetoolsPriceMode !== CommercetoolsProductPriceModeEnumValues.Embedded) {
-      return { price, discountedPrice };
-    }
-
     if (commercetoolsVariant?.prices) {
-      // Filter price by country and currency and if we don't find one, then filter only by currency
+      //Filter price by country and currency and if we don't find one, then filter only by currency
       let commercetoolsPrice: CommercetoolsPrice = commercetoolsVariant?.prices.find((price: CommercetoolsPrice) => {
         return (
           !price.hasOwnProperty('channel') &&
@@ -336,82 +286,6 @@ export default class ProductMapper {
     return { price, discountedPrice };
   }
 
-  static extractRecurrencePrices(
-    commercetoolsVariant: CommercetoolsProductVariant,
-    locale: Locale,
-    defaultLocale: Locale,
-    distributionChannelId?: string,
-    accountGroupIds?: string[],
-    commercetoolsPriceMode?: CommercetoolsProductPriceModeEnum,
-  ): Price[] | undefined {
-    let recurrencePrices: Price[] = [];
-
-    // We prioritize the prices returned under the recurrencePrices field if they are available
-    if (commercetoolsVariant?.recurrencePrices && commercetoolsVariant.recurrencePrices.length > 0) {
-      recurrencePrices = commercetoolsVariant.recurrencePrices.map((commercetoolsPrice) => {
-        return ProductMapper.commercetoolsPriceToPrice(commercetoolsPrice, locale, defaultLocale);
-      });
-    }
-
-    if (recurrencePrices.length > 0) {
-      return recurrencePrices;
-    }
-
-    // Fallback to prices with recurrence policy if recurrence prices are unavailable. Use embedded prices only if price mode is "Embedded".
-    if (commercetoolsPriceMode === CommercetoolsProductPriceModeEnumValues.Embedded && commercetoolsVariant?.prices) {
-      // Filter price by distribution channel, account group, country and currency and if we don't find one, then filter only by currency
-      const commercetoolsRecurrencePrices: CommercetoolsPrice[] = commercetoolsVariant?.prices.filter(
-        (commercetoolsPrice: CommercetoolsPrice) => {
-          return (
-            (!commercetoolsPrice?.channel?.id || commercetoolsPrice.channel.id === distributionChannelId) &&
-            (!commercetoolsPrice?.customerGroup?.id ||
-              accountGroupIds?.includes(commercetoolsPrice.customerGroup.id)) &&
-            (!commercetoolsPrice?.country || commercetoolsPrice.country === locale.country) &&
-            commercetoolsPrice.value.currencyCode === locale.currency &&
-            commercetoolsPrice.recurrencePolicy !== undefined
-          );
-        },
-      );
-
-      recurrencePrices = commercetoolsRecurrencePrices.map((commercetoolsPrice) => {
-        return ProductMapper.commercetoolsPriceToPrice(commercetoolsPrice, locale, defaultLocale);
-      });
-    }
-
-    return recurrencePrices.length > 0 ? recurrencePrices : undefined;
-  }
-
-  static commercetoolsPriceToPrice(
-    commercetoolsPrice: CommercetoolsPrice,
-    locale: Locale,
-    defaultLocale: Locale,
-  ): Price {
-    const price: Price = {
-      value: this.commercetoolsMoneyToMoney(commercetoolsPrice.value),
-    };
-
-    // Add discounted price if available
-    if (commercetoolsPrice.discounted) {
-      price.discounted = this.commercetoolsDiscountedPriceToDiscountedPrice(commercetoolsPrice.discounted, locale);
-    }
-
-    // Add recurrence policy if available
-    if (commercetoolsPrice.recurrencePolicy) {
-      price.recurrencePolicy = {
-        recurrencePolicyId: commercetoolsPrice.recurrencePolicy.id,
-        ...(commercetoolsPrice.recurrencePolicy.obj && {
-          ...CartMapper.commercetoolsRecurrencePolicyToRecurrencePolicy(
-            commercetoolsPrice.recurrencePolicy.obj,
-            locale,
-            defaultLocale,
-          ),
-        }),
-      };
-    }
-
-    return price;
-  }
-
   static commercetoolsDiscountedPriceToDiscountedPrice(
     commercetoolsDiscountedPrice: CommercetoolsDiscountedPrice,
     locale: Locale,
@@ -434,8 +308,8 @@ export default class ProductMapper {
         commercetoolsProductDiscount.value,
         locale,
       ),
-      description: LocalizedValue.getLocalizedValue(locale, locale, commercetoolsProductDiscount?.description),
-      name: LocalizedValue.getLocalizedValue(locale, locale, commercetoolsProductDiscount?.name),
+      description: commercetoolsProductDiscount?.description?.[locale.language],
+      name: commercetoolsProductDiscount?.name?.[locale.language],
     };
   }
 
@@ -458,7 +332,7 @@ export default class ProductMapper {
   static commercetoolsProductTypesToFilterFields(
     commercetoolsProductTypes: CommercetoolsProductType[],
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): FilterField[] {
     const filterFields: FilterField[] = [];
 
@@ -478,7 +352,7 @@ export default class ProductMapper {
   static commercetoolsAttributeDefinitionToFilterField(
     commercetoolsAttributeDefinition: CommercetoolsAttributeDefinition,
     locale: Locale,
-    defaultLocale: Locale,
+    defaultLocale: string,
   ): FilterField {
     let commercetoolsAttributeTypeName = commercetoolsAttributeDefinition.type.name;
 
@@ -539,9 +413,9 @@ export default class ProductMapper {
   static commercetoolsProductTypesToFacetDefinitions(
     commercetoolsProductTypes: CommercetoolsProductType[],
     locale: Locale,
-    defaultLocale: Locale,
   ): FacetDefinition[] {
     const facetDefinitionsIndex: { [key: string]: FacetDefinition } = {};
+    const facetDefinitions: FacetDefinition[] = [];
 
     commercetoolsProductTypes?.forEach((productType) => {
       productType.attributes?.forEach((attribute) => {
@@ -553,18 +427,11 @@ export default class ProductMapper {
           attributeType: attribute.type?.hasOwnProperty('elementType')
             ? (attribute.type as AttributeSetType)?.elementType.name
             : attribute.type.name,
-          attributeId: this.generateAttributeIdFromAttributeName(attribute.name),
-          attributeLabel: LocalizedValue.getLocalizedValue(locale, defaultLocale, attribute.label) || attribute.name,
-          attributeValues:
-            this.isAttributeEnumType(attribute.type) && attribute.type.values.length > 0
-              ? attribute.type.values.map((value) => ({
-                  key: value.key,
-                  label:
-                    typeof value.label === 'string'
-                      ? value.label
-                      : LocalizedValue.getLocalizedValue(locale, defaultLocale, value.label) || value.key,
-                }))
-              : undefined,
+          attributeId: `variants.attributes.${attribute.name}`,
+          attributeLabel:
+            attribute.label[locale.language] !== undefined && attribute.label[locale.language].length > 0
+              ? attribute.label[locale.language]
+              : attribute.name,
         };
 
         // Store facets by attributeId to avoid duplicated attributes
@@ -572,7 +439,11 @@ export default class ProductMapper {
       });
     });
 
-    return Object.values(facetDefinitionsIndex);
+    for (const [attributeId, facetDefinition] of Object.entries(facetDefinitionsIndex)) {
+      facetDefinitions.push(facetDefinition);
+    }
+
+    return facetDefinitions;
   }
 
   static commercetoolsFacetResultsToFacets(
@@ -620,7 +491,6 @@ export default class ProductMapper {
             return this.commercetoolsFacetResultBucketToTermFacet(
               commercetoolsFacetResult as ProductSearchFacetResultBucket,
               commercetoolsFacetExpression as ProductSearchFacetDistinctExpression,
-              facetDefinitions,
               facetLabel,
               facetQuery as QueryTermFacet | undefined,
             );
@@ -683,7 +553,6 @@ export default class ProductMapper {
   static commercetoolsFacetResultBucketToTermFacet = (
     commercetoolsFacetResultBucket: ProductSearchFacetResultBucket,
     commercetoolsFacetDistinctExpression: ProductSearchFacetDistinctExpression,
-    facetDefinitions: FacetDefinition[],
     facetLabel: string,
     facetQuery: QueryTermFacet | undefined,
   ): TermFacet => {
@@ -695,15 +564,9 @@ export default class ProductMapper {
       key: commercetoolsFacetResultBucket.name,
       selected: facetQuery !== undefined,
       terms: commercetoolsFacetResultBucket.buckets.map((facetResultTerm) => {
-        const label =
-          facetDefinitions
-            .find((facetDefinition) => facetDefinition.attributeId === commercetoolsFacetResultBucket.name)
-            ?.attributeValues?.find((attributeValue) => attributeValue.key === facetResultTerm.key.toString())?.label ||
-          facetResultTerm.key.toString();
-
         const term: Term = {
           identifier: facetResultTerm.key.toString(),
-          label,
+          label: facetResultTerm.key.toString(),
           count: facetResultTerm.count,
           key: facetResultTerm.key.toString(),
           selected: facetQuery !== undefined && facetQuery.terms?.includes(facetResultTerm.key.toString()),
@@ -745,7 +608,7 @@ export default class ProductMapper {
     commercetoolsCategory: CommercetoolsCategory,
     categoryIdField: string,
     locale: Locale,
-    defaultLocale?: Locale,
+    defaultLocale?: string,
   ): Category {
     return {
       categoryId: commercetoolsCategory?.id,
@@ -756,8 +619,8 @@ export default class ProductMapper {
       parentRef: commercetoolsCategory.parent?.obj?.[categoryIdField as keyof CommercetoolsCategory] as
         | string
         | undefined,
-      name: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsCategory.name) ?? undefined,
-      slug: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsCategory.slug) ?? undefined,
+      name: commercetoolsCategory.name?.[locale.language] ?? undefined,
+      slug: commercetoolsCategory.slug?.[locale.language] ?? undefined,
       depth: commercetoolsCategory.ancestors.length,
       _url: this.generateLocalizedUrl(commercetoolsCategory),
       metaTitle: LocalizedValue.getLocalizedValue(locale, defaultLocale, commercetoolsCategory?.metaTitle) || undefined,
@@ -832,23 +695,7 @@ export default class ProductMapper {
       return commercetoolsAttributeValue.map((value) => this.extractAttributeValue(value, locale));
     }
 
-    // Check if it's a localized string object (has language keys)
-    if (
-      commercetoolsAttributeValue &&
-      typeof commercetoolsAttributeValue === 'object' &&
-      !Array.isArray(commercetoolsAttributeValue)
-    ) {
-      const localizedValue = LocalizedValue.getLocalizedValue(
-        locale,
-        locale,
-        commercetoolsAttributeValue as LocalizedString,
-      );
-      if (localizedValue) {
-        return localizedValue;
-      }
-    }
-
-    return commercetoolsAttributeValue;
+    return commercetoolsAttributeValue[locale.language] || commercetoolsAttributeValue;
   }
 
   private static findFacetQuery(productQuery: ProductQuery, facetKey: string) {
@@ -861,15 +708,5 @@ export default class ProductMapper {
     }
 
     return undefined;
-  }
-
-  static isAttributeEnumType(
-    attributeType: AttributeType,
-  ): attributeType is AttributeEnumType | AttributeLocalizedEnumType {
-    return attributeType && 'values' in attributeType;
-  }
-
-  static generateAttributeIdFromAttributeName(name: string) {
-    return `variants.attributes.${name}`;
   }
 }

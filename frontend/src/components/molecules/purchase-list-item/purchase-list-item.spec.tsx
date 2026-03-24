@@ -18,7 +18,6 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: true,
           currency: 'USD',
-          specifications: [],
         }}
         onAddToCart={onAddToCart}
       />,
@@ -49,7 +48,6 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: false,
           currency: 'USD',
-          specifications: [],
         }}
         onAddToCart={onAddToCart}
       />,
@@ -78,7 +76,6 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: true,
           currency: 'USD',
-          specifications: [],
         }}
         onQuantityChange={onQuantityChange}
       />,
@@ -107,7 +104,6 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: true,
           currency: 'USD',
-          specifications: [],
         }}
         onQuantityChange={onQuantityChange}
       />,
@@ -134,10 +130,6 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: true,
           currency: 'USD',
-          specifications: [
-            { label: 'Pressure', value: '200' },
-            { label: 'Weight', value: '20' },
-          ],
         }}
         onRemove={onRemove}
       />,
@@ -148,7 +140,7 @@ describe('[Component] Purhcase List Item', () => {
     expect(onRemove).toHaveBeenCalled();
   });
 
-  test("It doesn't show a `showMore` widget when there are 3 or fewer specifications", () => {
+  test("It doesn't show a `showMore` widget when neither pressure nor weight are present", () => {
     render(
       <PurchaseListItem
         item={{
@@ -161,22 +153,18 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: true,
           currency: 'USD',
-          specifications: [
-            { label: 'Pressure', value: '200' },
-            { label: 'Weight', value: '20' },
-          ],
         }}
       />,
     );
 
-    expect(screen.getByText('Pressure:')).toBeInTheDocument();
-    expect(screen.getByText('Weight:')).toBeInTheDocument();
+    expect(screen.queryByText('Pressure')).toBeNull();
+    expect(screen.queryByText('Weight')).toBeNull();
 
     expect(screen.queryByText('Show all')).toBeNull();
     expect(screen.queryByText('Show less')).toBeNull();
   });
 
-  test('It shows a `showMore` widget when there are more than 3 specifications', async () => {
+  test('It shows a `showMore` widget when either pressure or weight are present', async () => {
     render(
       <PurchaseListItem
         item={{
@@ -189,13 +177,8 @@ describe('[Component] Purhcase List Item', () => {
           price: 100,
           inStock: true,
           currency: 'USD',
-          specifications: [
-            { label: 'Pressure', value: '200' },
-            { label: 'Weight', value: '20' },
-            { label: 'Length', value: '10' },
-            { label: 'Width', value: '5' },
-            { label: 'Height', value: '3' },
-          ],
+          pressure: '200',
+          weight: '20',
         }}
       />,
     );
@@ -204,117 +187,16 @@ describe('[Component] Purhcase List Item', () => {
 
     await act(async () => userEvent.click(screen.getByText('Show all')));
 
-    expect(screen.getByText('Width:')).toBeDefined();
-    expect(screen.getByText('Height:')).toBeDefined();
+    expect(screen.getByText('Pressure -')).toBeDefined();
+    expect(screen.getByText('Weight -')).toBeDefined();
 
     expect(screen.getByText('Show less')).toBeDefined();
 
     await act(async () => userEvent.click(screen.getByText('Show less')));
 
+    expect(screen.queryByTestId('Pressure -')).toBeNull();
+    expect(screen.queryByTestId('Weight -')).toBeNull();
+
     expect(screen.getByText('Show all')).toBeDefined();
-  });
-
-  test('It renders product specifications correctly', () => {
-    render(
-      <PurchaseListItem
-        item={{
-          id: '1',
-          name: 'Test Product',
-          image: 'test-image.jpg',
-          sku: 'TEST-001',
-          url: '/test-product',
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          currency: 'USD',
-          specifications: [
-            { label: 'Manufacturer', value: 'Test Brand' },
-            { label: 'Part Number', value: 'PN-12345' },
-            { label: 'Material', value: 'Steel' },
-          ],
-        }}
-      />,
-    );
-
-    expect(screen.getByText('Manufacturer:')).toBeInTheDocument();
-    expect(screen.getByText('Test Brand')).toBeInTheDocument();
-    expect(screen.getByText('Part Number:')).toBeInTheDocument();
-    expect(screen.getByText('PN-12345')).toBeInTheDocument();
-    expect(screen.getByText('Material:')).toBeInTheDocument();
-    expect(screen.getByText('Steel')).toBeInTheDocument();
-  });
-
-  test('It handles empty specifications array gracefully', () => {
-    render(
-      <PurchaseListItem
-        item={{
-          id: '1',
-          name: 'Test Product',
-          image: 'test-image.jpg',
-          sku: 'TEST-001',
-          url: '/test-product',
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          currency: 'USD',
-          specifications: [],
-        }}
-      />,
-    );
-
-    expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.queryByText('Show all')).toBeNull();
-    expect(screen.queryByText('Show less')).toBeNull();
-  });
-
-  test('It handles undefined specifications gracefully', () => {
-    render(
-      <PurchaseListItem
-        item={{
-          id: '1',
-          name: 'Test Product',
-          image: 'test-image.jpg',
-          sku: 'TEST-001',
-          url: '/test-product',
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          currency: 'USD',
-        }}
-      />,
-    );
-
-    expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.queryByText('Show all')).toBeNull();
-    expect(screen.queryByText('Show less')).toBeNull();
-  });
-
-  test('It shows exactly 3 specifications without Show More when there are exactly 3', () => {
-    render(
-      <PurchaseListItem
-        item={{
-          id: '1',
-          name: 'Test Product',
-          image: 'test-image.jpg',
-          sku: 'TEST-001',
-          url: '/test-product',
-          quantity: 1,
-          price: 100,
-          inStock: true,
-          currency: 'USD',
-          specifications: [
-            { label: 'Manufacturer', value: 'Test Brand' },
-            { label: 'Part Number', value: 'PN-12345' },
-            { label: 'Material', value: 'Steel' },
-          ],
-        }}
-      />,
-    );
-
-    expect(screen.getByText('Manufacturer:')).toBeInTheDocument();
-    expect(screen.getByText('Part Number:')).toBeInTheDocument();
-    expect(screen.getByText('Material:')).toBeInTheDocument();
-    expect(screen.queryByText('Show all')).toBeNull();
-    expect(screen.queryByText('Show less')).toBeNull();
   });
 });

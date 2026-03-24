@@ -16,9 +16,7 @@ export default class AccountMapper {
   static commercetoolsCustomerToAccount(commercetoolsCustomer: commercetoolsCustomer): Account {
     return {
       accountId: commercetoolsCustomer.id,
-      accountGroupIds: commercetoolsCustomer?.customerGroupAssignments.map((customerGroupAssignment) => {
-        return customerGroupAssignment.customerGroup.id;
-      }),
+      accountGroupId: commercetoolsCustomer?.customerGroup?.id,
       email: commercetoolsCustomer.email,
       salutation: commercetoolsCustomer?.salutation,
       firstName: commercetoolsCustomer?.firstName,
@@ -71,8 +69,6 @@ export default class AccountMapper {
       streetNumber: commercetoolsAddress?.streetNumber ?? undefined,
       additionalStreetInfo: commercetoolsAddress?.additionalStreetInfo ?? undefined,
       additionalAddressInfo: commercetoolsAddress?.additionalAddressInfo ?? undefined,
-      building: commercetoolsAddress?.building ?? undefined,
-      apartment: commercetoolsAddress?.apartment ?? undefined,
       postalCode: commercetoolsAddress?.postalCode ?? undefined,
       city: commercetoolsAddress?.city ?? undefined,
       country: commercetoolsAddress?.country ?? undefined,
@@ -92,8 +88,6 @@ export default class AccountMapper {
       streetNumber: address.streetNumber,
       additionalStreetInfo: address.additionalStreetInfo,
       additionalAddressInfo: address.additionalAddressInfo,
-      building: address.building,
-      apartment: address.apartment,
       postalCode: address.postalCode,
       city: address.city,
       country: address.country,

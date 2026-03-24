@@ -1,8 +1,7 @@
-import useDisclosure from '@/hooks/useDisclosure';
-import { classnames } from '@/utils/classnames/classnames';
-import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import React from 'react';
+import useDisclosure from '@/hooks/useDisclosure';
 import { useTranslations } from 'use-intl';
+import { classnames } from '@/utils/classnames/classnames';
 import { ShowMoreProps } from './types';
 
 const ShowMore = ({ children, className, renderLabel }: React.PropsWithChildren<ShowMoreProps>) => {
@@ -23,12 +22,7 @@ const ShowMore = ({ children, className, renderLabel }: React.PropsWithChildren<
               className,
             )}
           >
-            {translate(isShowingAll ? 'common.show-less' : 'common.show-all')}{' '}
-            {isShowingAll ? (
-              <ChevronUpIcon width={16} strokeWidth={2.5} className="inline-block" />
-            ) : (
-              <ChevronDownIcon width={16} strokeWidth={2.5} className="inline-block" />
-            )}
+            {translate(isShowingAll ? 'common.show-less' : 'common.show-all')}
           </span>
         )}
       </span>

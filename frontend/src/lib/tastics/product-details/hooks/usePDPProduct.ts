@@ -30,7 +30,7 @@ const usePDPProduct = (product: SharedProduct) => {
   );
 
   const mappedProduct = useMemo(
-    () => mapProduct(product, { variantIndex: currentVariantIndex, cart, filterOutNonMatchingVariants: false }),
+    () => mapProduct(product, { variantIndex: currentVariantIndex, cart }),
     [product, currentVariantIndex, cart],
   );
 

@@ -12,11 +12,11 @@ import { getBusinessUnitKey, getLocale, getStoreKey } from '../utils/requestHand
 import handleError from '@Commerce-commercetools/utils/handleError';
 import { EmailApiFactory } from '@Commerce-commercetools/utils/EmailApiFactory';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
-import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import { ResourceNotFoundError } from '@Commerce-commercetools/errors/ResourceNotFoundError';
-import getAccountApi from '@Commerce-commercetools/utils/apiFactories/getAccountApi';
-import getBusinessUnitApi from '@Commerce-commercetools/utils/apiFactories/getBusinessUnitApi';
+import getAccountApi from '@Commerce-commercetools/utils/apiConstructors/getAccountApi';
+import getBusinessUnitApi from '@Commerce-commercetools/utils/apiConstructors/getBusinessUnitApi';
 import queryParamsToStates from '@Commerce-commercetools/utils/requestHandlers/queryParamsToState';
 import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
 import queryParamsToSortAttributes from '@Commerce-commercetools/utils/requestHandlers/queryParamsToSortAttributes';
@@ -357,6 +357,7 @@ export const setBusinessUnitAndStoreKeys: ActionHook = async (request: Request, 
         ...request.sessionData,
         businessUnitKey,
         storeKey,
+        storeId: store.storeId,
         distributionChannelId: store?.distributionChannels?.[0]?.channelId, // Use only the first distribution channel
         supplyChannelId: store?.supplyChannels?.[0]?.channelId, // Use only the first supply channel
       },
@@ -378,7 +379,7 @@ export const getAssociate: ActionHook = async (request: Request, actionContext: 
 
     const account = await accountApi.getById(accountId);
 
-    const associate = await businessUnitApi.getAssociate(businessUnitKey, account);
+    const associate = await businessUnitApi.getAssociate(businessUnitKey, accountId, account);
 
     const response: Response = {
       statusCode: 200,

@@ -1,7 +1,6 @@
 import { Account } from '@shared/types/account';
 import { Currency } from '../currency';
 import { Store } from './business-unit';
-import { Attribute } from './product';
 
 export interface PurchaseListItem {
   id: string;
@@ -9,13 +8,16 @@ export interface PurchaseListItem {
   url: string;
   name: string;
   model?: string;
+  manufacturer?: string;
   image?: string;
+  partNumber?: string;
+  pressure?: string;
+  weight?: string;
   price: number;
   currency: Currency;
   quantity: number;
   inStock?: boolean;
   maxQuantity?: number;
-  specifications?: Attribute[];
 }
 
 export interface PurchaseList {

@@ -1,7 +1,6 @@
 import { SortAttributes, SortOrder } from '@Types/query/ProductQuery';
-import { QueryParams } from '@Commerce-commercetools/interfaces/QueryParams';
 
-const queryParamsToSortAttributes = (queryParams: QueryParams) => {
+const queryParamsToSortAttributes = (queryParams: any) => {
   const sortAttributes: SortAttributes = {};
 
   if (queryParams.sortAttributes) {

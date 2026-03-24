@@ -8,8 +8,7 @@ import { Locale } from '@/project.config';
 const useCustomRouter = () => {
   const { push: pushRoute, replace: replaceRoute, ...router } = useRouter();
 
-  const params = useParams();
-  const locale = params?.locale;
+  const { locale } = useParams();
 
   const push = useCallback(
     (

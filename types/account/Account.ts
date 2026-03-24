@@ -16,7 +16,7 @@ export interface Account {
   addresses?: Address[];
   apiToken?: string;
   vatNumber?: string;
-  accountGroupIds?: string[];
+  accountGroupId?: string;
 }
 
 export interface AccountGroup {

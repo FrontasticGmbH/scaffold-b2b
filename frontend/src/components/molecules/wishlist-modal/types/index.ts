@@ -7,7 +7,6 @@ export type ListWishListsProps = {
   isOpen: boolean;
   onSubmit: (lists: Array<Wishlist>) => void;
   selectedIds: string[];
-  savedItemsIds: string[];
   handleChange: (id: string, checked: boolean) => void;
   loading?: boolean;
   onClose: () => void;

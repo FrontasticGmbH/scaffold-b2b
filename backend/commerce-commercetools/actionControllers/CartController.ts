@@ -3,10 +3,9 @@ import { LineItem } from '@Types/cart/LineItem';
 import { OrderState, ReturnLineItem } from '@Types/cart/Order';
 import { Cart } from '@Types/cart/Cart';
 import { Address } from '@Types/account/Address';
-import { DiscountCode, LineItemRecurrenceInfo, ShippingMethod } from '@Types/cart';
+import { DiscountCode, ShippingMethod } from '@Types/cart';
 import { Payment, PaymentStatuses } from '@Types/cart/Payment';
 import { Token } from '@Types/Token';
-import { RecurrencePolicyQuery } from '@Types/query';
 import { EmailApiFactory } from '../utils/EmailApiFactory';
 import { CartFetcher } from '../utils/CartFetcher';
 import { getLocale } from '../utils/requestHandlers/Request';
@@ -14,16 +13,14 @@ import handleError from '@Commerce-commercetools/utils/handleError';
 import { OrderQueryFactory } from '@Commerce-commercetools/utils/OrderQueryFactory';
 import { ValidationError } from '@Commerce-commercetools/errors/ValidationError';
 import parseRequestBody from '@Commerce-commercetools/utils/requestHandlers/parseRequestBody';
-import getCartApi from '@Commerce-commercetools/utils/apiFactories/getCartApi';
-import queryParamsToIds from '@Commerce-commercetools/utils/requestHandlers/queryParamsToIds';
-import { RecurringOrderFactory } from '@Commerce-commercetools/utils/RecurringOrderQueryFactory';
+import getCartApi from '@Commerce-commercetools/utils/apiConstructors/getCartApi';
 
 type ActionHook = (request: Request, actionContext: ActionContext) => Promise<Response>;
 
 async function updateCartFromRequest(request: Request, actionContext: ActionContext): Promise<Cart> {
   const cartApi = getCartApi(request, actionContext.frontasticContext);
 
-  let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+  let cart = await CartFetcher.fetchCart(request, actionContext);
 
   if (request?.body === undefined || request?.body === '') {
     return cart;
@@ -52,7 +49,7 @@ async function updateCartFromRequest(request: Request, actionContext: ActionCont
 
 export const getCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext.frontasticContext);
+    const cart = await CartFetcher.fetchActiveCartFromSession(request, actionContext);
 
     return {
       statusCode: 200,
@@ -67,7 +64,7 @@ export const getCart: ActionHook = async (request: Request, actionContext: Actio
   }
 };
 
-export const clearCart: ActionHook = async (request: Request) => {
+export const clearCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
   return {
     statusCode: 200,
     body: JSON.stringify({}),
@@ -86,7 +83,7 @@ export const addToCart: ActionHook = async (request: Request, actionContext: Act
       lineItems: LineItem[];
     }>(request.body);
 
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
     cart = await cartApi.addToCart(cart, body.lineItems);
 
@@ -109,25 +106,15 @@ export const updateLineItem: ActionHook = async (request: Request, actionContext
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
 
-    const body = parseRequestBody<{
-      lineItem?: { id?: string; count?: number; recurrenceInfo?: LineItemRecurrenceInfo };
-    }>(request.body);
+    const body = parseRequestBody<{ lineItem?: { id?: string; count: number } }>(request.body);
 
     const lineItem: LineItem = {
       lineItemId: body.lineItem?.id,
-      count: body.lineItem?.count !== undefined ? +body.lineItem?.count : undefined,
-      recurrenceInfo:
-        body.lineItem?.recurrenceInfo !== undefined
-          ? body.lineItem.recurrenceInfo?.recurrencePolicy?.recurrencePolicyId !== undefined
-            ? {
-                recurrencePolicy: body.lineItem.recurrenceInfo.recurrencePolicy,
-              }
-            : {}
-          : undefined,
+      count: +body.lineItem?.count || 1,
     };
 
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
-    cart = await cartApi.updateLineItems(cart, [lineItem]);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
+    cart = await cartApi.updateLineItem(cart, lineItem);
 
     const cartId = cart.cartId;
 
@@ -218,7 +205,7 @@ export const splitLineItem: ActionHook = async (request: Request, actionContext:
       shippingAddresses: { address: Address; count: number }[];
     }>(request.body);
 
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
     cart = await cartApi.splitLineItem(cart, body.lineItemId, body.shippingAddresses);
 
     return {
@@ -236,7 +223,7 @@ export const splitLineItem: ActionHook = async (request: Request, actionContext:
 
 export const reassignCart: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
     const cartId = cart.cartId;
 
     const body = parseRequestBody<{
@@ -274,7 +261,7 @@ export const removeLineItem: ActionHook = async (request: Request, actionContext
       lineItemId: body.lineItem?.id,
     };
 
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
     cart = await cartApi.removeLineItem(cart, lineItem);
 
@@ -388,7 +375,7 @@ export const getShippingMethods: ActionHook = async (request: Request, actionCon
 export const getAvailableShippingMethods: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    const cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    const cart = await CartFetcher.fetchCart(request, actionContext);
 
     const availableShippingMethods = await cartApi.getAvailableShippingMethods(cart);
 
@@ -410,7 +397,7 @@ export const getAvailableShippingMethods: ActionHook = async (request: Request, 
 export const setShippingMethod: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
     const body = parseRequestBody<{ shippingMethod?: { id?: string } }>(request.body);
 
@@ -438,7 +425,7 @@ export const setShippingMethod: ActionHook = async (request: Request, actionCont
 export const addPaymentByInvoice: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
     const body = parseRequestBody<{ payment?: Payment }>(request.body);
 
@@ -476,7 +463,7 @@ export const addPaymentByInvoice: ActionHook = async (request: Request, actionCo
 export const updatePayment: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    const cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    const cart = await CartFetcher.fetchCart(request, actionContext);
 
     const body = parseRequestBody<{ payment?: Payment }>(request.body);
 
@@ -500,7 +487,7 @@ export const updatePayment: ActionHook = async (request: Request, actionContext:
 export const redeemDiscount: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
     const body = parseRequestBody<{ code?: string }>(request.body);
 
@@ -524,7 +511,7 @@ export const redeemDiscount: ActionHook = async (request: Request, actionContext
 export const removeDiscount: ActionHook = async (request: Request, actionContext: ActionContext) => {
   try {
     const cartApi = getCartApi(request, actionContext.frontasticContext);
-    let cart = await CartFetcher.fetchCart(request, actionContext.frontasticContext);
+    let cart = await CartFetcher.fetchCart(request, actionContext);
 
     const body = parseRequestBody<{ discountCodeId?: string }>(request.body);
 
@@ -570,216 +557,6 @@ export const getCheckoutSessionToken: ActionHook = async (request: Request, acti
     };
 
     return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const getRecurrencePolicies: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const recurrencePolicyQuery: RecurrencePolicyQuery = {
-      limit: request.query?.limit ?? undefined,
-      cursor: request.query?.cursor ?? undefined,
-      recurrencePolicyIds: queryParamsToIds('recurrencePolicyIds', request.query),
-      keys: queryParamsToIds('keys', request.query),
-    };
-    const recurrencePolicies = await cartApi.getRecurrencePolicies(recurrencePolicyQuery);
-
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(recurrencePolicies),
-      sessionData: {
-        ...request.sessionData,
-      },
-    };
-
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const queryRecurringOrders: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const recurringOrderQuery = RecurringOrderFactory.queryFromParams(request);
-
-    const recurringOrders = await cartApi.queryRecurringOrders(recurringOrderQuery);
-
-    const response: Response = {
-      statusCode: 200,
-      body: JSON.stringify(recurringOrders),
-      sessionData: {
-        ...request.sessionData,
-      },
-    };
-
-    return response;
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const pauseRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-    }>(request.body);
-
-    const response = await cartApi.pauseRecurringOrder(body.recurringOrderId);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const resumeRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-    }>(request.body);
-
-    const response = await cartApi.resumeRecurringOrder(body.recurringOrderId);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const cancelRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-    }>(request.body);
-
-    const response = await cartApi.cancelRecurringOrder(body.recurringOrderId);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const skipRecurringOrder: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-    }>(request.body);
-
-    const response = await cartApi.skipRecurringOrder(body.recurringOrderId);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const updateRecurringOrderLineItems: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-      lineItems: LineItem[];
-    }>(request.body);
-
-    if (!body.recurringOrderId) {
-      throw new ValidationError({ message: `recurringOrderId is required` });
-    }
-
-    if (!body.lineItems || body.lineItems.length === 0) {
-      throw new ValidationError({ message: `lineItems array is required and must not be empty` });
-    }
-
-    const response = await cartApi.updateRecurringOrderLineItems(body.recurringOrderId, body.lineItems);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const updateRecurringOrderSchedule: ActionHook = async (request: Request, actionContext: ActionContext) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-      recurrencePolicyId: string;
-    }>(request.body);
-
-    const response = await cartApi.updateRecurringOrderSchedule(body.recurringOrderId, body.recurrencePolicyId);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
-  } catch (error) {
-    return handleError(error, request);
-  }
-};
-
-export const updateRecurringOrderShippingAddress: ActionHook = async (
-  request: Request,
-  actionContext: ActionContext,
-) => {
-  try {
-    const cartApi = getCartApi(request, actionContext.frontasticContext);
-
-    const body = parseRequestBody<{
-      recurringOrderId: string;
-      shippingAddress: Address;
-    }>(request.body);
-
-    if (!body.recurringOrderId) {
-      throw new ValidationError({ message: `recurringOrderId is required` });
-    }
-
-    if (!body.shippingAddress) {
-      throw new ValidationError({ message: `shippingAddress is required and must not be empty` });
-    }
-
-    const response = await cartApi.updateRecurringOrderShippingAddress(body.recurringOrderId, body.shippingAddress);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-      sessionData: request.sessionData,
-    };
   } catch (error) {
     return handleError(error, request);
   }

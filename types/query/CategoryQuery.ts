@@ -8,6 +8,5 @@ export enum CategoryQueryFormat {
 export interface CategoryQuery extends PaginatedQuery {
   parentId?: string;
   slug?: string;
-  storeKey?: string;
   format?: CategoryQueryFormat;
 }
