@@ -23,7 +23,7 @@
     "@commercetools/platform-sdk": "8.7.0",
     "@commercetools/ts-client": "^3.3.1",
     "@sendgrid/mail": "^7.7.0",
-    "axios": "^0.24.0",
+    "axios": "^0.31.1",
     "contentful": "^9.3.7",
     "core-js": "^3.20.0",
     "crypto-js": "^4.2.0",
