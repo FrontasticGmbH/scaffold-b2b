@@ -28,7 +28,7 @@
     "core-js": "^3.20.0",
     "crypto-js": "^4.2.0",
     "node-fetch": "^2.6.7",
-    "nodemailer": "^6.9.10",
+    "nodemailer": "^8.0.9",
     "performance-now": "^2.1.0",
     "qs": "^6.10.1",
     "regenerator-runtime": "^0.13.9"
