@@ -1913,7 +1913,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.1.3"
     jest: "npm:^27.5.1"
     node-fetch: "npm:^2.6.7"
-    nodemailer: "npm:^6.9.10"
+    nodemailer: "npm:^9.0.1"
     performance-now: "npm:^2.1.0"
     prettier: "npm:^3.2.5"
     qs: "npm:^6.10.1"
@@ -6799,10 +6799,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nodemailer@npm:^6.9.10":
-  version: 6.9.10
-  resolution: "nodemailer@npm:6.9.10"
-  checksum: 10c0/a687116fa3dcdc77afa62087a3f7dd6d96c737fb044c4e003a90534ca1eff26ce4ddd2a4ac87bbe19f1ee267bd0d7a7c7e66676178b149a36b41a27e00167546
+"nodemailer@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "nodemailer@npm:9.0.1"
+  checksum: 10c0/4213f01aa211127c1ce33243c5e45e7f831601a933d03fa864cd827b1bd5ea2782cb4b43722bee7028cbc193733d9802dad1120fe67181448eb0b7de52218a37
   languageName: node
   linkType: hard
 
